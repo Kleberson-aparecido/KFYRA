@@ -1,69 +1,742 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | NEXORA</title>
-    <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Entrar | NEXORA</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --green: #0b332b;
+    --green2: #174b3c;
+    --mint: #c9ead8;
+    --gold: #c6a45b;
+    --text: #24342d;
+    --muted: #829087;
+    --border: #e4ebe6;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: #f4f8f5;
+}
+
+header {
+    padding: 25px 7%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    font-family: 'Manrope', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    color: var(--green);
+    text-decoration: none;
+}
+
+.logo span {
+    color: var(--gold);
+}
+
+.header-link {
+    color: var(--green);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+main {
+    min-height: calc(100vh - 100px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 35px 20px 65px;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 1050px;
+    min-height: 610px;
+    background: #fff;
+    border-radius: 25px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    box-shadow: 0 25px 80px rgba(15,53,41,.09);
+}
+
+.visual {
+    position: relative;
+    overflow: hidden;
+    padding: 65px 48px;
+    color: white;
+    background: linear-gradient(145deg, #0b332b, #174b3c);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.visual::before {
+    content: "";
+    position: absolute;
+    width: 450px;
+    height: 450px;
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 50%;
+    right: -210px;
+    top: 70px;
+}
+
+.visual::after {
+    content: "";
+    position: absolute;
+    width: 330px;
+    height: 330px;
+    border: 1px solid rgba(201,234,216,.13);
+    border-radius: 50%;
+    right: -130px;
+    top: 130px;
+}
+
+.visual-content,
+.visual-bottom {
+    position: relative;
+    z-index: 1;
+}
+
+.eyebrow {
+    color: var(--mint);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    margin-bottom: 30px;
+}
+
+.visual h1 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 43px;
+    line-height: 1.18;
+    max-width: 430px;
+    margin-bottom: 23px;
+}
+
+.visual h1 span {
+    color: #d8bd7d;
+}
+
+.visual p {
+    max-width: 370px;
+    color: #d4e4da;
+    font-size: 14px;
+    line-height: 1.9;
+}
+
+.visual-bottom {
+    color: #c4d8cb;
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.gold-line {
+    width: 50px;
+    height: 3px;
+    border-radius: 5px;
+    background: var(--gold);
+    margin-bottom: 20px;
+}
+
+.form-area {
+    padding: 70px 58px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form-label {
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+}
+
+.form-area h2 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 31px;
+    color: var(--green);
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 35px;
+}
+
+.field {
+    margin-bottom: 21px;
+}
+
+label {
+    display: block;
+    color: #405348;
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 9px;
+}
+
+.input-wrap {
+    position: relative;
+}
+
+input {
+    width: 100%;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    background: #fcfdfc;
+    outline: none;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    transition: .2s;
+}
+
+input:focus {
+    border-color: #75ad8e;
+    box-shadow: 0 0 0 3px rgba(117,173,142,.12);
+}
+
+.password-input {
+    padding-right: 75px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--green);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.forgot {
+    display: block;
+    text-align: right;
+    color: var(--green);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 800;
+    margin-top: -5px;
+    margin-bottom: 25px;
+}
+
+.submit {
+    width: 100%;
+    padding: 17px;
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 11px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.submit:hover {
+    background: var(--green2);
+    transform: translateY(-1px);
+}
+
+.submit:disabled {
+    opacity: .6;
+    cursor: wait;
+    transform: none;
+}
+
+.message {
+    display: none;
+    padding: 14px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.message.success {
+    display: block;
+    color: #17633a;
+    background: #e8f6ed;
+    border: 1px solid #b9dfc6;
+}
+
+.message.error {
+    display: block;
+    color: #a12e28;
+    background: #fff0ef;
+    border: 1px solid #f0c6c2;
+}
+
+.register {
+    text-align: center;
+    margin-top: 30px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.register a {
+    color: var(--green);
+    text-decoration: none;
+    font-weight: 800;
+}
+
+.security {
+    margin-top: 35px;
+    padding-top: 22px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 9px;
+    color: #849188;
+    font-size: 11px;
+}
+
+.security span {
+    color: var(--gold);
+    font-size: 16px;
+}
+
+footer {
+    text-align: center;
+    color: #8a988f;
+    padding: 20px;
+    font-size: 11px;
+}
+
+@media(max-width: 800px) {
+    header {
+        padding: 22px;
+    }
+
+    .login-container {
+        grid-template-columns: 1fr;
+        max-width: 480px;
+    }
+
+    .visual {
+        padding: 35px 30px;
+        min-height: 250px;
+    }
+
+    .visual h1 {
+        font-size: 30px;
+    }
+
+    .visual-bottom {
+        margin-top: 30px;
+    }
+
+    .form-area {
+        padding: 40px 28px;
+    }
+}
+
+@media(max-width: 420px) {
+    .logo {
+        font-size: 22px;
+    }
+
+    .header-link {
+        font-size: 11px;
+    }
+
+    .form-area h2 {
+        font-size: 26px;
+    }
+}
+</style>
 </head>
+
 <body>
 
-<header class="header">
-    <div class="container">
-        <a href="index.html" class="logo">NEXORA</a>
-        <a href="index.html" class="btn-secondary">Voltar ao início</a>
-    </div>
+<header>
+    <a href="index.html" class="logo">NEX<span>ORA</span></a>
+    <a href="cadastro.html" class="header-link">Cadastrar minha empresa →</a>
 </header>
 
-<main class="container">
-    <section class="hero">
-        <h1>Bem-vindo à NEXORA</h1>
-        <p>Acesse o ambiente exclusivo da sua empresa.</p>
+<main>
 
-        <form id="formLogin" class="form-container">
+<div class="login-container">
 
-            <h2>Entrar na plataforma</h2>
+    <section class="visual">
 
-            <label for="email">E-mail corporativo</label>
-            <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="empresa@exemplo.com"
-                required
-            >
+        <div class="visual-content">
+            <div class="eyebrow">NEXORA BUSINESS PLATFORM</div>
 
-            <label for="senha">Senha</label>
-            <input
-                type="password"
-                id="senha"
-                name="senha"
-                placeholder="Digite sua senha"
-                required
-            >
-
-            <button type="submit" class="btn-primary">
-                Entrar
-            </button>
-
-            <p id="mensagemLogin"></p>
+            <h1>Seu negócio.<br>Sua gestão.<br><span>Sua inteligência.</span></h1>
 
             <p>
-                Ainda não tem uma conta?
-                <a href="cadastro.html">Cadastre sua empresa</a>
+                Entre no ambiente exclusivo da sua empresa e tenha
+                o controle das pessoas, operações e resultados
+                em um único lugar.
             </p>
+        </div>
+
+        <div class="visual-bottom">
+            <div class="gold-line"></div>
+            Inteligência empresarial para empresas que querem evoluir.
+        </div>
+
+    </section>
+
+    <section class="form-area">
+
+        <div class="form-label">ACESSO À PLATAFORMA</div>
+
+        <h2 id="tituloLogin">Bem-vindo de volta.</h2>
+
+        <p class="subtitle" id="subtituloLogin">
+            Acesse sua conta para continuar sua jornada com a NEXORA.
+        </p>
+
+        <div id="mensagemLogin" class="message" role="alert"></div>
+
+        <form id="formLogin">
+
+            <div class="field">
+                <label for="email">E-MAIL DE ACESSO</label>
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="seuemail@empresa.com.br"
+                    autocomplete="email"
+                    required
+                >
+            </div>
+
+            <div class="field" id="campoSenha">
+                <label for="senha">SENHA</label>
+
+                <div class="input-wrap">
+                    <input
+                        type="password"
+                        id="senha"
+                        class="password-input"
+                        placeholder="Digite sua senha"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="toggle-password"
+                        id="toggleSenha"
+                    >MOSTRAR</button>
+                </div>
+            </div>
+
+            <div class="field" id="campoNovaSenha" style="display:none">
+                <label for="novaSenha">NOVA SENHA</label>
+                <input
+                    type="password"
+                    id="novaSenha"
+                    minlength="8"
+                    placeholder="Crie uma nova senha"
+                >
+            </div>
+
+            <a href="#" class="forgot" id="esqueciSenha">
+                Esqueci minha senha
+            </a>
+
+            <button type="submit" class="submit" id="botaoLogin">
+                ENTRAR NA NEXORA →
+            </button>
 
         </form>
+
+        <div class="register">
+            Ainda não possui uma conta?
+            <a href="cadastro.html">Cadastre sua empresa</a>
+        </div>
+
+        <div class="security">
+            <span>✦</span>
+            Ambiente de acesso protegido
+        </div>
+
     </section>
+
+</div>
+
 </main>
 
-<script>
-document.getElementById("formLogin").addEventListener("submit", function(event) {
-    event.preventDefault();
+<footer>
+    NEXORA — Gestão inteligente para empresas.
+</footer>
 
-    document.getElementById("mensagemLogin").textContent =
-        "A tela de login está preparada. A autenticação segura será conectada ao servidor na próxima etapa.";
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+/* CONFIGURAÇÃO DO SUPABASE */
+
+const SUPABASE_URL = "https://guiadodxikdvsfrhedls.supabase.co";
+
+const SUPABASE_ANON_KEY = "sb_publishable_dhAqwNSfwGj8_nBnudx_Hw_gMZpnyEL";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
+
+/* ELEMENTOS */
+
+const form = document.getElementById("formLogin");
+const mensagem = document.getElementById("mensagemLogin");
+const botao = document.getElementById("botaoLogin");
+
+const emailInput = document.getElementById("email");
+const senhaInput = document.getElementById("senha");
+
+let modoRecuperacao = false;
+
+function mostrarMensagem(texto, tipo) {
+    mensagem.textContent = texto;
+    mensagem.className = "message " + tipo;
+    mensagem.style.display = "block";
+
+    mensagem.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+}
+
+function limparMensagem() {
+    mensagem.textContent = "";
+    mensagem.className = "message";
+    mensagem.style.display = "none";
+}
+
+/* MOSTRAR E OCULTAR SENHA */
+
+document.getElementById("toggleSenha").addEventListener("click", function() {
+
+    if (senhaInput.type === "password") {
+        senhaInput.type = "text";
+        this.textContent = "OCULTAR";
+    } else {
+        senhaInput.type = "password";
+        this.textContent = "MOSTRAR";
+    }
+
 });
+
+/* LOGIN */
+
+form.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+    limparMensagem();
+
+    botao.disabled = true;
+
+    try {
+
+        if (modoRecuperacao) {
+
+            const novaSenha = document.getElementById("novaSenha").value;
+
+            if (novaSenha.length < 8) {
+                throw new Error("A nova senha precisa ter pelo menos 8 caracteres.");
+            }
+
+            const { error } = await supabaseClient.auth.updateUser({
+                password: novaSenha
+            });
+
+            if (error) throw error;
+
+            mostrarMensagem(
+                "Sua senha foi atualizada com sucesso! Agora você pode entrar com sua nova senha.",
+                "success"
+            );
+
+            modoRecuperacao = false;
+
+            document.getElementById("campoNovaSenha").style.display = "none";
+            document.getElementById("campoSenha").style.display = "block";
+            document.getElementById("esqueciSenha").style.display = "block";
+            document.getElementById("tituloLogin").textContent = "Senha atualizada.";
+            document.getElementById("subtituloLogin").textContent = "Entre novamente com sua nova senha.";
+
+            form.reset();
+
+            botao.textContent = "ENTRAR NA NEXORA →";
+
+            return;
+        }
+
+        const email = emailInput.value.trim().toLowerCase();
+        const senha = senhaInput.value;
+
+        botao.textContent = "VERIFICANDO ACESSO...";
+
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email: email,
+            password: senha
+        });
+
+        if (error) throw error;
+
+        if (!data.session) {
+            throw new Error("Não foi possível iniciar sua sessão. Tente novamente.");
+        }
+
+        mostrarMensagem("Acesso autorizado! Preparando seu ambiente...", "success");
+
+        botao.textContent = "ACESSO AUTORIZADO";
+
+        setTimeout(() => {
+            window.location.href = "dashboard.html";
+        }, 900);
+
+    } catch (error) {
+
+        console.error("Erro de autenticação:", error);
+
+        let texto = error.message || "Não foi possível realizar o acesso.";
+
+        if (
+            texto.toLowerCase().includes("invalid login credentials")
+        ) {
+            texto = "E-mail ou senha incorretos. Confira seus dados e tente novamente.";
+        } else if (
+            texto.toLowerCase().includes("email not confirmed")
+        ) {
+            texto = "Seu e-mail ainda não foi confirmado. Verifique sua caixa de entrada.";
+        }
+
+        mostrarMensagem(texto, "error");
+
+        botao.disabled = false;
+
+        botao.textContent = modoRecuperacao
+            ? "ATUALIZAR MINHA SENHA"
+            : "ENTRAR NA NEXORA →";
+
+    } finally {
+
+        if (!modoRecuperacao && botao.textContent !== "ACESSO AUTORIZADO") {
+            botao.disabled = false;
+        }
+
+    }
+
+});
+
+/* RECUPERAÇÃO DE SENHA */
+
+document.getElementById("esqueciSenha").addEventListener("click", async function(event) {
+
+    event.preventDefault();
+    limparMensagem();
+
+    const email = emailInput.value.trim().toLowerCase();
+
+    if (!email) {
+        mostrarMensagem(
+            "Digite seu e-mail no campo acima para receber o link de recuperação.",
+            "error"
+        );
+        emailInput.focus();
+        return;
+    }
+
+    botao.disabled = true;
+    botao.textContent = "ENVIANDO LINK...";
+
+    try {
+
+        const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+            redirectTo: window.location.origin + "/Nexora/login.html"
+        });
+
+        if (error) throw error;
+
+        mostrarMensagem(
+            "Se esse endereço estiver cadastrado, você receberá um e-mail com as instruções para redefinir sua senha.",
+            "success"
+        );
+
+    } catch (error) {
+
+        mostrarMensagem(
+            error.message || "Não foi possível enviar o e-mail de recuperação.",
+            "error"
+        );
+
+    } finally {
+
+        botao.disabled = false;
+        botao.textContent = "ENTRAR NA NEXORA →";
+
+    }
+
+});
+
+/* DETECTAR RECUPERAÇÃO DE SENHA */
+
+supabaseClient.auth.onAuthStateChange((event, session) => {
+
+    if (event === "PASSWORD_RECOVERY") {
+
+        modoRecuperacao = true;
+
+        document.getElementById("tituloLogin").textContent = "Crie uma nova senha.";
+
+        document.getElementById("subtituloLogin").textContent =
+            "Escolha uma senha segura para sua conta NEXORA.";
+
+        document.getElementById("campoSenha").style.display = "none";
+        document.getElementById("campoNovaSenha").style.display = "block";
+        document.getElementById("esqueciSenha").style.display = "none";
+
+        document.getElementById("novaSenha").required = true;
+
+        botao.textContent = "ATUALIZAR MINHA SENHA";
+
+        limparMensagem();
+    }
+
+});
+
 </script>
 
 </body>
