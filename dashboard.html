@@ -279,7 +279,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--green2)}
 table{
     width:100%;
     border-collapse:collapse;
-    min-width:600px;
+    min-width:800px;
 }
 
 th,td{
@@ -381,11 +381,14 @@ th{color:var(--muted);font-weight:700}
 <div class="layout">
 
 <aside class="sidebar">
+
     <div class="logo">NEX<span>ORA</span></div>
     <div class="logo-sub">GESTÃO INTELIGENTE</div>
 
     <div class="menu">
+
         <div class="menu-title">PRINCIPAL</div>
+
         <button class="active" onclick="showPage('inicio',this)">▦ Visão geral</button>
         <button onclick="showPage('colaboradores',this)">♙ Colaboradores</button>
         <button onclick="showPage('departamentos',this)">▤ Departamentos</button>
@@ -393,10 +396,12 @@ th{color:var(--muted);font-weight:700}
         <button onclick="showPage('escalas',this)">▦ Escalas</button>
 
         <div class="menu-title">GESTÃO</div>
+
         <button onclick="showPage('relatorios',this)">▥ Relatórios</button>
         <button onclick="showPage('disciplinar',this)">⚖ Disciplinar</button>
         <button onclick="showPage('configuracoes',this)">⚙ Configurações</button>
         <button onclick="showPage('ajuda',this)">✧ NEXORA AI</button>
+
     </div>
 
     <div class="sidebar-bottom">
@@ -404,11 +409,13 @@ th{color:var(--muted);font-weight:700}
             ↪ Sair da plataforma
         </button>
     </div>
+
 </aside>
 
 <main class="main">
 
 <header class="topbar">
+
     <div class="welcome">
         <h1 id="pageTitle">Visão geral</h1>
         <p id="pageSubtitle">Acompanhe os indicadores da sua empresa.</p>
@@ -418,21 +425,28 @@ th{color:var(--muted);font-weight:700}
         <strong id="userName">Carregando...</strong>
         <div id="userRole" style="color:#82918a;margin-top:4px">NEXORA</div>
     </div>
+
 </header>
 
 <div id="companyBanner" class="company-banner">
+
     <div>
         <h2 id="companyName">Carregando empresa...</h2>
         <p>Ambiente empresarial exclusivo NEXORA</p>
     </div>
+
     <div class="plan-tag" id="companyPlan">Plano contratado</div>
+
 </div>
+
+<!-- VISÃO GERAL -->
 
 <section id="page-inicio">
 
     <h2 class="section-title">Indicadores da empresa</h2>
 
     <div class="cards">
+
         <div class="card">
             <div class="card-label">Colaboradores</div>
             <div class="card-number" id="totalEmployees">—</div>
@@ -456,38 +470,54 @@ th{color:var(--muted);font-weight:700}
             <div class="card-number" style="font-size:19px" id="planIndicator">—</div>
             <div class="card-note">Plano da empresa</div>
         </div>
+
     </div>
 
     <div class="panel">
+
         <div class="panel-header">
             <h3>Bem-vindo à NEXORA</h3>
         </div>
+
         <p style="font-size:13px;color:#82918a;line-height:1.8">
             Sua empresa está conectada ao ambiente NEXORA.
             Utilize o menu lateral para acessar os módulos de gestão,
             acompanhar colaboradores e organizar as operações da sua empresa.
         </p>
+
     </div>
 
 </section>
 
+<!-- COLABORADORES -->
+
 <section id="page-colaboradores" class="hidden">
 
     <div class="panel">
+
         <div class="panel-header">
+
             <div>
                 <h3>Gestão de colaboradores</h3>
-                <p class="page-description">Cadastre e consulte os colaboradores da empresa.</p>
+                <p class="page-description">Cadastre, edite e consulte os colaboradores da empresa.</p>
             </div>
-            <button class="btn" id="newEmployeeButton" onclick="openEmployeeForm()">+ Novo colaborador</button>
+
+            <button class="btn" id="newEmployeeButton" onclick="openEmployeeForm()">
+                + Novo colaborador
+            </button>
+
         </div>
 
         <div id="employeeMessage" class="message"></div>
 
         <div id="employeeForm" class="hidden">
-            <h3 style="font-size:15px;margin-bottom:18px">Cadastro de colaborador</h3>
+
+            <h3 id="employeeFormTitle" style="font-size:15px;margin-bottom:18px">
+                Cadastro de colaborador
+            </h3>
 
             <form id="newEmployeeForm">
+
                 <div class="form-grid">
 
                     <div class="field">
@@ -539,21 +569,43 @@ th{color:var(--muted);font-weight:700}
                 </div>
 
                 <div class="form-actions">
-                    <button type="submit" class="btn">Salvar colaborador</button>
-                    <button type="button" class="btn btn-secondary" onclick="closeEmployeeForm()">Cancelar</button>
+
+                    <button type="submit" class="btn" id="employeeSubmitButton">
+                        Salvar colaborador
+                    </button>
+
+                    <button type="button" class="btn btn-secondary" onclick="closeEmployeeForm()">
+                        Cancelar
+                    </button>
+
                 </div>
+
             </form>
+
         </div>
+
     </div>
 
     <div class="panel">
+
         <div class="panel-header">
+
             <h3>Colaboradores cadastrados</h3>
-            <input class="search" type="search" id="employeeSearch" placeholder="Pesquisar colaborador..." oninput="filterEmployees()">
+
+            <input
+                class="search"
+                type="search"
+                id="employeeSearch"
+                placeholder="Pesquisar colaborador..."
+                oninput="filterEmployees()"
+            >
+
         </div>
 
         <div class="table-wrap">
+
             <table>
+
                 <thead>
                     <tr>
                         <th>Nome</th>
@@ -562,21 +614,32 @@ th{color:var(--muted);font-weight:700}
                         <th>Departamento</th>
                         <th>E-mail</th>
                         <th>Status</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
+
                 <tbody id="employeesTable">
-                    <tr><td colspan="6" class="empty">Carregando colaboradores...</td></tr>
+                    <tr>
+                        <td colspan="7" class="empty">Carregando colaboradores...</td>
+                    </tr>
                 </tbody>
+
             </table>
+
         </div>
+
     </div>
 
 </section>
 
+<!-- DEPARTAMENTOS -->
+
 <section id="page-departamentos" class="hidden">
 
     <div class="panel">
+
         <div class="panel-header">
+
             <div>
                 <h3>Gestão de departamentos</h3>
                 <p class="page-description">Organize os setores e departamentos da sua empresa.</p>
@@ -585,6 +648,7 @@ th{color:var(--muted);font-weight:700}
             <button class="btn" id="newDepartmentButton" onclick="openDepartmentForm()">
                 + Novo departamento
             </button>
+
         </div>
 
         <div id="departmentMessage" class="message"></div>
@@ -612,6 +676,7 @@ th{color:var(--muted);font-weight:700}
                 </div>
 
                 <div class="form-actions">
+
                     <button type="submit" class="btn" id="saveDepartmentButton">
                         Salvar departamento
                     </button>
@@ -619,10 +684,13 @@ th{color:var(--muted);font-weight:700}
                     <button type="button" class="btn btn-secondary" onclick="closeDepartmentForm()">
                         Cancelar
                     </button>
+
                 </div>
 
             </form>
+
         </div>
+
     </div>
 
     <div class="panel">
@@ -635,6 +703,7 @@ th{color:var(--muted);font-weight:700}
         <div class="table-wrap">
 
             <table>
+
                 <thead>
                     <tr>
                         <th>Nome</th>
@@ -650,6 +719,7 @@ th{color:var(--muted);font-weight:700}
                         <td colspan="5" class="empty">Carregando departamentos...</td>
                     </tr>
                 </tbody>
+
             </table>
 
         </div>
@@ -657,6 +727,8 @@ th{color:var(--muted);font-weight:700}
     </div>
 
 </section>
+
+<!-- OUTROS MÓDULOS -->
 
 <section id="page-ponto" class="hidden">
     <div class="panel">
@@ -704,6 +776,11 @@ th{color:var(--muted);font-weight:700}
 </div>
 
 <script>
+
+// ======================================
+// CONEXÃO SUPABASE
+// ======================================
+
 const SUPABASE_URL = 'https://guiadodxikdvsfrhedls.supabase.co';
 
 const SUPABASE_KEY = 'sb_publishable_dhAqwNSfwGj8_nBnudx_Hw_gMZpnyEL';
@@ -713,13 +790,23 @@ const supabaseClient = window.supabase.createClient(
     SUPABASE_KEY
 );
 
+// ======================================
+// VARIÁVEIS GLOBAIS
+// ======================================
+
 let currentUser = null;
 let currentCompany = null;
 let currentRole = null;
 
 let employeesData = [];
 let departmentsData = [];
+
+let editingEmployeeId = null;
 let editingDepartmentId = null;
+
+// ======================================
+// INICIALIZAÇÃO DO PAINEL
+// ======================================
 
 async function initializeDashboard(){
 
@@ -801,6 +888,10 @@ async function initializeDashboard(){
     await loadEmployees();
 }
 
+// ======================================
+// DEPARTAMENTOS
+// ======================================
+
 async function loadDepartments(){
 
     if(!currentCompany) return;
@@ -816,7 +907,10 @@ async function loadDepartments(){
         document.getElementById('departmentsTable').innerHTML =
             `<tr><td colspan="5" class="empty">Erro ao carregar departamentos: ${escapeHTML(error.message)}</td></tr>`;
 
-        showDepartmentMessage('Não foi possível carregar os departamentos: ' + error.message,'error');
+        showDepartmentMessage(
+            'Não foi possível carregar os departamentos: ' + error.message,
+            'error'
+        );
 
         return;
     }
@@ -827,7 +921,8 @@ async function loadDepartments(){
         departmentsData.length;
 
     document.getElementById('departmentCount').textContent =
-        departmentsData.length + (departmentsData.length === 1 ? ' departamento' : ' departamentos');
+        departmentsData.length +
+        (departmentsData.length === 1 ? ' departamento' : ' departamentos');
 
     renderDepartments();
     updateDepartmentOptions();
@@ -928,6 +1023,11 @@ function closeDepartmentForm(){
 
 function editDepartment(id){
 
+    if(!['admin_empresa','rh'].includes(currentRole)){
+        alert('Você não tem permissão para editar departamentos.');
+        return;
+    }
+
     const department = departmentsData.find(d => d.id === id);
 
     if(!department) return;
@@ -978,6 +1078,7 @@ document.getElementById('newDepartmentForm').addEventListener('submit',async fun
         return;
     }
 
+    const wasEditing = Boolean(editingDepartmentId);
     const button = document.getElementById('saveDepartmentButton');
 
     button.disabled = true;
@@ -985,7 +1086,7 @@ document.getElementById('newDepartmentForm').addEventListener('submit',async fun
 
     let result;
 
-    if(editingDepartmentId){
+    if(wasEditing){
 
         result = await supabaseClient
             .from('departamentos')
@@ -1004,14 +1105,16 @@ document.getElementById('newDepartmentForm').addEventListener('submit',async fun
     }
 
     button.disabled = false;
-
-    button.textContent = editingDepartmentId
+    button.textContent = wasEditing
         ? 'Salvar alterações'
         : 'Salvar departamento';
 
     if(result.error){
 
-        showDepartmentMessage('Não foi possível salvar: ' + result.error.message,'error');
+        showDepartmentMessage(
+            'Não foi possível salvar: ' + result.error.message,
+            'error'
+        );
 
         return;
     }
@@ -1019,23 +1122,31 @@ document.getElementById('newDepartmentForm').addEventListener('submit',async fun
     closeDepartmentForm();
 
     showDepartmentMessage(
-        editingDepartmentId
+        wasEditing
             ? 'Departamento atualizado com sucesso!'
             : 'Departamento cadastrado com sucesso!',
         'success'
     );
 
     await loadDepartments();
+    await loadEmployees();
 });
 
 async function deleteDepartment(id){
+
+    if(!['admin_empresa','rh'].includes(currentRole)){
+        alert('Você não tem permissão para excluir departamentos.');
+        return;
+    }
 
     const department = departmentsData.find(d => d.id === id);
 
     if(!department) return;
 
     const confirmed = confirm(
-        'Deseja realmente excluir o departamento "' + department.nome + '"? Os colaboradores vinculados ficarão sem departamento.'
+        'Deseja realmente excluir o departamento "' +
+        department.nome +
+        '"? Os colaboradores vinculados ficarão sem departamento.'
     );
 
     if(!confirmed) return;
@@ -1048,7 +1159,10 @@ async function deleteDepartment(id){
 
     if(error){
 
-        showDepartmentMessage('Não foi possível excluir: ' + error.message,'error');
+        showDepartmentMessage(
+            'Não foi possível excluir: ' + error.message,
+            'error'
+        );
 
         return;
     }
@@ -1071,7 +1185,13 @@ function showDepartmentMessage(message,type){
     },6000);
 }
 
+// ======================================
+// COLABORADORES
+// ======================================
+
 async function loadEmployees(){
+
+    if(!currentCompany) return;
 
     const {data,error} = await supabaseClient
         .from('employees')
@@ -1082,7 +1202,7 @@ async function loadEmployees(){
     if(error){
 
         document.getElementById('employeesTable').innerHTML =
-            `<tr><td colspan="6" class="empty">Erro ao carregar colaboradores: ${escapeHTML(error.message)}</td></tr>`;
+            `<tr><td colspan="7" class="empty">Erro ao carregar colaboradores: ${escapeHTML(error.message)}</td></tr>`;
 
         return;
     }
@@ -1106,7 +1226,7 @@ function renderEmployees(list){
     if(!list.length){
 
         tbody.innerHTML =
-            '<tr><td colspan="6" class="empty">Nenhum colaborador cadastrado.</td></tr>';
+            '<tr><td colspan="7" class="empty">Nenhum colaborador cadastrado.</td></tr>';
 
         return;
     }
@@ -1126,6 +1246,20 @@ function renderEmployees(list){
             d.id === employee.department_id
         );
 
+        const actions = ['admin_empresa','rh'].includes(currentRole)
+            ? `
+                <div class="actions">
+                    <button class="btn btn-edit" onclick="editEmployee('${employee.id}')">
+                        Editar
+                    </button>
+
+                    <button class="btn btn-delete" onclick="deleteEmployee('${employee.id}')">
+                        Excluir
+                    </button>
+                </div>
+            `
+            : '—';
+
         return `
             <tr>
                 <td><strong>${escapeHTML(employee.full_name)}</strong></td>
@@ -1138,6 +1272,7 @@ function renderEmployees(list){
                         ${escapeHTML(statusLabel)}
                     </span>
                 </td>
+                <td>${actions}</td>
             </tr>
         `;
 
@@ -1169,21 +1304,161 @@ function filterEmployees(){
     renderEmployees(filtered);
 }
 
+// ======================================
+// ABRIR FORMULÁRIO DE COLABORADOR
+// ======================================
+
 function openEmployeeForm(){
+
+    if(!['admin_empresa','rh'].includes(currentRole)){
+        alert('Você não tem permissão para cadastrar colaboradores.');
+        return;
+    }
+
+    editingEmployeeId = null;
+
+    document.getElementById('newEmployeeForm').reset();
+
+    document.getElementById('employeeFormTitle').textContent =
+        'Cadastro de colaborador';
+
+    document.getElementById('employeeSubmitButton').textContent =
+        'Salvar colaborador';
 
     updateDepartmentOptions();
 
     document.getElementById('employeeForm').classList.remove('hidden');
 
     document.getElementById('employeeName').focus();
+
+    window.scrollTo({top:0,behavior:'smooth'});
 }
+
+// ======================================
+// FECHAR FORMULÁRIO
+// ======================================
 
 function closeEmployeeForm(){
 
     document.getElementById('employeeForm').classList.add('hidden');
 
     document.getElementById('newEmployeeForm').reset();
+
+    editingEmployeeId = null;
+
+    document.getElementById('employeeFormTitle').textContent =
+        'Cadastro de colaborador';
+
+    document.getElementById('employeeSubmitButton').textContent =
+        'Salvar colaborador';
 }
+
+// ======================================
+// EDITAR COLABORADOR
+// ======================================
+
+function editEmployee(id){
+
+    if(!['admin_empresa','rh'].includes(currentRole)){
+        alert('Você não tem permissão para editar colaboradores.');
+        return;
+    }
+
+    const employee = employeesData.find(e => e.id === id);
+
+    if(!employee){
+        alert('Colaborador não encontrado.');
+        return;
+    }
+
+    editingEmployeeId = id;
+
+    updateDepartmentOptions();
+
+    document.getElementById('employeeName').value =
+        employee.full_name || '';
+
+    document.getElementById('employeeCode').value =
+        employee.employee_code || '';
+
+    document.getElementById('employeeEmail').value =
+        employee.email || '';
+
+    document.getElementById('employeePhone').value =
+        employee.phone || '';
+
+    document.getElementById('employeePosition').value =
+        employee.job_title || '';
+
+    document.getElementById('employeeDepartment').value =
+        employee.department_id || '';
+
+    document.getElementById('employeeHireDate').value =
+        employee.hire_date || '';
+
+    document.getElementById('employeeStatus').value =
+        employee.status || 'active';
+
+    document.getElementById('employeeFormTitle').textContent =
+        'Editar colaborador';
+
+    document.getElementById('employeeSubmitButton').textContent =
+        'Salvar alterações';
+
+    document.getElementById('employeeForm').classList.remove('hidden');
+
+    document.getElementById('employeeName').focus();
+
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ======================================
+// EXCLUIR COLABORADOR
+// ======================================
+
+async function deleteEmployee(id){
+
+    if(!['admin_empresa','rh'].includes(currentRole)){
+        alert('Você não tem permissão para excluir colaboradores.');
+        return;
+    }
+
+    const employee = employeesData.find(e => e.id === id);
+
+    if(!employee) return;
+
+    const confirmed = confirm(
+        'Deseja realmente excluir o cadastro de "' +
+        employee.full_name +
+        '"? Esta ação não poderá ser desfeita. O cadastro será removido da tabela de colaboradores, mas não apagará automaticamente uma conta de acesso.'
+    );
+
+    if(!confirmed) return;
+
+    const {error} = await supabaseClient
+        .from('employees')
+        .delete()
+        .eq('id',id)
+        .eq('company_id',currentCompany.id);
+
+    if(error){
+
+        showMessage(
+            'Não foi possível excluir: ' + error.message,
+            'error'
+        );
+
+        return;
+    }
+
+    showMessage('Colaborador excluído com sucesso!','success');
+
+    await loadEmployees();
+}
+
+// ======================================
+// MENSAGENS DE COLABORADORES
+// ======================================
 
 function showMessage(message,type){
 
@@ -1197,12 +1472,21 @@ function showMessage(message,type){
     },6000);
 }
 
+// ======================================
+// SALVAR OU ATUALIZAR COLABORADOR
+// ======================================
+
 document.getElementById('newEmployeeForm').addEventListener('submit',async function(event){
 
     event.preventDefault();
 
     if(!currentCompany){
         showMessage('Empresa não identificada.','error');
+        return;
+    }
+
+    if(!['admin_empresa','rh'].includes(currentRole)){
+        showMessage('Você não tem permissão para realizar esta ação.','error');
         return;
     }
 
@@ -1223,31 +1507,72 @@ document.getElementById('newEmployeeForm').addEventListener('submit',async funct
         return;
     }
 
-    const submitButton = this.querySelector('button[type="submit"]');
+    const wasEditing = Boolean(editingEmployeeId);
+
+    const submitButton = document.getElementById('employeeSubmitButton');
 
     submitButton.disabled = true;
     submitButton.textContent = 'Salvando...';
 
-    const {error} = await supabaseClient
-        .from('employees')
-        .insert(employee);
+    let result;
+
+    if(wasEditing){
+
+        const updateData = {
+            full_name:employee.full_name,
+            employee_code:employee.employee_code,
+            email:employee.email,
+            phone:employee.phone,
+            job_title:employee.job_title,
+            department_id:employee.department_id,
+            hire_date:employee.hire_date,
+            status:employee.status
+        };
+
+        result = await supabaseClient
+            .from('employees')
+            .update(updateData)
+            .eq('id',editingEmployeeId)
+            .eq('company_id',currentCompany.id);
+
+    }else{
+
+        result = await supabaseClient
+            .from('employees')
+            .insert(employee);
+    }
 
     submitButton.disabled = false;
-    submitButton.textContent = 'Salvar colaborador';
 
-    if(error){
+    submitButton.textContent = wasEditing
+        ? 'Salvar alterações'
+        : 'Salvar colaborador';
 
-        showMessage('Não foi possível salvar: ' + error.message,'error');
+    if(result.error){
+
+        showMessage(
+            'Não foi possível salvar: ' + result.error.message,
+            'error'
+        );
 
         return;
     }
 
-    showMessage('Colaborador cadastrado com sucesso!','success');
-
     closeEmployeeForm();
+
+    showMessage(
+        wasEditing
+            ? 'Colaborador atualizado com sucesso!'
+            : 'Colaborador cadastrado com sucesso!',
+        'success'
+    );
 
     await loadEmployees();
 });
+
+// ======================================
+// NAVEGAÇÃO ENTRE PÁGINAS
+// ======================================
 
 function showPage(page,button){
 
@@ -1282,6 +1607,7 @@ function showPage(page,button){
     };
 
     document.getElementById('pageTitle').textContent = titles[page][0];
+
     document.getElementById('pageSubtitle').textContent = titles[page][1];
 
     document.getElementById('companyBanner').classList.toggle(
@@ -1298,12 +1624,20 @@ function showPage(page,button){
     }
 }
 
+// ======================================
+// SAIR DA PLATAFORMA
+// ======================================
+
 async function logout(){
 
     await supabaseClient.auth.signOut();
 
     window.location.href = 'login.html';
 }
+
+// ======================================
+// PROTEÇÃO DE TEXTO HTML
+// ======================================
 
 function escapeHTML(value){
 
@@ -1316,7 +1650,12 @@ function escapeHTML(value){
     })[char]);
 }
 
+// ======================================
+// INICIAR PAINEL
+// ======================================
+
 initializeDashboard();
+
 </script>
 
 </body>
