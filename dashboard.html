@@ -220,10 +220,24 @@ body{
 }
 
 .btn:hover{background:var(--green2)}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+
 .btn-secondary{background:#edf4ef;color:var(--green)}
 .btn-secondary:hover{background:#dcebe1}
 
-input,select{
+.btn-edit{
+    background:#edf4ef;
+    color:var(--green);
+    padding:7px 10px;
+}
+
+.btn-delete{
+    background:#fff0ed;
+    color:#a43e30;
+    padding:7px 10px;
+}
+
+input,select,textarea{
     width:100%;
     padding:12px 13px;
     border:1px solid #dfe8e1;
@@ -234,7 +248,12 @@ input,select{
     background:white;
 }
 
-input:focus,select:focus{border-color:var(--green2)}
+textarea{
+    min-height:90px;
+    resize:vertical;
+}
+
+input:focus,select:focus,textarea:focus{border-color:var(--green2)}
 
 .form-grid{
     display:grid;
@@ -319,6 +338,11 @@ th{color:var(--muted);font-weight:700}
     margin:-8px 0 20px;
 }
 
+.actions{
+    display:flex;
+    gap:7px;
+}
+
 @media(max-width:950px){
     .cards{grid-template-columns:repeat(2,1fr)}
     .main{padding:25px}
@@ -347,6 +371,7 @@ th{color:var(--muted);font-weight:700}
     .card-number{font-size:23px}
     .form-grid{grid-template-columns:1fr}
     .panel{padding:17px}
+    .panel-header{align-items:flex-start;flex-direction:column}
 }
 </style>
 </head>
@@ -422,7 +447,7 @@ th{color:var(--muted);font-weight:700}
 
         <div class="card">
             <div class="card-label">Departamentos</div>
-            <div class="card-number">—</div>
+            <div class="card-number" id="totalDepartments">—</div>
             <div class="card-note">Estrutura organizacional</div>
         </div>
 
@@ -440,7 +465,7 @@ th{color:var(--muted);font-weight:700}
         <p style="font-size:13px;color:#82918a;line-height:1.8">
             Sua empresa está conectada ao ambiente NEXORA.
             Utilize o menu lateral para acessar os módulos de gestão,
-            acompanhar colaboradores e organizar as operações da empresa.
+            acompanhar colaboradores e organizar as operações da sua empresa.
         </p>
     </div>
 
@@ -491,6 +516,13 @@ th{color:var(--muted);font-weight:700}
                     </div>
 
                     <div class="field">
+                        <label>Departamento</label>
+                        <select id="employeeDepartment">
+                            <option value="">Sem departamento</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
                         <label>Data de contratação</label>
                         <input type="date" id="employeeHireDate">
                     </div>
@@ -527,12 +559,13 @@ th{color:var(--muted);font-weight:700}
                         <th>Nome</th>
                         <th>Código</th>
                         <th>Cargo</th>
+                        <th>Departamento</th>
                         <th>E-mail</th>
                         <th>Status</th>
                     </tr>
                 </thead>
                 <tbody id="employeesTable">
-                    <tr><td colspan="5" class="empty">Carregando colaboradores...</td></tr>
+                    <tr><td colspan="6" class="empty">Carregando colaboradores...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -541,10 +574,88 @@ th{color:var(--muted);font-weight:700}
 </section>
 
 <section id="page-departamentos" class="hidden">
+
     <div class="panel">
-        <h3>Departamentos</h3>
-        <div class="empty">Módulo de departamentos em desenvolvimento.</div>
+        <div class="panel-header">
+            <div>
+                <h3>Gestão de departamentos</h3>
+                <p class="page-description">Organize os setores e departamentos da sua empresa.</p>
+            </div>
+
+            <button class="btn" id="newDepartmentButton" onclick="openDepartmentForm()">
+                + Novo departamento
+            </button>
+        </div>
+
+        <div id="departmentMessage" class="message"></div>
+
+        <div id="departmentForm" class="hidden">
+
+            <h3 id="departmentFormTitle" style="font-size:15px;margin-bottom:18px">
+                Cadastrar departamento
+            </h3>
+
+            <form id="newDepartmentForm">
+
+                <div class="form-grid">
+
+                    <div class="field">
+                        <label>Nome do departamento *</label>
+                        <input type="text" id="departmentName" required placeholder="Ex.: Recursos Humanos">
+                    </div>
+
+                    <div class="field">
+                        <label>Descrição</label>
+                        <input type="text" id="departmentDescription" placeholder="Descreva a finalidade do departamento">
+                    </div>
+
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn" id="saveDepartmentButton">
+                        Salvar departamento
+                    </button>
+
+                    <button type="button" class="btn btn-secondary" onclick="closeDepartmentForm()">
+                        Cancelar
+                    </button>
+                </div>
+
+            </form>
+        </div>
     </div>
+
+    <div class="panel">
+
+        <div class="panel-header">
+            <h3>Departamentos cadastrados</h3>
+            <strong id="departmentCount" style="font-size:12px;color:#82918a">0 departamentos</strong>
+        </div>
+
+        <div class="table-wrap">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Descrição</th>
+                        <th>Colaboradores</th>
+                        <th>Data de criação</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody id="departmentsTable">
+                    <tr>
+                        <td colspan="5" class="empty">Carregando departamentos...</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+
 </section>
 
 <section id="page-ponto" class="hidden">
@@ -605,7 +716,10 @@ const supabaseClient = window.supabase.createClient(
 let currentUser = null;
 let currentCompany = null;
 let currentRole = null;
+
 let employeesData = [];
+let departmentsData = [];
+let editingDepartmentId = null;
 
 async function initializeDashboard(){
 
@@ -678,20 +792,298 @@ async function initializeDashboard(){
         !canManage
     );
 
+    document.getElementById('newDepartmentButton').classList.toggle(
+        'hidden',
+        !canManage
+    );
+
+    await loadDepartments();
     await loadEmployees();
+}
+
+async function loadDepartments(){
+
+    if(!currentCompany) return;
+
+    const {data,error} = await supabaseClient
+        .from('departamentos')
+        .select('id,id_da_empresa,nome,descrição,criado_em')
+        .eq('id_da_empresa',currentCompany.id)
+        .order('nome',{ascending:true});
+
+    if(error){
+
+        document.getElementById('departmentsTable').innerHTML =
+            `<tr><td colspan="5" class="empty">Erro ao carregar departamentos: ${escapeHTML(error.message)}</td></tr>`;
+
+        showDepartmentMessage('Não foi possível carregar os departamentos: ' + error.message,'error');
+
+        return;
+    }
+
+    departmentsData = data || [];
+
+    document.getElementById('totalDepartments').textContent =
+        departmentsData.length;
+
+    document.getElementById('departmentCount').textContent =
+        departmentsData.length + (departmentsData.length === 1 ? ' departamento' : ' departamentos');
+
+    renderDepartments();
+    updateDepartmentOptions();
+}
+
+function renderDepartments(){
+
+    const tbody = document.getElementById('departmentsTable');
+
+    if(!departmentsData.length){
+
+        tbody.innerHTML =
+            '<tr><td colspan="5" class="empty">Nenhum departamento cadastrado. Clique em "+ Novo departamento" para começar.</td></tr>';
+
+        return;
+    }
+
+    tbody.innerHTML = departmentsData.map(department => {
+
+        const employeesCount = employeesData.filter(employee =>
+            employee.department_id === department.id
+        ).length;
+
+        const date = department.criado_em
+            ? new Date(department.criado_em).toLocaleDateString('pt-BR')
+            : '—';
+
+        const actions = ['admin_empresa','rh'].includes(currentRole)
+            ? `
+                <div class="actions">
+                    <button class="btn btn-edit" onclick="editDepartment('${department.id}')">Editar</button>
+                    <button class="btn btn-delete" onclick="deleteDepartment('${department.id}')">Excluir</button>
+                </div>
+            `
+            : '—';
+
+        return `
+            <tr>
+                <td><strong>${escapeHTML(department.nome)}</strong></td>
+                <td>${escapeHTML(department['descrição'] || '—')}</td>
+                <td>${employeesCount}</td>
+                <td>${date}</td>
+                <td>${actions}</td>
+            </tr>
+        `;
+
+    }).join('');
+}
+
+function updateDepartmentOptions(){
+
+    const select = document.getElementById('employeeDepartment');
+
+    const previousValue = select.value;
+
+    select.innerHTML = '<option value="">Sem departamento</option>';
+
+    departmentsData.forEach(department => {
+
+        const option = document.createElement('option');
+
+        option.value = department.id;
+        option.textContent = department.nome;
+
+        select.appendChild(option);
+    });
+
+    if(departmentsData.some(d => d.id === previousValue)){
+        select.value = previousValue;
+    }
+}
+
+function openDepartmentForm(){
+
+    editingDepartmentId = null;
+
+    document.getElementById('departmentFormTitle').textContent =
+        'Cadastrar departamento';
+
+    document.getElementById('saveDepartmentButton').textContent =
+        'Salvar departamento';
+
+    document.getElementById('newDepartmentForm').reset();
+
+    document.getElementById('departmentForm').classList.remove('hidden');
+
+    document.getElementById('departmentName').focus();
+}
+
+function closeDepartmentForm(){
+
+    document.getElementById('departmentForm').classList.add('hidden');
+
+    document.getElementById('newDepartmentForm').reset();
+
+    editingDepartmentId = null;
+}
+
+function editDepartment(id){
+
+    const department = departmentsData.find(d => d.id === id);
+
+    if(!department) return;
+
+    editingDepartmentId = id;
+
+    document.getElementById('departmentFormTitle').textContent =
+        'Editar departamento';
+
+    document.getElementById('saveDepartmentButton').textContent =
+        'Salvar alterações';
+
+    document.getElementById('departmentName').value =
+        department.nome || '';
+
+    document.getElementById('departmentDescription').value =
+        department['descrição'] || '';
+
+    document.getElementById('departmentForm').classList.remove('hidden');
+
+    document.getElementById('departmentName').focus();
+
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.getElementById('newDepartmentForm').addEventListener('submit',async function(event){
+
+    event.preventDefault();
+
+    if(!currentCompany){
+        showDepartmentMessage('Empresa não identificada.','error');
+        return;
+    }
+
+    if(!['admin_empresa','rh'].includes(currentRole)){
+        showDepartmentMessage('Você não tem permissão para cadastrar departamentos.','error');
+        return;
+    }
+
+    const department = {
+        id_da_empresa:currentCompany.id,
+        nome:document.getElementById('departmentName').value.trim(),
+        descrição:document.getElementById('departmentDescription').value.trim() || null
+    };
+
+    if(!department.nome){
+        showDepartmentMessage('Informe o nome do departamento.','error');
+        return;
+    }
+
+    const button = document.getElementById('saveDepartmentButton');
+
+    button.disabled = true;
+    button.textContent = 'Salvando...';
+
+    let result;
+
+    if(editingDepartmentId){
+
+        result = await supabaseClient
+            .from('departamentos')
+            .update({
+                nome:department.nome,
+                descrição:department.descrição
+            })
+            .eq('id',editingDepartmentId)
+            .eq('id_da_empresa',currentCompany.id);
+
+    }else{
+
+        result = await supabaseClient
+            .from('departamentos')
+            .insert(department);
+    }
+
+    button.disabled = false;
+
+    button.textContent = editingDepartmentId
+        ? 'Salvar alterações'
+        : 'Salvar departamento';
+
+    if(result.error){
+
+        showDepartmentMessage('Não foi possível salvar: ' + result.error.message,'error');
+
+        return;
+    }
+
+    closeDepartmentForm();
+
+    showDepartmentMessage(
+        editingDepartmentId
+            ? 'Departamento atualizado com sucesso!'
+            : 'Departamento cadastrado com sucesso!',
+        'success'
+    );
+
+    await loadDepartments();
+});
+
+async function deleteDepartment(id){
+
+    const department = departmentsData.find(d => d.id === id);
+
+    if(!department) return;
+
+    const confirmed = confirm(
+        'Deseja realmente excluir o departamento "' + department.nome + '"? Os colaboradores vinculados ficarão sem departamento.'
+    );
+
+    if(!confirmed) return;
+
+    const {error} = await supabaseClient
+        .from('departamentos')
+        .delete()
+        .eq('id',id)
+        .eq('id_da_empresa',currentCompany.id);
+
+    if(error){
+
+        showDepartmentMessage('Não foi possível excluir: ' + error.message,'error');
+
+        return;
+    }
+
+    showDepartmentMessage('Departamento excluído com sucesso!','success');
+
+    await loadDepartments();
+    await loadEmployees();
+}
+
+function showDepartmentMessage(message,type){
+
+    const box = document.getElementById('departmentMessage');
+
+    box.textContent = message;
+    box.className = 'message ' + type;
+
+    setTimeout(() => {
+        box.className = 'message';
+    },6000);
 }
 
 async function loadEmployees(){
 
     const {data,error} = await supabaseClient
         .from('employees')
-        .select('id,employee_code,full_name,email,phone,job_title,status,hire_date,created_at')
+        .select('id,employee_code,full_name,email,phone,job_title,status,hire_date,created_at,department_id')
         .eq('company_id',currentCompany.id)
         .order('created_at',{ascending:false});
 
     if(error){
+
         document.getElementById('employeesTable').innerHTML =
-            `<tr><td colspan="5" class="empty">Erro ao carregar colaboradores: ${escapeHTML(error.message)}</td></tr>`;
+            `<tr><td colspan="6" class="empty">Erro ao carregar colaboradores: ${escapeHTML(error.message)}</td></tr>`;
+
         return;
     }
 
@@ -704,6 +1096,7 @@ async function loadEmployees(){
         employeesData.filter(e => e.status === 'active').length;
 
     renderEmployees(employeesData);
+    renderDepartments();
 }
 
 function renderEmployees(list){
@@ -711,8 +1104,10 @@ function renderEmployees(list){
     const tbody = document.getElementById('employeesTable');
 
     if(!list.length){
+
         tbody.innerHTML =
-            '<tr><td colspan="5" class="empty">Nenhum colaborador cadastrado.</td></tr>';
+            '<tr><td colspan="6" class="empty">Nenhum colaborador cadastrado.</td></tr>';
+
         return;
     }
 
@@ -727,11 +1122,16 @@ function renderEmployees(list){
         const status = employee.status || 'active';
         const statusLabel = statusLabels[status] || status;
 
+        const department = departmentsData.find(d =>
+            d.id === employee.department_id
+        );
+
         return `
             <tr>
                 <td><strong>${escapeHTML(employee.full_name)}</strong></td>
                 <td>${escapeHTML(employee.employee_code || '—')}</td>
                 <td>${escapeHTML(employee.job_title || '—')}</td>
+                <td>${escapeHTML(department?.nome || '—')}</td>
                 <td>${escapeHTML(employee.email || '—')}</td>
                 <td>
                     <span class="badge ${escapeHTML(status)}">
@@ -740,6 +1140,7 @@ function renderEmployees(list){
                 </td>
             </tr>
         `;
+
     }).join('');
 }
 
@@ -750,22 +1151,37 @@ function filterEmployees(){
         .value
         .toLowerCase();
 
-    const filtered = employeesData.filter(employee =>
-        (employee.full_name || '').toLowerCase().includes(search) ||
-        (employee.email || '').toLowerCase().includes(search) ||
-        (employee.employee_code || '').toLowerCase().includes(search)
-    );
+    const filtered = employeesData.filter(employee => {
+
+        const department = departmentsData.find(d =>
+            d.id === employee.department_id
+        );
+
+        return (
+            (employee.full_name || '').toLowerCase().includes(search) ||
+            (employee.email || '').toLowerCase().includes(search) ||
+            (employee.employee_code || '').toLowerCase().includes(search) ||
+            (employee.job_title || '').toLowerCase().includes(search) ||
+            (department?.nome || '').toLowerCase().includes(search)
+        );
+    });
 
     renderEmployees(filtered);
 }
 
 function openEmployeeForm(){
+
+    updateDepartmentOptions();
+
     document.getElementById('employeeForm').classList.remove('hidden');
+
     document.getElementById('employeeName').focus();
 }
 
 function closeEmployeeForm(){
+
     document.getElementById('employeeForm').classList.add('hidden');
+
     document.getElementById('newEmployeeForm').reset();
 }
 
@@ -797,6 +1213,7 @@ document.getElementById('newEmployeeForm').addEventListener('submit',async funct
         email:document.getElementById('employeeEmail').value.trim() || null,
         phone:document.getElementById('employeePhone').value.trim() || null,
         job_title:document.getElementById('employeePosition').value.trim() || null,
+        department_id:document.getElementById('employeeDepartment').value || null,
         hire_date:document.getElementById('employeeHireDate').value || null,
         status:document.getElementById('employeeStatus').value
     };
@@ -819,7 +1236,9 @@ document.getElementById('newEmployeeForm').addEventListener('submit',async funct
     submitButton.textContent = 'Salvar colaborador';
 
     if(error){
+
         showMessage('Não foi possível salvar: ' + error.message,'error');
+
         return;
     }
 
@@ -869,6 +1288,14 @@ function showPage(page,button){
         'hidden',
         page !== 'inicio'
     );
+
+    if(page === 'departamentos'){
+        loadDepartments();
+    }
+
+    if(page === 'colaboradores'){
+        updateDepartmentOptions();
+    }
 }
 
 async function logout(){
