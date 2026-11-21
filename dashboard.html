@@ -674,7 +674,7 @@ async function loadEmployees(){
 
     const {data,error} = await supabaseClient
         .from('employees')
-        .select('id,employee_code,full_name,email,phone,cargo,status,hire_date,created_at')
+        .select('id,employee_code,full_name,email,phone,job_title,status,hire_date,created_at')
         .eq('company_id',currentCompany.id)
         .order('created_at',{ascending:false});
 
@@ -709,7 +709,7 @@ function renderEmployees(list){
         <tr>
             <td><strong>${escapeHTML(employee.full_name)}</strong></td>
             <td>${escapeHTML(employee.employee_code || '—')}</td>
-            <td>${escapeHTML(employee.cargo || '—')}</td>
+            <td>${escapeHTML(employee.job_title || '—')}</td>
             <td>${escapeHTML(employee.email || '—')}</td>
             <td><span class="badge">${escapeHTML(employee.status || 'ativo')}</span></td>
         </tr>
@@ -769,7 +769,7 @@ document.getElementById('newEmployeeForm').addEventListener('submit',async funct
         employee_code:document.getElementById('employeeCode').value.trim() || null,
         email:document.getElementById('employeeEmail').value.trim() || null,
         phone:document.getElementById('employeePhone').value.trim() || null,
-        cargo:document.getElementById('employeePosition').value.trim() || null,
+        job_title:document.getElementById('employeePosition').value.trim() || null,
         hire_date:document.getElementById('employeeHireDate').value || null,
         status:document.getElementById('employeeStatus').value
     };
