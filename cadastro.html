@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Empresa | NEXORA</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="container">
+        <a href="index.html" class="logo">NEXORA</a>
+        <a href="index.html" class="btn-secondary">Voltar ao início</a>
+    </div>
+</header>
+
+<main class="container">
+    <section class="hero">
+        <h1>Cadastre sua empresa</h1>
+        <p>Comece a transformar a gestão da sua empresa com a NEXORA.</p>
+
+        <form id="cadastroEmpresa" class="form-container">
+
+            <h2>Dados da empresa</h2>
+
+            <label for="empresa">Nome da empresa</label>
+            <input type="text" id="empresa" name="empresa" required>
+
+            <label for="cnpj">CNPJ</label>
+            <input type="text" id="cnpj" name="cnpj" placeholder="00.000.000/0000-00" required>
+
+            <label for="email">E-mail corporativo</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="telefone">Telefone</label>
+            <input type="tel" id="telefone" name="telefone" required>
+
+            <h2>Responsável pela conta</h2>
+
+            <label for="responsavel">Nome completo</label>
+            <input type="text" id="responsavel" name="responsavel" required>
+
+            <label for="senha">Crie uma senha</label>
+            <input type="password" id="senha" name="senha" minlength="8" required>
+
+            <h2>Escolha seu plano</h2>
+
+            <label for="plano">Plano NEXORA</label>
+            <select id="plano" name="plano" required>
+                <option value="">Selecione um plano</option>
+                <option value="700">Até 700 colaboradores — R$ 1.000/mês</option>
+                <option value="1400">Até 1.400 colaboradores — R$ 3.000/mês</option>
+                <option value="enterprise">Acima de 1.400 — Personalizado</option>
+            </select>
+
+            <button type="submit" class="btn-primary">
+                Continuar cadastro
+            </button>
+
+            <p id="mensagemCadastro"></p>
+
+        </form>
+    </section>
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const planoSelecionado = new URLSearchParams(window.location.search).get("plano");
+
+    if (planoSelecionado) {
+        document.getElementById("plano").value = planoSelecionado;
+    }
+
+    document.getElementById("cadastroEmpresa").addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        document.getElementById("mensagemCadastro").textContent =
+            "Cadastro visual preparado. A integração segura com o servidor será implementada na próxima etapa.";
+    });
+});
+</script>
+
+</body>
+</html>
