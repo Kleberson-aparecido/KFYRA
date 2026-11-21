@@ -301,17 +301,13 @@ th{color:var(--muted);font-weight:700}
 .message.error{background:#fff0ed;color:#a43e30;display:block}
 .message.success{background:#e7f6ed;color:#216b43;display:block}
 
-.search{
-    max-width:260px;
-}
+.search{max-width:260px}
 
 .page-description{
     color:var(--muted);
     font-size:13px;
     margin:-8px 0 20px;
 }
-
-.mobile-menu{display:none}
 
 @media(max-width:950px){
     .cards{grid-template-columns:repeat(2,1fr)}
@@ -355,7 +351,6 @@ th{color:var(--muted);font-weight:700}
 
     <div class="menu">
         <div class="menu-title">PRINCIPAL</div>
-
         <button class="active" onclick="showPage('inicio',this)">▦ Visão geral</button>
         <button onclick="showPage('colaboradores',this)">♙ Colaboradores</button>
         <button onclick="showPage('departamentos',this)">▤ Departamentos</button>
@@ -363,7 +358,6 @@ th{color:var(--muted);font-weight:700}
         <button onclick="showPage('escalas',this)">▦ Escalas</button>
 
         <div class="menu-title">GESTÃO</div>
-
         <button onclick="showPage('relatorios',this)">▥ Relatórios</button>
         <button onclick="showPage('disciplinar',this)">⚖ Disciplinar</button>
         <button onclick="showPage('configuracoes',this)">⚙ Configurações</button>
@@ -379,210 +373,210 @@ th{color:var(--muted);font-weight:700}
 
 <main class="main">
 
-    <header class="topbar">
-        <div class="welcome">
-            <h1 id="pageTitle">Visão geral</h1>
-            <p id="pageSubtitle">Acompanhe os indicadores da sua empresa.</p>
-        </div>
-
-        <div class="user-box">
-            <strong id="userName">Carregando...</strong>
-            <div id="userRole" style="color:#82918a;margin-top:4px">NEXORA</div>
-        </div>
-    </header>
-
-    <div id="companyBanner" class="company-banner">
-        <div>
-            <h2 id="companyName">Carregando empresa...</h2>
-            <p>Ambiente empresarial exclusivo NEXORA</p>
-        </div>
-        <div class="plan-tag" id="companyPlan">Plano contratado</div>
+<header class="topbar">
+    <div class="welcome">
+        <h1 id="pageTitle">Visão geral</h1>
+        <p id="pageSubtitle">Acompanhe os indicadores da sua empresa.</p>
     </div>
 
-    <section id="page-inicio">
+    <div class="user-box">
+        <strong id="userName">Carregando...</strong>
+        <div id="userRole" style="color:#82918a;margin-top:4px">NEXORA</div>
+    </div>
+</header>
 
-        <h2 class="section-title">Indicadores da empresa</h2>
+<div id="companyBanner" class="company-banner">
+    <div>
+        <h2 id="companyName">Carregando empresa...</h2>
+        <p>Ambiente empresarial exclusivo NEXORA</p>
+    </div>
+    <div class="plan-tag" id="companyPlan">Plano contratado</div>
+</div>
 
-        <div class="cards">
-            <div class="card">
-                <div class="card-label">Colaboradores</div>
-                <div class="card-number" id="totalEmployees">—</div>
-                <div class="card-note">Total cadastrado</div>
-            </div>
+<section id="page-inicio">
 
-            <div class="card">
-                <div class="card-label">Ativos</div>
-                <div class="card-number" id="activeEmployees">—</div>
-                <div class="card-note">Colaboradores ativos</div>
-            </div>
+    <h2 class="section-title">Indicadores da empresa</h2>
 
-            <div class="card">
-                <div class="card-label">Departamentos</div>
-                <div class="card-number">—</div>
-                <div class="card-note">Estrutura organizacional</div>
-            </div>
-
-            <div class="card">
-                <div class="card-label">Plano</div>
-                <div class="card-number" style="font-size:19px" id="planIndicator">—</div>
-                <div class="card-note">Plano da empresa</div>
-            </div>
+    <div class="cards">
+        <div class="card">
+            <div class="card-label">Colaboradores</div>
+            <div class="card-number" id="totalEmployees">—</div>
+            <div class="card-note">Total cadastrado</div>
         </div>
 
-        <div class="panel">
-            <div class="panel-header">
-                <h3>Bem-vindo à NEXORA</h3>
-            </div>
-            <p style="font-size:13px;color:#82918a;line-height:1.8">
-                Sua empresa está conectada ao ambiente NEXORA.
-                Utilize o menu lateral para acessar os módulos de gestão,
-                acompanhar colaboradores e organizar as operações da empresa.
-            </p>
+        <div class="card">
+            <div class="card-label">Ativos</div>
+            <div class="card-number" id="activeEmployees">—</div>
+            <div class="card-note">Colaboradores ativos</div>
         </div>
 
-    </section>
+        <div class="card">
+            <div class="card-label">Departamentos</div>
+            <div class="card-number">—</div>
+            <div class="card-note">Estrutura organizacional</div>
+        </div>
 
-    <section id="page-colaboradores" class="hidden">
+        <div class="card">
+            <div class="card-label">Plano</div>
+            <div class="card-number" style="font-size:19px" id="planIndicator">—</div>
+            <div class="card-note">Plano da empresa</div>
+        </div>
+    </div>
 
-        <div class="panel">
-            <div class="panel-header">
-                <div>
-                    <h3>Gestão de colaboradores</h3>
-                    <p class="page-description">Cadastre e consulte os colaboradores da empresa.</p>
+    <div class="panel">
+        <div class="panel-header">
+            <h3>Bem-vindo à NEXORA</h3>
+        </div>
+        <p style="font-size:13px;color:#82918a;line-height:1.8">
+            Sua empresa está conectada ao ambiente NEXORA.
+            Utilize o menu lateral para acessar os módulos de gestão,
+            acompanhar colaboradores e organizar as operações da empresa.
+        </p>
+    </div>
+
+</section>
+
+<section id="page-colaboradores" class="hidden">
+
+    <div class="panel">
+        <div class="panel-header">
+            <div>
+                <h3>Gestão de colaboradores</h3>
+                <p class="page-description">Cadastre e consulte os colaboradores da empresa.</p>
+            </div>
+            <button class="btn" id="newEmployeeButton" onclick="openEmployeeForm()">+ Novo colaborador</button>
+        </div>
+
+        <div id="employeeMessage" class="message"></div>
+
+        <div id="employeeForm" class="hidden">
+            <h3 style="font-size:15px;margin-bottom:18px">Cadastro de colaborador</h3>
+
+            <form id="newEmployeeForm">
+                <div class="form-grid">
+
+                    <div class="field">
+                        <label>Nome completo *</label>
+                        <input type="text" id="employeeName" required placeholder="Nome do colaborador">
+                    </div>
+
+                    <div class="field">
+                        <label>Código do funcionário</label>
+                        <input type="text" id="employeeCode" placeholder="Ex.: COL001">
+                    </div>
+
+                    <div class="field">
+                        <label>E-mail</label>
+                        <input type="email" id="employeeEmail" placeholder="email@empresa.com">
+                    </div>
+
+                    <div class="field">
+                        <label>Telefone</label>
+                        <input type="text" id="employeePhone" placeholder="(00) 00000-0000">
+                    </div>
+
+                    <div class="field">
+                        <label>Cargo</label>
+                        <input type="text" id="employeePosition" placeholder="Cargo do colaborador">
+                    </div>
+
+                    <div class="field">
+                        <label>Data de contratação</label>
+                        <input type="date" id="employeeHireDate">
+                    </div>
+
+                    <div class="field">
+                        <label>Status</label>
+                        <select id="employeeStatus">
+                            <option value="ativo">Ativo</option>
+                            <option value="inativo">Inativo</option>
+                        </select>
+                    </div>
+
                 </div>
-                <button class="btn" id="newEmployeeButton" onclick="openEmployeeForm()">+ Novo colaborador</button>
-            </div>
 
-            <div id="employeeMessage" class="message"></div>
+                <div class="form-actions">
+                    <button type="submit" class="btn">Salvar colaborador</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeEmployeeForm()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-            <div id="employeeForm" class="hidden">
-                <h3 style="font-size:15px;margin-bottom:18px">Cadastro de colaborador</h3>
-
-                <form id="newEmployeeForm">
-                    <div class="form-grid">
-
-                        <div class="field">
-                            <label>Nome completo *</label>
-                            <input type="text" id="employeeName" required placeholder="Nome do colaborador">
-                        </div>
-
-                        <div class="field">
-                            <label>Código do funcionário</label>
-                            <input type="text" id="employeeCode" placeholder="Ex.: COL001">
-                        </div>
-
-                        <div class="field">
-                            <label>E-mail</label>
-                            <input type="email" id="employeeEmail" placeholder="email@empresa.com">
-                        </div>
-
-                        <div class="field">
-                            <label>Telefone</label>
-                            <input type="text" id="employeePhone" placeholder="(00) 00000-0000">
-                        </div>
-
-                        <div class="field">
-                            <label>Cargo</label>
-                            <input type="text" id="employeePosition" placeholder="Cargo do colaborador">
-                        </div>
-
-                        <div class="field">
-                            <label>Data de contratação</label>
-                            <input type="date" id="employeeHireDate">
-                        </div>
-
-                        <div class="field">
-                            <label>Status</label>
-                            <select id="employeeStatus">
-                                <option value="ativo">Ativo</option>
-                                <option value="inativo">Inativo</option>
-                            </select>
-                        </div>
-
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn">Salvar colaborador</button>
-                        <button type="button" class="btn btn-secondary" onclick="closeEmployeeForm()">Cancelar</button>
-                    </div>
-                </form>
-            </div>
+    <div class="panel">
+        <div class="panel-header">
+            <h3>Colaboradores cadastrados</h3>
+            <input class="search" type="search" id="employeeSearch" placeholder="Pesquisar colaborador..." oninput="filterEmployees()">
         </div>
 
-        <div class="panel">
-            <div class="panel-header">
-                <h3>Colaboradores cadastrados</h3>
-                <input class="search" type="search" id="employeeSearch" placeholder="Pesquisar colaborador..." oninput="filterEmployees()">
-            </div>
-
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Código</th>
-                            <th>Cargo</th>
-                            <th>E-mail</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="employeesTable">
-                        <tr><td colspan="5" class="empty">Carregando colaboradores...</td></tr>
-                    </tbody>
-                </table>
-            </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Código</th>
+                        <th>Cargo</th>
+                        <th>E-mail</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="employeesTable">
+                    <tr><td colspan="5" class="empty">Carregando colaboradores...</td></tr>
+                </tbody>
+            </table>
         </div>
+    </div>
 
-    </section>
+</section>
 
-    <section id="page-departamentos" class="hidden">
-        <div class="panel">
-            <h3>Departamentos</h3>
-            <div class="empty">Módulo de departamentos em desenvolvimento.</div>
-        </div>
-    </section>
+<section id="page-departamentos" class="hidden">
+    <div class="panel">
+        <h3>Departamentos</h3>
+        <div class="empty">Módulo de departamentos em desenvolvimento.</div>
+    </div>
+</section>
 
-    <section id="page-ponto" class="hidden">
-        <div class="panel">
-            <h3>Controle de ponto</h3>
-            <div class="empty">Módulo de controle de ponto em desenvolvimento.</div>
-        </div>
-    </section>
+<section id="page-ponto" class="hidden">
+    <div class="panel">
+        <h3>Controle de ponto</h3>
+        <div class="empty">Módulo de controle de ponto em desenvolvimento.</div>
+    </div>
+</section>
 
-    <section id="page-escalas" class="hidden">
-        <div class="panel">
-            <h3>Escalas de trabalho</h3>
-            <div class="empty">Módulo de escalas em desenvolvimento.</div>
-        </div>
-    </section>
+<section id="page-escalas" class="hidden">
+    <div class="panel">
+        <h3>Escalas de trabalho</h3>
+        <div class="empty">Módulo de escalas em desenvolvimento.</div>
+    </div>
+</section>
 
-    <section id="page-relatorios" class="hidden">
-        <div class="panel">
-            <h3>Relatórios</h3>
-            <div class="empty">Módulo de relatórios em desenvolvimento.</div>
-        </div>
-    </section>
+<section id="page-relatorios" class="hidden">
+    <div class="panel">
+        <h3>Relatórios</h3>
+        <div class="empty">Módulo de relatórios em desenvolvimento.</div>
+    </div>
+</section>
 
-    <section id="page-disciplinar" class="hidden">
-        <div class="panel">
-            <h3>NEXORA Disciplinar</h3>
-            <div class="empty">Módulo disciplinar em desenvolvimento.</div>
-        </div>
-    </section>
+<section id="page-disciplinar" class="hidden">
+    <div class="panel">
+        <h3>NEXORA Disciplinar</h3>
+        <div class="empty">Módulo disciplinar em desenvolvimento.</div>
+    </div>
+</section>
 
-    <section id="page-configuracoes" class="hidden">
-        <div class="panel">
-            <h3>Configurações da empresa</h3>
-            <div class="empty">Configurações em desenvolvimento.</div>
-        </div>
-    </section>
+<section id="page-configuracoes" class="hidden">
+    <div class="panel">
+        <h3>Configurações da empresa</h3>
+        <div class="empty">Configurações em desenvolvimento.</div>
+    </div>
+</section>
 
-    <section id="page-ajuda" class="hidden">
-        <div class="panel">
-            <h3>NEXORA AI</h3>
-            <div class="empty">Assistente inteligente em desenvolvimento.</div>
-        </div>
-    </section>
+<section id="page-ajuda" class="hidden">
+    <div class="panel">
+        <h3>NEXORA AI</h3>
+        <div class="empty">Assistente inteligente em desenvolvimento.</div>
+    </div>
+</section>
 
 </main>
 </div>
@@ -680,7 +674,7 @@ async function loadEmployees(){
 
     const {data,error} = await supabaseClient
         .from('employees')
-        .select('id,employee_code,full_name,email,phone,position,status,hire_date,created_at')
+        .select('id,employee_code,full_name,email,phone,cargo,status,hire_date,created_at')
         .eq('company_id',currentCompany.id)
         .order('created_at',{ascending:false});
 
@@ -715,7 +709,7 @@ function renderEmployees(list){
         <tr>
             <td><strong>${escapeHTML(employee.full_name)}</strong></td>
             <td>${escapeHTML(employee.employee_code || '—')}</td>
-            <td>${escapeHTML(employee.position || '—')}</td>
+            <td>${escapeHTML(employee.cargo || '—')}</td>
             <td>${escapeHTML(employee.email || '—')}</td>
             <td><span class="badge">${escapeHTML(employee.status || 'ativo')}</span></td>
         </tr>
@@ -775,7 +769,7 @@ document.getElementById('newEmployeeForm').addEventListener('submit',async funct
         employee_code:document.getElementById('employeeCode').value.trim() || null,
         email:document.getElementById('employeeEmail').value.trim() || null,
         phone:document.getElementById('employeePhone').value.trim() || null,
-        position:document.getElementById('employeePosition').value.trim() || null,
+        cargo:document.getElementById('employeePosition').value.trim() || null,
         hire_date:document.getElementById('employeeHireDate').value || null,
         status:document.getElementById('employeeStatus').value
     };
