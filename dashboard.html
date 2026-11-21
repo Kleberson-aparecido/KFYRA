@@ -243,9 +243,7 @@ body{
     padding:7px 10px;
 }
 
-.btn-invite:hover{
-    background:#ccebd8;
-}
+.btn-invite:hover{background:#ccebd8}
 
 .btn-linked{
     background:#edf4ef;
@@ -342,6 +340,8 @@ th{color:var(--muted);font-weight:700}
     margin-bottom:15px;
     font-size:12px;
     display:none;
+    white-space:pre-wrap;
+    overflow-wrap:anywhere;
 }
 
 .message.error{background:#fff0ed;color:#a43e30;display:block}
@@ -1354,7 +1354,7 @@ async function inviteEmployee(id){
     const employee = employeesData.find(e => e.id === id);
 
     if(!employee){
-        alert('Colaborador não encontrado.');
+        alert('Colaborador não encontrado na lista atual.');
         return;
     }
 
@@ -1401,22 +1401,69 @@ async function inviteEmployee(id){
             }
         );
 
+        // TRATAMENTO DOS ERROS RETORNADOS PELO SUPABASE
+
         if(error){
 
             console.error('Erro ao chamar convite:',error);
 
-            let errorMessage = error.message || 'Não foi possível enviar o convite.';
+            let errorMessage = error.message ||
+                'Não foi possível enviar o convite.';
 
-            if(error.context && typeof error.context.json === 'function'){
+            const response = error.context;
+
+            if(response){
+
                 try{
-                    const details = await error.context.json();
 
-                    if(details.error){
-                        errorMessage = details.error;
+                    let responseData = null;
+
+                    if(typeof response.clone === 'function'){
+
+                        responseData = await response.clone().json();
+
+                    }else if(typeof response.json === 'function'){
+
+                        responseData = await response.json();
+
                     }
+
+                    if(responseData){
+
+                        const details = [];
+
+                        if(responseData.error){
+                            details.push(responseData.error);
+                        }
+
+                        if(responseData.details){
+                            details.push(
+                                'Detalhes técnicos: ' + responseData.details
+                            );
+                        }
+
+                        if(responseData.received_employee_id){
+                            details.push(
+                                'ID recebido: ' +
+                                responseData.received_employee_id
+                            );
+                        }
+
+                        if(details.length){
+                            errorMessage = details.join('\n');
+                        }
+
+                    }
+
                 }catch(parseError){
-                    console.error('Erro ao ler resposta:',parseError);
+
+                    console.error(
+                        'Erro ao interpretar resposta da função:',
+                        parseError
+                    );
+
                 }
+
             }
 
             showMessage(errorMessage,'error');
@@ -1424,15 +1471,31 @@ async function inviteEmployee(id){
             return;
         }
 
+        // VERIFICAÇÃO DA RESPOSTA DA FUNÇÃO
+
         if(!data || !data.success){
 
-            showMessage(
-                data?.error || 'Não foi possível enviar o convite.',
-                'error'
-            );
+            let errorMessage = data?.error ||
+                'Não foi possível enviar o convite.';
+
+            if(data?.details){
+                errorMessage +=
+                    '\nDetalhes técnicos: ' + data.details;
+            }
+
+            if(data?.received_employee_id){
+                errorMessage +=
+                    '\nID recebido: ' + data.received_employee_id;
+            }
+
+            console.error('Resposta da Edge Function:',data);
+
+            showMessage(errorMessage,'error');
 
             return;
         }
+
+        // CONVITE ENVIADO
 
         showMessage(
             data.message || 'Convite enviado com sucesso!',
@@ -1446,7 +1509,8 @@ async function inviteEmployee(id){
         console.error('Erro inesperado ao convidar:',error);
 
         showMessage(
-            'Ocorreu um erro ao enviar o convite. Tente novamente.',
+            'Erro inesperado: ' +
+            (error.message || 'Tente novamente.'),
             'error'
         );
 
@@ -1456,6 +1520,7 @@ async function inviteEmployee(id){
             button.disabled = false;
             button.textContent = 'Enviar convite';
         }
+
     }
 }
 
