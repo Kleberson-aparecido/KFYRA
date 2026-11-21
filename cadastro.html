@@ -3,937 +3,773 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#09251f">
-<title>Cadastro empresarial | NEXORA</title>
+<title>Cadastro Empresarial | NEXORA</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 :root {
-    --dark:#09251f;
-    --green:#103d32;
-    --mint:#b8f2d5;
-    --gold:#d8b65c;
-    --text:#18372e;
-    --muted:#75867f;
-    --border:#e4ebe6;
+    --green: #0b332b;
+    --green-light: #e9f5ef;
+    --mint: #c9ead8;
+    --gold: #c6a45b;
+    --text: #24342d;
+    --muted: #7a8980;
+    --white: #ffffff;
+    --border: #e4ebe6;
 }
 
 * {
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    font-family:'DM Sans',sans-serif;
-    background:#f5f8f6;
-    color:var(--text);
+    font-family: 'DM Sans', sans-serif;
+    background: #f4f8f5;
+    color: var(--text);
+    min-height: 100vh;
 }
 
-a {text-decoration:none;color:inherit;}
-
-.topbar {
-    height:75px;
-    background:white;
-    border-bottom:1px solid var(--border);
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 7%;
+header {
+    width: 100%;
+    padding: 24px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .logo {
-    font-family:'Manrope',sans-serif;
-    font-size:25px;
-    font-weight:800;
-    letter-spacing:2px;
-    color:var(--green);
+    font-family: 'Manrope', sans-serif;
+    font-size: 27px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    color: var(--green);
 }
 
-.logo span {color:var(--gold);}
-
-.top-right {
-    display:flex;
-    gap:20px;
-    align-items:center;
-    font-size:13px;
-    color:var(--muted);
+.logo span {
+    color: var(--gold);
 }
 
-.login-link {
-    color:var(--green);
-    font-weight:800;
+.header-link {
+    text-decoration: none;
+    color: var(--green);
+    font-weight: 700;
+    font-size: 14px;
 }
 
-.page {
-    max-width:1250px;
-    margin:45px auto;
-    padding:0 25px;
-    display:grid;
-    grid-template-columns:.85fr 1.35fr;
-    gap:28px;
-    align-items:start;
+main {
+    padding: 35px 18px 70px;
 }
 
-.brand-panel {
-    background:
-    radial-gradient(circle at 90% 10%,rgba(184,242,213,.16),transparent 35%),
-    linear-gradient(145deg,#164b3c,#09251f 75%);
-    border-radius:24px;
-    padding:40px 34px;
-    color:white;
-    min-height:690px;
-    position:sticky;
-    top:25px;
-    overflow:hidden;
+.container {
+    max-width: 1100px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    background: white;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 70px rgba(15, 53, 41, 0.08);
 }
 
-.brand-label {
-    color:var(--mint);
-    font-size:11px;
-    letter-spacing:2.5px;
-    font-weight:800;
+.side {
+    background: linear-gradient(145deg, #0b332b, #174b3c);
+    color: white;
+    padding: 55px 42px;
+    position: relative;
+    overflow: hidden;
 }
 
-.brand-panel h1 {
-    font-family:'Manrope',sans-serif;
-    font-size:39px;
-    line-height:1.15;
-    margin-top:27px;
-    letter-spacing:-1.5px;
+.side::after {
+    content: "";
+    position: absolute;
+    width: 330px;
+    height: 330px;
+    border: 1px solid rgba(255,255,255,.13);
+    border-radius: 50%;
+    right: -160px;
+    bottom: -120px;
 }
 
-.brand-panel h1 span {color:var(--mint);}
+.side-label {
+    color: var(--mint);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    margin-bottom: 25px;
+}
 
-.brand-description {
-    color:#c1d8cc;
-    font-size:14px;
-    line-height:1.8;
-    margin-top:20px;
+.side h1 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 37px;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+.side h1 span {
+    color: #d8bd7d;
+}
+
+.side p {
+    color: #d2e2d8;
+    line-height: 1.8;
+    font-size: 15px;
 }
 
 .benefits {
-    margin-top:42px;
-    display:grid;
-    gap:22px;
+    margin-top: 42px;
+    display: grid;
+    gap: 20px;
 }
 
 .benefit {
-    display:flex;
-    align-items:flex-start;
-    gap:13px;
+    display: flex;
+    gap: 13px;
+    align-items: center;
+    color: #edf6f0;
+    font-size: 14px;
 }
 
-.benefit-icon {
-    width:38px;
-    height:38px;
-    flex-shrink:0;
-    border-radius:11px;
-    background:rgba(184,242,213,.12);
-    display:grid;
-    place-items:center;
-    color:var(--mint);
-    font-size:17px;
+.check {
+    width: 27px;
+    height: 27px;
+    border-radius: 50%;
+    background: rgba(201,234,216,.16);
+    color: #d8bd7d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
-.benefit strong {
-    display:block;
-    font-size:13px;
-    margin-bottom:5px;
+.form-area {
+    padding: 48px;
 }
 
-.benefit p {
-    color:#a9c3b5;
-    font-size:12px;
-    line-height:1.6;
+.form-area h2 {
+    font-family: 'Manrope', sans-serif;
+    color: var(--green);
+    font-size: 27px;
+    margin-bottom: 8px;
 }
 
-.brand-bottom {
-    margin-top:40px;
-    color:#9ebcae;
-    font-size:10px;
-    line-height:1.7;
+.subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 30px;
 }
-
-.form-panel {
-    background:white;
-    border:1px solid var(--border);
-    border-radius:24px;
-    padding:40px;
-    box-shadow:0 15px 50px rgba(16,61,50,.045);
-}
-
-.form-heading {margin-bottom:30px;}
-
-.step-label {
-    color:#a1843e;
-    font-size:11px;
-    font-weight:800;
-    letter-spacing:1.8px;
-}
-
-.form-heading h2 {
-    font-family:'Manrope',sans-serif;
-    font-size:29px;
-    color:var(--green);
-    margin-top:10px;
-}
-
-.form-heading p {
-    color:var(--muted);
-    font-size:13px;
-    margin-top:9px;
-    line-height:1.6;
-}
-
-.progress {
-    display:flex;
-    gap:8px;
-    margin-top:24px;
-}
-
-.progress-line {
-    height:5px;
-    flex:1;
-    background:#e9efeb;
-    border-radius:20px;
-}
-
-.progress-line.active {background:#58bd8e;}
 
 .section-title {
-    display:flex;
-    align-items:center;
-    gap:11px;
-    margin:31px 0 18px;
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    margin: 27px 0 15px;
 }
 
-.section-number {
-    width:28px;
-    height:28px;
-    background:#e9fff3;
-    color:var(--green);
-    border-radius:9px;
-    display:grid;
-    place-items:center;
-    font-size:12px;
-    font-weight:800;
-}
-
-.section-title h3 {
-    font-family:'Manrope',sans-serif;
-    color:var(--green);
-    font-size:15px;
-}
-
-.section-title p {
-    color:var(--muted);
-    font-size:11px;
-    margin-top:3px;
-}
-
-.fields {
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:16px;
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
 }
 
 .field {
-    display:flex;
-    flex-direction:column;
-    gap:8px;
+    margin-bottom: 16px;
 }
 
-.field.full {grid-column:1/-1;}
-
-.field label {
-    font-size:12px;
-    font-weight:700;
-    color:#3e554b;
+.field.full {
+    grid-column: 1 / -1;
 }
 
-.field input,.field select {
-    width:100%;
-    height:47px;
-    border:1px solid #e1e9e3;
-    border-radius:10px;
-    padding:0 13px;
-    background:#fbfdfb;
-    outline:none;
-    color:var(--text);
-    font-family:inherit;
-    font-size:13px;
+label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #43564b;
 }
 
-.field input:focus,.field select:focus {
-    border-color:#58bd8e;
-    box-shadow:0 0 0 3px rgba(88,189,142,.12);
-    background:white;
+input {
+    width: 100%;
+    padding: 14px 15px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    outline: none;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    background: #fcfdfc;
+    transition: .2s;
 }
 
-.field input::placeholder {color:#aab6af;}
+input:focus {
+    border-color: #75ad8e;
+    box-shadow: 0 0 0 3px rgba(117,173,142,.12);
+}
 
-.password-wrap {position:relative;}
+.password-wrap {
+    position: relative;
+}
 
-.password-wrap input {padding-right:75px;}
+.password-wrap input {
+    padding-right: 65px;
+}
 
 .toggle-password {
-    position:absolute;
-    right:12px;
-    top:50%;
-    transform:translateY(-50%);
-    background:none;
-    border:none;
-    color:#508b6d;
-    font-size:11px;
-    font-weight:700;
-    cursor:pointer;
-}
-
-.field small {
-    color:#91a097;
-    font-size:10px;
+    position: absolute;
+    right: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    color: var(--green);
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 12px;
 }
 
 .plans {
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
 }
 
-.plan-card {
-    border:1px solid var(--border);
-    border-radius:13px;
-    padding:17px;
-    cursor:pointer;
-    position:relative;
-    transition:.2s;
+.plan {
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 17px;
+    cursor: pointer;
+    transition: .2s;
+    background: #fff;
 }
 
-.plan-card:hover {
-    border-color:#86c9a5;
-    transform:translateY(-2px);
+.plan:hover {
+    border-color: var(--gold);
 }
 
-.plan-card.selected {
-    border:2px solid #45a978;
-    background:#f4fff8;
-    padding:16px;
+.plan.selected {
+    border: 2px solid var(--green);
+    background: #f2f8f4;
 }
 
-.plan-card input {
-    position:absolute;
-    opacity:0;
+.plan input {
+    width: auto;
+    margin-right: 6px;
+    accent-color: var(--green);
 }
 
 .plan-name {
-    font-size:12px;
-    font-weight:800;
-    color:var(--green);
+    display: block;
+    color: var(--green);
+    font-weight: 800;
+    font-size: 14px;
+    margin: 10px 0 5px;
 }
 
 .plan-price {
-    font-family:'Manrope',sans-serif;
-    font-size:22px;
-    font-weight:800;
-    color:var(--green);
-    margin:12px 0 3px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 21px;
+    font-weight: 800;
+    color: var(--green);
 }
 
-.plan-price small {
-    font-size:10px;
-    font-weight:500;
-    color:var(--muted);
+.plan-description {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 5px;
 }
 
-.plan-detail {
-    color:var(--muted);
-    font-size:10px;
+.enterprise {
+    grid-column: 1 / -1;
 }
-
-.plan-badge {
-    position:absolute;
-    right:9px;
-    top:9px;
-    background:#e7f8ed;
-    color:#28764c;
-    padding:5px 7px;
-    border-radius:5px;
-    font-size:9px;
-    font-weight:800;
-}
-
-.enterprise {grid-column:1/-1;}
 
 .terms {
-    display:flex;
-    gap:10px;
-    align-items:flex-start;
-    margin-top:25px;
-    color:var(--muted);
-    font-size:11px;
-    line-height:1.6;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 24px 0;
 }
 
 .terms input {
-    margin-top:3px;
-    accent-color:#399b6b;
+    width: auto;
+    margin-top: 3px;
+    accent-color: var(--green);
 }
 
-.terms a {
-    color:#32835c;
-    font-weight:700;
+.terms label {
+    font-size: 12px;
+    line-height: 1.6;
+    font-weight: 500;
+    margin: 0;
 }
 
-.submit-button {
-    width:100%;
-    height:53px;
-    margin-top:23px;
-    border:none;
-    border-radius:11px;
-    background:linear-gradient(110deg,#164b3c,#287d59);
-    color:white;
-    font-family:inherit;
-    font-size:13px;
-    font-weight:800;
-    cursor:pointer;
-    transition:.2s;
+.submit {
+    width: 100%;
+    padding: 17px;
+    border: none;
+    border-radius: 11px;
+    background: var(--green);
+    color: white;
+    font-family: inherit;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: .2s;
 }
 
-.submit-button:hover {transform:translateY(-2px);}
+.submit:hover {
+    background: #174b3c;
+    transform: translateY(-1px);
+}
+
+.submit:disabled {
+    opacity: .6;
+    cursor: wait;
+    transform: none;
+}
 
 .message {
-    display:none;
-    margin-top:15px;
-    padding:13px;
-    border-radius:9px;
-    font-size:12px;
-    line-height:1.6;
-    background:#fff8e8;
-    color:#765c20;
+    display: none;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 18px;
 }
 
-.login-bottom {
-    text-align:center;
-    color:var(--muted);
-    font-size:12px;
-    margin-top:22px;
+.message.success {
+    display: block;
+    background: #e8f6ed;
+    color: #17633a;
+    border: 1px solid #b9dfc6;
 }
 
-.login-bottom a {
-    color:#32835c;
-    font-weight:800;
+.message.error {
+    display: block;
+    background: #fff0ef;
+    color: #a12e28;
+    border: 1px solid #f0c6c2;
 }
 
-/* CONTATO OFICIAL */
-
-.contact-panel {
-    max-width:1250px;
-    margin:0 auto 45px;
-    padding:0 25px;
+.login-link {
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 22px;
 }
 
-.contact-card {
-    background:white;
-    border:1px solid var(--border);
-    border-radius:20px;
-    padding:30px 35px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:25px;
-    box-shadow:0 10px 35px rgba(16,61,50,.035);
+.login-link a {
+    color: var(--green);
+    font-weight: 800;
+    text-decoration: none;
 }
 
-.contact-heading span {
-    color:#a1843e;
-    font-size:10px;
-    letter-spacing:2px;
-    font-weight:800;
+footer {
+    text-align: center;
+    padding: 25px 15px;
+    color: #8a988f;
+    font-size: 12px;
+    line-height: 1.8;
 }
 
-.contact-heading h2 {
-    font-family:'Manrope',sans-serif;
-    color:var(--green);
-    font-size:22px;
-    margin-top:8px;
+footer a {
+    color: var(--green);
+    text-decoration: none;
+    font-weight: 700;
 }
 
-.contact-heading p {
-    color:var(--muted);
-    font-size:12px;
-    margin-top:6px;
-}
-
-.contact-details {
-    display:flex;
-    flex-wrap:wrap;
-    gap:12px;
-}
-
-.contact-item {
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding:13px 16px;
-    background:#f5faf6;
-    border:1px solid #e6eee8;
-    border-radius:11px;
-    font-size:12px;
-    color:var(--green);
-    font-weight:700;
-    transition:.2s;
-}
-
-.contact-item:hover {
-    border-color:#72c69a;
-    background:#effbf3;
-}
-
-.contact-item span {
-    font-size:17px;
-}
-
-.contact-item small {
-    display:block;
-    color:var(--muted);
-    font-size:9px;
-    font-weight:500;
-    margin-bottom:3px;
-}
-
-.footer {
-    background:#09251f;
-    color:#a9c3b5;
-    text-align:center;
-    padding:23px;
-    font-size:11px;
-}
-
-@media(max-width:900px) {
-    .page {
-        grid-template-columns:1fr;
-        max-width:720px;
-        margin:25px auto;
+@media(max-width: 800px) {
+    .container {
+        grid-template-columns: 1fr;
     }
 
-    .brand-panel {
-        min-height:auto;
-        position:relative;
-        top:0;
+    .side {
+        padding: 38px 28px;
     }
 
-    .brand-panel h1 {font-size:32px;}
+    .side h1 {
+        font-size: 30px;
+    }
 
     .benefits {
-        grid-template-columns:1fr 1fr;
+        margin-top: 25px;
+        gap: 13px;
     }
 
-    .contact-card {
-        flex-direction:column;
-        align-items:flex-start;
+    .form-area {
+        padding: 35px 24px;
     }
 }
 
-@media(max-width:550px) {
-    .topbar {
-        height:65px;
-        padding:0 18px;
+@media(max-width: 500px) {
+    header {
+        padding: 20px;
     }
 
-    .top-right span {display:none;}
-
-    .page {
-        padding:0 13px;
-        margin:16px auto;
-        gap:15px;
+    .logo {
+        font-size: 22px;
     }
 
-    .brand-panel,.form-panel {
-        border-radius:17px;
-        padding:24px 19px;
+    .grid,
+    .plans {
+        grid-template-columns: 1fr;
     }
 
-    .brand-panel h1 {font-size:29px;}
-
-    .benefits {grid-template-columns:1fr;}
-
-    .fields {grid-template-columns:1fr;}
-
-    .field.full {grid-column:auto;}
-
-    .plans {grid-template-columns:1fr;}
-
-    .enterprise {grid-column:auto;}
-
-    .contact-panel {padding:0 13px;}
-
-    .contact-card {padding:23px 19px;}
-
-    .contact-heading h2 {font-size:19px;}
-
-    .contact-details {
-        width:100%;
-        flex-direction:column;
+    .enterprise {
+        grid-column: auto;
     }
 
-    .contact-item {width:100%;}
+    .form-area h2 {
+        font-size: 23px;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<header class="topbar">
-    <a href="index.html" class="logo">NEXORA<span>.</span></a>
-
-    <div class="top-right">
-        <span>Já possui uma conta?</span>
-        <a href="login.html" class="login-link">Fazer login →</a>
-    </div>
+<header>
+    <div class="logo">NEX<span>ORA</span></div>
+    <a class="header-link" href="login.html">Já tenho uma conta →</a>
 </header>
 
-<main class="page">
+<main>
+<div class="container">
 
-<aside class="brand-panel">
+    <section class="side">
+        <div class="side-label">NEXORA BUSINESS PLATFORM</div>
 
-    <div class="brand-label">NEXORA BUSINESS PLATFORM</div>
+        <h1>Uma nova forma de <span>gerenciar sua empresa.</span></h1>
 
-    <h1>Sua empresa merece uma gestão <span>extraordinária.</span></h1>
-
-    <p class="brand-description">
-        Crie seu ambiente empresarial e tenha em um só lugar
-        controle operacional, colaboradores, indicadores e
-        inteligência de gestão.
-    </p>
-
-    <div class="benefits">
-
-        <div class="benefit">
-            <div class="benefit-icon">✦</div>
-            <div>
-                <strong>Gestão centralizada</strong>
-                <p>Organize equipes, departamentos e informações em um único ambiente.</p>
-            </div>
-        </div>
-
-        <div class="benefit">
-            <div class="benefit-icon">◷</div>
-            <div>
-                <strong>NEXORA LIVE</strong>
-                <p>Acompanhe a operação, presença e jornada dos colaboradores.</p>
-            </div>
-        </div>
-
-        <div class="benefit">
-            <div class="benefit-icon">✧</div>
-            <div>
-                <strong>NEXORA AI</strong>
-                <p>Inteligência para transformar dados em decisões empresariais.</p>
-            </div>
-        </div>
-
-        <div class="benefit">
-            <div class="benefit-icon">◇</div>
-            <div>
-                <strong>Ambiente exclusivo</strong>
-                <p>Uma estrutura individual para os dados e a gestão da sua empresa.</p>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="brand-bottom">
-        NEXORA © 2026<br>
-        Gestão inteligente, resultados extraordinários.
-    </div>
-
-</aside>
-
-<section class="form-panel">
-
-    <div class="form-heading">
-        <div class="step-label">COMECE SUA JORNADA</div>
-        <h2>Cadastro empresarial</h2>
         <p>
-            Preencha os dados abaixo para iniciar a criação
-            do ambiente da sua empresa.
+            Centralize pessoas, operações, departamentos e indicadores
+            em uma plataforma inteligente, desenvolvida para empresas
+            que querem crescer com organização e eficiência.
         </p>
 
-        <div class="progress">
-            <div class="progress-line active"></div>
-            <div class="progress-line active"></div>
-            <div class="progress-line"></div>
+        <div class="benefits">
+            <div class="benefit"><span class="check">✓</span> Gestão empresarial integrada</div>
+            <div class="benefit"><span class="check">✓</span> Controle de colaboradores e RH</div>
+            <div class="benefit"><span class="check">✓</span> Controle de ponto e jornadas</div>
+            <div class="benefit"><span class="check">✓</span> Indicadores e inteligência empresarial</div>
+            <div class="benefit"><span class="check">✓</span> Ambiente exclusivo para sua empresa</div>
         </div>
-    </div>
+    </section>
 
-    <form id="cadastroEmpresa">
+    <section class="form-area">
 
-        <div class="section-title">
-            <div class="section-number">01</div>
-            <div>
-                <h3>Identificação da empresa</h3>
-                <p>Informações institucionais</p>
-            </div>
-        </div>
+        <h2>Cadastre sua empresa</h2>
+        <p class="subtitle">Preencha os dados para iniciar sua jornada com a NEXORA.</p>
 
-        <div class="fields">
+        <div id="mensagemCadastro" class="message" role="alert"></div>
 
-            <div class="field full">
-                <label for="empresa">Nome da empresa *</label>
-                <input type="text" id="empresa" name="empresa"
-                placeholder="Ex.: Empresa Brasil Ltda." required>
-            </div>
+        <form id="cadastroEmpresa">
 
-            <div class="field">
-                <label for="cnpj">CNPJ *</label>
-                <input type="text" id="cnpj" name="cnpj"
-                placeholder="00.000.000/0000-00"
-                maxlength="18" required>
-            </div>
+            <div class="section-title">01 — DADOS DA EMPRESA</div>
 
-            <div class="field">
-                <label for="telefone">Telefone corporativo *</label>
-                <input type="tel" id="telefone" name="telefone"
-                placeholder="(00) 00000-0000"
-                maxlength="15" required>
-            </div>
+            <div class="grid">
 
-            <div class="field full">
-                <label for="email">E-mail corporativo *</label>
-                <input type="email" id="email" name="email"
-                placeholder="contato@suaempresa.com.br" required>
-            </div>
-
-        </div>
-
-        <div class="section-title">
-            <div class="section-number">02</div>
-            <div>
-                <h3>Responsável pela conta</h3>
-                <p>Dados do administrador principal</p>
-            </div>
-        </div>
-
-        <div class="fields">
-
-            <div class="field full">
-                <label for="responsavel">Nome completo *</label>
-                <input type="text" id="responsavel" name="responsavel"
-                placeholder="Nome do responsável pela empresa" required>
-            </div>
-
-            <div class="field full">
-                <label for="senha">Crie sua senha *</label>
-
-                <div class="password-wrap">
-                    <input type="password" id="senha" name="senha"
-                    placeholder="Mínimo de 8 caracteres"
-                    minlength="8" autocomplete="new-password" required>
-
-                    <button type="button" class="toggle-password"
-                    id="togglePassword">Mostrar</button>
+                <div class="field full">
+                    <label for="empresa">Nome da empresa</label>
+                    <input id="empresa" type="text" placeholder="Razão social ou nome empresarial" required>
                 </div>
 
-                <small>Utilize uma senha forte e exclusiva.</small>
-            </div>
-
-        </div>
-
-        <div class="section-title">
-            <div class="section-number">03</div>
-            <div>
-                <h3>Escolha seu plano</h3>
-                <p>Selecione a capacidade adequada à sua operação</p>
-            </div>
-        </div>
-
-        <div class="plans">
-
-            <label class="plan-card" data-plan="700">
-                <input type="radio" name="plano" value="700" required>
-                <div class="plan-name">NEXORA BUSINESS</div>
-                <div class="plan-price">R$ 1.000<small>/mês</small></div>
-                <div class="plan-detail">Até 700 colaboradores</div>
-            </label>
-
-            <label class="plan-card" data-plan="1400">
-                <input type="radio" name="plano" value="1400">
-                <div class="plan-badge">MAIOR CAPACIDADE</div>
-                <div class="plan-name">NEXORA CORPORATE</div>
-                <div class="plan-price">R$ 3.000<small>/mês</small></div>
-                <div class="plan-detail">Até 1.400 colaboradores</div>
-            </label>
-
-            <label class="plan-card enterprise" data-plan="enterprise">
-                <input type="radio" name="plano" value="enterprise">
-                <div class="plan-name">NEXORA ENTERPRISE</div>
-                <div class="plan-price">Personalizado</div>
-                <div class="plan-detail">
-                    Acima de 1.400 colaboradores · Consulte condições comerciais.
+                <div class="field">
+                    <label for="cnpj">CNPJ</label>
+                    <input id="cnpj" type="text" placeholder="00.000.000/0000-00" maxlength="18" required>
                 </div>
-            </label>
 
-        </div>
+                <div class="field">
+                    <label for="telefone">Telefone / WhatsApp</label>
+                    <input id="telefone" type="tel" placeholder="(00) 00000-0000" maxlength="15" required>
+                </div>
 
-        <label class="terms">
-            <input type="checkbox" id="termos" required>
-            <span>
-                Declaro que as informações fornecidas são verdadeiras
-                e concordo com os termos de uso e a política de privacidade
-                da NEXORA.
-            </span>
-        </label>
+                <div class="field full">
+                    <label for="email">E-mail corporativo (será seu login)</label>
+                    <input id="email" type="email" placeholder="nome@empresa.com.br" required>
+                </div>
 
-        <button type="submit" class="submit-button">
-            CONTINUAR COM MEU CADASTRO →
-        </button>
+            </div>
 
-        <div class="message" id="mensagemCadastro" role="status"></div>
+            <div class="section-title">02 — RESPONSÁVEL PELO CADASTRO</div>
 
-    </form>
+            <div class="grid">
 
-    <div class="login-bottom">
-        Já faz parte da NEXORA?
-        <a href="login.html">Acesse sua conta</a>
-    </div>
+                <div class="field full">
+                    <label for="responsavel">Nome completo do responsável</label>
+                    <input id="responsavel" type="text" placeholder="Nome completo" required>
+                </div>
 
-</section>
+                <div class="field full">
+                    <label for="senha">Crie sua senha</label>
+                    <div class="password-wrap">
+                        <input id="senha" type="password" placeholder="Mínimo de 8 caracteres" minlength="8" required>
+                        <button class="toggle-password" type="button" id="toggleSenha">Mostrar</button>
+                    </div>
+                </div>
 
+            </div>
+
+            <div class="section-title">03 — ESCOLHA SEU PLANO</div>
+
+            <div class="plans">
+
+                <label class="plan selected" for="plano700">
+                    <input type="radio" id="plano700" name="plano" value="700" checked>
+                    <span class="plan-name">NEXORA BUSINESS</span>
+                    <span class="plan-price">R$ 1.000<span style="font-size:12px">/mês</span></span>
+                    <div class="plan-description">Até 700 colaboradores</div>
+                </label>
+
+                <label class="plan" for="plano1400">
+                    <input type="radio" id="plano1400" name="plano" value="1400">
+                    <span class="plan-name">NEXORA CORPORATE</span>
+                    <span class="plan-price">R$ 3.000<span style="font-size:12px">/mês</span></span>
+                    <div class="plan-description">Até 1.400 colaboradores</div>
+                </label>
+
+                <label class="plan enterprise" for="planoEnterprise">
+                    <input type="radio" id="planoEnterprise" name="plano" value="enterprise">
+                    <span class="plan-name">NEXORA ENTERPRISE</span>
+                    <span class="plan-price">Sob consulta</span>
+                    <div class="plan-description">Mais de 1.400 colaboradores — solução personalizada.</div>
+                </label>
+
+            </div>
+
+            <div class="terms">
+                <input type="checkbox" id="termos" required>
+                <label for="termos">
+                    Declaro que as informações fornecidas são verdadeiras e concordo
+                    com os termos de utilização e a política de privacidade da NEXORA.
+                </label>
+            </div>
+
+            <button type="submit" class="submit" id="botaoCadastro">
+                CONTINUAR COM MEU CADASTRO →
+            </button>
+
+            <div class="login-link">
+                Já possui cadastro? <a href="login.html">Acesse sua conta</a>
+            </div>
+
+        </form>
+
+    </section>
+
+</div>
 </main>
 
-<!-- CONTATO OFICIAL DA NEXORA -->
-
-<section class="contact-panel">
-
-    <div class="contact-card">
-
-        <div class="contact-heading">
-            <span>FALE COM A NEXORA</span>
-            <h2>Estamos à disposição.</h2>
-            <p>
-                Entre em contato com nossa equipe para informações,
-                atendimento e oportunidades comerciais.
-            </p>
-        </div>
-
-        <div class="contact-details">
-
-            <a class="contact-item"
-            href="https://wa.me/5511985934594"
-            target="_blank" rel="noopener noreferrer">
-                <span>◉</span>
-                <div>
-                    <small>WHATSAPP / TELEFONE</small>
-                    (11) 98593-4594
-                </div>
-            </a>
-
-            <a class="contact-item"
-            href="mailto:Klebersonaparecidocorporativo@gmail.com">
-                <span>✉</span>
-                <div>
-                    <small>E-MAIL OFICIAL</small>
-                    Klebersonaparecidocorporativo@gmail.com
-                </div>
-            </a>
-
-        </div>
-
-    </div>
-
-</section>
-
-<footer class="footer">
-    NEXORA © 2026 · Todos os direitos reservados.
-    <br>Gestão inteligente. Empresas extraordinárias.
+<footer>
+    NEXORA — Gestão inteligente para empresas.<br>
+    Contato: <a href="mailto:Klebersonaparecidocorporativo@gmail.com">Klebersonaparecidocorporativo@gmail.com</a>
+    &nbsp; | &nbsp;
+    <a href="https://wa.me/5511985934594" target="_blank">(11) 98593-4594</a>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+/* CONFIGURAÇÃO SUPABASE */
 
-    const form = document.getElementById("cadastroEmpresa");
-    const cnpj = document.getElementById("cnpj");
-    const telefone = document.getElementById("telefone");
+const SUPABASE_URL = "https://guiadodxikdvsfrhedls.supabase.co";
+
+const SUPABASE_ANON_KEY = "sb_publishable_dhAqwNSfwGj8_nBnudx_Hw_gMZpnyEL";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
+
+/* ELEMENTOS */
+
+const form = document.getElementById("cadastroEmpresa");
+const mensagem = document.getElementById("mensagemCadastro");
+const botao = document.getElementById("botaoCadastro");
+
+const cnpjInput = document.getElementById("cnpj");
+const telefoneInput = document.getElementById("telefone");
+
+function mostrarMensagem(texto, tipo) {
+    mensagem.textContent = texto;
+    mensagem.className = "message " + tipo;
+    mensagem.style.display = "block";
+
+    mensagem.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+}
+
+/* PLANOS */
+
+function atualizarPlanos() {
+    document.querySelectorAll(".plan").forEach(plan => {
+        plan.classList.remove("selected");
+    });
+
+    const selecionado = document.querySelector('input[name="plano"]:checked');
+
+    if (selecionado) {
+        selecionado.closest(".plan").classList.add("selected");
+    }
+}
+
+document.querySelectorAll('input[name="plano"]').forEach(input => {
+    input.addEventListener("change", atualizarPlanos);
+});
+
+/* MÁSCARA CNPJ */
+
+cnpjInput.addEventListener("input", function() {
+    let v = this.value.replace(/\D/g, "").slice(0, 14);
+
+    v = v.replace(/^(\d{2})(\d)/, "$1.$2");
+    v = v.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+    v = v.replace(/\.(\d{3})(\d)/, ".$1/$2");
+    v = v.replace(/(\d{4})(\d)/, "$1-$2");
+
+    this.value = v;
+});
+
+/* MÁSCARA TELEFONE */
+
+telefoneInput.addEventListener("input", function() {
+    let v = this.value.replace(/\D/g, "").slice(0, 11);
+
+    if (v.length > 10) {
+        v = v.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
+    } else if (v.length > 6) {
+        v = v.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3");
+    } else if (v.length > 2) {
+        v = v.replace(/^(\d{2})(\d+)/, "($1) $2");
+    }
+
+    this.value = v;
+});
+
+/* MOSTRAR SENHA */
+
+document.getElementById("toggleSenha").addEventListener("click", function() {
     const senha = document.getElementById("senha");
-    const mensagem = document.getElementById("mensagemCadastro");
 
-    // Recupera o plano escolhido na página inicial
-    const planoURL = new URLSearchParams(window.location.search).get("plano");
+    if (senha.type === "password") {
+        senha.type = "text";
+        this.textContent = "Ocultar";
+    } else {
+        senha.type = "password";
+        this.textContent = "Mostrar";
+    }
+});
 
-    if (planoURL) {
-        const radio = document.querySelector(
-            `input[name="plano"][value="${planoURL}"]`
-        );
+/* CADASTRO NO SUPABASE */
 
-        if (radio) {
-            radio.checked = true;
+form.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    mensagem.className = "message";
+    mensagem.style.display = "none";
+
+    const empresa = document.getElementById("empresa").value.trim();
+    const cnpj = cnpjInput.value.replace(/\D/g, "");
+    const telefone = telefoneInput.value.replace(/\D/g, "");
+    const email = document.getElementById("email").value.trim().toLowerCase();
+    const responsavel = document.getElementById("responsavel").value.trim();
+    const senha = document.getElementById("senha").value;
+    const plano = document.querySelector('input[name="plano"]:checked');
+
+    if (cnpj.length !== 14) {
+        mostrarMensagem("Informe um CNPJ com 14 números.", "error");
+        return;
+    }
+
+    if (telefone.length < 10) {
+        mostrarMensagem("Informe um telefone válido com DDD.", "error");
+        return;
+    }
+
+    if (!plano) {
+        mostrarMensagem("Selecione um plano para continuar.", "error");
+        return;
+    }
+
+    if (senha.length < 8) {
+        mostrarMensagem("Sua senha precisa ter pelo menos 8 caracteres.", "error");
+        return;
+    }
+
+    botao.disabled = true;
+    botao.textContent = "CRIANDO SEU CADASTRO...";
+
+    try {
+        const { data, error } = await supabaseClient.auth.signUp({
+            email: email,
+            password: senha,
+            options: {
+                data: {
+                    full_name: responsavel,
+                    company_name: empresa,
+                    company_cnpj: cnpj,
+                    company_email: email,
+                    company_phone: telefone,
+                    plan_code: plano.value
+                },
+                emailRedirectTo: window.location.origin + "/Nexora/login.html"
+            }
+        });
+
+        if (error) {
+            throw error;
+        }
+
+        if (data.user) {
+            if (data.session) {
+                mostrarMensagem(
+                    "Cadastro criado com sucesso! Sua empresa foi registrada. A contratação do plano ainda ficará pendente até a próxima etapa. Você já pode acessar a área de login.",
+                    "success"
+                );
+            } else {
+                mostrarMensagem(
+                    "Cadastro recebido com sucesso! Enviamos um e-mail de confirmação para " +
+                    email +
+                    ". Confirme seu endereço para continuar. A contratação do plano ficará pendente até a próxima etapa.",
+                    "success"
+                );
+            }
+
+            form.reset();
             atualizarPlanos();
-        }
-    }
 
-    // Destaque do plano selecionado
-    function atualizarPlanos() {
-        document.querySelectorAll(".plan-card").forEach(card => {
-            const radio = card.querySelector("input");
-            card.classList.toggle("selected", radio.checked);
-        });
-    }
-
-    document.querySelectorAll('input[name="plano"]').forEach(radio => {
-        radio.addEventListener("change", atualizarPlanos);
-    });
-
-    // Máscara CNPJ
-    cnpj.addEventListener("input", () => {
-        let v = cnpj.value.replace(/\D/g, "").slice(0, 14);
-        v = v.replace(/^(\d{2})(\d)/, "$1.$2");
-        v = v.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
-        v = v.replace(/\.(\d{3})(\d)/, ".$1/$2");
-        v = v.replace(/(\d{4})(\d)/, "$1-$2");
-        cnpj.value = v;
-    });
-
-    // Máscara de telefone
-    telefone.addEventListener("input", () => {
-        let v = telefone.value.replace(/\D/g, "").slice(0, 11);
-
-        if (v.length > 10) {
-            v = v.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
-        } else if (v.length > 6) {
-            v = v.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3");
-        } else if (v.length > 2) {
-            v = v.replace(/^(\d{2})(\d{0,5})$/, "($1) $2");
+            botao.textContent = "CADASTRO REALIZADO";
         }
 
-        telefone.value = v;
-    });
+    } catch (error) {
+        console.error("Erro no cadastro NEXORA:", error);
 
-    // Mostrar ou ocultar senha
-    document.getElementById("togglePassword").addEventListener("click", () => {
-        const visivel = senha.type === "text";
-        senha.type = visivel ? "password" : "text";
+        let texto = error.message || "Não foi possível concluir o cadastro.";
 
-        document.getElementById("togglePassword").textContent =
-            visivel ? "Mostrar" : "Ocultar";
-    });
+        if (
+            texto.toLowerCase().includes("already registered") ||
+            texto.toLowerCase().includes("already been registered")
+        ) {
+            texto = "Este e-mail já possui cadastro. Tente acessar sua conta.";
+        } else if (
+            texto.toLowerCase().includes("companies_cnpj_key") ||
+            texto.toLowerCase().includes("duplicate key")
+        ) {
+            texto = "Este CNPJ já está cadastrado na NEXORA.";
+        }
 
-    // Aviso enquanto a integração com o servidor não está ativa
-    form.addEventListener("submit", event => {
-        event.preventDefault();
+        mostrarMensagem(texto, "error");
 
-        mensagem.style.display = "block";
-        mensagem.textContent =
-            "A interface está pronta. A criação segura da conta, o armazenamento dos dados e a contratação serão ativados na integração com o servidor NEXORA.";
-
-        mensagem.scrollIntoView({
-            behavior:"smooth",
-            block:"nearest"
-        });
-    });
-
+        botao.disabled = false;
+        botao.textContent = "CONTINUAR COM MEU CADASTRO →";
+    }
 });
 </script>
 
