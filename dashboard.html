@@ -281,6 +281,16 @@ th{color:var(--muted);font-weight:700}
     font-weight:700;
 }
 
+.badge.inactive{
+    background:#fff4df;
+    color:#946b22;
+}
+
+.badge.terminated{
+    background:#fdebea;
+    color:#a43e30;
+}
+
 .empty{
     padding:35px 15px;
     text-align:center;
@@ -488,8 +498,9 @@ th{color:var(--muted);font-weight:700}
                     <div class="field">
                         <label>Status</label>
                         <select id="employeeStatus">
-                            <option value="ativo">Ativo</option>
-                            <option value="inativo">Inativo</option>
+                            <option value="active">Ativo</option>
+                            <option value="inactive">Inativo</option>
+                            <option value="terminated">Desligado</option>
                         </select>
                     </div>
 
@@ -690,7 +701,7 @@ async function loadEmployees(){
         employeesData.length;
 
     document.getElementById('activeEmployees').textContent =
-        employeesData.filter(e => e.status === 'ativo').length;
+        employeesData.filter(e => e.status === 'active').length;
 
     renderEmployees(employeesData);
 }
@@ -705,15 +716,31 @@ function renderEmployees(list){
         return;
     }
 
-    tbody.innerHTML = list.map(employee => `
-        <tr>
-            <td><strong>${escapeHTML(employee.full_name)}</strong></td>
-            <td>${escapeHTML(employee.employee_code || '—')}</td>
-            <td>${escapeHTML(employee.job_title || '—')}</td>
-            <td>${escapeHTML(employee.email || '—')}</td>
-            <td><span class="badge">${escapeHTML(employee.status || 'ativo')}</span></td>
-        </tr>
-    `).join('');
+    const statusLabels = {
+        active:'Ativo',
+        inactive:'Inativo',
+        terminated:'Desligado'
+    };
+
+    tbody.innerHTML = list.map(employee => {
+
+        const status = employee.status || 'active';
+        const statusLabel = statusLabels[status] || status;
+
+        return `
+            <tr>
+                <td><strong>${escapeHTML(employee.full_name)}</strong></td>
+                <td>${escapeHTML(employee.employee_code || '—')}</td>
+                <td>${escapeHTML(employee.job_title || '—')}</td>
+                <td>${escapeHTML(employee.email || '—')}</td>
+                <td>
+                    <span class="badge ${escapeHTML(status)}">
+                        ${escapeHTML(statusLabel)}
+                    </span>
+                </td>
+            </tr>
+        `;
+    }).join('');
 }
 
 function filterEmployees(){
