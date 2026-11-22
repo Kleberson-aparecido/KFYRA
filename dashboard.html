@@ -1375,7 +1375,7 @@ function localDateInSaoPaulo(value){
  const p={};parts.forEach(x=>p[x.type]=x.value);return `${p.year}-${p.month}-${p.day}`;
 }
 function timeToMinutes(value){
- if(!value)return null;const m=String(value).match(/^(\\d{1,2}):(\\d{2})/);return m?Number(m[1])*60+Number(m[2]):null;
+ if(!value)return null;const m=String(value).match(/^(\d{1,2}):(\d{2})/);return m?Number(m[1])*60+Number(m[2]):null;
 }
 function dateDiffDays(a,b){
  const [ay,am,ad]=a.split('-').map(Number),[by,bm,bd]=b.split('-').map(Number);
