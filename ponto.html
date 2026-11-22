@@ -63,16 +63,62 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .horas-dia{margin-top:10px;padding:10px;background:#eaf7ef;border-radius:8px;color:#216343;font-weight:bold;font-size:14px;line-height:1.6}
 .horas-alerta{background:#fff8e8;color:#93651c}
 .horas-negativas{background:#fff0ef;color:#a53d35}
-.calendario{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-top:12px}
-.cal-dia{min-height:48px;border-radius:7px;background:#f1f4f2;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;gap:3px}
-.cal-dia small{font-size:10px}
+/* CALENDÁRIO MENSAL */
+.calendario{
+display:grid;
+grid-template-columns:repeat(7,minmax(0,1fr));
+gap:5px;
+margin-top:12px;
+}
+.cal-cabecalho{
+text-align:center;
+font-size:11px;
+font-weight:bold;
+color:#687c72;
+padding:7px 0;
+}
+.cal-dia{
+min-width:0;
+min-height:58px;
+border-radius:8px;
+background:#f1f4f2;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+font-size:12px;
+gap:4px;
+cursor:pointer;
+border:2px solid transparent;
+padding:4px 1px;
+}
+.cal-dia strong{font-size:14px}
+.cal-dia small{font-size:9px;text-align:center;line-height:1.2}
 .cal-dia.trabalhado{background:#e0f3e7;color:#216343}
-.cal-dia.folga{background:#e9efeb;color:#52665d}
+.cal-dia.folga{background:#e3efff;color:#245b91}
 .cal-dia.ocorrencia{background:#fff0df;color:#98621c}
-.cal-dia.vazio{background:transparent}
-.cal-legenda{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:#687c72;margin-top:10px}
+.cal-dia.vazio{background:transparent;cursor:default}
+.cal-dia.hoje{border-color:#123d32}
+.cal-dia.selecionado{box-shadow:0 0 0 2px #c5a45b}
+.cal-legenda{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:#687c72;margin-top:12px}
 .cal-legenda span{display:flex;align-items:center;gap:5px}
-.ponto-bolinha{width:9px;height:9px;border-radius:50%;display:inline-block;background:#e0f3e7}
+.cal-cor{width:10px;height:10px;border-radius:3px;display:inline-block}
+.cor-trabalho{background:#a8dfb9}
+.cor-folga{background:#b7d5f5}
+.cor-ocorrencia{background:#f2c58e}
+.cor-hoje{background:#123d32}
+.cal-detalhe{
+margin-top:14px;
+padding:14px;
+background:white;
+border:1px solid #dce6df;
+border-radius:10px;
+font-size:13px;
+line-height:1.7;
+}
+.cal-detalhe h4{margin:0 0 8px;color:#123d32;font-size:15px}
+.cal-detalhe p{margin:5px 0;color:#52665d;font-size:13px}
+.cal-detalhe strong{color:#18352d}
 .status-solicitacao{display:inline-block;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:bold}
 .status-pending{background:#fff4d9;color:#8a6417}
 .status-approved{background:#e0f3e7;color:#216343}
@@ -84,50 +130,18 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .solicitacao-card .detalhe{color:#52665d}
 .solicitacao-vazia{text-align:center;padding:20px;background:#f4f7f4;border-radius:9px;color:#687c72;margin-top:12px}
 .aviso-solicitacao{font-size:13px;background:#fff8e8;color:#805d20;padding:12px;border-radius:8px;line-height:1.6;margin-top:12px}
-/* COMPROVANTES DAS SOLICITAÇÕES */
-.arquivo-solicitacao{
-background:white;
-border:1px dashed #a9beb0;
-border-radius:9px;
-padding:14px;
-margin-top:8px;
-}
-.arquivo-solicitacao input{
-padding:10px;
-border:0;
-background:transparent;
-}
-.arquivo-ajuda{
-font-size:12px;
-color:#687c72;
-margin-top:7px;
-line-height:1.5;
-}
-.arquivo-selecionado{
-font-size:13px;
-color:#216343;
-margin-top:8px;
-overflow-wrap:anywhere;
-}
-.link-comprovante{
-display:inline-block;
-margin-top:8px;
-padding:9px 12px;
-background:#e9efeb;
-color:#123d32;
-border-radius:7px;
-font-size:13px;
-font-weight:bold;
-text-decoration:none;
-}
-.link-comprovante:hover{
-background:#dce9df;
-}
+.arquivo-solicitacao{background:white;border:1px dashed #a9beb0;border-radius:9px;padding:14px;margin-top:8px}
+.arquivo-solicitacao input{padding:10px;border:0;background:transparent}
+.arquivo-ajuda{font-size:12px;color:#687c72;margin-top:7px;line-height:1.5}
+.arquivo-selecionado{font-size:13px;color:#216343;margin-top:8px;overflow-wrap:anywhere}
+.link-comprovante{display:inline-block;margin-top:8px;padding:9px 12px;background:#e9efeb;color:#123d32;border-radius:7px;font-size:13px;font-weight:bold;text-decoration:none}
+.link-comprovante:hover{background:#dce9df}
 @media(max-width:500px){
 main{margin:15px auto;padding:12px}
 .card{padding:20px}
 header{padding:22px}
-.cal-dia{min-height:42px}
+.cal-dia{min-height:48px}
+.cal-dia small{font-size:8px}
 .abas{gap:5px}
 .aba{font-size:12px;padding:12px 4px}
 }
@@ -150,9 +164,7 @@ header{padding:22px}
 <input type="password" id="senha" required autocomplete="current-password">
 <button type="submit">Entrar no Meu Ponto</button>
 </form>
-<a class="link" id="linkRecuperacao" href="javascript:void(0)">
-Primeiro acesso / Esqueci minha senha
-</a>
+<a class="link" id="linkRecuperacao" href="javascript:void(0)">Primeiro acesso / Esqueci minha senha</a>
 <form id="formRecuperacao" class="oculto">
 <label for="emailRecuperacao">Seu e-mail cadastrado</label>
 <input type="email" id="emailRecuperacao" required>
@@ -172,7 +184,6 @@ Primeiro acesso / Esqueci minha senha
 <button type="button" class="aba" id="abaSolicitacoes">Solicitações</button>
 <button type="button" class="aba" id="abaPerfil">Meu Perfil</button>
 </div>
-<!-- MEU PONTO -->
 <section id="conteudoPonto">
 <div class="painel-ponto">
 <p>Colaborador</p>
@@ -201,11 +212,15 @@ Primeiro acesso / Esqueci minha senha
 <div id="resumoEspelho" class="resumo-historico"></div>
 <div class="painel-ponto">
 <h3>Calendário mensal</h3>
-<div id="calendarioMensal"></div>
+<div id="calendarioMensal" class="calendario"></div>
 <div class="cal-legenda">
-<span>🟢 Trabalhado</span>
-<span>⚪ Folga</span>
-<span>🟠 Ocorrência</span>
+<span><i class="cal-cor cor-trabalho"></i> Trabalho</span>
+<span><i class="cal-cor cor-folga"></i> Folga</span>
+<span><i class="cal-cor cor-ocorrencia"></i> Ocorrência</span>
+<span><i class="cal-cor cor-hoje"></i> Hoje</span>
+</div>
+<div id="calendarioDetalhe" class="cal-detalhe">
+Selecione um dia do calendário para consultar os detalhes.
 </div>
 </div>
 <div id="listaEspelho">
@@ -213,7 +228,6 @@ Primeiro acesso / Esqueci minha senha
 </div>
 </div>
 </section>
-<!-- SOLICITAÇÕES -->
 <section id="conteudoSolicitacoes" class="oculto">
 <div class="painel-ponto">
 <h3>Nova solicitação</h3>
@@ -242,19 +256,11 @@ Primeiro acesso / Esqueci minha senha
 <textarea id="descricaoSolicitacao" required maxlength="3000" placeholder="Explique o motivo da sua solicitação com o máximo de detalhes possível."></textarea>
 <label for="comprovanteSolicitacao">Comprovante ou documento (opcional)</label>
 <div class="arquivo-solicitacao">
-<input
-type="file"
-id="comprovanteSolicitacao"
-accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
->
-<div class="arquivo-ajuda">
-Você pode anexar um PDF ou uma imagem JPG/PNG. Tamanho máximo: 10 MB.
-</div>
+<input type="file" id="comprovanteSolicitacao" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png">
+<div class="arquivo-ajuda">Você pode anexar um PDF ou uma imagem JPG/PNG. Tamanho máximo: 10 MB.</div>
 <div id="nomeComprovante" class="arquivo-selecionado"></div>
 </div>
-<div class="aviso-solicitacao">
-Sua solicitação será encaminhada para análise. O envio não significa aprovação e não altera automaticamente seu ponto ou sua escala.
-</div>
+<div class="aviso-solicitacao">Sua solicitação será encaminhada para análise. O envio não significa aprovação e não altera automaticamente seu ponto ou sua escala.</div>
 <button type="submit" id="botaoEnviarSolicitacao">Enviar solicitação</button>
 </form>
 </div>
@@ -262,12 +268,9 @@ Sua solicitação será encaminhada para análise. O envio não significa aprova
 <h3>Minhas solicitações</h3>
 <p>Acompanhe o andamento das solicitações que você enviou.</p>
 <button type="button" id="botaoAtualizarSolicitacoes" class="secundario">Atualizar histórico</button>
-<div id="listaSolicitacoes">
-<p>Carregando solicitações...</p>
-</div>
+<div id="listaSolicitacoes"><p>Carregando solicitações...</p></div>
 </div>
 </section>
-<!-- MEU PERFIL -->
 <section id="conteudoPerfil" class="oculto">
 <div class="painel-ponto">
 <div class="perfil-topo">
@@ -275,8 +278,7 @@ Sua solicitação será encaminhada para análise. O envio não significa aprova
 <img id="fotoPerfil" class="foto-perfil oculto" alt="Foto de perfil">
 <h2 class="nome-perfil" id="nomePerfil"></h2>
 <p class="cargo-perfil" id="cargoPerfil"></p>
-<label class="upload-label" for="arquivoFoto">
-Adicionar ou trocar foto
+<label class="upload-label" for="arquivoFoto">Adicionar ou trocar foto
 <input type="file" id="arquivoFoto" accept="image/jpeg,image/png,image/webp">
 </label>
 </div>
@@ -298,7 +300,6 @@ Adicionar ou trocar foto
 const SUPABASE_URL="https://guiadodxikdvsfrhedls.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable_dhAqwNSfwGj8_nBnudx_Hw_gMZpnyEL";
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-/* BUCKET PRIVADO DOS COMPROVANTES */
 const BUCKET_COMPROVANTES="employee-request-documents";
 const TAMANHO_MAXIMO_COMPROVANTE=10*1024*1024;
 const mensagem=document.getElementById("mensagem");
@@ -314,6 +315,9 @@ let colaboradorAtual=null;
 let relogioIntervalo=null;
 let processandoPonto=false;
 let processandoSolicitacao=false;
+let jornadasCalendario={};
+let diasCalendario={};
+let dataSelecionadaCalendario=null;
 function mostrarMensagem(texto,tipo){
 mensagem.textContent=texto;
 mensagem.className=tipo;
@@ -499,7 +503,7 @@ ultimaSaida,
 inconsistente
 };
 }
-/* CONSULTA DAS ESCALAS PARA CÁLCULO */
+/* CONSULTA DAS ESCALAS PARA TODO O MÊS */
 async function carregarJornadasPrevistas(ano,mes){
 const primeiroDia=ano+"-"+String(mes).padStart(2,"0")+"-01";
 const ultimoDia=dataChaveLocal(new Date(ano,mes,0));
@@ -519,12 +523,13 @@ const {data:dias,error:erroDias}=await supabaseClient.from("work_schedule_templa
 .select("schedule_id,day_number,is_working,start_time,end_time,break_minutes").in("schedule_id",ids);
 if(erroDias)throw erroDias;
 const resultado={};
-const hoje=dataChaveLocal(new Date());
 for(let numero=1;numero<=new Date(ano,mes,0).getDate();numero++){
 const data=new Date(ano,mes-1,numero,12,0,0);
 const chave=dataChaveLocal(data);
-if(chave>hoje)continue;
-const atribuicao=atribuicoes.filter(a=>a.effective_from<=chave&&(!a.effective_until||a.effective_until>=chave))
+/* Não ignora mais os dias futuros.
+   Assim, o calendário mostra a escala prevista do mês inteiro. */
+const atribuicao=atribuicoes
+.filter(a=>a.effective_from<=chave&&(!a.effective_until||a.effective_until>=chave))
 .sort((a,b)=>b.effective_from.localeCompare(a.effective_from))[0];
 if(!atribuicao)continue;
 const modelo=modelos.find(m=>m.id===atribuicao.schedule_id);
@@ -594,22 +599,78 @@ span.textContent=legenda;
 caixa.append(strong,span);
 return caixa;
 }
+/* DETALHES DO DIA SELECIONADO */
+function mostrarDetalheCalendario(chave){
+const detalhe=document.getElementById("calendarioDetalhe");
+detalhe.innerHTML="";
+const tituloDia=document.createElement("h4");
+tituloDia.textContent="Detalhes de "+formatarDataEspelho(chave);
+detalhe.appendChild(tituloDia);
+const jornada=jornadasCalendario[chave];
+const eventos=diasCalendario[chave]||[];
+const hoje=dataChaveLocal(new Date());
+let situacao="Sem escala cadastrada para esta data.";
+if(jornada)situacao=jornada.trabalho?"Dia previsto para trabalho.":"Dia previsto como folga.";
+detalhe.appendChild(criarElemento("p","",situacao));
+if(jornada&&jornada.trabalho){
+detalhe.appendChild(criarElemento("p","","Horário previsto: "+
+(jornada.inicio!==null?String(Math.floor(jornada.inicio/60)).padStart(2,"0")+":"+String(jornada.inicio%60).padStart(2,"0"):"--:--")+
+" até "+
+(jornada.fim!==null?String(Math.floor(jornada.fim/60)).padStart(2,"0")+":"+String(jornada.fim%60).padStart(2,"0"):"--:--")));
+detalhe.appendChild(criarElemento("p","","Intervalo previsto: "+formatarIntervalo(jornada.intervalo)));
+detalhe.appendChild(criarElemento("p","","Carga prevista: "+formatarDuracao(jornada.minutos)));
+}
+const tituloRegistros=document.createElement("p");
+tituloRegistros.innerHTML="<strong>Marcações realizadas:</strong>";
+detalhe.appendChild(tituloRegistros);
+if(eventos.length){
+eventos.forEach(registro=>{
+const hora=new Date(registro.recorded_at).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+detalhe.appendChild(criarElemento("p","","• "+nomeEvento(registro.event_type)+": "+hora));
+});
+const calculo=calcularHorasDoDia(eventos);
+detalhe.appendChild(criarElemento("p","","Total trabalhado: "+formatarDuracao(calculo.minutos)));
+detalhe.appendChild(criarElemento("p","","Intervalos registrados: "+formatarDuracao(calculo.intervalo)));
+if(calculo.pendente)detalhe.appendChild(criarElemento("p","","Atenção: existe uma jornada sem encerramento."));
+if(calculo.inconsistente)detalhe.appendChild(criarElemento("p","","Atenção: foram identificadas marcações inconsistentes."));
+}else{
+detalhe.appendChild(criarElemento("p","","Nenhuma marcação registrada neste dia."));
+if(chave>hoje&&jornada&&jornada.trabalho){
+detalhe.appendChild(criarElemento("p","","Este dia ainda é futuro. A jornada está prevista, aguardando as marcações."));
+}else if(chave<hoje&&jornada&&jornada.trabalho){
+detalhe.appendChild(criarElemento("p","","Não foram encontradas marcações para este dia de trabalho."));
+}
+}
+}
+/* RENDERIZAÇÃO DO CALENDÁRIO */
 function renderizarCalendario(ano,mes,jornadas,dias){
 const area=document.getElementById("calendarioMensal");
 area.innerHTML="";
-const primeiro=new Date(ano,mes-1,1);
+area.className="calendario";
+const hoje=dataChaveLocal(new Date());
+const primeiro=new Date(ano,mes-1,1,12,0,0);
 const deslocamento=(primeiro.getDay()+6)%7;
+const nomesCurtos=["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"];
+nomesCurtos.forEach(nome=>{
+const cabecalho=document.createElement("div");
+cabecalho.className="cal-cabecalho";
+cabecalho.textContent=nome;
+area.appendChild(cabecalho);
+});
 for(let i=0;i<deslocamento;i++){
 const vazio=document.createElement("div");
 vazio.className="cal-dia vazio";
 area.appendChild(vazio);
 }
 const total=new Date(ano,mes,0).getDate();
-const hoje=dataChaveLocal(new Date());
+let primeiraData=null;
 for(let n=1;n<=total;n++){
 const chave=ano+"-"+String(mes).padStart(2,"0")+"-"+String(n).padStart(2,"0");
 const celula=document.createElement("div");
 celula.className="cal-dia";
+celula.setAttribute("role","button");
+celula.setAttribute("tabindex","0");
+celula.setAttribute("aria-label","Consultar dia "+formatarDataEspelho(chave));
 const jornada=jornadas[chave];
 const eventos=dias[chave]||[];
 if(eventos.length){
@@ -619,15 +680,55 @@ celula.classList.add(calc.inconsistente||calc.pendente?"ocorrencia":"trabalhado"
 celula.classList.add("folga");
 }else if(jornada&&jornada.trabalho&&chave<hoje){
 celula.classList.add("ocorrencia");
+}else if(jornada&&jornada.trabalho){
+celula.classList.add("trabalhado");
 }else{
 celula.classList.add("vazio");
 }
+if(chave===hoje)celula.classList.add("hoje");
 const numero=document.createElement("strong");
 numero.textContent=n;
 const pequeno=document.createElement("small");
-pequeno.textContent=eventos.length?"●":(jornada?(jornada.trabalho?"—":"Folga"):"");
+if(eventos.length){
+pequeno.textContent="Registrado";
+}else if(jornada){
+pequeno.textContent=jornada.trabalho?"Trabalho":"Folga";
+}else{
+pequeno.textContent="—";
+}
 celula.append(numero,pequeno);
+celula.addEventListener("click",()=>{
+dataSelecionadaCalendario=chave;
+area.querySelectorAll(".cal-dia").forEach(el=>el.classList.remove("selecionado"));
+celula.classList.add("selecionado");
+mostrarDetalheCalendario(chave);
+});
+celula.addEventListener("keydown",event=>{
+if(event.key==="Enter"||event.key===" "){
+event.preventDefault();
+celula.click();
+}
+});
 area.appendChild(celula);
+if(chave===hoje)primeiraData=chave;
+}
+if(!primeiraData&&total>0){
+primeiraData=ano+"-"+String(mes).padStart(2,"0")+"-01";
+}
+if(dataSelecionadaCalendario&&dataSelecionadaCalendario.startsWith(ano+"-"+String(mes).padStart(2,"0"))){
+primeiraData=dataSelecionadaCalendario;
+}
+if(primeiraData){
+const celulas=area.querySelectorAll(".cal-dia");
+celulas.forEach(celula=>{
+if(celula.getAttribute("aria-label")==="Consultar dia "+formatarDataEspelho(primeiraData)){
+celula.classList.add("selecionado");
+}
+});
+dataSelecionadaCalendario=primeiraData;
+mostrarDetalheCalendario(primeiraData);
+}else{
+document.getElementById("calendarioDetalhe").textContent="Nenhum dia disponível.";
 }
 }
 /* ESPELHO DE PONTO E RESUMO */
@@ -661,11 +762,14 @@ if(!dias[chave])dias[chave]=[];
 dias[chave].push(registro);
 });
 const jornadas=await carregarJornadasPrevistas(ano,mes);
+jornadasCalendario=jornadas;
+diasCalendario=dias;
 let totalMes=0,previstoMes=0,atrasoMes=0,antecipadaMes=0,extraMes=0;
 let diasComRegistro=0;
 let diasComOcorrencia=0;
+const hoje=dataChaveLocal(new Date());
 Object.entries(jornadas).forEach(([chave,jornada])=>{
-if(chave<=dataChaveLocal(new Date()))previstoMes+=jornada.minutos;
+if(chave<=hoje)previstoMes+=jornada.minutos;
 });
 Object.entries(dias).forEach(([chave,eventos])=>{
 const calc=calcularHorasDoDia(eventos);
@@ -688,7 +792,7 @@ resumo.innerHTML="";
 [registros.length,"Marcações"],
 [diasComRegistro,"Dias com registro"],
 [formatarDuracao(totalMes),"Horas trabalhadas"],
-[formatarDuracao(previstoMes),"Jornada prevista"],
+[formatarDuracao(previstoMes),"Jornada prevista até hoje"],
 [(saldoMes>=0?"+":"-")+formatarDuracao(saldoMes),"Saldo do período"],
 [formatarDuracao(atrasoMes),"Atrasos acumulados"],
 [formatarDuracao(antecipadaMes),"Saídas antecipadas"],
@@ -758,13 +862,6 @@ bloco.appendChild(aviso);
 }
 lista.appendChild(bloco);
 });
-}catch(error){
-console.error("Erro no espelho de ponto:",error);
-lista.innerHTML="";
-const aviso=document.createElement("p");
-aviso.textContent="Não foi possível carregar o espelho: "+error.message;
-lista.appendChild(aviso);
-}
 }
 /* PERFIL */
 function iniciais(nome){
@@ -965,7 +1062,6 @@ if(classe)elemento.className=classe;
 if(texto!==undefined)elemento.textContent=texto;
 return elemento;
 }
-/* GERA NOME SEGURO PARA O ARQUIVO */
 function extensaoComprovante(arquivo){
 const extensao=arquivo.name.split(".").pop().toLowerCase();
 if(arquivo.type==="application/pdf"&&extensao==="pdf")return "pdf";
@@ -973,44 +1069,23 @@ if(arquivo.type==="image/jpeg"&&(extensao==="jpg"||extensao==="jpeg"))return ext
 if(arquivo.type==="image/png"&&extensao==="png")return "png";
 return null;
 }
-/* UPLOAD PRIVADO DO COMPROVANTE */
 async function enviarComprovante(arquivo){
 if(!arquivo)return null;
 const extensao=extensaoComprovante(arquivo);
-if(!extensao){
-throw new Error("O comprovante deve ser um arquivo PDF, JPG ou PNG válido.");
-}
-if(arquivo.size>TAMANHO_MAXIMO_COMPROVANTE){
-throw new Error("O comprovante ultrapassa o limite de 10 MB.");
-}
+if(!extensao)throw new Error("O comprovante deve ser um arquivo PDF, JPG ou PNG válido.");
+if(arquivo.size>TAMANHO_MAXIMO_COMPROVANTE)throw new Error("O comprovante ultrapassa o limite de 10 MB.");
 const nomeArquivo=crypto.randomUUID()+"."+extensao;
-/*
-O caminho segue a estrutura exigida pela política
-do Storage:
-company_id/employee_id/nome-do-arquivo
-*/
-const caminho=
-String(colaboradorAtual.company_id)+"/"+
-String(colaboradorAtual.id)+"/"+
-nomeArquivo;
-const {error}=await supabaseClient.storage
-.from(BUCKET_COMPROVANTES)
-.upload(caminho,arquivo,{
-contentType:arquivo.type,
-upsert:false
-});
+const caminho=String(colaboradorAtual.company_id)+"/"+String(colaboradorAtual.id)+"/"+nomeArquivo;
+const {error}=await supabaseClient.storage.from(BUCKET_COMPROVANTES)
+.upload(caminho,arquivo,{contentType:arquivo.type,upsert:false});
 if(error)throw error;
 return caminho;
 }
-/* LINK TEMPORÁRIO PARA ARQUIVO PRIVADO */
 async function criarLinkComprovante(caminho){
-const {data,error}=await supabaseClient.storage
-.from(BUCKET_COMPROVANTES)
-.createSignedUrl(caminho,300);
+const {data,error}=await supabaseClient.storage.from(BUCKET_COMPROVANTES).createSignedUrl(caminho,300);
 if(error)throw error;
 return data.signedUrl;
 }
-/* CARREGA SOLICITAÇÕES E SEUS COMPROVANTES */
 async function carregarMinhasSolicitacoes(){
 const lista=document.getElementById("listaSolicitacoes");
 if(!usuarioAtual||!colaboradorAtual){
@@ -1019,11 +1094,9 @@ return;
 }
 lista.innerHTML="<p>Carregando suas solicitações...</p>";
 try{
-const {data,error}=await supabaseClient
-.from("employee_requests")
+const {data,error}=await supabaseClient.from("employee_requests")
 .select("id,request_type,description,requested_date,requested_start_time,requested_end_time,status,decision_reason,created_at,decided_at,document_path")
-.eq("employee_id",colaboradorAtual.id)
-.eq("user_id",usuarioAtual.id)
+.eq("employee_id",colaboradorAtual.id).eq("user_id",usuarioAtual.id)
 .order("created_at",{ascending:false});
 if(error)throw error;
 lista.innerHTML="";
@@ -1033,28 +1106,15 @@ return;
 }
 for(const item of data){
 const card=criarElemento("div","solicitacao-card");
-const tituloCard=criarElemento("h4","",tiposSolicitacao[item.request_type]||"Solicitação");
-card.appendChild(tituloCard);
-const status=criarElemento("span","status-solicitacao status-"+item.status,statusSolicitacao[item.status]||item.status);
-card.appendChild(status);
-const dataPedido=criarElemento("p","detalhe","Data relacionada: "+formatarDataSolicitacao(item.requested_date));
-card.appendChild(dataPedido);
-if(item.requested_start_time){
-card.appendChild(criarElemento("p","detalhe","Horário inicial: "+String(item.requested_start_time).substring(0,5)));
-}
-if(item.requested_end_time){
-card.appendChild(criarElemento("p","detalhe","Horário final: "+String(item.requested_end_time).substring(0,5)));
-}
-card.appendChild(criarElemento("p","", "Justificativa: "+item.description));
+card.appendChild(criarElemento("h4","",tiposSolicitacao[item.request_type]||"Solicitação"));
+card.appendChild(criarElemento("span","status-solicitacao status-"+item.status,statusSolicitacao[item.status]||item.status));
+card.appendChild(criarElemento("p","detalhe","Data relacionada: "+formatarDataSolicitacao(item.requested_date)));
+if(item.requested_start_time)card.appendChild(criarElemento("p","detalhe","Horário inicial: "+String(item.requested_start_time).substring(0,5)));
+if(item.requested_end_time)card.appendChild(criarElemento("p","detalhe","Horário final: "+String(item.requested_end_time).substring(0,5)));
+card.appendChild(criarElemento("p","","Justificativa: "+item.description));
 card.appendChild(criarElemento("p","detalhe","Enviada em: "+formatarDataHoraSolicitacao(item.created_at)));
-if(item.decided_at){
-card.appendChild(criarElemento("p","detalhe","Analisada em: "+formatarDataHoraSolicitacao(item.decided_at)));
-}
-if(item.decision_reason){
-const motivo=criarElemento("p","detalhe","Resposta do responsável: "+item.decision_reason);
-card.appendChild(motivo);
-}
-/* DOCUMENTO ANEXADO */
+if(item.decided_at)card.appendChild(criarElemento("p","detalhe","Analisada em: "+formatarDataHoraSolicitacao(item.decided_at)));
+if(item.decision_reason)card.appendChild(criarElemento("p","detalhe","Resposta do responsável: "+item.decision_reason));
 if(item.document_path){
 const areaDocumento=criarElemento("div","","");
 areaDocumento.appendChild(criarElemento("p","detalhe","Comprovante anexado:"));
@@ -1069,9 +1129,7 @@ link.textContent="Abrir comprovante";
 areaDocumento.appendChild(link);
 }catch(erroDocumento){
 console.error("Erro ao gerar link do comprovante:",erroDocumento);
-areaDocumento.appendChild(
-criarElemento("p","detalhe","Não foi possível abrir o comprovante. Atualize o histórico ou procure o RH.")
-);
+areaDocumento.appendChild(criarElemento("p","detalhe","Não foi possível abrir o comprovante. Atualize o histórico ou procure o RH."));
 }
 card.appendChild(areaDocumento);
 }
@@ -1083,7 +1141,6 @@ lista.innerHTML="";
 lista.appendChild(criarElemento("p","","Não foi possível carregar suas solicitações: "+error.message));
 }
 }
-/* ENVIA SOLICITAÇÃO E COMPROVANTE */
 async function enviarSolicitacao(event){
 event.preventDefault();
 if(processandoSolicitacao)return;
@@ -1127,12 +1184,10 @@ botao.textContent="Enviando solicitação...";
 limparMensagem();
 try{
 let caminhoDocumento=null;
-/* PRIMEIRO ENVIA O ARQUIVO PARA O STORAGE */
 if(arquivo){
 botao.textContent="Enviando comprovante...";
 caminhoDocumento=await enviarComprovante(arquivo);
 }
-/* DEPOIS REGISTRA A SOLICITAÇÃO NO BANCO */
 botao.textContent="Salvando solicitação...";
 const dados={
 company_id:colaboradorAtual.company_id,
@@ -1145,33 +1200,24 @@ requested_start_time:horaInicial,
 requested_end_time:horaFinal,
 document_path:caminhoDocumento
 };
-const {error}=await supabaseClient
-.from("employee_requests")
-.insert(dados);
+const {error}=await supabaseClient.from("employee_requests").insert(dados);
 if(error)throw error;
 document.getElementById("formSolicitacao").reset();
 document.getElementById("camposHorario").classList.add("oculto");
 document.getElementById("nomeComprovante").textContent="";
-mostrarMensagem(
-arquivo?
+mostrarMensagem(arquivo?
 "Sua solicitação e o comprovante foram enviados com sucesso! Agora aguardam análise do responsável.":
-"Sua solicitação foi enviada com sucesso! Agora ela aguarda análise do responsável.",
-"sucesso"
-);
+"Sua solicitação foi enviada com sucesso! Agora ela aguarda análise do responsável.","sucesso");
 await carregarMinhasSolicitacoes();
 }catch(error){
 console.error("Erro ao enviar solicitação:",error);
-mostrarMensagem(
-"Não foi possível enviar sua solicitação: "+error.message,
-"erro"
-);
+mostrarMensagem("Não foi possível enviar sua solicitação: "+error.message,"erro");
 }finally{
 processandoSolicitacao=false;
 botao.disabled=false;
 botao.textContent="Enviar solicitação";
 }
 }
-/* MOSTRA O NOME DO ARQUIVO SELECIONADO */
 document.getElementById("comprovanteSolicitacao").addEventListener("change",function(){
 const arquivo=this.files[0];
 const area=document.getElementById("nomeComprovante");
@@ -1314,15 +1360,9 @@ subtitulo.textContent="Consulte seus dados e sua jornada.";
 carregarPerfil();
 }
 }
-document.getElementById("abaPonto").addEventListener("click",function(){
-ativarAba("ponto");
-});
-document.getElementById("abaSolicitacoes").addEventListener("click",function(){
-ativarAba("solicitacoes");
-});
-document.getElementById("abaPerfil").addEventListener("click",function(){
-ativarAba("perfil");
-});
+document.getElementById("abaPonto").addEventListener("click",function(){ativarAba("ponto");});
+document.getElementById("abaSolicitacoes").addEventListener("click",function(){ativarAba("solicitacoes");});
+document.getElementById("abaPerfil").addEventListener("click",function(){ativarAba("perfil");});
 document.getElementById("arquivoFoto").addEventListener("change",enviarFoto);
 /* LOGIN, RECUPERAÇÃO E PRIMEIRO ACESSO */
 async function iniciar(){
@@ -1425,10 +1465,7 @@ const botao=formLogin.querySelector("button");
 botao.disabled=true;
 botao.textContent="Entrando...";
 try{
-const {data,error}=await supabaseClient.auth.signInWithPassword({
-email,
-password:senha
-});
+const {data,error}=await supabaseClient.auth.signInWithPassword({email,password:senha});
 if(error)throw error;
 await abrirPortal(data.user);
 }catch(error){
