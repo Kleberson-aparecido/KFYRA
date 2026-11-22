@@ -6,726 +6,506 @@
 <title>Meu Ponto | NEXORA</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-* { box-sizing: border-box; }
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f4f7f4;
-    color: #18352d;
-}
-header {
-    background: #123d32;
-    color: white;
-    padding: 25px;
-}
-header h2 {
-    margin: 0;
-    letter-spacing: 3px;
-}
-header span { color: #c5a45b; }
-header p {
-    color: #c6ddd1;
-    margin-bottom: 0;
-}
-main {
-    max-width: 480px;
-    margin: 35px auto;
-    padding: 20px;
-}
-.card {
-    background: white;
-    padding: 28px;
-    border-radius: 15px;
-    box-shadow: 0 5px 25px #0001;
-}
-h1 { font-size: 25px; }
-p {
-    color: #788a82;
-    line-height: 1.6;
-}
-label {
-    display: block;
-    margin: 18px 0 7px;
-    font-weight: bold;
-    font-size: 14px;
-}
-input {
-    width: 100%;
-    padding: 15px;
-    border: 1px solid #dce6df;
-    border-radius: 8px;
-    font-size: 16px;
-    background: white;
-}
-input:focus {
-    outline: 2px solid #c5a45b;
-    border-color: #c5a45b;
-}
-button {
-    width: 100%;
-    padding: 16px;
-    margin-top: 20px;
-    background: #123d32;
-    color: white;
-    border: 0;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 15px;
-    cursor: pointer;
-}
-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-button.secundario {
-    background: #e9efeb;
-    color: #123d32;
-}
-.link {
-    display: block;
-    text-align: center;
-    margin-top: 20px;
-    color: #17654c;
-    cursor: pointer;
-    font-size: 14px;
-    text-decoration: underline;
-}
-#mensagem {
-    display: none;
-    padding: 13px;
-    border-radius: 8px;
-    margin: 15px 0;
-    font-size: 14px;
-    overflow-wrap: anywhere;
-}
-.erro {
-    display: block !important;
-    background: #fff0ef;
-    color: #a53d35;
-}
-.sucesso {
-    display: block !important;
-    background: #eaf7ef;
-    color: #216343;
-}
-.oculto { display: none !important; }
-.painel-ponto {
-    background: #f4f7f4;
-    border: 1px solid #e1eae3;
-    border-radius: 12px;
-    padding: 18px;
-    margin-top: 20px;
-}
-.painel-ponto p {
-    margin: 8px 0;
-}
-.relogio {
-    font-size: 20px;
-    font-weight: bold;
-    color: #123d32;
-    margin-top: 12px;
-}
-.status-ponto {
-    font-size: 14px;
-    font-weight: bold;
-    color: #17654c;
-}
-@media(max-width: 500px) {
-    main { margin: 20px auto; }
-    .card { padding: 23px; }
-}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f7f4;color:#18352d}
+header{background:#123d32;color:white;padding:25px}
+header h2{margin:0;letter-spacing:3px}
+header span{color:#c5a45b}
+header p{color:#c6ddd1;margin-bottom:0}
+main{max-width:480px;margin:35px auto;padding:20px}
+.card{background:white;padding:28px;border-radius:15px;box-shadow:0 5px 25px #0001}
+h1{font-size:25px}
+p{color:#788a82;line-height:1.6}
+label{display:block;margin:18px 0 7px;font-weight:bold;font-size:14px}
+input{width:100%;padding:15px;border:1px solid #dce6df;border-radius:8px;font-size:16px}
+button{width:100%;padding:16px;margin-top:15px;background:#123d32;color:white;border:0;border-radius:8px;font-weight:bold;font-size:15px;cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
+.secundario{background:#e9efeb;color:#123d32}
+.link{display:block;text-align:center;margin-top:20px;color:#17654c;cursor:pointer;font-size:14px;text-decoration:underline}
+#mensagem{display:none;padding:13px;border-radius:8px;margin:15px 0;font-size:14px;overflow-wrap:anywhere}
+.erro{display:block!important;background:#fff0ef;color:#a53d35}
+.sucesso{display:block!important;background:#eaf7ef;color:#216343}
+.oculto{display:none!important}
+.painel-ponto{background:#f4f7f4;border:1px solid #e1eae3;border-radius:12px;padding:18px;margin-top:20px}
+.painel-ponto p{margin:8px 0}
+.relogio{font-size:19px;font-weight:bold;color:#123d32;margin-top:12px}
+.status-ponto{font-size:14px;font-weight:bold;color:#17654c;line-height:1.5}
+@media(max-width:500px){main{margin:20px auto}.card{padding:23px}}
 </style>
 </head>
 <body>
 <header>
-    <h2>NEXORA<span>.</span></h2>
-    <p>MEU PONTO • PORTAL DO COLABORADOR</p>
+<h2>NEXORA<span>.</span></h2>
+<p>MEU PONTO • PORTAL DO COLABORADOR</p>
 </header>
+
 <main>
 <div class="card">
 <h1 id="titulo">Bem-vindo ao Meu Ponto</h1>
-<p id="subtitulo">
-    Acesse seu portal individual de colaborador.
-</p>
+<p id="subtitulo">Acesse seu portal individual de colaborador.</p>
 <div id="mensagem"></div>
-<!-- LOGIN -->
+
 <form id="formLogin">
-    <label for="email">E-mail</label>
-    <input
-        type="email"
-        id="email"
-        required
-        autocomplete="email"
-        placeholder="Digite seu e-mail"
-    >
-    <label for="senha">Senha</label>
-    <input
-        type="password"
-        id="senha"
-        required
-        autocomplete="current-password"
-        placeholder="Digite sua senha"
-    >
-    <button type="submit">
-        Entrar no Meu Ponto
-    </button>
+<label for="email">E-mail</label>
+<input type="email" id="email" required autocomplete="email">
+<label for="senha">Senha</label>
+<input type="password" id="senha" required autocomplete="current-password">
+<button type="submit">Entrar no Meu Ponto</button>
 </form>
-<a class="link" id="linkRecuperacao">
-    Primeiro acesso / Esqueci minha senha
-</a>
-<!-- RECUPERAÇÃO DE SENHA -->
+
+<a class="link" id="linkRecuperacao">Primeiro acesso / Esqueci minha senha</a>
+
 <form id="formRecuperacao" class="oculto">
-    <label for="emailRecuperacao">
-        Seu e-mail cadastrado
-    </label>
-    <input
-        type="email"
-        id="emailRecuperacao"
-        required
-        autocomplete="email"
-        placeholder="Digite seu e-mail"
-    >
-    <button type="submit">
-        Enviar link para meu e-mail
-    </button>
-    <a class="link" id="voltarLogin">
-        Voltar para o login
-    </a>
+<label for="emailRecuperacao">Seu e-mail cadastrado</label>
+<input type="email" id="emailRecuperacao" required>
+<button type="submit">Enviar link para meu e-mail</button>
+<a class="link" id="voltarLogin">Voltar para o login</a>
 </form>
-<!-- CRIAÇÃO E REDEFINIÇÃO DE SENHA -->
+
 <form id="formSenha" class="oculto">
-    <label for="novaSenha">Crie sua senha</label>
-    <input
-        type="password"
-        id="novaSenha"
-        minlength="8"
-        required
-        autocomplete="new-password"
-        placeholder="Mínimo de 8 caracteres"
-    >
-    <label for="confirmarSenha">Confirme sua senha</label>
-    <input
-        type="password"
-        id="confirmarSenha"
-        minlength="8"
-        required
-        autocomplete="new-password"
-        placeholder="Repita sua senha"
-    >
-    <button type="submit">
-        Salvar senha e continuar
-    </button>
+<label for="novaSenha">Crie sua senha</label>
+<input type="password" id="novaSenha" minlength="8" required autocomplete="new-password">
+<label for="confirmarSenha">Confirme sua senha</label>
+<input type="password" id="confirmarSenha" minlength="8" required autocomplete="new-password">
+<button type="submit">Salvar senha e continuar</button>
 </form>
-<!-- ÁREA DO COLABORADOR -->
+
 <div id="areaLogada" class="oculto">
-    <div class="painel-ponto">
-        <p>Colaborador</p>
-        <h2 id="nomeColaborador">Carregando...</h2>
-        <p id="emailColaborador"></p>
-    </div>
-    <div class="painel-ponto">
-        <p>Data e horário atual</p>
-        <div id="relogio" class="relogio">
-            Carregando...
-        </div>
-    </div>
-    <div class="painel-ponto">
-        <p>Registro de ponto</p>
-        <div id="statusPonto" class="status-ponto">
-            Verificando registros...
-        </div>
-        <button
-            type="button"
-            id="botaoEntrada"
-            disabled
-        >
-            Registrar Entrada
-        </button>
-    </div>
-    <button
-        type="button"
-        id="botaoSair"
-        class="secundario"
-    >
-        Sair da conta
-    </button>
+<div class="painel-ponto">
+<p>Colaborador</p>
+<h2 id="nomeColaborador"></h2>
+<p id="emailColaborador"></p>
+</div>
+
+<div class="painel-ponto">
+<p>Data e horário atual</p>
+<div id="relogio" class="relogio"></div>
+</div>
+
+<div class="painel-ponto">
+<p>Registro de ponto</p>
+<div id="statusPonto" class="status-ponto">Verificando registros...</div>
+<button type="button" id="botaoPonto" disabled>Carregando...</button>
+</div>
+
+<button type="button" id="botaoSair" class="secundario">Sair da conta</button>
 </div>
 </div>
 </main>
+
 <script>
-// =====================================
-// CONEXÃO SUPABASE
-// =====================================
-const SUPABASE_URL =
-"https://guiadodxikdvsfrhedls.supabase.co";
-const SUPABASE_ANON_KEY =
-"sb_publishable_dhAqwNSfwGj8_nBnudx_Hw_gMZpnyEL";
-const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-);
-// =====================================
-// ELEMENTOS
-// =====================================
-const mensagem = document.getElementById("mensagem");
-const formLogin = document.getElementById("formLogin");
-const formSenha = document.getElementById("formSenha");
-const formRecuperacao = document.getElementById("formRecuperacao");
-const areaLogada = document.getElementById("areaLogada");
-const linkRecuperacao = document.getElementById("linkRecuperacao");
-const titulo = document.getElementById("titulo");
-const subtitulo = document.getElementById("subtitulo");
-let colaboradorAtual = null;
-let usuarioAtual = null;
-let relogioIntervalo = null;
-// =====================================
-// MENSAGENS
-// =====================================
-function mostrarMensagem(texto, tipo) {
-    mensagem.textContent = texto;
-    mensagem.className = tipo;
+const SUPABASE_URL="https://guiadodxikdvsfrhedls.supabase.co";
+const SUPABASE_ANON_KEY="sb_publishable_dhAqwNSfwGj8_nBnudx_Hw_gMZpnyEL";
+
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+
+const mensagem=document.getElementById("mensagem");
+const formLogin=document.getElementById("formLogin");
+const formSenha=document.getElementById("formSenha");
+const formRecuperacao=document.getElementById("formRecuperacao");
+const areaLogada=document.getElementById("areaLogada");
+const linkRecuperacao=document.getElementById("linkRecuperacao");
+const titulo=document.getElementById("titulo");
+const subtitulo=document.getElementById("subtitulo");
+
+let usuarioAtual=null;
+let colaboradorAtual=null;
+let relogioIntervalo=null;
+let processandoPonto=false;
+
+function mostrarMensagem(texto,tipo){
+mensagem.textContent=texto;
+mensagem.className=tipo;
 }
-function limparMensagem() {
-    mensagem.textContent = "";
-    mensagem.className = "";
+
+function limparMensagem(){
+mensagem.textContent="";
+mensagem.className="";
 }
-// =====================================
-// CONTROLE DOS FORMULÁRIOS
-// =====================================
-function esconderFormularios() {
-    formLogin.classList.add("oculto");
-    formSenha.classList.add("oculto");
-    formRecuperacao.classList.add("oculto");
-    areaLogada.classList.add("oculto");
-    linkRecuperacao.classList.add("oculto");
+
+function esconderFormularios(){
+formLogin.classList.add("oculto");
+formSenha.classList.add("oculto");
+formRecuperacao.classList.add("oculto");
+areaLogada.classList.add("oculto");
+linkRecuperacao.classList.add("oculto");
 }
-function mostrarLogin() {
-    esconderFormularios();
-    formLogin.classList.remove("oculto");
-    linkRecuperacao.classList.remove("oculto");
-    titulo.textContent = "Bem-vindo ao Meu Ponto";
-    subtitulo.textContent =
-        "Acesse seu portal individual de colaborador.";
+
+function mostrarLogin(){
+esconderFormularios();
+formLogin.classList.remove("oculto");
+linkRecuperacao.classList.remove("oculto");
+titulo.textContent="Bem-vindo ao Meu Ponto";
+subtitulo.textContent="Acesse seu portal individual de colaborador.";
 }
-function mostrarFormularioSenha(tipo) {
-    esconderFormularios();
-    formSenha.classList.remove("oculto");
-    titulo.textContent =
-        tipo === "invite"
-        ? "Primeiro acesso"
-        : "Redefinir senha";
-    subtitulo.textContent =
-        "Defina sua senha pessoal para acessar o Meu Ponto.";
-    mostrarMensagem(
-        "Crie uma senha com pelo menos 8 caracteres.",
-        "sucesso"
-    );
+
+function mostrarFormularioSenha(tipo){
+esconderFormularios();
+formSenha.classList.remove("oculto");
+titulo.textContent=tipo==="invite"?"Primeiro acesso":"Redefinir senha";
+subtitulo.textContent="Defina sua senha pessoal para acessar o Meu Ponto.";
+mostrarMensagem("Crie uma senha com pelo menos 8 caracteres.","sucesso");
 }
-// =====================================
-// RELÓGIO
-// =====================================
-function iniciarRelogio() {
-    if (relogioIntervalo) {
-        clearInterval(relogioIntervalo);
-    }
-    function atualizar() {
-        const agora = new Date();
-        document.getElementById("relogio").textContent =
-            agora.toLocaleString("pt-BR", {
-                dateStyle: "full",
-                timeStyle: "medium"
-            });
-    }
-    atualizar();
-    relogioIntervalo = setInterval(atualizar, 1000);
+
+function iniciarRelogio(){
+if(relogioIntervalo)clearInterval(relogioIntervalo);
+function atualizar(){
+document.getElementById("relogio").textContent=
+new Date().toLocaleString("pt-BR",{dateStyle:"full",timeStyle:"medium"});
 }
-// =====================================
-// BUSCAR COLABORADOR AUTENTICADO
-// =====================================
-async function buscarColaborador(user) {
-    const { data, error } = await supabaseClient
-        .from("employees")
-        .select("id, full_name, email, company_id, status")
-        .eq("user_id", user.id)
-        .eq("status", "active")
-        .maybeSingle();
-    if (error) {
-        throw new Error(
-            "Não foi possível consultar seu cadastro: " +
-            error.message
-        );
-    }
-    if (!data) {
-        throw new Error(
-            "Sua conta não está vinculada a um colaborador ativo. Procure o RH da empresa."
-        );
-    }
-    return data;
+atualizar();
+relogioIntervalo=setInterval(atualizar,1000);
 }
-// =====================================
-// BUSCAR ÚLTIMO REGISTRO
-// =====================================
-async function buscarUltimoRegistro() {
-    const { data, error } = await supabaseClient
-        .from("attendance_records")
-        .select("id, event_type, recorded_at")
-        .eq("user_id", usuarioAtual.id)
-        .order("recorded_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-    if (error) {
-        throw new Error(
-            "Não foi possível consultar seus registros: " +
-            error.message
-        );
-    }
-    return data;
+
+async function buscarColaborador(user){
+const {data,error}=await supabaseClient
+.from("employees")
+.select("id,full_name,email,company_id,status")
+.eq("user_id",user.id)
+.eq("status","active")
+.maybeSingle();
+
+if(error)throw new Error("Erro ao consultar colaborador: "+error.message);
+if(!data)throw new Error("Seu cadastro não está vinculado a um colaborador ativo. Procure o RH.");
+return data;
 }
-// =====================================
-// ATUALIZAR ESTADO DO PONTO
-// =====================================
-async function atualizarEstadoPonto() {
-    const botao = document.getElementById("botaoEntrada");
-    const status = document.getElementById("statusPonto");
-    botao.disabled = true;
-    status.textContent = "Verificando registros...";
-    try {
-        const ultimo = await buscarUltimoRegistro();
-        if (
-            ultimo &&
-            ultimo.event_type !== "saida"
-        ) {
-            status.textContent =
-                "Existe uma jornada em andamento. A entrada não está disponível.";
-            botao.textContent = "Entrada já registrada";
-            botao.disabled = true;
-            return;
-        }
-        status.textContent =
-            "Nenhuma jornada em andamento. Você pode registrar sua entrada.";
-        botao.textContent = "Registrar Entrada";
-        botao.disabled = false;
-    } catch (error) {
-        status.textContent = error.message;
-        botao.textContent = "Registro indisponível";
-        botao.disabled = true;
-    }
+
+async function buscarUltimoRegistro(){
+const {data,error}=await supabaseClient
+.from("attendance_records")
+.select("id,event_type,recorded_at")
+.eq("user_id",usuarioAtual.id)
+.eq("employee_id",colaboradorAtual.id)
+.order("recorded_at",{ascending:false})
+.limit(1)
+.maybeSingle();
+
+if(error)throw new Error("Erro ao consultar ponto: "+error.message);
+return data;
 }
-// =====================================
-// ABRIR PORTAL
-// =====================================
-async function abrirPortal(user) {
-    esconderFormularios();
-    limparMensagem();
-    titulo.textContent = "Meu Ponto";
-    subtitulo.textContent =
-        "Carregando seus dados...";
-    try {
-        usuarioAtual = user;
-        colaboradorAtual = await buscarColaborador(user);
-        areaLogada.classList.remove("oculto");
-        titulo.textContent = "Meu Ponto";
-        subtitulo.textContent =
-            "Bem-vindo ao seu portal de colaborador.";
-        document.getElementById("nomeColaborador").textContent =
-            colaboradorAtual.full_name;
-        document.getElementById("emailColaborador").textContent =
-            colaboradorAtual.email || user.email;
-        iniciarRelogio();
-        await atualizarEstadoPonto();
-    } catch (error) {
-        colaboradorAtual = null;
-        usuarioAtual = null;
-        mostrarLogin();
-        mostrarMensagem(error.message, "erro");
-    }
+
+const etapas={
+entrada:{
+proximo:"inicio_intervalo",
+botao:"Iniciar Intervalo",
+status:"Entrada registrada. Jornada em andamento."
+},
+inicio_intervalo:{
+proximo:"retorno_intervalo",
+botao:"Retornar do Intervalo",
+status:"Intervalo iniciado. Aguardando retorno."
+},
+retorno_intervalo:{
+proximo:"saida",
+botao:"Registrar Saída",
+status:"Retorno registrado. Jornada em andamento."
+},
+saida:{
+proximo:"entrada",
+botao:"Registrar Entrada",
+status:"Jornada encerrada. Você pode iniciar uma nova jornada."
 }
-// =====================================
-// REGISTRAR ENTRADA
-// =====================================
-async function registrarEntrada() {
-    if (!usuarioAtual || !colaboradorAtual) {
-        mostrarMensagem(
-            "Sua sessão não está válida. Entre novamente.",
-            "erro"
-        );
-        return;
-    }
-    const botao = document.getElementById("botaoEntrada");
-    botao.disabled = true;
-    botao.textContent = "Registrando...";
-    limparMensagem();
-    try {
-        // Confere novamente o último registro
-        const ultimo = await buscarUltimoRegistro();
-        if (
-            ultimo &&
-            ultimo.event_type !== "saida"
-        ) {
-            throw new Error(
-                "Já existe uma jornada em andamento. Não é possível registrar outra entrada."
-            );
-        }
-        const agora = new Date().toISOString();
-        const { error } = await supabaseClient
-            .from("attendance_records")
-            .insert({
-                id: crypto.randomUUID(),
-                company_id: colaboradorAtual.company_id,
-                employee_id: colaboradorAtual.id,
-                user_id: usuarioAtual.id,
-                event_type: "entrada",
-                recorded_at: agora,
-                created_at: agora
-            });
-        if (error) {
-            throw error;
-        }
-        mostrarMensagem(
-            "Entrada registrada com sucesso! Seu horário foi salvo.",
-            "sucesso"
-        );
-        await atualizarEstadoPonto();
-    } catch (error) {
-        mostrarMensagem(
-            "Não foi possível registrar sua entrada: " +
-            error.message,
-            "erro"
-        );
-        await atualizarEstadoPonto();
-    }
+};
+
+function configurarBotao(tipo){
+const botao=document.getElementById("botaoPonto");
+const status=document.getElementById("statusPonto");
+
+if(!tipo){
+botao.textContent="Registrar Entrada";
+status.textContent="Nenhuma jornada iniciada hoje.";
+botao.disabled=false;
+return;
 }
-document.getElementById("botaoEntrada")
-.addEventListener("click", registrarEntrada);
-// =====================================
-// IDENTIFICAR CONVITE E RECUPERAÇÃO
-// =====================================
-async function iniciar() {
-    const hash = new URLSearchParams(
-        window.location.hash.replace(/^#/, "")
-    );
-    const query = new URLSearchParams(
-        window.location.search
-    );
-    const tipo = hash.get("type");
-    const erroLink =
-        hash.get("error_description") ||
-        query.get("error_description");
-    if (erroLink) {
-        mostrarLogin();
-        mostrarMensagem(
-            "O link é inválido ou expirou. Solicite um novo link de acesso.",
-            "erro"
-        );
-        return;
-    }
-    const { data, error } =
-        await supabaseClient.auth.getSession();
-    if (error) {
-        mostrarMensagem(error.message, "erro");
-        return;
-    }
-    if (
-        tipo === "invite" ||
-        tipo === "recovery" ||
-        tipo === "signup"
-    ) {
-        if (data.session) {
-            mostrarFormularioSenha(tipo);
-            return;
-        }
-        mostrarLogin();
-        mostrarMensagem(
-            "Não foi possível validar o link. Solicite um novo link.",
-            "erro"
-        );
-        return;
-    }
-    if (data.session) {
-        await abrirPortal(data.session.user);
-    } else {
-        mostrarLogin();
-    }
+
+const etapa=etapas[tipo];
+
+if(!etapa){
+botao.textContent="Indisponível";
+status.textContent="Tipo de registro não reconhecido. Procure o RH.";
+botao.disabled=true;
+return;
 }
-// =====================================
-// PRIMEIRO ACESSO / ESQUECI A SENHA
-// =====================================
-linkRecuperacao.addEventListener("click", function() {
-    esconderFormularios();
-    formRecuperacao.classList.remove("oculto");
-    titulo.textContent = "Primeiro acesso ou recuperação";
-    subtitulo.textContent =
-        "Informe seu e-mail cadastrado para receber um link.";
-    limparMensagem();
+
+botao.textContent=etapa.botao;
+status.textContent=etapa.status;
+botao.disabled=false;
+}
+
+async function atualizarEstadoPonto(){
+const botao=document.getElementById("botaoPonto");
+const status=document.getElementById("statusPonto");
+
+botao.disabled=true;
+status.textContent="Verificando registros...";
+
+try{
+const ultimo=await buscarUltimoRegistro();
+
+if(!ultimo){
+configurarBotao(null);
+return;
+}
+
+configurarBotao(ultimo.event_type);
+
+}catch(error){
+status.textContent=error.message;
+botao.textContent="Registro indisponível";
+botao.disabled=true;
+}
+}
+
+async function abrirPortal(user){
+esconderFormularios();
+limparMensagem();
+
+try{
+usuarioAtual=user;
+colaboradorAtual=await buscarColaborador(user);
+
+document.getElementById("nomeColaborador").textContent=colaboradorAtual.full_name;
+document.getElementById("emailColaborador").textContent=colaboradorAtual.email||user.email;
+
+areaLogada.classList.remove("oculto");
+titulo.textContent="Meu Ponto";
+subtitulo.textContent="Bem-vindo ao seu portal de colaborador.";
+
+iniciarRelogio();
+await atualizarEstadoPonto();
+
+}catch(error){
+usuarioAtual=null;
+colaboradorAtual=null;
+mostrarLogin();
+mostrarMensagem(error.message,"erro");
+}
+}
+
+async function registrarPonto(){
+if(processandoPonto)return;
+
+if(!usuarioAtual||!colaboradorAtual){
+mostrarMensagem("Sua sessão não está válida. Entre novamente.","erro");
+return;
+}
+
+processandoPonto=true;
+const botao=document.getElementById("botaoPonto");
+botao.disabled=true;
+botao.textContent="Registrando...";
+limparMensagem();
+
+try{
+const ultimo=await buscarUltimoRegistro();
+
+let novoEvento="entrada";
+
+if(ultimo){
+const etapa=etapas[ultimo.event_type];
+
+if(!etapa){
+throw new Error("Não foi possível identificar a próxima marcação. Procure o RH.");
+}
+
+novoEvento=etapa.proximo;
+}
+
+const agora=new Date().toISOString();
+
+const {error}=await supabaseClient
+.from("attendance_records")
+.insert({
+id:crypto.randomUUID(),
+company_id:colaboradorAtual.company_id,
+employee_id:colaboradorAtual.id,
+user_id:usuarioAtual.id,
+event_type:novoEvento,
+recorded_at:agora,
+created_at:agora
 });
-// =====================================
-// VOLTAR PARA LOGIN
-// =====================================
-document.getElementById("voltarLogin")
-.addEventListener("click", function() {
-    mostrarLogin();
-    limparMensagem();
-});
-// =====================================
-// ENVIAR E-MAIL DE RECUPERAÇÃO
-// =====================================
-formRecuperacao.addEventListener("submit", async function(e) {
-    e.preventDefault();
-    limparMensagem();
-    const email = document.getElementById("emailRecuperacao")
-        .value.trim();
-    const botao = formRecuperacao.querySelector("button");
-    botao.disabled = true;
-    botao.textContent = "Enviando...";
-    try {
-        const { error } =
-            await supabaseClient.auth.resetPasswordForEmail(
-                email,
-                {
-                    redirectTo:
-                        window.location.origin +
-                        window.location.pathname
-                }
-            );
-        if (error) {
-            throw error;
-        }
-        mostrarMensagem(
-            "Se o e-mail estiver cadastrado, você receberá um link para criar sua senha. Confira também a caixa de spam.",
-            "sucesso"
-        );
-    } catch (error) {
-        mostrarMensagem(
-            "Não foi possível enviar o e-mail: " + error.message,
-            "erro"
-        );
-    } finally {
-        botao.disabled = false;
-        botao.textContent = "Enviar link para meu e-mail";
-    }
-});
-// =====================================
-// CRIAR OU REDEFINIR SENHA
-// =====================================
-formSenha.addEventListener("submit", async function(e) {
-    e.preventDefault();
-    limparMensagem();
-    const senha = document.getElementById("novaSenha").value;
-    const confirmar =
-        document.getElementById("confirmarSenha").value;
-    if (senha.length < 8) {
-        mostrarMensagem(
-            "A senha precisa ter pelo menos 8 caracteres.",
-            "erro"
-        );
-        return;
-    }
-    if (senha !== confirmar) {
-        mostrarMensagem(
-            "As senhas não coincidem.",
-            "erro"
-        );
-        return;
-    }
-    const botao = formSenha.querySelector("button");
-    botao.disabled = true;
-    botao.textContent = "Salvando...";
-    try {
-        const { data, error } =
-            await supabaseClient.auth.updateUser({
-                password: senha
-            });
-        if (error) {
-            throw error;
-        }
-        history.replaceState(
-            null,
-            "",
-            window.location.pathname
-        );
-        mostrarMensagem(
-            "Senha criada com sucesso!",
-            "sucesso"
-        );
-        await abrirPortal(data.user);
-    } catch (error) {
-        mostrarMensagem(
-            "Erro ao salvar a senha: " + error.message,
-            "erro"
-        );
-    } finally {
-        botao.disabled = false;
-        botao.textContent = "Salvar senha e continuar";
-    }
-});
-// =====================================
-// LOGIN
-// =====================================
-formLogin.addEventListener("submit", async function(e) {
-    e.preventDefault();
-    limparMensagem();
-    const email = document.getElementById("email").value.trim();
-    const senha = document.getElementById("senha").value;
-    const botao = formLogin.querySelector("button");
-    botao.disabled = true;
-    botao.textContent = "Entrando...";
-    try {
-        const { data, error } =
-            await supabaseClient.auth.signInWithPassword({
-                email: email,
-                password: senha
-            });
-        if (error) {
-            throw error;
-        }
-        await abrirPortal(data.user);
-    } catch (error) {
-        mostrarMensagem(
-            "Não foi possível entrar. Confira seu e-mail e sua senha.",
-            "erro"
-        );
-    } finally {
-        botao.disabled = false;
-        botao.textContent = "Entrar no Meu Ponto";
-    }
-});
-// =====================================
-// SAIR DA CONTA
-// =====================================
-async function sair() {
-    const { error } = await supabaseClient.auth.signOut();
-    if (error) {
-        mostrarMensagem(
-            "Não foi possível sair da conta.",
-            "erro"
-        );
-        return;
-    }
-    if (relogioIntervalo) {
-        clearInterval(relogioIntervalo);
-    }
-    window.location.replace(
-        window.location.pathname
-    );
+
+if(error)throw error;
+
+const nomes={
+entrada:"Entrada",
+inicio_intervalo:"Início do intervalo",
+retorno_intervalo:"Retorno do intervalo",
+saida:"Saída"
+};
+
+mostrarMensagem(nomes[novoEvento]+" registrado com sucesso! Seu horário foi salvo.","sucesso");
+
+await atualizarEstadoPonto();
+
+}catch(error){
+mostrarMensagem("Não foi possível registrar: "+error.message,"erro");
+await atualizarEstadoPonto();
+}finally{
+processandoPonto=false;
 }
-document.getElementById("botaoSair")
-.addEventListener("click", sair);
-// =====================================
-// EVENTO DE RECUPERAÇÃO
-// =====================================
-supabaseClient.auth.onAuthStateChange(
-    function(event, session) {
-        if (
-            event === "PASSWORD_RECOVERY" &&
-            session
-        ) {
-            mostrarFormularioSenha("recovery");
-        }
-    }
-);
-// =====================================
-// INICIALIZAÇÃO
-// =====================================
+}
+
+document.getElementById("botaoPonto").addEventListener("click",registrarPonto);
+
+async function iniciar(){
+const hash=new URLSearchParams(window.location.hash.replace(/^#/,""));
+const query=new URLSearchParams(window.location.search);
+const tipo=hash.get("type");
+
+const erroLink=hash.get("error_description")||query.get("error_description");
+
+if(erroLink){
+mostrarLogin();
+mostrarMensagem("O link é inválido ou expirou. Solicite um novo link.","erro");
+return;
+}
+
+const {data,error}=await supabaseClient.auth.getSession();
+
+if(error){
+mostrarMensagem(error.message,"erro");
+return;
+}
+
+if(["invite","recovery","signup"].includes(tipo)){
+if(data.session){
+mostrarFormularioSenha(tipo);
+return;
+}
+mostrarLogin();
+mostrarMensagem("Não foi possível validar o link. Solicite um novo.","erro");
+return;
+}
+
+if(data.session){
+await abrirPortal(data.session.user);
+}else{
+mostrarLogin();
+}
+}
+
+linkRecuperacao.addEventListener("click",function(){
+esconderFormularios();
+formRecuperacao.classList.remove("oculto");
+titulo.textContent="Primeiro acesso ou recuperação";
+subtitulo.textContent="Informe seu e-mail cadastrado para receber um link.";
+limparMensagem();
+});
+
+document.getElementById("voltarLogin").addEventListener("click",function(){
+mostrarLogin();
+limparMensagem();
+});
+
+formRecuperacao.addEventListener("submit",async function(e){
+e.preventDefault();
+limparMensagem();
+
+const email=document.getElementById("emailRecuperacao").value.trim();
+const botao=formRecuperacao.querySelector("button");
+
+botao.disabled=true;
+botao.textContent="Enviando...";
+
+try{
+const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{
+redirectTo:window.location.origin+window.location.pathname
+});
+
+if(error)throw error;
+
+mostrarMensagem("Se o e-mail estiver cadastrado, você receberá um link. Confira também o spam.","sucesso");
+
+}catch(error){
+mostrarMensagem("Não foi possível enviar o e-mail: "+error.message,"erro");
+}finally{
+botao.disabled=false;
+botao.textContent="Enviar link para meu e-mail";
+}
+});
+
+formSenha.addEventListener("submit",async function(e){
+e.preventDefault();
+limparMensagem();
+
+const senha=document.getElementById("novaSenha").value;
+const confirmar=document.getElementById("confirmarSenha").value;
+
+if(senha.length<8){
+mostrarMensagem("A senha precisa ter pelo menos 8 caracteres.","erro");
+return;
+}
+
+if(senha!==confirmar){
+mostrarMensagem("As senhas não coincidem.","erro");
+return;
+}
+
+const botao=formSenha.querySelector("button");
+botao.disabled=true;
+botao.textContent="Salvando...";
+
+try{
+const {data,error}=await supabaseClient.auth.updateUser({password:senha});
+if(error)throw error;
+
+history.replaceState(null,"",window.location.pathname);
+mostrarMensagem("Senha criada com sucesso!","sucesso");
+await abrirPortal(data.user);
+
+}catch(error){
+mostrarMensagem("Erro ao salvar a senha: "+error.message,"erro");
+}finally{
+botao.disabled=false;
+botao.textContent="Salvar senha e continuar";
+}
+});
+
+formLogin.addEventListener("submit",async function(e){
+e.preventDefault();
+limparMensagem();
+
+const email=document.getElementById("email").value.trim();
+const senha=document.getElementById("senha").value;
+const botao=formLogin.querySelector("button");
+
+botao.disabled=true;
+botao.textContent="Entrando...";
+
+try{
+const {data,error}=await supabaseClient.auth.signInWithPassword({email, password:senha});
+if(error)throw error;
+await abrirPortal(data.user);
+
+}catch(error){
+mostrarMensagem("Não foi possível entrar. Confira seu e-mail e sua senha.","erro");
+}finally{
+botao.disabled=false;
+botao.textContent="Entrar no Meu Ponto";
+}
+});
+
+async function sair(){
+const {error}=await supabaseClient.auth.signOut();
+
+if(error){
+mostrarMensagem("Não foi possível sair da conta.","erro");
+return;
+}
+
+if(relogioIntervalo)clearInterval(relogioIntervalo);
+window.location.replace(window.location.pathname);
+}
+
+document.getElementById("botaoSair").addEventListener("click",sair);
+
+supabaseClient.auth.onAuthStateChange(function(event,session){
+if(event==="PASSWORD_RECOVERY"&&session){
+mostrarFormularioSenha("recovery");
+}
+});
+
 iniciar();
 </script>
 </body>
