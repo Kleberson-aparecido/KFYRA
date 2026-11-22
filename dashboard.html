@@ -7,25 +7,120 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 :root{--green:#123c32;--green2:#1d5949;--mint:#dff4e9;--gold:#c9a96e;--bg:#f5f7f5;--text:#20332d;--muted:#82918a;--white:#fff;--border:#e8eee9;--shadow:0 8px 30px rgba(20,55,43,.06)}
-*{box-sizing:border-box;margin:0;padding:0}body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text)}.layout{display:flex;min-height:100vh}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text)}
+.layout{display:flex;min-height:100vh}
 .sidebar{width:250px;background:var(--green);color:white;padding:28px 18px;position:fixed;top:0;bottom:0;left:0;display:flex;flex-direction:column;z-index:10;overflow:auto}
-.logo{font-family:Manrope,sans-serif;font-size:27px;font-weight:800;letter-spacing:3px;padding:5px 12px}.logo span{color:var(--gold)}.logo-sub{color:#a9c5b8;font-size:10px;letter-spacing:3px;padding:0 13px;margin-bottom:25px}
-.menu-title{color:#8ca99a;font-size:10px;font-weight:700;letter-spacing:2px;padding:12px}.menu button,.sidebar-bottom button{width:100%;border:0;background:transparent;color:#d4e4dc;padding:13px 14px;text-align:left;border-radius:9px;cursor:pointer;font-size:13px;margin:3px 0;font-family:inherit}.menu button:hover,.menu button.active{background:#ffffff19;color:white}.menu button.active{border-left:3px solid var(--gold)}.sidebar-bottom{margin-top:auto;border-top:1px solid #ffffff20;padding-top:20px}
-.main{margin-left:250px;width:calc(100% - 250px);padding:30px 38px}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;gap:15px}.welcome h1{font-family:Manrope,sans-serif;font-size:25px;font-weight:800}.welcome p{color:var(--muted);font-size:13px;margin-top:5px}.user-box{background:white;padding:10px 16px;border:1px solid var(--border);border-radius:12px;font-size:12px;box-shadow:var(--shadow)}
-.company-banner{background:linear-gradient(120deg,#123c32,#24634f);color:white;padding:28px;border-radius:16px;margin-bottom:25px;display:flex;justify-content:space-between;align-items:center;gap:20px;box-shadow:var(--shadow)}.company-banner h2{font-family:Manrope,sans-serif;font-size:22px;margin-bottom:7px}.company-banner p{color:#c6ddd1;font-size:13px}.plan-tag{background:#ffffff20;border:1px solid #ffffff35;padding:10px 16px;border-radius:30px;font-size:12px;white-space:nowrap}
-.section-title{font-family:Manrope,sans-serif;font-size:18px;margin-bottom:17px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:30px}.card,.panel{background:white;border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow)}.card{padding:21px}.card-label{font-size:12px;color:var(--muted)}.card-number{font-size:28px;font-weight:800;margin:13px 0 5px}.card-note{font-size:11px;color:#8a9b91}.panel{padding:24px;margin-bottom:22px}.panel-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}.panel-header h3{font-family:Manrope,sans-serif;font-size:16px}
-.btn{border:0;background:var(--green);color:white;padding:11px 17px;border-radius:8px;cursor:pointer;font-weight:700;font-size:12px;font-family:inherit}.btn:hover{background:var(--green2)}.btn:disabled{opacity:.6;cursor:not-allowed}.btn-secondary,.btn-edit{background:#edf4ef;color:var(--green)}.btn-delete{background:#fff0ed;color:#a43e30}.btn-invite{background:#e5f5eb;color:#24714d}.btn-linked{background:#edf4ef;color:#24714d;cursor:default}
-input,select,textarea{width:100%;padding:12px 13px;border:1px solid #dfe8e1;border-radius:8px;font-family:inherit;font-size:13px;outline:none;background:white;color:var(--text)}textarea{min-height:80px;resize:vertical}input:focus,select:focus,textarea:focus{border-color:var(--green2)}.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}.field label{display:block;font-size:12px;font-weight:700;margin-bottom:7px}.form-actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:14px 12px;border-bottom:1px solid var(--border);text-align:left;font-size:12px}th{color:var(--muted);font-weight:700}.badge{background:#e5f5eb;color:#24714d;padding:5px 9px;border-radius:20px;font-size:10px;font-weight:700}.badge.inactive{background:#fff4df;color:#946b22}.badge.terminated{background:#fdebea;color:#a43e30}.empty{padding:30px 15px;text-align:center;color:var(--muted);font-size:13px}.hidden{display:none!important}.message{padding:12px;border-radius:8px;margin-bottom:15px;font-size:12px;display:none;white-space:pre-wrap;overflow-wrap:anywhere}.message.error{background:#fff0ed;color:#a43e30;display:block}.message.success{background:#e7f6ed;color:#216b43;display:block}.search{max-width:260px}.page-description{color:var(--muted);font-size:13px;margin:-8px 0 20px}.actions{display:flex;gap:7px;flex-wrap:wrap}.hint{font-size:11px;color:var(--muted);line-height:1.5;margin-top:6px}.day-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}.day-row{border:1px solid var(--border);border-radius:10px;padding:12px;display:grid;grid-template-columns:1.1fr .8fr .8fr .8fr;gap:8px;align-items:end}.day-row .field label{font-size:10px}.day-row .field input{padding:9px;font-size:11px}.day-check{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700}.day-check input{width:auto}.inline-note{background:#f2f7f3;padding:12px;border-radius:9px;color:#53675d;font-size:12px;line-height:1.5;margin:12px 0}
+.logo{font-family:Manrope,sans-serif;font-size:27px;font-weight:800;letter-spacing:3px;padding:5px 12px}
+.logo span{color:var(--gold)}
+.logo-sub{color:#a9c5b8;font-size:10px;letter-spacing:3px;padding:0 13px;margin-bottom:25px}
+.menu-title{color:#8ca99a;font-size:10px;font-weight:700;letter-spacing:2px;padding:12px}
+.menu button,.sidebar-bottom button{width:100%;border:0;background:transparent;color:#d4e4dc;padding:13px 14px;text-align:left;border-radius:9px;cursor:pointer;font-size:13px;margin:3px 0;font-family:inherit}
+.menu button:hover,.menu button.active{background:#ffffff19;color:white}
+.menu button.active{border-left:3px solid var(--gold)}
+.sidebar-bottom{margin-top:auto;border-top:1px solid #ffffff20;padding-top:20px}
+.main{margin-left:250px;width:calc(100% - 250px);padding:30px 38px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;gap:15px}
+.welcome h1{font-family:Manrope,sans-serif;font-size:25px;font-weight:800}
+.welcome p{color:var(--muted);font-size:13px;margin-top:5px}
+.user-box{background:white;padding:10px 16px;border:1px solid var(--border);border-radius:12px;font-size:12px;box-shadow:var(--shadow)}
+.company-banner{background:linear-gradient(120deg,#123c32,#24634f);color:white;padding:28px;border-radius:16px;margin-bottom:25px;display:flex;justify-content:space-between;align-items:center;gap:20px;box-shadow:var(--shadow)}
+.company-banner h2{font-family:Manrope,sans-serif;font-size:22px;margin-bottom:7px}
+.company-banner p{color:#c6ddd1;font-size:13px}
+.plan-tag{background:#ffffff20;border:1px solid #ffffff35;padding:10px 16px;border-radius:30px;font-size:12px;white-space:nowrap}
+.section-title{font-family:Manrope,sans-serif;font-size:18px;margin-bottom:17px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:30px}
+.card,.panel{background:white;border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow)}
+.card{padding:21px}
+.card-label{font-size:12px;color:var(--muted)}
+.card-number{font-size:28px;font-weight:800;margin:13px 0 5px}
+.card-note{font-size:11px;color:#8a9b91}
+.panel{padding:24px;margin-bottom:22px}
+.panel-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}
+.panel-header h3{font-family:Manrope,sans-serif;font-size:16px}
+.btn{border:0;background:var(--green);color:white;padding:11px 17px;border-radius:8px;cursor:pointer;font-weight:700;font-size:12px;font-family:inherit}
+.btn:hover{background:var(--green2)}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.btn-secondary,.btn-edit{background:#edf4ef;color:var(--green)}
+.btn-delete{background:#fff0ed;color:#a43e30}
+.btn-invite{background:#e5f5eb;color:#24714d}
+.btn-linked{background:#edf4ef;color:#24714d;cursor:default}
+.btn-approve{background:#e5f5eb;color:#24714d}
+.btn-reject{background:#fff0ed;color:#a43e30}
+input,select,textarea{width:100%;padding:12px 13px;border:1px solid #dfe8e1;border-radius:8px;font-family:inherit;font-size:13px;outline:none;background:white;color:var(--text)}
+textarea{min-height:80px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--green2)}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
+.field label{display:block;font-size:12px;font-weight:700;margin-bottom:7px}
+.form-actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:850px}
+th,td{padding:14px 12px;border-bottom:1px solid var(--border);text-align:left;font-size:12px}
+th{color:var(--muted);font-weight:700}
+.badge{background:#e5f5eb;color:#24714d;padding:5px 9px;border-radius:20px;font-size:10px;font-weight:700;display:inline-block}
+.badge.inactive{background:#fff4df;color:#946b22}
+.badge.terminated{background:#fdebea;color:#a43e30}
+.badge.pending{background:#fff4df;color:#946b22}
+.badge.approved{background:#e5f5eb;color:#24714d}
+.badge.rejected{background:#fdebea;color:#a43e30}
+.badge.cancelled{background:#edf0ef;color:#66736d}
+.empty{padding:30px 15px;text-align:center;color:var(--muted);font-size:13px}
+.hidden{display:none!important}
+.message{padding:12px;border-radius:8px;margin-bottom:15px;font-size:12px;display:none;white-space:pre-wrap;overflow-wrap:anywhere}
+.message.error{background:#fff0ed;color:#a43e30;display:block}
+.message.success{background:#e7f6ed;color:#216b43;display:block}
+.search{max-width:260px}
+.page-description{color:var(--muted);font-size:13px;margin:-8px 0 20px}
+.actions{display:flex;gap:7px;flex-wrap:wrap}
+.hint{font-size:11px;color:var(--muted);line-height:1.5;margin-top:6px}
+.day-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.day-row{border:1px solid var(--border);border-radius:10px;padding:12px;display:grid;grid-template-columns:1.1fr .8fr .8fr .8fr;gap:8px;align-items:end}
+.day-row .field label{font-size:10px}
+.day-row .field input{padding:9px;font-size:11px}
+.day-check{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700}
+.day-check input{width:auto}
+.inline-note{background:#f2f7f3;padding:12px;border-radius:9px;color:#53675d;font-size:12px;line-height:1.5;margin:12px 0}
+.request-detail{background:#f7faf7;border:1px solid var(--border);padding:17px;border-radius:10px;margin-top:15px}
+.request-detail h4{font-size:14px;margin-bottom:12px}
+.request-detail p{font-size:12px;line-height:1.7;margin:6px 0;overflow-wrap:anywhere}
+.history-item{border-left:3px solid var(--gold);padding:10px 13px;margin:12px 0;background:#f8faf8;border-radius:0 8px 8px 0;font-size:12px;line-height:1.6}
+.request-toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.request-toolbar select{max-width:220px}
 @media(max-width:950px){.cards{grid-template-columns:repeat(2,1fr)}.main{padding:25px}}
-@media(max-width:650px){.sidebar{width:100%;height:auto;position:relative;padding:15px}.layout{display:block}.logo{font-size:23px}.logo-sub{margin-bottom:10px}.menu{display:grid;grid-template-columns:repeat(2,1fr)}.menu-title{grid-column:1/-1}.sidebar-bottom{margin-top:15px}.main{margin:0;width:100%;padding:20px 15px}.topbar{align-items:flex-start;flex-direction:column}.company-banner{align-items:flex-start;flex-direction:column}.cards{grid-template-columns:repeat(2,1fr);gap:10px}.card{padding:15px}.card-number{font-size:23px}.form-grid{grid-template-columns:1fr}.panel{padding:17px}.panel-header{align-items:flex-start;flex-direction:column}.day-grid{grid-template-columns:1fr}.day-row{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){
+.sidebar{width:100%;height:auto;position:relative;padding:15px}
+.layout{display:block}
+.logo{font-size:23px}
+.logo-sub{margin-bottom:10px}
+.menu{display:grid;grid-template-columns:repeat(2,1fr)}
+.menu-title{grid-column:1/-1}
+.sidebar-bottom{margin-top:15px}
+.main{margin:0;width:100%;padding:20px 15px}
+.topbar{align-items:flex-start;flex-direction:column}
+.company-banner{align-items:flex-start;flex-direction:column}
+.cards{grid-template-columns:repeat(2,1fr);gap:10px}
+.card{padding:15px}
+.card-number{font-size:23px}
+.form-grid{grid-template-columns:1fr}
+.panel{padding:17px}
+.panel-header{align-items:flex-start;flex-direction:column}
+.day-grid{grid-template-columns:1fr}
+.day-row{grid-template-columns:1fr 1fr}
+.request-toolbar{align-items:stretch;flex-direction:column}
+.request-toolbar select{max-width:none}
+}
 </style>
 </head>
+
 <body>
 <div class="layout">
 <aside class="sidebar">
-<div class="logo">KFY<span>RA</span></div><div class="logo-sub">GESTÃO INTELIGENTE</div>
+<div class="logo">KFY<span>RA</span></div>
+<div class="logo-sub">GESTÃO INTELIGENTE</div>
+
 <div class="menu">
 <div class="menu-title">PRINCIPAL</div>
 <button class="active" onclick="showPage('inicio',this)">▦ Visão geral</button>
@@ -33,26 +128,72 @@ input,select,textarea{width:100%;padding:12px 13px;border:1px solid #dfe8e1;bord
 <button onclick="showPage('departamentos',this)">▤ Departamentos</button>
 <button onclick="showPage('ponto',this)">◷ Controle de ponto</button>
 <button onclick="showPage('escalas',this)">▦ Escalas</button>
+<button onclick="showPage('solicitacoes',this)">▣ Solicitações</button>
+
 <div class="menu-title">GESTÃO</div>
-<button onclick="showPage('relatorios',this)">▥ Relatórios</button><button onclick="showPage('disciplinar',this)">⚖ Disciplinar</button><button onclick="showPage('configuracoes',this)">⚙ Configurações</button><button onclick="showPage('ajuda',this)">✧ KFYRA AI</button>
+<button onclick="showPage('relatorios',this)">▥ Relatórios</button>
+<button onclick="showPage('disciplinar',this)">⚖ Disciplinar</button>
+<button onclick="showPage('configuracoes',this)">⚙ Configurações</button>
+<button onclick="showPage('ajuda',this)">✧ KFYRA AI</button>
 </div>
-<div class="sidebar-bottom"><button onclick="logout()">↪ Sair da plataforma</button></div>
+
+<div class="sidebar-bottom">
+<button onclick="logout()">↪ Sair da plataforma</button>
+</div>
 </aside>
+
 <main class="main">
-<header class="topbar"><div class="welcome"><h1 id="pageTitle">Visão geral</h1><p id="pageSubtitle">Acompanhe os indicadores da sua empresa.</p></div><div class="user-box"><strong id="userName">Carregando...</strong><div id="userRole" style="color:#82918a;margin-top:4px">KFYRA</div></div></header>
-<div id="companyBanner" class="company-banner"><div><h2 id="companyName">Carregando empresa...</h2><p>Ambiente empresarial exclusivo KFYRA</p></div><div class="plan-tag" id="companyPlan">Plano contratado</div></div>
+
+<header class="topbar">
+<div class="welcome">
+<h1 id="pageTitle">Visão geral</h1>
+<p id="pageSubtitle">Acompanhe os indicadores da sua empresa.</p>
+</div>
+<div class="user-box">
+<strong id="userName">Carregando...</strong>
+<div id="userRole" style="color:#82918a;margin-top:4px">KFYRA</div>
+</div>
+</header>
+
+<div id="companyBanner" class="company-banner">
+<div>
+<h2 id="companyName">Carregando empresa...</h2>
+<p>Ambiente empresarial exclusivo KFYRA</p>
+</div>
+<div class="plan-tag" id="companyPlan">Plano contratado</div>
+</div>
+
 <section id="page-inicio">
-<h2 class="section-title">Indicadores da empresa</h2><div class="cards">
+<h2 class="section-title">Indicadores da empresa</h2>
+<div class="cards">
 <div class="card"><div class="card-label">Colaboradores</div><div class="card-number" id="totalEmployees">—</div><div class="card-note">Total cadastrado</div></div>
 <div class="card"><div class="card-label">Ativos</div><div class="card-number" id="activeEmployees">—</div><div class="card-note">Colaboradores ativos</div></div>
 <div class="card"><div class="card-label">Departamentos</div><div class="card-number" id="totalDepartments">—</div><div class="card-note">Estrutura organizacional</div></div>
 <div class="card"><div class="card-label">Plano</div><div class="card-number" style="font-size:19px" id="planIndicator">—</div><div class="card-note">Plano da empresa</div></div>
-</div><div class="panel"><div class="panel-header"><h3>Bem-vindo à KFYRA</h3></div><p style="font-size:13px;color:#82918a;line-height:1.8">Sua empresa está conectada ao ambiente KFYRA. Utilize o menu lateral para acessar os módulos de gestão, acompanhar colaboradores e organizar as operações da sua empresa.</p></div>
+</div>
+
+<div class="panel">
+<div class="panel-header"><h3>Bem-vindo à KFYRA</h3></div>
+<p style="font-size:13px;color:#82918a;line-height:1.8">Sua empresa está conectada ao ambiente KFYRA. Utilize o menu lateral para acessar os módulos de gestão, acompanhar colaboradores e organizar as operações da sua empresa.</p>
+</div>
 </section>
+
 <section id="page-colaboradores" class="hidden">
-<div class="panel"><div class="panel-header"><div><h3>Gestão de colaboradores</h3><p class="page-description">Cadastre, edite e consulte os colaboradores da empresa.</p></div><button class="btn" id="newEmployeeButton" onclick="openEmployeeForm()">+ Novo colaborador</button></div>
-<div id="employeeMessage" class="message"></div><div id="employeeForm" class="hidden"><h3 id="employeeFormTitle" style="font-size:15px;margin-bottom:18px">Cadastro de colaborador</h3>
-<form id="newEmployeeForm"><div class="form-grid">
+<div class="panel">
+<div class="panel-header">
+<div>
+<h3>Gestão de colaboradores</h3>
+<p class="page-description">Cadastre, edite e consulte os colaboradores da empresa.</p>
+</div>
+<button class="btn" id="newEmployeeButton" onclick="openEmployeeForm()">+ Novo colaborador</button>
+</div>
+
+<div id="employeeMessage" class="message"></div>
+
+<div id="employeeForm" class="hidden">
+<h3 id="employeeFormTitle" style="font-size:15px;margin-bottom:18px">Cadastro de colaborador</h3>
+<form id="newEmployeeForm">
+<div class="form-grid">
 <div class="field"><label>Nome completo *</label><input type="text" id="employeeName" required></div>
 <div class="field"><label>Código do funcionário</label><input type="text" id="employeeCode" placeholder="Ex.: COL001"></div>
 <div class="field"><label>E-mail</label><input type="email" id="employeeEmail" placeholder="email@empresa.com"></div>
@@ -64,19 +205,75 @@ input,select,textarea{width:100%;padding:12px 13px;border:1px solid #dfe8e1;bord
 <div class="field"><label>Status</label><select id="employeeStatus"><option value="active">Ativo</option><option value="inactive">Inativo</option><option value="terminated">Desligado</option></select></div>
 <div class="field"><label>Escala de trabalho</label><select id="employeeSchedule"><option value="">Sem escala atribuída</option></select><div class="hint">Você pode cadastrar os modelos na aba Escalas.</div></div>
 <div class="field"><label>Início da vigência da escala</label><input type="date" id="employeeScheduleStart"></div>
-</div><div class="form-actions"><button type="submit" class="btn" id="employeeSubmitButton">Salvar colaborador</button><button type="button" class="btn btn-secondary" onclick="closeEmployeeForm()">Cancelar</button></div></form></div></div>
-<div class="panel"><div class="panel-header"><h3>Colaboradores cadastrados</h3><input class="search" type="search" id="employeeSearch" placeholder="Pesquisar colaborador..." oninput="filterEmployees()"></div>
-<div class="table-wrap"><table><thead><tr><th>Nome</th><th>Código</th><th>Cargo</th><th>Vínculo</th><th>Departamento</th><th>Escala</th><th>E-mail</th><th>Status</th><th>Ações</th></tr></thead><tbody id="employeesTable"><tr><td colspan="9" class="empty">Carregando colaboradores...</td></tr></tbody></table></div></div>
+</div>
+<div class="form-actions">
+<button type="submit" class="btn" id="employeeSubmitButton">Salvar colaborador</button>
+<button type="button" class="btn btn-secondary" onclick="closeEmployeeForm()">Cancelar</button>
+</div>
+</form>
+</div>
+</div>
+
+<div class="panel">
+<div class="panel-header">
+<h3>Colaboradores cadastrados</h3>
+<input class="search" type="search" id="employeeSearch" placeholder="Pesquisar colaborador..." oninput="filterEmployees()">
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Nome</th><th>Código</th><th>Cargo</th><th>Vínculo</th><th>Departamento</th><th>Escala</th><th>E-mail</th><th>Status</th><th>Ações</th></tr></thead>
+<tbody id="employeesTable"><tr><td colspan="9" class="empty">Carregando colaboradores...</td></tr></tbody>
+</table>
+</div>
+</div>
 </section>
+
 <section id="page-departamentos" class="hidden">
-<div class="panel"><div class="panel-header"><div><h3>Gestão de departamentos</h3><p class="page-description">Organize os setores e departamentos da sua empresa.</p></div><button class="btn" id="newDepartmentButton" onclick="openDepartmentForm()">+ Novo departamento</button></div><div id="departmentMessage" class="message"></div>
-<div id="departmentForm" class="hidden"><h3 id="departmentFormTitle" style="font-size:15px;margin-bottom:18px">Cadastrar departamento</h3><form id="newDepartmentForm"><div class="form-grid"><div class="field"><label>Nome do departamento *</label><input type="text" id="departmentName" required></div><div class="field"><label>Descrição</label><input type="text" id="departmentDescription"></div></div><div class="form-actions"><button type="submit" class="btn" id="saveDepartmentButton">Salvar departamento</button><button type="button" class="btn btn-secondary" onclick="closeDepartmentForm()">Cancelar</button></div></form></div></div>
-<div class="panel"><div class="panel-header"><h3>Departamentos cadastrados</h3><strong id="departmentCount" style="font-size:12px;color:#82918a">0 departamentos</strong></div><div class="table-wrap"><table><thead><tr><th>Nome</th><th>Descrição</th><th>Colaboradores</th><th>Data de criação</th><th>Ações</th></tr></thead><tbody id="departmentsTable"><tr><td colspan="5" class="empty">Carregando departamentos...</td></tr></tbody></table></div></div>
+<div class="panel">
+<div class="panel-header">
+<div><h3>Gestão de departamentos</h3><p class="page-description">Organize os setores e departamentos da sua empresa.</p></div>
+<button class="btn" id="newDepartmentButton" onclick="openDepartmentForm()">+ Novo departamento</button>
+</div>
+<div id="departmentMessage" class="message"></div>
+
+<div id="departmentForm" class="hidden">
+<h3 id="departmentFormTitle" style="font-size:15px;margin-bottom:18px">Cadastrar departamento</h3>
+<form id="newDepartmentForm">
+<div class="form-grid">
+<div class="field"><label>Nome do departamento *</label><input type="text" id="departmentName" required></div>
+<div class="field"><label>Descrição</label><input type="text" id="departmentDescription"></div>
+</div>
+<div class="form-actions">
+<button type="submit" class="btn" id="saveDepartmentButton">Salvar departamento</button>
+<button type="button" class="btn btn-secondary" onclick="closeDepartmentForm()">Cancelar</button>
+</div>
+</form>
+</div>
+</div>
+
+<div class="panel">
+<div class="panel-header"><h3>Departamentos cadastrados</h3><strong id="departmentCount" style="font-size:12px;color:#82918a">0 departamentos</strong></div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Nome</th><th>Descrição</th><th>Colaboradores</th><th>Data de criação</th><th>Ações</th></tr></thead>
+<tbody id="departmentsTable"><tr><td colspan="5" class="empty">Carregando departamentos...</td></tr></tbody>
+</table>
+</div>
+</div>
 </section>
+
 <section id="page-escalas" class="hidden">
-<div class="panel"><div class="panel-header"><div><h3>Modelos de escalas</h3><p class="page-description">Crie escalas semanais fixas ou ciclos personalizados de trabalho e descanso.</p></div><button class="btn" id="newScheduleButton" onclick="openScheduleForm()">+ Nova escala</button></div><div id="scheduleMessage" class="message"></div>
-<div id="scheduleForm" class="hidden"><h3 id="scheduleFormTitle" style="font-size:15px;margin-bottom:18px">Cadastrar modelo de escala</h3>
-<form id="newScheduleForm"><div class="form-grid">
+<div class="panel">
+<div class="panel-header">
+<div><h3>Modelos de escalas</h3><p class="page-description">Crie escalas semanais fixas ou ciclos personalizados de trabalho e descanso.</p></div>
+<button class="btn" id="newScheduleButton" onclick="openScheduleForm()">+ Nova escala</button>
+</div>
+<div id="scheduleMessage" class="message"></div>
+
+<div id="scheduleForm" class="hidden">
+<h3 id="scheduleFormTitle" style="font-size:15px;margin-bottom:18px">Cadastrar modelo de escala</h3>
+<form id="newScheduleForm">
+<div class="form-grid">
 <div class="field"><label>Nome da escala *</label><input id="scheduleName" required placeholder="Ex.: Administrativo - manhã"></div>
 <div class="field"><label>Tipo de escala *</label><select id="scheduleType" onchange="buildScheduleDays()"><option value="fixed">Fixa semanal</option><option value="cyclic">Cíclica</option></select></div>
 <div class="field hidden" id="cycleLengthField"><label>Duração do ciclo (dias) *</label><input id="cycleDays" type="number" min="1" max="42" value="6"><div class="hint">Informe quantos dias tem o ciclo completo, incluindo trabalho e descanso.</div></div>
@@ -84,292 +281,1476 @@ input,select,textarea{width:100%;padding:12px 13px;border:1px solid #dfe8e1;bord
 </div>
 <div class="inline-note" id="scheduleExplanation">Escala fixa: configure os sete dias da semana. Marque os dias trabalhados e informe horários e intervalo. Dias desmarcados serão descanso.</div>
 <div id="scheduleDays" class="day-grid"></div>
-<div class="form-actions"><button type="submit" class="btn" id="saveScheduleButton">Salvar escala</button><button type="button" class="btn btn-secondary" onclick="closeScheduleForm()">Cancelar</button></div>
-</form></div></div>
-<div class="panel"><div class="panel-header"><h3>Escalas cadastradas</h3><strong id="scheduleCount" style="font-size:12px;color:#82918a">0 escalas</strong></div><div class="table-wrap"><table><thead><tr><th>Nome</th><th>Tipo</th><th>Duração</th><th>Dias trabalhados</th><th>Horas/semana</th><th>Status</th><th>Ações</th></tr></thead><tbody id="schedulesTable"><tr><td colspan="7" class="empty">Carregando escalas...</td></tr></tbody></table></div></div>
-<div class="panel"><div class="panel-header"><h3>Escalas atribuídas aos colaboradores</h3></div><div class="table-wrap"><table><thead><tr><th>Colaborador</th><th>Modelo</th><th>Início da vigência</th><th>Fim da vigência</th></tr></thead><tbody id="employeeSchedulesTable"><tr><td colspan="4" class="empty">Carregando atribuições...</td></tr></tbody></table></div></div>
+<div class="form-actions">
+<button type="submit" class="btn" id="saveScheduleButton">Salvar escala</button>
+<button type="button" class="btn btn-secondary" onclick="closeScheduleForm()">Cancelar</button>
+</div>
+</form>
+</div>
+</div>
+
+<div class="panel">
+<div class="panel-header"><h3>Escalas cadastradas</h3><strong id="scheduleCount" style="font-size:12px;color:#82918a">0 escalas</strong></div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Nome</th><th>Tipo</th><th>Duração</th><th>Dias trabalhados</th><th>Horas/semana</th><th>Status</th><th>Ações</th></tr></thead>
+<tbody id="schedulesTable"><tr><td colspan="7" class="empty">Carregando escalas...</td></tr></tbody>
+</table>
+</div>
+</div>
+
+<div class="panel">
+<div class="panel-header"><h3>Escalas atribuídas aos colaboradores</h3></div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Colaborador</th><th>Modelo</th><th>Início da vigência</th><th>Fim da vigência</th></tr></thead>
+<tbody id="employeeSchedulesTable"><tr><td colspan="4" class="empty">Carregando atribuições...</td></tr></tbody>
+</table>
+</div>
+</div>
 </section>
-<section id="page-ponto" class="hidden"><div class="panel"><h3>Controle de ponto</h3><div class="empty">Os registros individuais de ponto são realizados pelo portal Meu Ponto.</div></div></section>
-<section id="page-relatorios" class="hidden"><div class="panel"><h3>Relatórios</h3><div class="empty">Módulo de relatórios em desenvolvimento.</div></div></section>
-<section id="page-disciplinar" class="hidden"><div class="panel"><h3>KFYRA Disciplinar</h3><div class="empty">Módulo disciplinar em desenvolvimento.</div></div></section>
-<section id="page-configuracoes" class="hidden"><div class="panel"><h3>Configurações da empresa</h3><div class="empty">Configurações em desenvolvimento.</div></div></section>
-<section id="page-ajuda" class="hidden"><div class="panel"><h3>KFYRA AI</h3><div class="empty">Assistente inteligente em desenvolvimento.</div></div></section>
-</main></div>
+
+<!-- NOVO MÓDULO: SOLICITAÇÕES -->
+<section id="page-solicitacoes" class="hidden">
+
+<div class="panel">
+<div class="panel-header">
+<div>
+<h3>Solicitações dos colaboradores</h3>
+<p class="page-description">Consulte, analise e acompanhe as solicitações enviadas pelo portal Meu Ponto.</p>
+</div>
+<button class="btn btn-secondary" onclick="loadRequests()">↻ Atualizar</button>
+</div>
+
+<div id="requestMessage" class="message"></div>
+
+<div class="request-toolbar">
+<div style="flex:1;min-width:180px">
+<label style="display:block;font-size:12px;font-weight:700;margin-bottom:7px">Filtrar solicitações</label>
+<select id="requestStatusFilter" onchange="renderRequests()">
+<option value="all">Todas as solicitações</option>
+<option value="pending">Pendentes</option>
+<option value="approved">Aprovadas</option>
+<option value="rejected">Recusadas</option>
+<option value="cancelled">Canceladas</option>
+</select>
+</div>
+
+<div style="flex:1;min-width:180px">
+<label style="display:block;font-size:12px;font-weight:700;margin-bottom:7px">Pesquisar colaborador</label>
+<input type="search" id="requestSearch" placeholder="Nome do colaborador..." oninput="renderRequests()">
+</div>
+</div>
+
+<div class="cards" style="margin-top:22px;margin-bottom:15px">
+<div class="card">
+<div class="card-label">Total</div>
+<div class="card-number" id="requestTotal">0</div>
+<div class="card-note">Solicitações recebidas</div>
+</div>
+<div class="card">
+<div class="card-label">Pendentes</div>
+<div class="card-number" id="requestPending">0</div>
+<div class="card-note">Aguardando análise</div>
+</div>
+<div class="card">
+<div class="card-label">Aprovadas</div>
+<div class="card-number" id="requestApproved">0</div>
+<div class="card-note">Solicitações aprovadas</div>
+</div>
+<div class="card">
+<div class="card-label">Recusadas</div>
+<div class="card-number" id="requestRejected">0</div>
+<div class="card-note">Solicitações recusadas</div>
+</div>
+</div>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Colaborador</th>
+<th>Tipo</th>
+<th>Data solicitada</th>
+<th>Enviada em</th>
+<th>Status</th>
+<th>Ações</th>
+</tr>
+</thead>
+<tbody id="requestsTable">
+<tr><td colspan="6" class="empty">Carregando solicitações...</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="panel hidden" id="requestDetailPanel">
+<div class="panel-header">
+<h3>Detalhes da solicitação</h3>
+<button class="btn btn-secondary" onclick="closeRequestDetails()">Fechar detalhes</button>
+</div>
+
+<div id="requestDetails"></div>
+
+<div id="requestDecisionArea" class="hidden">
+<div class="inline-note">A decisão será registrada no histórico da solicitação. Os dados originais enviados pelo colaborador serão preservados.</div>
+
+<div class="field">
+<label for="requestDecisionReason">Observação da decisão</label>
+<textarea id="requestDecisionReason" placeholder="Informe uma observação. Para recusar, o motivo é obrigatório."></textarea>
+</div>
+
+<div class="form-actions">
+<button class="btn btn-approve" id="approveRequestButton" onclick="decideRequest('approved')">✓ Aprovar solicitação</button>
+<button class="btn btn-reject" id="rejectRequestButton" onclick="decideRequest('rejected')">✕ Recusar solicitação</button>
+</div>
+</div>
+
+<div class="panel" style="margin-top:20px;background:#fafcfb">
+<h3 style="font-size:14px;margin-bottom:12px">Histórico da solicitação</h3>
+<div id="requestHistory"><div class="empty">Carregando histórico...</div></div>
+</div>
+</div>
+
+</section>
+
+<section id="page-ponto" class="hidden">
+<div class="panel"><h3>Controle de ponto</h3><div class="empty">Os registros individuais de ponto são realizados pelo portal Meu Ponto.</div></div>
+</section>
+
+<section id="page-relatorios" class="hidden">
+<div class="panel"><h3>Relatórios</h3><div class="empty">Módulo de relatórios em desenvolvimento.</div></div>
+</section>
+
+<section id="page-disciplinar" class="hidden">
+<div class="panel"><h3>KFYRA Disciplinar</h3><div class="empty">Módulo disciplinar em desenvolvimento.</div></div>
+</section>
+
+<section id="page-configuracoes" class="hidden">
+<div class="panel"><h3>Configurações da empresa</h3><div class="empty">Configurações em desenvolvimento.</div></div>
+</section>
+
+<section id="page-ajuda" class="hidden">
+<div class="panel"><h3>KFYRA AI</h3><div class="empty">Assistente inteligente em desenvolvimento.</div></div>
+</section>
+
+</main>
+</div>
+
 <script>
 const SUPABASE_URL='https://guiadodxikdvsfrhedls.supabase.co';
 const SUPABASE_KEY='sb_publishable_dhAqwNSfwGj8_nBnudx_Hw_gMZpnyEL';
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
 let currentUser=null,currentCompany=null,currentRole=null;
 let employeesData=[],departmentsData=[],schedulesData=[],scheduleDaysData=[],assignmentsData=[];
+let requestsData=[],selectedRequest=null;
+
 let editingEmployeeId=null,editingDepartmentId=null,editingScheduleId=null;
+
 const canManage=()=>['admin_empresa','rh'].includes(currentRole);
+const canViewRequests=()=>['admin_empresa','rh','gerente','coordenador','supervisor'].includes(currentRole);
+
 const dayNames=['Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado','Domingo'];
-async function initializeDashboard(){
- const {data:{session},error}=await supabaseClient.auth.getSession();
- if(error||!session){location.href='login.html';return}
- currentUser=session.user;
- const {data:membership,error:me}=await supabaseClient.from('company_memberships').select('company_id,role').eq('user_id',currentUser.id).limit(1).maybeSingle();
- if(me||!membership){alert('Não foi possível localizar o vínculo da sua empresa.');return}
- currentRole=membership.role;
- const {data:company,error:ce}=await supabaseClient.from('companies').select('*').eq('id',membership.company_id).single();
- if(ce||!company){alert('Não foi possível carregar os dados da empresa.');return}
- currentCompany=company;
- const {data:profile}=await supabaseClient.from('profiles').select('full_name').eq('id',currentUser.id).maybeSingle();
- $('userName').textContent=profile?.full_name||currentUser.email;
- $('userRole').textContent=currentRole||'Usuário';
- $('companyName').textContent=company.name||'Minha empresa';
- const plans={'700':'Até 700 colaboradores','1400':'Até 1.400 colaboradores','enterprise':'Enterprise'};
- const plan=plans[company.plan_code]||'Plano contratado';
- $('companyPlan').textContent=plan;$('planIndicator').textContent=plan;
- ['newEmployeeButton','newDepartmentButton','newScheduleButton'].forEach(id=>$(id).classList.toggle('hidden',!canManage()));
- await loadDepartments();await loadSchedules();await loadEmployees();
-}
+
 function $(id){return document.getElementById(id)}
-function escapeHTML(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function showBox(id,msg,type){const b=$(id);b.textContent=msg;b.className='message '+type;setTimeout(()=>b.className='message',7000)}
+
+function escapeHTML(v){
+ return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
+}
+
+function showBox(id,msg,type){
+ const b=$(id);
+ b.textContent=msg;
+ b.className='message '+type;
+ setTimeout(()=>b.className='message',7000);
+}
+
 function showMessage(m,t){showBox('employeeMessage',m,t)}
 function showDepartmentMessage(m,t){showBox('departmentMessage',m,t)}
 function showScheduleMessage(m,t){showBox('scheduleMessage',m,t)}
+function showRequestMessage(m,t){showBox('requestMessage',m,t)}
+
+function formatDate(value){
+ if(!value)return '—';
+ const d=new Date(value+'T00:00:00');
+ return Number.isNaN(d.getTime())?'—':d.toLocaleDateString('pt-BR');
+}
+
+function formatDateTime(value){
+ if(!value)return '—';
+ const d=new Date(value);
+ return Number.isNaN(d.getTime())?'—':d.toLocaleString('pt-BR');
+}
+
+// INICIALIZAÇÃO
+async function initializeDashboard(){
+ const {data:{session},error}=await supabaseClient.auth.getSession();
+
+ if(error||!session){
+  location.href='login.html';
+  return;
+ }
+
+ currentUser=session.user;
+
+ const {data:membership,error:me}=await supabaseClient
+  .from('company_memberships')
+  .select('company_id,role')
+  .eq('user_id',currentUser.id)
+  .limit(1)
+  .maybeSingle();
+
+ if(me||!membership){
+  alert('Não foi possível localizar o vínculo da sua empresa.');
+  return;
+ }
+
+ currentRole=membership.role;
+
+ const {data:company,error:ce}=await supabaseClient
+  .from('companies')
+  .select('*')
+  .eq('id',membership.company_id)
+  .single();
+
+ if(ce||!company){
+  alert('Não foi possível carregar os dados da empresa.');
+  return;
+ }
+
+ currentCompany=company;
+
+ const {data:profile}=await supabaseClient
+  .from('profiles')
+  .select('full_name')
+  .eq('id',currentUser.id)
+  .maybeSingle();
+
+ $('userName').textContent=profile?.full_name||currentUser.email;
+ $('userRole').textContent=currentRole||'Usuário';
+ $('companyName').textContent=company.name||'Minha empresa';
+
+ const plans={
+  '700':'Até 700 colaboradores',
+  '1400':'Até 1.400 colaboradores',
+  'enterprise':'Enterprise'
+ };
+
+ const plan=plans[company.plan_code]||'Plano contratado';
+
+ $('companyPlan').textContent=plan;
+ $('planIndicator').textContent=plan;
+
+ ['newEmployeeButton','newDepartmentButton','newScheduleButton'].forEach(id=>{
+  $(id).classList.toggle('hidden',!canManage());
+ });
+
+ const requestButton=document.querySelector('.menu button[onclick*="solicitacoes"]');
+
+ if(requestButton){
+  requestButton.classList.toggle('hidden',!canViewRequests());
+ }
+
+ await loadDepartments();
+ await loadSchedules();
+ await loadEmployees();
+}
+
 // DEPARTAMENTOS
 async function loadDepartments(){
  if(!currentCompany)return;
- const {data,error}=await supabaseClient.from('departamentos').select('id,id_da_empresa,nome,descrição,criado_em').eq('id_da_empresa',currentCompany.id).order('nome');
- if(error){$('departmentsTable').innerHTML=`<tr><td colspan="5" class="empty">Erro: ${escapeHTML(error.message)}</td></tr>`;return}
- departmentsData=data||[];$('totalDepartments').textContent=departmentsData.length;
- $('departmentCount').textContent=departmentsData.length+(departmentsData.length===1?' departamento':' departamentos');
- renderDepartments();updateDepartmentOptions();
+
+ const {data,error}=await supabaseClient
+  .from('departamentos')
+  .select('id,id_da_empresa,nome,descrição,criado_em')
+  .eq('id_da_empresa',currentCompany.id)
+  .order('nome');
+
+ if(error){
+  $('departmentsTable').innerHTML=`<tr><td colspan="5" class="empty">Erro: ${escapeHTML(error.message)}</td></tr>`;
+  return;
+ }
+
+ departmentsData=data||[];
+
+ $('totalDepartments').textContent=departmentsData.length;
+
+ $('departmentCount').textContent=departmentsData.length+
+  (departmentsData.length===1?' departamento':' departamentos');
+
+ renderDepartments();
+ updateDepartmentOptions();
 }
+
 function renderDepartments(){
  if(!$('departmentsTable'))return;
- if(!departmentsData.length){$('departmentsTable').innerHTML='<tr><td colspan="5" class="empty">Nenhum departamento cadastrado.</td></tr>';return}
+
+ if(!departmentsData.length){
+  $('departmentsTable').innerHTML='<tr><td colspan="5" class="empty">Nenhum departamento cadastrado.</td></tr>';
+  return;
+ }
+
  $('departmentsTable').innerHTML=departmentsData.map(d=>{
- const count=employeesData.filter(e=>e.department_id===d.id).length;
- const date=d.criado_em?new Date(d.criado_em).toLocaleDateString('pt-BR'):'—';
- const actions=canManage()?`<div class="actions"><button class="btn btn-edit" onclick="editDepartment('${d.id}')">Editar</button><button class="btn btn-delete" onclick="deleteDepartment('${d.id}')">Excluir</button></div>`:'—';
- return `<tr><td><strong>${escapeHTML(d.nome)}</strong></td><td>${escapeHTML(d['descrição']||'—')}</td><td>${count}</td><td>${date}</td><td>${actions}</td></tr>`;
+  const count=employeesData.filter(e=>e.department_id===d.id).length;
+  const date=d.criado_em?new Date(d.criado_em).toLocaleDateString('pt-BR'):'—';
+
+  const actions=canManage()
+   ?`<div class="actions"><button class="btn btn-edit" onclick="editDepartment('${d.id}')">Editar</button><button class="btn btn-delete" onclick="deleteDepartment('${d.id}')">Excluir</button></div>`
+   :'—';
+
+  return `<tr>
+   <td><strong>${escapeHTML(d.nome)}</strong></td>
+   <td>${escapeHTML(d['descrição']||'—')}</td>
+   <td>${count}</td>
+   <td>${date}</td>
+   <td>${actions}</td>
+  </tr>`;
  }).join('');
 }
+
 function updateDepartmentOptions(){
- const s=$('employeeDepartment');if(!s)return;const old=s.value;s.innerHTML='<option value="">Sem departamento</option>';
- departmentsData.forEach(d=>{const o=document.createElement('option');o.value=d.id;o.textContent=d.nome;s.appendChild(o)});if(departmentsData.some(d=>d.id===old))s.value=old;
+ const s=$('employeeDepartment');
+ if(!s)return;
+
+ const old=s.value;
+ s.innerHTML='<option value="">Sem departamento</option>';
+
+ departmentsData.forEach(d=>{
+  const o=document.createElement('option');
+  o.value=d.id;
+  o.textContent=d.nome;
+  s.appendChild(o);
+ });
+
+ if(departmentsData.some(d=>d.id===old))s.value=old;
 }
-function openDepartmentForm(){if(!canManage())return;editingDepartmentId=null;$('newDepartmentForm').reset();$('departmentFormTitle').textContent='Cadastrar departamento';$('saveDepartmentButton').textContent='Salvar departamento';$('departmentForm').classList.remove('hidden')}
-function closeDepartmentForm(){$('departmentForm').classList.add('hidden');$('newDepartmentForm').reset();editingDepartmentId=null}
-function editDepartment(id){const d=departmentsData.find(x=>x.id===id);if(!d||!canManage())return;editingDepartmentId=id;$('departmentName').value=d.nome||'';$('departmentDescription').value=d['descrição']||'';$('departmentFormTitle').textContent='Editar departamento';$('saveDepartmentButton').textContent='Salvar alterações';$('departmentForm').classList.remove('hidden');scrollTo({top:0,behavior:'smooth'})}
+
+function openDepartmentForm(){
+ if(!canManage())return;
+
+ editingDepartmentId=null;
+ $('newDepartmentForm').reset();
+ $('departmentFormTitle').textContent='Cadastrar departamento';
+ $('saveDepartmentButton').textContent='Salvar departamento';
+ $('departmentForm').classList.remove('hidden');
+}
+
+function closeDepartmentForm(){
+ $('departmentForm').classList.add('hidden');
+ $('newDepartmentForm').reset();
+ editingDepartmentId=null;
+}
+
+function editDepartment(id){
+ const d=departmentsData.find(x=>x.id===id);
+ if(!d||!canManage())return;
+
+ editingDepartmentId=id;
+ $('departmentName').value=d.nome||'';
+ $('departmentDescription').value=d['descrição']||'';
+ $('departmentFormTitle').textContent='Editar departamento';
+ $('saveDepartmentButton').textContent='Salvar alterações';
+ $('departmentForm').classList.remove('hidden');
+
+ scrollTo({top:0,behavior:'smooth'});
+}
+
 $('newDepartmentForm').addEventListener('submit',async e=>{
- e.preventDefault();if(!canManage())return;
- const payload={nome:$('departmentName').value.trim(),'descrição':$('departmentDescription').value.trim()||null};
- if(!payload.nome){showDepartmentMessage('Informe o nome do departamento.','error');return}
- const editing=!!editingDepartmentId;const b=$('saveDepartmentButton');b.disabled=true;b.textContent='Salvando...';
- const result=editing?await supabaseClient.from('departamentos').update(payload).eq('id',editingDepartmentId).eq('id_da_empresa',currentCompany.id):await supabaseClient.from('departamentos').insert({...payload,id_da_empresa:currentCompany.id});
- b.disabled=false;b.textContent=editing?'Salvar alterações':'Salvar departamento';
- if(result.error){showDepartmentMessage('Não foi possível salvar: '+result.error.message,'error');return}
- closeDepartmentForm();showDepartmentMessage('Departamento salvo com sucesso.','success');await loadDepartments();await loadEmployees();
+ e.preventDefault();
+ if(!canManage())return;
+
+ const payload={
+  nome:$('departmentName').value.trim(),
+  'descrição':$('departmentDescription').value.trim()||null
+ };
+
+ if(!payload.nome){
+  showDepartmentMessage('Informe o nome do departamento.','error');
+  return;
+ }
+
+ const editing=!!editingDepartmentId;
+ const b=$('saveDepartmentButton');
+
+ b.disabled=true;
+ b.textContent='Salvando...';
+
+ const result=editing
+  ?await supabaseClient.from('departamentos').update(payload).eq('id',editingDepartmentId).eq('id_da_empresa',currentCompany.id)
+  :await supabaseClient.from('departamentos').insert({...payload,id_da_empresa:currentCompany.id});
+
+ b.disabled=false;
+ b.textContent=editing?'Salvar alterações':'Salvar departamento';
+
+ if(result.error){
+  showDepartmentMessage('Não foi possível salvar: '+result.error.message,'error');
+  return;
+ }
+
+ closeDepartmentForm();
+ showDepartmentMessage('Departamento salvo com sucesso.','success');
+ await loadDepartments();
+ await loadEmployees();
 });
+
 async function deleteDepartment(id){
- const d=departmentsData.find(x=>x.id===id);if(!d||!canManage())return;
+ const d=departmentsData.find(x=>x.id===id);
+ if(!d||!canManage())return;
+
  if(!confirm(`Excluir o departamento "${d.nome}"? Colaboradores vinculados poderão ficar sem departamento.`))return;
- const {error}=await supabaseClient.from('departamentos').delete().eq('id',id).eq('id_da_empresa',currentCompany.id);
- if(error){showDepartmentMessage('Não foi possível excluir: '+error.message,'error');return}
- showDepartmentMessage('Departamento excluído.','success');await loadDepartments();await loadEmployees();
+
+ const {error}=await supabaseClient
+  .from('departamentos')
+  .delete()
+  .eq('id',id)
+  .eq('id_da_empresa',currentCompany.id);
+
+ if(error){
+  showDepartmentMessage('Não foi possível excluir: '+error.message,'error');
+  return;
+ }
+
+ showDepartmentMessage('Departamento excluído.','success');
+ await loadDepartments();
+ await loadEmployees();
 }
-// ESCALAS: day_number 1-7 para fixa (segunda-domingo), 1-cycle_days para cíclica.
+
+// ESCALAS
 async function loadSchedules(){
  if(!currentCompany)return;
- const {data:templates,error}=await supabaseClient.from('work_schedule_templates').select('id,company_id,name,schedule_type,cycle_days,weekly_hours,active,created_at').eq('company_id',currentCompany.id).order('created_at',{ascending:false});
- if(error){$('schedulesTable').innerHTML=`<tr><td colspan="7" class="empty">Erro ao carregar escalas: ${escapeHTML(error.message)}</td></tr>`;showScheduleMessage('Verifique as tabelas e permissões de escalas: '+error.message,'error');return}
+
+ const {data:templates,error}=await supabaseClient
+  .from('work_schedule_templates')
+  .select('id,company_id,name,schedule_type,cycle_days,weekly_hours,active,created_at')
+  .eq('company_id',currentCompany.id)
+  .order('created_at',{ascending:false});
+
+ if(error){
+  $('schedulesTable').innerHTML=`<tr><td colspan="7" class="empty">Erro ao carregar escalas: ${escapeHTML(error.message)}</td></tr>`;
+  showScheduleMessage('Verifique as tabelas e permissões de escalas: '+error.message,'error');
+  return;
+ }
+
  schedulesData=templates||[];
+
  const ids=schedulesData.map(s=>s.id);
+
  if(ids.length){
-  const {data:days,error:de}=await supabaseClient.from('work_schedule_template_days').select('id,schedule_id,day_number,is_working,start_time,end_time,break_minutes').in('schedule_id',ids).order('day_number');
-  if(de){showScheduleMessage('Erro ao carregar dias das escalas: '+de.message,'error');return}
+  const {data:days,error:de}=await supabaseClient
+   .from('work_schedule_template_days')
+   .select('id,schedule_id,day_number,is_working,start_time,end_time,break_minutes')
+   .in('schedule_id',ids)
+   .order('day_number');
+
+  if(de){
+   showScheduleMessage('Erro ao carregar dias das escalas: '+de.message,'error');
+   return;
+  }
+
   scheduleDaysData=days||[];
- }else scheduleDaysData=[];
- const {data:assign,error:ae}=await supabaseClient.from('employee_work_schedules').select('id,company_id,employee_id,schedule_id,effective_from,effective_until,created_at').eq('company_id',currentCompany.id).order('effective_from',{ascending:false});
- if(ae){showScheduleMessage('Erro ao carregar atribuições: '+ae.message,'error');assignmentsData=[]}else assignmentsData=assign||[];
- renderSchedules();updateScheduleOptions();renderEmployeeScheduleAssignments();
+ }else{
+  scheduleDaysData=[];
+ }
+
+ const {data:assign,error:ae}=await supabaseClient
+  .from('employee_work_schedules')
+  .select('id,company_id,employee_id,schedule_id,effective_from,effective_until,created_at')
+  .eq('company_id',currentCompany.id)
+  .order('effective_from',{ascending:false});
+
+ if(ae){
+  showScheduleMessage('Erro ao carregar atribuições: '+ae.message,'error');
+  assignmentsData=[];
+ }else{
+  assignmentsData=assign||[];
+ }
+
+ renderSchedules();
+ updateScheduleOptions();
+ renderEmployeeScheduleAssignments();
 }
-function scheduleLabel(s){return s.schedule_type==='cyclic'?'Cíclica':'Fixa semanal'}
-function getScheduleDays(id){return scheduleDaysData.filter(d=>d.schedule_id===id)}
+
+function scheduleLabel(s){
+ return s.schedule_type==='cyclic'?'Cíclica':'Fixa semanal';
+}
+
+function getScheduleDays(id){
+ return scheduleDaysData.filter(d=>d.schedule_id===id);
+}
+
 function renderSchedules(){
- if(!schedulesData.length){$('schedulesTable').innerHTML='<tr><td colspan="7" class="empty">Nenhuma escala cadastrada. Clique em “Nova escala”.</td></tr>';$('scheduleCount').textContent='0 escalas';return}
+ if(!schedulesData.length){
+  $('schedulesTable').innerHTML='<tr><td colspan="7" class="empty">Nenhuma escala cadastrada. Clique em “Nova escala”.</td></tr>';
+  $('scheduleCount').textContent='0 escalas';
+  return;
+ }
+
  $('scheduleCount').textContent=schedulesData.length+(schedulesData.length===1?' escala':' escalas');
+
  $('schedulesTable').innerHTML=schedulesData.map(s=>{
- const days=getScheduleDays(s.id),worked=days.filter(d=>d.is_working).length;
- const duration=s.schedule_type==='cyclic'?`${s.cycle_days} dias`:'7 dias';
- const actions=canManage()?`<div class="actions"><button class="btn btn-edit" onclick="editSchedule('${s.id}')">Editar</button><button class="btn ${s.active?'btn-delete':'btn-invite'}" onclick="toggleSchedule('${s.id}',${!s.active})">${s.active?'Desativar':'Ativar'}</button></div>`:'—';
- return `<tr><td><strong>${escapeHTML(s.name)}</strong></td><td>${scheduleLabel(s)}</td><td>${duration}</td><td>${worked} de ${days.length}</td><td>${s.weekly_hours??'—'}</td><td><span class="badge ${s.active?'':'inactive'}">${s.active?'Ativa':'Inativa'}</span></td><td>${actions}</td></tr>`;
+  const days=getScheduleDays(s.id);
+  const worked=days.filter(d=>d.is_working).length;
+  const duration=s.schedule_type==='cyclic'?`${s.cycle_days} dias`:'7 dias';
+
+  const actions=canManage()
+   ?`<div class="actions"><button class="btn btn-edit" onclick="editSchedule('${s.id}')">Editar</button><button class="btn ${s.active?'btn-delete':'btn-invite'}" onclick="toggleSchedule('${s.id}',${!s.active})">${s.active?'Desativar':'Ativar'}</button></div>`
+   :'—';
+
+  return `<tr>
+   <td><strong>${escapeHTML(s.name)}</strong></td>
+   <td>${scheduleLabel(s)}</td>
+   <td>${duration}</td>
+   <td>${worked} de ${days.length}</td>
+   <td>${s.weekly_hours??'—'}</td>
+   <td><span class="badge ${s.active?'':'inactive'}">${s.active?'Ativa':'Inativa'}</span></td>
+   <td>${actions}</td>
+  </tr>`;
  }).join('');
 }
+
 function updateScheduleOptions(){
- const select=$('employeeSchedule');if(!select)return;const old=select.value;select.innerHTML='<option value="">Sem escala atribuída</option>';
- schedulesData.filter(s=>s.active).forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=`${s.name} (${scheduleLabel(s)})`;select.appendChild(o)});
+ const select=$('employeeSchedule');
+ if(!select)return;
+
+ const old=select.value;
+ select.innerHTML='<option value="">Sem escala atribuída</option>';
+
+ schedulesData.filter(s=>s.active).forEach(s=>{
+  const o=document.createElement('option');
+  o.value=s.id;
+  o.textContent=`${s.name} (${scheduleLabel(s)})`;
+  select.appendChild(o);
+ });
+
  if([...select.options].some(o=>o.value===old))select.value=old;
 }
+
 function buildScheduleDays(existing=[]){
- const type=$('scheduleType').value;const cyclic=type==='cyclic';
+ const type=$('scheduleType').value;
+ const cyclic=type==='cyclic';
+
  $('cycleLengthField').classList.toggle('hidden',!cyclic);
- $('scheduleExplanation').textContent=cyclic?'Escala cíclica: configure cada dia do ciclo. O Dia 1 se repete após o último dia informado. Exemplo: ciclo de 6 dias com 5 dias trabalhados e 1 descanso.':'Escala fixa: configure os sete dias da semana. Dia 1 = segunda-feira e Dia 7 = domingo. Os dias desmarcados serão descanso.';
+
+ $('scheduleExplanation').textContent=cyclic
+  ?'Escala cíclica: configure cada dia do ciclo. O Dia 1 se repete após o último dia informado. Exemplo: ciclo de 6 dias com 5 dias trabalhados e 1 descanso.'
+  :'Escala fixa: configure os sete dias da semana. Dia 1 = segunda-feira e Dia 7 = domingo. Os dias desmarcados serão descanso.';
+
  let count=7;
- if(cyclic){count=Math.max(1,Math.min(42,parseInt($('cycleDays').value,10)||6))}
+
+ if(cyclic){
+  count=Math.max(1,Math.min(42,parseInt($('cycleDays').value,10)||6));
+ }
+
  const labels=cyclic?Array.from({length:count},(_,i)=>`Dia ${i+1}`):dayNames;
+
  $('scheduleDays').innerHTML=labels.map((label,i)=>{
- const day=existing.find(d=>Number(d.day_number)===i+1);
- const working=day?day.is_working:(cyclic?i<5:i<5);
- const start=day?.start_time?.slice(0,5)||'08:00',end=day?.end_time?.slice(0,5)||'17:00',br=day?.break_minutes??60;
- return `<div class="day-row"><div><label class="day-check"><input type="checkbox" class="work-day" data-day="${i+1}" ${working?'checked':''} onchange="toggleDayInputs(this)"> ${label}</label><div class="hint">${working?'Dia de trabalho':'Dia de descanso'}</div></div><div class="field"><label>Entrada</label><input type="time" class="day-start" data-day="${i+1}" value="${start}" ${working?'':'disabled'}></div><div class="field"><label>Saída</label><input type="time" class="day-end" data-day="${i+1}" value="${end}" ${working?'':'disabled'}></div><div class="field"><label>Intervalo (min)</label><input type="number" min="0" max="600" class="day-break" data-day="${i+1}" value="${br}" ${working?'':'disabled'}></div></div>`;
+  const day=existing.find(d=>Number(d.day_number)===i+1);
+  const working=day?day.is_working:(cyclic?i<5:i<5);
+  const start=day?.start_time?.slice(0,5)||'08:00';
+  const end=day?.end_time?.slice(0,5)||'17:00';
+  const br=day?.break_minutes??60;
+
+  return `<div class="day-row">
+   <div>
+    <label class="day-check"><input type="checkbox" class="work-day" data-day="${i+1}" ${working?'checked':''} onchange="toggleDayInputs(this)"> ${label}</label>
+    <div class="hint">${working?'Dia de trabalho':'Dia de descanso'}</div>
+   </div>
+   <div class="field"><label>Entrada</label><input type="time" class="day-start" data-day="${i+1}" value="${start}" ${working?'':'disabled'}></div>
+   <div class="field"><label>Saída</label><input type="time" class="day-end" data-day="${i+1}" value="${end}" ${working?'':'disabled'}></div>
+   <div class="field"><label>Intervalo (min)</label><input type="number" min="0" max="600" class="day-break" data-day="${i+1}" value="${br}" ${working?'':'disabled'}></div>
+  </div>`;
  }).join('');
 }
-function toggleDayInputs(check){const row=check.closest('.day-row');row.querySelectorAll('.day-start,.day-end,.day-break').forEach(el=>el.disabled=!check.checked);row.querySelector('.hint').textContent=check.checked?'Dia de trabalho':'Dia de descanso'}
+
+function toggleDayInputs(check){
+ const row=check.closest('.day-row');
+ row.querySelectorAll('.day-start,.day-end,.day-break').forEach(el=>el.disabled=!check.checked);
+ row.querySelector('.hint').textContent=check.checked?'Dia de trabalho':'Dia de descanso';
+}
+
 $('scheduleType').addEventListener('change',()=>buildScheduleDays());
-$('cycleDays').addEventListener('input',()=>{if($('scheduleType').value==='cyclic')buildScheduleDays()});
+
+$('cycleDays').addEventListener('input',()=>{
+ if($('scheduleType').value==='cyclic')buildScheduleDays();
+});
+
 function openScheduleForm(){
- if(!canManage())return;editingScheduleId=null;$('newScheduleForm').reset();$('scheduleType').value='fixed';$('cycleDays').value=6;$('scheduleFormTitle').textContent='Cadastrar modelo de escala';$('saveScheduleButton').textContent='Salvar escala';buildScheduleDays();$('scheduleForm').classList.remove('hidden');scrollTo({top:0,behavior:'smooth'});
+ if(!canManage())return;
+
+ editingScheduleId=null;
+ $('newScheduleForm').reset();
+ $('scheduleType').value='fixed';
+ $('cycleDays').value=6;
+ $('scheduleFormTitle').textContent='Cadastrar modelo de escala';
+ $('saveScheduleButton').textContent='Salvar escala';
+
+ buildScheduleDays();
+
+ $('scheduleForm').classList.remove('hidden');
+ scrollTo({top:0,behavior:'smooth'});
 }
-function closeScheduleForm(){$('scheduleForm').classList.add('hidden');$('newScheduleForm').reset();editingScheduleId=null}
+
+function closeScheduleForm(){
+ $('scheduleForm').classList.add('hidden');
+ $('newScheduleForm').reset();
+ editingScheduleId=null;
+}
+
 function editSchedule(id){
- if(!canManage())return;const s=schedulesData.find(x=>x.id===id);if(!s)return;editingScheduleId=id;
- $('scheduleName').value=s.name;$('scheduleType').value=s.schedule_type;$('cycleDays').value=s.cycle_days||6;$('scheduleWeeklyHours').value=s.weekly_hours??'';
- buildScheduleDays(getScheduleDays(id));$('scheduleFormTitle').textContent='Editar modelo de escala';$('saveScheduleButton').textContent='Salvar alterações';$('scheduleForm').classList.remove('hidden');scrollTo({top:0,behavior:'smooth'});
+ if(!canManage())return;
+
+ const s=schedulesData.find(x=>x.id===id);
+ if(!s)return;
+
+ editingScheduleId=id;
+
+ $('scheduleName').value=s.name;
+ $('scheduleType').value=s.schedule_type;
+ $('cycleDays').value=s.cycle_days||6;
+ $('scheduleWeeklyHours').value=s.weekly_hours??'';
+
+ buildScheduleDays(getScheduleDays(id));
+
+ $('scheduleFormTitle').textContent='Editar modelo de escala';
+ $('saveScheduleButton').textContent='Salvar alterações';
+ $('scheduleForm').classList.remove('hidden');
+
+ scrollTo({top:0,behavior:'smooth'});
 }
+
 async function toggleSchedule(id,active){
- if(!canManage())return;const {error}=await supabaseClient.from('work_schedule_templates').update({active}).eq('id',id).eq('company_id',currentCompany.id);
- if(error){showScheduleMessage('Não foi possível atualizar: '+error.message,'error');return}
- showScheduleMessage(active?'Escala ativada.':'Escala desativada.','success');await loadSchedules();
+ if(!canManage())return;
+
+ const {error}=await supabaseClient
+  .from('work_schedule_templates')
+  .update({active})
+  .eq('id',id)
+  .eq('company_id',currentCompany.id);
+
+ if(error){
+  showScheduleMessage('Não foi possível atualizar: '+error.message,'error');
+  return;
+ }
+
+ showScheduleMessage(active?'Escala ativada.':'Escala desativada.','success');
+ await loadSchedules();
 }
+
 $('newScheduleForm').addEventListener('submit',async e=>{
- e.preventDefault();if(!canManage())return;
- const name=$('scheduleName').value.trim(),type=$('scheduleType').value,cycle=type==='cyclic'?parseInt($('cycleDays').value,10):7;
- if(!name){showScheduleMessage('Informe o nome da escala.','error');return}
- if(type==='cyclic'&&(!Number.isInteger(cycle)||cycle<1||cycle>42)){showScheduleMessage('O ciclo deve ter entre 1 e 42 dias.','error');return}
+ e.preventDefault();
+ if(!canManage())return;
+
+ const name=$('scheduleName').value.trim();
+ const type=$('scheduleType').value;
+ const cycle=type==='cyclic'?parseInt($('cycleDays').value,10):7;
+
+ if(!name){
+  showScheduleMessage('Informe o nome da escala.','error');
+  return;
+ }
+
+ if(type==='cyclic'&&(!Number.isInteger(cycle)||cycle<1||cycle>42)){
+  showScheduleMessage('O ciclo deve ter entre 1 e 42 dias.','error');
+  return;
+ }
+
  const rows=[...document.querySelectorAll('.day-row')].map(row=>{
- const check=row.querySelector('.work-day'),day=Number(check.dataset.day),working=check.checked;
- return {day_number:day,is_working:working,start_time:working?(row.querySelector('.day-start').value||null):null,end_time:working?(row.querySelector('.day-end').value||null):null,break_minutes:working?(parseInt(row.querySelector('.day-break').value,10)||0):0};
+  const check=row.querySelector('.work-day');
+  const day=Number(check.dataset.day);
+  const working=check.checked;
+
+  return {
+   day_number:day,
+   is_working:working,
+   start_time:working?(row.querySelector('.day-start').value||null):null,
+   end_time:working?(row.querySelector('.day-end').value||null):null,
+   break_minutes:working?(parseInt(row.querySelector('.day-break').value,10)||0):0
+  };
  });
- if(rows.some(r=>r.is_working&&(!r.start_time||!r.end_time))){showScheduleMessage('Preencha entrada e saída de todos os dias trabalhados.','error');return}
- if(!rows.some(r=>r.is_working)){showScheduleMessage('A escala precisa ter pelo menos um dia de trabalho.','error');return}
- const b=$('saveScheduleButton'),editing=!!editingScheduleId;b.disabled=true;b.textContent='Salvando...';
+
+ if(rows.some(r=>r.is_working&&(!r.start_time||!r.end_time))){
+  showScheduleMessage('Preencha entrada e saída de todos os dias trabalhados.','error');
+  return;
+ }
+
+ if(!rows.some(r=>r.is_working)){
+  showScheduleMessage('A escala precisa ter pelo menos um dia de trabalho.','error');
+  return;
+ }
+
+ const b=$('saveScheduleButton');
+ const editing=!!editingScheduleId;
+
+ b.disabled=true;
+ b.textContent='Salvando...';
+
  try{
   let scheduleId=editingScheduleId;
-  const payload={company_id:currentCompany.id,name,schedule_type:type,cycle_days:cycle,weekly_hours:$('scheduleWeeklyHours').value===''?null:Number($('scheduleWeeklyHours').value),active:true};
+
+  const payload={
+   company_id:currentCompany.id,
+   name,
+   schedule_type:type,
+   cycle_days:cycle,
+   weekly_hours:$('scheduleWeeklyHours').value===''?null:Number($('scheduleWeeklyHours').value),
+   active:true
+  };
+
   if(editing){
-   const {error}=await supabaseClient.from('work_schedule_templates').update({name,schedule_type:type,cycle_days:cycle,weekly_hours:payload.weekly_hours}).eq('id',scheduleId).eq('company_id',currentCompany.id);
+   const {error}=await supabaseClient
+    .from('work_schedule_templates')
+    .update({name,schedule_type:type,cycle_days:cycle,weekly_hours:payload.weekly_hours})
+    .eq('id',scheduleId)
+    .eq('company_id',currentCompany.id);
+
    if(error)throw error;
-   const {error:delError}=await supabaseClient.from('work_schedule_template_days').delete().eq('schedule_id',scheduleId);
+
+   const {error:delError}=await supabaseClient
+    .from('work_schedule_template_days')
+    .delete()
+    .eq('schedule_id',scheduleId);
+
    if(delError)throw delError;
   }else{
-   const {data,error}=await supabaseClient.from('work_schedule_templates').insert(payload).select('id').single();
-   if(error)throw error;scheduleId=data.id;
+   const {data,error}=await supabaseClient
+    .from('work_schedule_templates')
+    .insert(payload)
+    .select('id')
+    .single();
+
+   if(error)throw error;
+
+   scheduleId=data.id;
   }
+
   const dayPayload=rows.map(r=>({...r,schedule_id:scheduleId}));
-  const {error:dayError}=await supabaseClient.from('work_schedule_template_days').insert(dayPayload);
+
+  const {error:dayError}=await supabaseClient
+   .from('work_schedule_template_days')
+   .insert(dayPayload);
+
   if(dayError)throw dayError;
-  closeScheduleForm();showScheduleMessage(editing?'Escala atualizada com sucesso.':'Escala criada com sucesso.','success');await loadSchedules();
- }catch(err){showScheduleMessage('Não foi possível salvar a escala: '+(err.message||err),'error')}
- finally{b.disabled=false;b.textContent=editing?'Salvar alterações':'Salvar escala'}
+
+  closeScheduleForm();
+
+  showScheduleMessage(editing?'Escala atualizada com sucesso.':'Escala criada com sucesso.','success');
+
+  await loadSchedules();
+
+ }catch(err){
+  showScheduleMessage('Não foi possível salvar a escala: '+(err.message||err),'error');
+ }finally{
+  b.disabled=false;
+  b.textContent=editing?'Salvar alterações':'Salvar escala';
+ }
 });
+
 function renderEmployeeScheduleAssignments(){
- const body=$('employeeSchedulesTable');if(!assignmentsData.length){body.innerHTML='<tr><td colspan="4" class="empty">Nenhuma escala atribuída.</td></tr>';return}
+ const body=$('employeeSchedulesTable');
+
+ if(!assignmentsData.length){
+  body.innerHTML='<tr><td colspan="4" class="empty">Nenhuma escala atribuída.</td></tr>';
+  return;
+ }
+
  body.innerHTML=assignmentsData.map(a=>{
- const emp=employeesData.find(e=>e.id===a.employee_id),sch=schedulesData.find(s=>s.id===a.schedule_id);
- return `<tr><td>${escapeHTML(emp?.full_name||'Colaborador')}</td><td>${escapeHTML(sch?.name||'Escala')}</td><td>${a.effective_from?new Date(a.effective_from+'T00:00:00').toLocaleDateString('pt-BR'):'—'}</td><td>${a.effective_until?new Date(a.effective_until+'T00:00:00').toLocaleDateString('pt-BR'):'Em aberto'}</td></tr>`;
+  const emp=employeesData.find(e=>e.id===a.employee_id);
+  const sch=schedulesData.find(s=>s.id===a.schedule_id);
+
+  return `<tr>
+   <td>${escapeHTML(emp?.full_name||'Colaborador')}</td>
+   <td>${escapeHTML(sch?.name||'Escala')}</td>
+   <td>${a.effective_from?formatDate(a.effective_from):'—'}</td>
+   <td>${a.effective_until?formatDate(a.effective_until):'Em aberto'}</td>
+  </tr>`;
  }).join('');
 }
+
 // COLABORADORES
 async function loadEmployees(){
  if(!currentCompany)return;
- const {data,error}=await supabaseClient.from('employees').select('id,employee_code,full_name,email,phone,job_title,status,hire_date,created_at,department_id,user_id,employment_type').eq('company_id',currentCompany.id).order('created_at',{ascending:false});
- if(error){$('employeesTable').innerHTML=`<tr><td colspan="9" class="empty">Erro ao carregar colaboradores: ${escapeHTML(error.message)}</td></tr>`;return}
- employeesData=data||[];$('totalEmployees').textContent=employeesData.length;$('activeEmployees').textContent=employeesData.filter(e=>e.status==='active').length;
- renderEmployees(employeesData);renderDepartments();renderEmployeeScheduleAssignments();
-}
-function currentAssignment(employeeId){return assignmentsData.find(a=>a.employee_id===employeeId&&!a.effective_until)||assignmentsData.find(a=>a.employee_id===employeeId)}
-function renderEmployees(list){
- const tbody=$('employeesTable');if(!list.length){tbody.innerHTML='<tr><td colspan="9" class="empty">Nenhum colaborador cadastrado.</td></tr>';return}
- const labels={active:'Ativo',inactive:'Inativo',terminated:'Desligado'};
- tbody.innerHTML=list.map(e=>{
- const dep=departmentsData.find(d=>d.id===e.department_id),ass=currentAssignment(e.id),sch=schedulesData.find(s=>s.id===ass?.schedule_id);
- let access=e.user_id?'<button class="btn btn-linked" disabled>Acesso vinculado</button>':e.status==='active'&&e.email?`<button class="btn btn-invite" id="invite-${e.id}" onclick="inviteEmployee('${e.id}')">Enviar convite</button>`:'<button class="btn btn-linked" disabled>Sem acesso</button>';
- const actions=canManage()?`<div class="actions"><button class="btn btn-edit" onclick="editEmployee('${e.id}')">Editar</button><button class="btn btn-delete" onclick="deleteEmployee('${e.id}')">Excluir</button>${access}</div>`:'—';
- return `<tr><td><strong>${escapeHTML(e.full_name)}</strong></td><td>${escapeHTML(e.employee_code||'—')}</td><td>${escapeHTML(e.job_title||'—')}</td><td>${escapeHTML(e.employment_type||'CLT')}</td><td>${escapeHTML(dep?.nome||'—')}</td><td>${escapeHTML(sch?.name||'—')}</td><td>${escapeHTML(e.email||'—')}</td><td><span class="badge ${escapeHTML(e.status||'active')}">${escapeHTML(labels[e.status]||e.status||'Ativo')}</span></td><td>${actions}</td></tr>`;
- }).join('');
-}
-function filterEmployees(){const q=$('employeeSearch').value.toLowerCase();renderEmployees(employeesData.filter(e=>{const d=departmentsData.find(x=>x.id===e.department_id);const s=schedulesData.find(x=>x.id===currentAssignment(e.id)?.schedule_id);return [e.full_name,e.email,e.employee_code,e.job_title,e.employment_type,d?.nome,s?.name].some(v=>(v||'').toLowerCase().includes(q))}))}
-function openEmployeeForm(){
- if(!canManage())return;editingEmployeeId=null;$('newEmployeeForm').reset();$('employeeEmploymentType').value='CLT';$('employeeStatus').value='active';$('employeeFormTitle').textContent='Cadastro de colaborador';$('employeeSubmitButton').textContent='Salvar colaborador';updateDepartmentOptions();updateScheduleOptions();$('employeeScheduleStart').value=new Date().toISOString().slice(0,10);$('employeeForm').classList.remove('hidden');scrollTo({top:0,behavior:'smooth'});
-}
-function closeEmployeeForm(){$('employeeForm').classList.add('hidden');$('newEmployeeForm').reset();editingEmployeeId=null}
-function editEmployee(id){
- if(!canManage())return;const e=employeesData.find(x=>x.id===id);if(!e)return;editingEmployeeId=id;updateDepartmentOptions();updateScheduleOptions();
- $('employeeName').value=e.full_name||'';$('employeeCode').value=e.employee_code||'';$('employeeEmail').value=e.email||'';$('employeePhone').value=e.phone||'';$('employeePosition').value=e.job_title||'';$('employeeDepartment').value=e.department_id||'';$('employeeEmploymentType').value=e.employment_type||'CLT';$('employeeHireDate').value=e.hire_date||'';$('employeeStatus').value=e.status||'active';
- const ass=currentAssignment(id);$('employeeSchedule').value=ass?.schedule_id||'';$('employeeScheduleStart').value=ass?.effective_from||new Date().toISOString().slice(0,10);
- $('employeeFormTitle').textContent='Editar colaborador';$('employeeSubmitButton').textContent='Salvar alterações';$('employeeForm').classList.remove('hidden');scrollTo({top:0,behavior:'smooth'});
-}
-async function saveEmployeeSchedule(employeeId,scheduleId,effectiveFrom){
- const current=assignmentsData.find(a=>a.employee_id===employeeId&&!a.effective_until);
- if(!scheduleId){
-  if(current){const {error}=await supabaseClient.from('employee_work_schedules').update({effective_until:effectiveFrom}).eq('id',current.id).eq('company_id',currentCompany.id);if(error)throw error}
+
+ const {data,error}=await supabaseClient
+  .from('employees')
+  .select('id,employee_code,full_name,email,phone,job_title,status,hire_date,created_at,department_id,user_id,employment_type')
+  .eq('company_id',currentCompany.id)
+  .order('created_at',{ascending:false});
+
+ if(error){
+  $('employeesTable').innerHTML=`<tr><td colspan="9" class="empty">Erro ao carregar colaboradores: ${escapeHTML(error.message)}</td></tr>`;
   return;
  }
- if(!effectiveFrom)throw new Error('Informe a data de início da vigência da escala.');
- if(current&&current.schedule_id===scheduleId&&current.effective_from===effectiveFrom)return;
- if(current){
-  const endDate=new Date(effectiveFrom+'T00:00:00');endDate.setDate(endDate.getDate()-1);
-  const until=endDate.toISOString().slice(0,10);
-  if(current.effective_from>=effectiveFrom)throw new Error('A nova vigência precisa começar depois do início da escala atual.');
-  const {error}=await supabaseClient.from('employee_work_schedules').update({effective_until:until}).eq('id',current.id).eq('company_id',currentCompany.id);if(error)throw error;
+
+ employeesData=data||[];
+
+ $('totalEmployees').textContent=employeesData.length;
+ $('activeEmployees').textContent=employeesData.filter(e=>e.status==='active').length;
+
+ renderEmployees(employeesData);
+ renderDepartments();
+ renderEmployeeScheduleAssignments();
+}
+
+function currentAssignment(employeeId){
+ return assignmentsData.find(a=>a.employee_id===employeeId&&!a.effective_until)||assignmentsData.find(a=>a.employee_id===employeeId);
+}
+
+function renderEmployees(list){
+ const tbody=$('employeesTable');
+
+ if(!list.length){
+  tbody.innerHTML='<tr><td colspan="9" class="empty">Nenhum colaborador cadastrado.</td></tr>';
+  return;
  }
- const {error}=await supabaseClient.from('employee_work_schedules').insert({company_id:currentCompany.id,employee_id:employeeId,schedule_id:scheduleId,effective_from:effectiveFrom,effective_until:null});
+
+ const labels={active:'Ativo',inactive:'Inativo',terminated:'Desligado'};
+
+ tbody.innerHTML=list.map(e=>{
+  const dep=departmentsData.find(d=>d.id===e.department_id);
+  const ass=currentAssignment(e.id);
+  const sch=schedulesData.find(s=>s.id===ass?.schedule_id);
+
+  let access=e.user_id
+   ?'<button class="btn btn-linked" disabled>Acesso vinculado</button>'
+   :e.status==='active'&&e.email
+    ?`<button class="btn btn-invite" id="invite-${e.id}" onclick="inviteEmployee('${e.id}')">Enviar convite</button>`
+    :'<button class="btn btn-linked" disabled>Sem acesso</button>';
+
+  const actions=canManage()
+   ?`<div class="actions"><button class="btn btn-edit" onclick="editEmployee('${e.id}')">Editar</button><button class="btn btn-delete" onclick="deleteEmployee('${e.id}')">Excluir</button>${access}</div>`
+   :'—';
+
+  return `<tr>
+   <td><strong>${escapeHTML(e.full_name)}</strong></td>
+   <td>${escapeHTML(e.employee_code||'—')}</td>
+   <td>${escapeHTML(e.job_title||'—')}</td>
+   <td>${escapeHTML(e.employment_type||'CLT')}</td>
+   <td>${escapeHTML(dep?.nome||'—')}</td>
+   <td>${escapeHTML(sch?.name||'—')}</td>
+   <td>${escapeHTML(e.email||'—')}</td>
+   <td><span class="badge ${escapeHTML(e.status||'active')}">${escapeHTML(labels[e.status]||e.status||'Ativo')}</span></td>
+   <td>${actions}</td>
+  </tr>`;
+ }).join('');
+}
+
+function filterEmployees(){
+ const q=$('employeeSearch').value.toLowerCase();
+
+ renderEmployees(employeesData.filter(e=>{
+  const d=departmentsData.find(x=>x.id===e.department_id);
+  const s=schedulesData.find(x=>x.id===currentAssignment(e.id)?.schedule_id);
+
+  return [e.full_name,e.email,e.employee_code,e.job_title,e.employment_type,d?.nome,s?.name]
+   .some(v=>(v||'').toLowerCase().includes(q));
+ }));
+}
+
+function openEmployeeForm(){
+ if(!canManage())return;
+
+ editingEmployeeId=null;
+ $('newEmployeeForm').reset();
+ $('employeeEmploymentType').value='CLT';
+ $('employeeStatus').value='active';
+ $('employeeFormTitle').textContent='Cadastro de colaborador';
+ $('employeeSubmitButton').textContent='Salvar colaborador';
+
+ updateDepartmentOptions();
+ updateScheduleOptions();
+
+ $('employeeScheduleStart').value=new Date().toISOString().slice(0,10);
+ $('employeeForm').classList.remove('hidden');
+
+ scrollTo({top:0,behavior:'smooth'});
+}
+
+function closeEmployeeForm(){
+ $('employeeForm').classList.add('hidden');
+ $('newEmployeeForm').reset();
+ editingEmployeeId=null;
+}
+
+function editEmployee(id){
+ if(!canManage())return;
+
+ const e=employeesData.find(x=>x.id===id);
+ if(!e)return;
+
+ editingEmployeeId=id;
+
+ updateDepartmentOptions();
+ updateScheduleOptions();
+
+ $('employeeName').value=e.full_name||'';
+ $('employeeCode').value=e.employee_code||'';
+ $('employeeEmail').value=e.email||'';
+ $('employeePhone').value=e.phone||'';
+ $('employeePosition').value=e.job_title||'';
+ $('employeeDepartment').value=e.department_id||'';
+ $('employeeEmploymentType').value=e.employment_type||'CLT';
+ $('employeeHireDate').value=e.hire_date||'';
+ $('employeeStatus').value=e.status||'active';
+
+ const ass=currentAssignment(id);
+
+ $('employeeSchedule').value=ass?.schedule_id||'';
+ $('employeeScheduleStart').value=ass?.effective_from||new Date().toISOString().slice(0,10);
+
+ $('employeeFormTitle').textContent='Editar colaborador';
+ $('employeeSubmitButton').textContent='Salvar alterações';
+ $('employeeForm').classList.remove('hidden');
+
+ scrollTo({top:0,behavior:'smooth'});
+}
+
+async function saveEmployeeSchedule(employeeId,scheduleId,effectiveFrom){
+ const current=assignmentsData.find(a=>a.employee_id===employeeId&&!a.effective_until);
+
+ if(!scheduleId){
+  if(current){
+   const {error}=await supabaseClient
+    .from('employee_work_schedules')
+    .update({effective_until:effectiveFrom})
+    .eq('id',current.id)
+    .eq('company_id',currentCompany.id);
+
+   if(error)throw error;
+  }
+  return;
+ }
+
+ if(!effectiveFrom)throw new Error('Informe a data de início da vigência da escala.');
+
+ if(current&&current.schedule_id===scheduleId&&current.effective_from===effectiveFrom)return;
+
+ if(current){
+  const endDate=new Date(effectiveFrom+'T00:00:00');
+  endDate.setDate(endDate.getDate()-1);
+  const until=endDate.toISOString().slice(0,10);
+
+  if(current.effective_from>=effectiveFrom){
+   throw new Error('A nova vigência precisa começar depois do início da escala atual.');
+  }
+
+  const {error}=await supabaseClient
+   .from('employee_work_schedules')
+   .update({effective_until:until})
+   .eq('id',current.id)
+   .eq('company_id',currentCompany.id);
+
+  if(error)throw error;
+ }
+
+ const {error}=await supabaseClient
+  .from('employee_work_schedules')
+  .insert({
+   company_id:currentCompany.id,
+   employee_id:employeeId,
+   schedule_id:scheduleId,
+   effective_from:effectiveFrom,
+   effective_until:null
+  });
+
  if(error)throw error;
 }
+
 $('newEmployeeForm').addEventListener('submit',async e=>{
- e.preventDefault();if(!canManage())return;
- const emp={company_id:currentCompany.id,full_name:$('employeeName').value.trim(),employee_code:$('employeeCode').value.trim()||null,email:$('employeeEmail').value.trim()||null,phone:$('employeePhone').value.trim()||null,job_title:$('employeePosition').value.trim()||null,department_id:$('employeeDepartment').value||null,employment_type:$('employeeEmploymentType').value,hire_date:$('employeeHireDate').value||null,status:$('employeeStatus').value};
- if(!emp.full_name){showMessage('Informe o nome completo.','error');return}
- const editing=!!editingEmployeeId,button=$('employeeSubmitButton');button.disabled=true;button.textContent='Salvando...';
+ e.preventDefault();
+ if(!canManage())return;
+
+ const emp={
+  company_id:currentCompany.id,
+  full_name:$('employeeName').value.trim(),
+  employee_code:$('employeeCode').value.trim()||null,
+  email:$('employeeEmail').value.trim()||null,
+  phone:$('employeePhone').value.trim()||null,
+  job_title:$('employeePosition').value.trim()||null,
+  department_id:$('employeeDepartment').value||null,
+  employment_type:$('employeeEmploymentType').value,
+  hire_date:$('employeeHireDate').value||null,
+  status:$('employeeStatus').value
+ };
+
+ if(!emp.full_name){
+  showMessage('Informe o nome completo.','error');
+  return;
+ }
+
+ const editing=!!editingEmployeeId;
+ const button=$('employeeSubmitButton');
+
+ button.disabled=true;
+ button.textContent='Salvando...';
+
  try{
   let employeeId=editingEmployeeId;
+
   if(editing){
-   const {error}=await supabaseClient.from('employees').update({full_name:emp.full_name,employee_code:emp.employee_code,email:emp.email,phone:emp.phone,job_title:emp.job_title,department_id:emp.department_id,employment_type:emp.employment_type,hire_date:emp.hire_date,status:emp.status}).eq('id',employeeId).eq('company_id',currentCompany.id);
+   const {error}=await supabaseClient
+    .from('employees')
+    .update({
+     full_name:emp.full_name,
+     employee_code:emp.employee_code,
+     email:emp.email,
+     phone:emp.phone,
+     job_title:emp.job_title,
+     department_id:emp.department_id,
+     employment_type:emp.employment_type,
+     hire_date:emp.hire_date,
+     status:emp.status
+    })
+    .eq('id',employeeId)
+    .eq('company_id',currentCompany.id);
+
    if(error)throw error;
+
   }else{
-   const {data,error}=await supabaseClient.from('employees').insert(emp).select('id').single();if(error)throw error;employeeId=data.id;
+   const {data,error}=await supabaseClient
+    .from('employees')
+    .insert(emp)
+    .select('id')
+    .single();
+
+   if(error)throw error;
+
+   employeeId=data.id;
   }
+
   await saveEmployeeSchedule(employeeId,$('employeeSchedule').value,$('employeeScheduleStart').value);
-  closeEmployeeForm();showMessage(editing?'Colaborador atualizado com sucesso!':'Colaborador cadastrado com sucesso!','success');await loadSchedules();await loadEmployees();
- }catch(err){showMessage('Colaborador salvo parcialmente ou não salvo: '+(err.message||err)+'. Confira os dados e tente novamente.','error');await loadEmployees();await loadSchedules()}
- finally{button.disabled=false;button.textContent=editing?'Salvar alterações':'Salvar colaborador'}
+
+  closeEmployeeForm();
+
+  showMessage(editing?'Colaborador atualizado com sucesso!':'Colaborador cadastrado com sucesso!','success');
+
+  await loadSchedules();
+  await loadEmployees();
+
+ }catch(err){
+  showMessage('Colaborador salvo parcialmente ou não salvo: '+(err.message||err)+'. Confira os dados e tente novamente.','error');
+  await loadEmployees();
+  await loadSchedules();
+ }finally{
+  button.disabled=false;
+  button.textContent=editing?'Salvar alterações':'Salvar colaborador';
+ }
 });
+
 async function deleteEmployee(id){
- if(!canManage())return;const e=employeesData.find(x=>x.id===id);if(!e)return;
+ if(!canManage())return;
+
+ const e=employeesData.find(x=>x.id===id);
+ if(!e)return;
+
  if(!confirm(`Excluir o cadastro de "${e.full_name}"? Isso não apaga automaticamente a conta de acesso.`))return;
- const {error}=await supabaseClient.from('employees').delete().eq('id',id).eq('company_id',currentCompany.id);
- if(error){showMessage('Não foi possível excluir: '+error.message,'error');return}
- showMessage('Colaborador excluído.','success');await loadEmployees();await loadSchedules();
+
+ const {error}=await supabaseClient
+  .from('employees')
+  .delete()
+  .eq('id',id)
+  .eq('company_id',currentCompany.id);
+
+ if(error){
+  showMessage('Não foi possível excluir: '+error.message,'error');
+  return;
+ }
+
+ showMessage('Colaborador excluído.','success');
+
+ await loadEmployees();
+ await loadSchedules();
 }
+
 // CONVITE MEU PONTO
 async function inviteEmployee(id){
- const employee=employeesData.find(e=>e.id===id);if(!canManage()||!employee)return;
- if(employee.user_id){alert('Este colaborador já possui acesso.');return}
- if(employee.status!=='active'||!employee.email){alert('É necessário que o colaborador esteja ativo e tenha e-mail cadastrado.');return}
+ const employee=employeesData.find(e=>e.id===id);
+
+ if(!canManage()||!employee)return;
+
+ if(employee.user_id){
+  alert('Este colaborador já possui acesso.');
+  return;
+ }
+
+ if(employee.status!=='active'||!employee.email){
+  alert('É necessário que o colaborador esteja ativo e tenha e-mail cadastrado.');
+  return;
+ }
+
  if(!confirm(`Enviar convite de acesso ao Meu Ponto para ${employee.full_name} (${employee.email})?`))return;
- const button=$('invite-'+id);if(button){button.disabled=true;button.textContent='Enviando...'}
+
+ const button=$('invite-'+id);
+
+ if(button){
+  button.disabled=true;
+  button.textContent='Enviando...';
+ }
+
  try{
-  const {data,error}=await supabaseClient.functions.invoke('invite-employee',{body:{employee_id:id}});
-  if(error)throw error;if(!data?.success)throw new Error(data?.error||'A função não confirmou o envio.');
-  showMessage(data.message||'Convite enviado com sucesso!','success');await loadEmployees();
- }catch(err){showMessage('Não foi possível enviar o convite: '+(err.message||err),'error')}
- finally{if(button&&document.body.contains(button)){button.disabled=false;button.textContent='Enviar convite'}}
+  const {data,error}=await supabaseClient.functions.invoke('invite-employee',{
+   body:{employee_id:id}
+  });
+
+  if(error)throw error;
+
+  if(!data?.success)throw new Error(data?.error||'A função não confirmou o envio.');
+
+  showMessage(data.message||'Convite enviado com sucesso!','success');
+
+  await loadEmployees();
+
+ }catch(err){
+  showMessage('Não foi possível enviar o convite: '+(err.message||err),'error');
+ }finally{
+  if(button&&document.body.contains(button)){
+   button.disabled=false;
+   button.textContent='Enviar convite';
+  }
+ }
 }
+
+// =====================================================
+// MÓDULO DE SOLICITAÇÕES
+// =====================================================
+
+const requestTypeLabels={
+ time_correction:'Correção de ponto',
+ day_off_change:'Troca de folga',
+ schedule_change:'Alteração de escala',
+ medical_certificate:'Atestado médico',
+ attendance_declaration:'Declaração de horas/comparecimento',
+ union_declaration:'Declaração sindical',
+ other_declaration:'Outra declaração'
+};
+
+const requestStatusLabels={
+ pending:'Pendente',
+ approved:'Aprovada',
+ rejected:'Recusada',
+ cancelled:'Cancelada'
+};
+
+function requestStatusBadge(status){
+ const label=requestStatusLabels[status]||status||'—';
+ return `<span class="badge ${escapeHTML(status)}">${escapeHTML(label)}</span>`;
+}
+
+function getRequestEmployee(request){
+ return employeesData.find(e=>e.id===request.employee_id);
+}
+
+async function loadRequests(){
+ if(!currentCompany||!canViewRequests())return;
+
+ $('requestsTable').innerHTML='<tr><td colspan="6" class="empty">Carregando solicitações...</td></tr>';
+
+ const {data,error}=await supabaseClient
+  .from('employee_requests')
+  .select('id,company_id,employee_id,user_id,request_type,description,requested_date,requested_start_time,requested_end_time,document_path,status,decision_reason,decided_by,decided_at,created_at,updated_at')
+  .eq('company_id',currentCompany.id)
+  .order('created_at',{ascending:false});
+
+ if(error){
+  $('requestsTable').innerHTML=`<tr><td colspan="6" class="empty">Erro ao carregar solicitações: ${escapeHTML(error.message)}</td></tr>`;
+  showRequestMessage('Não foi possível carregar as solicitações: '+error.message,'error');
+  return;
+ }
+
+ requestsData=data||[];
+
+ updateRequestCounters();
+ renderRequests();
+
+ if(selectedRequest){
+  const updated=requestsData.find(r=>r.id===selectedRequest.id);
+
+  if(updated){
+   selectedRequest=updated;
+   await showRequestDetails(updated.id);
+  }else{
+   closeRequestDetails();
+  }
+ }
+}
+
+function updateRequestCounters(){
+ $('requestTotal').textContent=requestsData.length;
+ $('requestPending').textContent=requestsData.filter(r=>r.status==='pending').length;
+ $('requestApproved').textContent=requestsData.filter(r=>r.status==='approved').length;
+ $('requestRejected').textContent=requestsData.filter(r=>r.status==='rejected').length;
+}
+
+function renderRequests(){
+ const tbody=$('requestsTable');
+
+ let list=[...requestsData];
+
+ const status=$('requestStatusFilter').value;
+ const search=$('requestSearch').value.trim().toLowerCase();
+
+ if(status!=='all'){
+  list=list.filter(r=>r.status===status);
+ }
+
+ if(search){
+  list=list.filter(r=>{
+   const emp=getRequestEmployee(r);
+   return (emp?.full_name||'').toLowerCase().includes(search);
+  });
+ }
+
+ if(!list.length){
+  tbody.innerHTML='<tr><td colspan="6" class="empty">Nenhuma solicitação encontrada.</td></tr>';
+  return;
+ }
+
+ tbody.innerHTML=list.map(r=>{
+  const emp=getRequestEmployee(r);
+  const name=emp?.full_name||'Colaborador não identificado';
+
+  const requestedDate=formatDate(r.requested_date);
+  const created=formatDateTime(r.created_at);
+
+  return `<tr>
+   <td><strong>${escapeHTML(name)}</strong></td>
+   <td>${escapeHTML(requestTypeLabels[r.request_type]||r.request_type)}</td>
+   <td>${requestedDate}</td>
+   <td>${created}</td>
+   <td>${requestStatusBadge(r.status)}</td>
+   <td><button class="btn btn-secondary" onclick="showRequestDetails('${r.id}')">Ver detalhes</button></td>
+  </tr>`;
+ }).join('');
+}
+
+async function showRequestDetails(id){
+ const request=requestsData.find(r=>r.id===id);
+
+ if(!request)return;
+
+ selectedRequest=request;
+
+ const emp=getRequestEmployee(request);
+ const employeeName=emp?.full_name||'Colaborador não identificado';
+
+ const type=requestTypeLabels[request.request_type]||request.request_type;
+
+ const canDecide=canManage()&&request.status==='pending';
+
+ $('requestDetailPanel').classList.remove('hidden');
+ $('requestDecisionArea').classList.toggle('hidden',!canDecide);
+
+ $('requestDecisionReason').value='';
+
+ let period='—';
+
+ if(request.requested_start_time||request.requested_end_time){
+  period=`${request.requested_start_time||'—'} até ${request.requested_end_time||'—'}`;
+ }
+
+ $('requestDetails').innerHTML=`
+ <div class="request-detail">
+  <h4>${escapeHTML(type)}</h4>
+  <p><strong>Colaborador:</strong> ${escapeHTML(employeeName)}</p>
+  <p><strong>Tipo de solicitação:</strong> ${escapeHTML(type)}</p>
+  <p><strong>Data solicitada:</strong> ${formatDate(request.requested_date)}</p>
+  <p><strong>Horário solicitado:</strong> ${escapeHTML(period)}</p>
+  <p><strong>Enviada em:</strong> ${formatDateTime(request.created_at)}</p>
+  <p><strong>Status:</strong> ${requestStatusBadge(request.status)}</p>
+  <p><strong>Justificativa / descrição:</strong></p>
+  <p>${escapeHTML(request.description||'Nenhuma descrição informada.').replace(/\n/g,'<br>')}</p>
+  ${request.decision_reason?`<p><strong>Observação da decisão:</strong></p><p>${escapeHTML(request.decision_reason)}</p>`:''}
+  ${request.decided_at?`<p><strong>Decidida em:</strong> ${formatDateTime(request.decided_at)}</p>`:''}
+  ${request.document_path?`<p><strong>Documento anexado:</strong> Arquivo registrado no sistema.</p><p class="hint">O acesso ao documento ainda depende da configuração do armazenamento privado.</p>`:''}
+ </div>`;
+
+ $('requestHistory').innerHTML='<div class="empty">Carregando histórico...</div>';
+
+ $('requestDetailPanel').scrollIntoView({behavior:'smooth',block:'start'});
+
+ await loadRequestHistory(id);
+}
+
+async function loadRequestHistory(requestId){
+ const container=$('requestHistory');
+
+ const {data,error}=await supabaseClient
+  .from('employee_request_history')
+  .select('id,request_id,action,changed_by,old_data,new_data,created_at')
+  .eq('request_id',requestId)
+  .order('created_at',{ascending:false});
+
+ if(error){
+  container.innerHTML=`<div class="empty">Não foi possível consultar o histórico: ${escapeHTML(error.message)}</div>`;
+  return;
+ }
+
+ if(!data||!data.length){
+  container.innerHTML='<div class="empty">Nenhum registro de histórico encontrado.</div>';
+  return;
+ }
+
+ container.innerHTML=data.map(item=>{
+  const action=item.action==='created'?'Solicitação criada':'Solicitação atualizada';
+
+  let detail='';
+
+  if(item.new_data?.status){
+   const status=requestStatusLabels[item.new_data.status]||item.new_data.status;
+   detail=`Status registrado: ${escapeHTML(status)}.`;
+  }
+
+  if(item.new_data?.decision_reason){
+   detail+=` Observação: ${escapeHTML(item.new_data.decision_reason)}`;
+  }
+
+  return `<div class="history-item">
+   <strong>${escapeHTML(action)}</strong>
+   <div>${formatDateTime(item.created_at)}</div>
+   <div>${detail||'Registro de alteração armazenado.'}</div>
+  </div>`;
+ }).join('');
+}
+
+function closeRequestDetails(){
+ selectedRequest=null;
+ $('requestDetailPanel').classList.add('hidden');
+ $('requestDetails').innerHTML='';
+ $('requestHistory').innerHTML='';
+ $('requestDecisionReason').value='';
+}
+
+async function decideRequest(decision){
+ if(!canManage()){
+  showRequestMessage('Você não possui permissão para decidir solicitações.','error');
+  return;
+ }
+
+ if(!selectedRequest){
+  showRequestMessage('Selecione uma solicitação.','error');
+  return;
+ }
+
+ if(selectedRequest.status!=='pending'){
+  showRequestMessage('Esta solicitação não está mais pendente.','error');
+  return;
+ }
+
+ if(!['approved','rejected'].includes(decision))return;
+
+ const reason=$('requestDecisionReason').value.trim();
+
+ if(decision==='rejected'&&!reason){
+  showRequestMessage('Para recusar uma solicitação, informe o motivo.','error');
+  $('requestDecisionReason').focus();
+  return;
+ }
+
+ const action=decision==='approved'?'aprovar':'recusar';
+
+ if(!confirm(`Confirma que deseja ${action} esta solicitação?`))return;
+
+ const approveButton=$('approveRequestButton');
+ const rejectButton=$('rejectRequestButton');
+
+ approveButton.disabled=true;
+ rejectButton.disabled=true;
+
+ approveButton.textContent='Processando...';
+
+ try{
+  const {error}=await supabaseClient.rpc('decide_employee_request',{
+   p_request_id:selectedRequest.id,
+   p_decision:decision,
+   p_reason:reason||null
+  });
+
+  if(error)throw error;
+
+  showRequestMessage(
+   decision==='approved'
+    ?'Solicitação aprovada com sucesso!'
+    :'Solicitação recusada com sucesso!',
+   'success'
+  );
+
+  await loadRequests();
+
+  const updated=requestsData.find(r=>r.id===selectedRequest?.id);
+
+  if(updated){
+   selectedRequest=updated;
+   await showRequestDetails(updated.id);
+  }
+
+ }catch(err){
+  showRequestMessage('Não foi possível registrar a decisão: '+(err.message||err),'error');
+ }finally{
+  approveButton.disabled=false;
+  rejectButton.disabled=false;
+  approveButton.textContent='✓ Aprovar solicitação';
+  rejectButton.textContent='✕ Recusar solicitação';
+ }
+}
+
 // NAVEGAÇÃO / SESSÃO
 async function showPage(page,button){
- document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));$('page-'+page)?.classList.remove('hidden');
- document.querySelectorAll('.menu button').forEach(b=>b.classList.remove('active'));if(button)button.classList.add('active');
- const titles={inicio:['Visão geral','Acompanhe os indicadores da sua empresa.'],colaboradores:['Colaboradores','Gestão e cadastro de colaboradores.'],departamentos:['Departamentos','Organização da estrutura empresarial.'],ponto:['Controle de ponto','Registro e acompanhamento de jornada.'],escalas:['Escalas','Modelos fixos e cíclicos e atribuição aos colaboradores.'],relatorios:['Relatórios','Indicadores e informações gerenciais.'],disciplinar:['KFYRA Disciplinar','Gestão disciplinar empresarial.'],configuracoes:['Configurações','Configurações da empresa.'],ajuda:['KFYRA AI','Inteligência para sua gestão.']};
- $('pageTitle').textContent=titles[page][0];$('pageSubtitle').textContent=titles[page][1];$('companyBanner').classList.toggle('hidden',page!=='inicio');
- if(page==='departamentos')await loadDepartments();if(page==='colaboradores'){updateDepartmentOptions();updateScheduleOptions()}if(page==='escalas'){await loadSchedules();await loadEmployees()}
+ document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));
+
+ $('page-'+page)?.classList.remove('hidden');
+
+ document.querySelectorAll('.menu button').forEach(b=>b.classList.remove('active'));
+
+ if(button)button.classList.add('active');
+
+ const titles={
+  inicio:['Visão geral','Acompanhe os indicadores da sua empresa.'],
+  colaboradores:['Colaboradores','Gestão e cadastro de colaboradores.'],
+  departamentos:['Departamentos','Organização da estrutura empresarial.'],
+  ponto:['Controle de ponto','Registro e acompanhamento de jornada.'],
+  escalas:['Escalas','Modelos fixos e cíclicos e atribuição aos colaboradores.'],
+  solicitacoes:['Solicitações','Análise e acompanhamento das solicitações dos colaboradores.'],
+  relatorios:['Relatórios','Indicadores e informações gerenciais.'],
+  disciplinar:['KFYRA Disciplinar','Gestão disciplinar empresarial.'],
+  configuracoes:['Configurações','Configurações da empresa.'],
+  ajuda:['KFYRA AI','Inteligência para sua gestão.']
+ };
+
+ $('pageTitle').textContent=titles[page][0];
+ $('pageSubtitle').textContent=titles[page][1];
+
+ $('companyBanner').classList.toggle('hidden',page!=='inicio');
+
+ if(page==='departamentos'){
+  await loadDepartments();
+ }
+
+ if(page==='colaboradores'){
+  updateDepartmentOptions();
+  updateScheduleOptions();
+ }
+
+ if(page==='escalas'){
+  await loadSchedules();
+  await loadEmployees();
+ }
+
+ if(page==='solicitacoes'){
+  if(!canViewRequests()){
+   showRequestMessage('Você não possui permissão para consultar solicitações.','error');
+   return;
+  }
+
+  closeRequestDetails();
+  await loadRequests();
+ }
 }
-async function logout(){await supabaseClient.auth.signOut();location.href='login.html'}
+
+async function logout(){
+ await supabaseClient.auth.signOut();
+ location.href='login.html';
+}
+
 initializeDashboard();
 </script>
 </body>
