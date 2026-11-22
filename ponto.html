@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Meu Ponto | KFYRA</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f4f7f4;color:#18352d}
@@ -17,7 +18,8 @@ main{max-width:650px;margin:30px auto;padding:18px}
 h1{font-size:25px}
 p{color:#788a82;line-height:1.6}
 label{display:block;margin:18px 0 7px;font-weight:bold;font-size:14px}
-input{width:100%;padding:15px;border:1px solid #dce6df;border-radius:8px;font-size:16px;background:white;color:#18352d}
+input,select,textarea{width:100%;padding:15px;border:1px solid #dce6df;border-radius:8px;font-size:16px;background:white;color:#18352d;font-family:Arial,sans-serif}
+textarea{min-height:110px;resize:vertical}
 button{width:100%;padding:15px;margin-top:13px;background:#123d32;color:white;border:0;border-radius:8px;font-weight:bold;font-size:15px;cursor:pointer}
 button:disabled{opacity:.55;cursor:not-allowed}
 .secundario{background:#e9efeb;color:#123d32}
@@ -72,21 +74,40 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .cal-legenda{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:#687c72;margin-top:10px}
 .cal-legenda span{display:flex;align-items:center;gap:5px}
 .ponto-bolinha{width:9px;height:9px;border-radius:50%;display:inline-block;background:#e0f3e7}
+
+.status-solicitacao{display:inline-block;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:bold}
+.status-pending{background:#fff4d9;color:#8a6417}
+.status-approved{background:#e0f3e7;color:#216343}
+.status-rejected{background:#fff0ef;color:#a53d35}
+.status-cancelled{background:#e9efeb;color:#52665d}
+.solicitacao-card{background:white;border:1px solid #e1eae3;border-radius:10px;padding:15px;margin-top:12px}
+.solicitacao-card h4{margin:0 0 10px;color:#123d32}
+.solicitacao-card p{font-size:14px;margin:7px 0;overflow-wrap:anywhere}
+.solicitacao-card .detalhe{color:#52665d}
+.solicitacao-vazia{text-align:center;padding:20px;background:#f4f7f4;border-radius:9px;color:#687c72;margin-top:12px}
+.aviso-solicitacao{font-size:13px;background:#fff8e8;color:#805d20;padding:12px;border-radius:8px;line-height:1.6;margin-top:12px}
+
 @media(max-width:500px){
 main{margin:15px auto;padding:12px}
 .card{padding:20px}
 header{padding:22px}
 .cal-dia{min-height:42px}
+.abas{gap:5px}
+.aba{font-size:12px;padding:12px 4px}
 }
 </style>
 </head>
+
 <body>
+
 <header>
 <h2>KFYRA<span>.</span></h2>
 <p>MEU PONTO • PORTAL DO COLABORADOR</p>
 </header>
+
 <main>
 <div class="card">
+
 <h1 id="titulo">Bem-vindo ao Meu Ponto</h1>
 <p id="subtitulo">Acesse seu portal individual de colaborador.</p>
 <div id="mensagem"></div>
@@ -94,8 +115,10 @@ header{padding:22px}
 <form id="formLogin">
 <label for="email">E-mail</label>
 <input type="email" id="email" required autocomplete="email">
+
 <label for="senha">Senha</label>
 <input type="password" id="senha" required autocomplete="current-password">
+
 <button type="submit">Entrar no Meu Ponto</button>
 </form>
 
@@ -113,18 +136,25 @@ Primeiro acesso / Esqueci minha senha
 <form id="formSenha" class="oculto">
 <label for="novaSenha">Crie sua senha</label>
 <input type="password" id="novaSenha" minlength="8" required autocomplete="new-password">
+
 <label for="confirmarSenha">Confirme sua senha</label>
 <input type="password" id="confirmarSenha" minlength="8" required autocomplete="new-password">
+
 <button type="submit">Salvar senha e continuar</button>
 </form>
 
 <div id="areaLogada" class="oculto">
+
 <div class="abas">
 <button type="button" class="aba ativa" id="abaPonto">Meu Ponto</button>
+<button type="button" class="aba" id="abaSolicitacoes">Solicitações</button>
 <button type="button" class="aba" id="abaPerfil">Meu Perfil</button>
 </div>
 
+<!-- MEU PONTO -->
+
 <section id="conteudoPonto">
+
 <div class="painel-ponto">
 <p>Colaborador</p>
 <h2 id="nomeColaborador"></h2>
@@ -145,6 +175,7 @@ Primeiro acesso / Esqueci minha senha
 <div class="painel-ponto" id="painelEspelho">
 <h3>Espelho de Ponto</h3>
 <p>Consulte suas marcações organizadas por dia.</p>
+
 <div class="historico-topo">
 <div>
 <label for="mesEspelho">Mês de referência</label>
@@ -152,7 +183,9 @@ Primeiro acesso / Esqueci minha senha
 </div>
 <button type="button" id="botaoConsultarEspelho">Consultar</button>
 </div>
+
 <div id="resumoEspelho" class="resumo-historico"></div>
+
 <div class="painel-ponto">
 <h3>Calendário mensal</h3>
 <div id="calendarioMensal"></div>
@@ -162,24 +195,87 @@ Primeiro acesso / Esqueci minha senha
 <span>🟠 Ocorrência</span>
 </div>
 </div>
+
 <div id="listaEspelho">
 <p>Carregando histórico...</p>
 </div>
 </div>
 </section>
 
+<!-- SOLICITAÇÕES -->
+
+<section id="conteudoSolicitacoes" class="oculto">
+
+<div class="painel-ponto">
+<h3>Nova solicitação</h3>
+<p>Envie uma solicitação para análise do RH ou do responsável autorizado pela sua empresa.</p>
+
+<form id="formSolicitacao">
+
+<label for="tipoSolicitacao">Tipo de solicitação</label>
+<select id="tipoSolicitacao" required>
+<option value="">Selecione uma opção</option>
+<option value="time_correction">Correção de ponto</option>
+<option value="day_off_change">Troca de folga</option>
+<option value="schedule_change">Alteração de escala</option>
+<option value="medical_certificate">Atestado médico</option>
+<option value="attendance_declaration">Declaração de horas / comparecimento</option>
+<option value="union_declaration">Declaração sindical</option>
+<option value="other_declaration">Outra declaração</option>
+</select>
+
+<label for="dataSolicitacao">Data relacionada à solicitação</label>
+<input type="date" id="dataSolicitacao">
+
+<div id="camposHorario" class="oculto">
+<label for="horaInicial">Horário correto / horário inicial</label>
+<input type="time" id="horaInicial">
+
+<label for="horaFinal">Horário final (se necessário)</label>
+<input type="time" id="horaFinal">
+</div>
+
+<label for="descricaoSolicitacao">Justificativa e detalhes</label>
+<textarea id="descricaoSolicitacao" required maxlength="3000" placeholder="Explique o motivo da sua solicitação com o máximo de detalhes possível."></textarea>
+
+<div class="aviso-solicitacao">
+Sua solicitação será encaminhada para análise. O envio não significa aprovação e não altera automaticamente seu ponto ou sua escala.
+</div>
+
+<button type="submit" id="botaoEnviarSolicitacao">Enviar solicitação</button>
+
+</form>
+</div>
+
+<div class="painel-ponto">
+<h3>Minhas solicitações</h3>
+<p>Acompanhe o andamento das solicitações que você enviou.</p>
+<button type="button" id="botaoAtualizarSolicitacoes" class="secundario">Atualizar histórico</button>
+<div id="listaSolicitacoes">
+<p>Carregando solicitações...</p>
+</div>
+</div>
+
+</section>
+
+<!-- MEU PERFIL -->
+
 <section id="conteudoPerfil" class="oculto">
+
 <div class="painel-ponto">
 <div class="perfil-topo">
 <div id="avatarIniciais" class="avatar-iniciais">K</div>
 <img id="fotoPerfil" class="foto-perfil oculto" alt="Foto de perfil">
+
 <h2 class="nome-perfil" id="nomePerfil"></h2>
 <p class="cargo-perfil" id="cargoPerfil"></p>
+
 <label class="upload-label" for="arquivoFoto">
 Adicionar ou trocar foto
 <input type="file" id="arquivoFoto" accept="image/jpeg,image/png,image/webp">
 </label>
 </div>
+
 <div class="dado-perfil"><span>E-mail</span><strong id="emailPerfil">-</strong></div>
 <div class="dado-perfil"><span>Cargo</span><strong id="cargoDado">-</strong></div>
 <div class="dado-perfil"><span>Departamento</span><strong id="departamentoPerfil">Não informado</strong></div>
@@ -190,11 +286,11 @@ Adicionar ou trocar foto
 <p>Horários previstos conforme a escala cadastrada pela empresa.</p>
 <div id="listaEscala"><p>Carregando horários...</p></div>
 </div>
+
 </section>
 
-<button type="button" id="botaoSair" class="secundario">
-Sair da conta
-</button>
+<button type="button" id="botaoSair" class="secundario">Sair da conta</button>
+
 </div>
 </div>
 </main>
@@ -218,6 +314,7 @@ let usuarioAtual=null;
 let colaboradorAtual=null;
 let relogioIntervalo=null;
 let processandoPonto=false;
+let processandoSolicitacao=false;
 
 function mostrarMensagem(texto,tipo){
 mensagem.textContent=texto;
@@ -255,9 +352,11 @@ mostrarMensagem("Crie uma senha com pelo menos 8 caracteres.","sucesso");
 
 function iniciarRelogio(){
 if(relogioIntervalo)clearInterval(relogioIntervalo);
+
 function atualizar(){
 document.getElementById("relogio").textContent=new Date().toLocaleString("pt-BR",{dateStyle:"full",timeStyle:"medium"});
 }
+
 atualizar();
 relogioIntervalo=setInterval(atualizar,1000);
 }
@@ -269,6 +368,7 @@ const {data,error}=await supabaseClient.from("employees")
 
 if(error)throw new Error("Erro ao consultar colaborador: "+error.message);
 if(!data)throw new Error("Seu cadastro não está vinculado a um colaborador ativo. Procure o RH.");
+
 return data;
 }
 
@@ -380,6 +480,7 @@ const instante=new Date(registro.recorded_at).getTime();
 if(!Number.isFinite(instante)){inconsistente=true;return;}
 
 switch(registro.event_type){
+
 case "entrada":
 if(entrada!==null){inconsistente=true;break;}
 entrada=instante;
@@ -407,13 +508,16 @@ break;
 case "saida":
 if(entrada===null){inconsistente=true;break;}
 if(inicioIntervalo!==null){inconsistente=true;break;}
+
 const total=(instante-entrada)/60000-minutosIntervalo;
 
 if(total>=0){
 minutosTrabalhados+=total;
 ciclosCompletos++;
 ultimaSaida=instante;
-}else inconsistente=true;
+}else{
+inconsistente=true;
+}
 
 entrada=null;
 inicioIntervalo=null;
@@ -683,7 +787,9 @@ antecipadaMes+=ocorrencias.antecipada;
 extraMes+=ocorrencias.extra;
 
 if(calc.inconsistente||calc.pendente||ocorrencias.atraso||ocorrencias.antecipada)diasComOcorrencia++;
-}else if(calc.inconsistente||calc.pendente)diasComOcorrencia++;
+}else if(calc.inconsistente||calc.pendente){
+diasComOcorrencia++;
+}
 });
 
 const saldoMes=totalMes-previstoMes;
@@ -795,6 +901,8 @@ lista.appendChild(aviso);
 }
 }
 
+/* PERFIL */
+
 function iniciais(nome){
 return (nome||"K").trim().split(/\s+/).slice(0,2).map(p=>p.charAt(0).toUpperCase()).join("");
 }
@@ -875,6 +983,8 @@ if(horas>0&&resto>0)return horas+"h "+resto+"min";
 if(horas>0)return horas+"h";
 return resto+"min";
 }
+
+/* ESCALA */
 
 async function carregarEscala(){
 const lista=document.getElementById("listaEscala");
@@ -971,6 +1081,8 @@ lista.innerHTML="<p>Não foi possível carregar sua escala: "+(error.message||"e
 }
 }
 
+/* FOTO DE PERFIL */
+
 async function enviarFoto(event){
 const arquivo=event.target.files[0];
 if(!arquivo)return;
@@ -1019,6 +1131,212 @@ input.value="";
 }
 }
 
+/* MÓDULO DE SOLICITAÇÕES */
+
+const tiposSolicitacao={
+time_correction:"Correção de ponto",
+day_off_change:"Troca de folga",
+schedule_change:"Alteração de escala",
+medical_certificate:"Atestado médico",
+attendance_declaration:"Declaração de horas / comparecimento",
+union_declaration:"Declaração sindical",
+other_declaration:"Outra declaração"
+};
+
+const statusSolicitacao={
+pending:"Pendente",
+approved:"Aprovada",
+rejected:"Recusada",
+cancelled:"Cancelada"
+};
+
+function formatarDataSolicitacao(data){
+if(!data)return "Não informada";
+const partes=String(data).split("-");
+if(partes.length!==3)return data;
+return partes[2]+"/"+partes[1]+"/"+partes[0];
+}
+
+function formatarDataHoraSolicitacao(data){
+if(!data)return "-";
+return new Date(data).toLocaleString("pt-BR");
+}
+
+function criarElemento(tag,classe,texto){
+const elemento=document.createElement(tag);
+if(classe)elemento.className=classe;
+if(texto!==undefined)elemento.textContent=texto;
+return elemento;
+}
+
+async function carregarMinhasSolicitacoes(){
+const lista=document.getElementById("listaSolicitacoes");
+
+if(!usuarioAtual||!colaboradorAtual){
+lista.innerHTML="<p>Entre novamente para consultar suas solicitações.</p>";
+return;
+}
+
+lista.innerHTML="<p>Carregando suas solicitações...</p>";
+
+try{
+const {data,error}=await supabaseClient
+.from("employee_requests")
+.select("id,request_type,description,requested_date,requested_start_time,requested_end_time,status,decision_reason,created_at,decided_at")
+.eq("employee_id",colaboradorAtual.id)
+.eq("user_id",usuarioAtual.id)
+.order("created_at",{ascending:false});
+
+if(error)throw error;
+
+lista.innerHTML="";
+
+if(!data||data.length===0){
+lista.innerHTML='<div class="solicitacao-vazia">Você ainda não enviou nenhuma solicitação.</div>';
+return;
+}
+
+data.forEach(item=>{
+const card=criarElemento("div","solicitacao-card");
+
+const tituloCard=criarElemento("h4","",tiposSolicitacao[item.request_type]||"Solicitação");
+card.appendChild(tituloCard);
+
+const status=criarElemento("span","status-solicitacao status-"+item.status,statusSolicitacao[item.status]||item.status);
+card.appendChild(status);
+
+const dataPedido=criarElemento("p","detalhe","Data relacionada: "+formatarDataSolicitacao(item.requested_date));
+card.appendChild(dataPedido);
+
+if(item.requested_start_time){
+card.appendChild(criarElemento("p","detalhe","Horário inicial: "+String(item.requested_start_time).substring(0,5)));
+}
+
+if(item.requested_end_time){
+card.appendChild(criarElemento("p","detalhe","Horário final: "+String(item.requested_end_time).substring(0,5)));
+}
+
+card.appendChild(criarElemento("p","", "Justificativa: "+item.description));
+card.appendChild(criarElemento("p","detalhe","Enviada em: "+formatarDataHoraSolicitacao(item.created_at)));
+
+if(item.decided_at){
+card.appendChild(criarElemento("p","detalhe","Analisada em: "+formatarDataHoraSolicitacao(item.decided_at)));
+}
+
+if(item.decision_reason){
+const motivo=criarElemento("p","detalhe","Resposta do responsável: "+item.decision_reason);
+card.appendChild(motivo);
+}
+
+lista.appendChild(card);
+});
+
+}catch(error){
+console.error("Erro ao carregar solicitações:",error);
+lista.innerHTML="";
+lista.appendChild(criarElemento("p","","Não foi possível carregar suas solicitações: "+error.message));
+}
+}
+
+async function enviarSolicitacao(event){
+event.preventDefault();
+
+if(processandoSolicitacao)return;
+
+if(!usuarioAtual||!colaboradorAtual){
+mostrarMensagem("Sua sessão não está válida. Entre novamente.","erro");
+return;
+}
+
+const tipo=document.getElementById("tipoSolicitacao").value;
+const data=document.getElementById("dataSolicitacao").value||null;
+const horaInicial=document.getElementById("horaInicial").value||null;
+const horaFinal=document.getElementById("horaFinal").value||null;
+const descricao=document.getElementById("descricaoSolicitacao").value.trim();
+
+if(!tipo||!tiposSolicitacao[tipo]){
+mostrarMensagem("Selecione um tipo de solicitação válido.","erro");
+return;
+}
+
+if(!descricao){
+mostrarMensagem("Informe a justificativa da solicitação.","erro");
+return;
+}
+
+if(horaInicial&&horaFinal&&horaFinal<horaInicial){
+mostrarMensagem("O horário final não pode ser anterior ao horário inicial.","erro");
+return;
+}
+
+processandoSolicitacao=true;
+
+const botao=document.getElementById("botaoEnviarSolicitacao");
+botao.disabled=true;
+botao.textContent="Enviando solicitação...";
+limparMensagem();
+
+try{
+const dados={
+company_id:colaboradorAtual.company_id,
+employee_id:colaboradorAtual.id,
+user_id:usuarioAtual.id,
+request_type:tipo,
+description:descricao,
+requested_date:data,
+requested_start_time:horaInicial,
+requested_end_time:horaFinal
+};
+
+const {error}=await supabaseClient
+.from("employee_requests")
+.insert(dados);
+
+if(error)throw error;
+
+document.getElementById("formSolicitacao").reset();
+document.getElementById("camposHorario").classList.add("oculto");
+
+mostrarMensagem("Sua solicitação foi enviada com sucesso! Agora ela aguarda análise do responsável.","sucesso");
+
+await carregarMinhasSolicitacoes();
+
+}catch(error){
+console.error("Erro ao enviar solicitação:",error);
+mostrarMensagem("Não foi possível enviar sua solicitação: "+error.message,"erro");
+
+}finally{
+processandoSolicitacao=false;
+botao.disabled=false;
+botao.textContent="Enviar solicitação";
+}
+}
+
+document.getElementById("tipoSolicitacao").addEventListener("change",function(){
+const tipo=this.value;
+const campos=document.getElementById("camposHorario");
+
+if(tipo==="time_correction"||tipo==="schedule_change"){
+campos.classList.remove("oculto");
+}else{
+campos.classList.add("oculto");
+document.getElementById("horaInicial").value="";
+document.getElementById("horaFinal").value="";
+}
+});
+
+document.getElementById("formSolicitacao").addEventListener("submit",enviarSolicitacao);
+
+document.getElementById("botaoAtualizarSolicitacoes").addEventListener("click",async function(){
+this.disabled=true;
+this.textContent="Atualizando...";
+await carregarMinhasSolicitacoes();
+this.disabled=false;
+this.textContent="Atualizar histórico";
+});
+
+/* ABERTURA DO PORTAL */
+
 async function abrirPortal(user){
 esconderFormularios();
 limparMensagem();
@@ -1036,8 +1354,11 @@ titulo.textContent="Meu Ponto";
 subtitulo.textContent="Bem-vindo ao seu portal de colaborador.";
 
 document.getElementById("conteudoPonto").classList.remove("oculto");
+document.getElementById("conteudoSolicitacoes").classList.add("oculto");
 document.getElementById("conteudoPerfil").classList.add("oculto");
+
 document.getElementById("abaPonto").classList.add("ativa");
+document.getElementById("abaSolicitacoes").classList.remove("ativa");
 document.getElementById("abaPerfil").classList.remove("ativa");
 
 iniciarRelogio();
@@ -1051,6 +1372,8 @@ mostrarLogin();
 mostrarMensagem(error.message,"erro");
 }
 }
+
+/* REGISTRO DE PONTO */
 
 async function registrarPonto(){
 if(processandoPonto)return;
@@ -1114,31 +1437,59 @@ document.getElementById("botaoPonto").addEventListener("click",registrarPonto);
 document.getElementById("botaoConsultarEspelho").addEventListener("click",carregarEspelhoPonto);
 document.getElementById("mesEspelho").addEventListener("change",carregarEspelhoPonto);
 
-document.getElementById("abaPonto").addEventListener("click",function(){
-document.getElementById("conteudoPonto").classList.remove("oculto");
-document.getElementById("conteudoPerfil").classList.add("oculto");
+/* NAVEGAÇÃO ENTRE ABAS */
 
-this.classList.add("ativa");
-document.getElementById("abaPerfil").classList.remove("ativa");
+function ativarAba(nome){
+const secoes={
+ponto:document.getElementById("conteudoPonto"),
+solicitacoes:document.getElementById("conteudoSolicitacoes"),
+perfil:document.getElementById("conteudoPerfil")
+};
 
-titulo.textContent="Meu Ponto";
-subtitulo.textContent="Registre sua jornada de trabalho.";
+const botoes={
+ponto:document.getElementById("abaPonto"),
+solicitacoes:document.getElementById("abaSolicitacoes"),
+perfil:document.getElementById("abaPerfil")
+};
+
+Object.keys(secoes).forEach(chave=>{
+secoes[chave].classList.toggle("oculto",chave!==nome);
+botoes[chave].classList.toggle("ativa",chave===nome);
 });
 
-document.getElementById("abaPerfil").addEventListener("click",async function(){
-document.getElementById("conteudoPonto").classList.add("oculto");
-document.getElementById("conteudoPerfil").classList.remove("oculto");
+if(nome==="ponto"){
+titulo.textContent="Meu Ponto";
+subtitulo.textContent="Registre sua jornada de trabalho.";
+}
 
-this.classList.add("ativa");
-document.getElementById("abaPonto").classList.remove("ativa");
+if(nome==="solicitacoes"){
+titulo.textContent="Solicitações";
+subtitulo.textContent="Envie e acompanhe suas solicitações.";
+carregarMinhasSolicitacoes();
+}
 
+if(nome==="perfil"){
 titulo.textContent="Meu Perfil";
 subtitulo.textContent="Consulte seus dados e sua jornada.";
+carregarPerfil();
+}
+}
 
-await carregarPerfil();
+document.getElementById("abaPonto").addEventListener("click",function(){
+ativarAba("ponto");
+});
+
+document.getElementById("abaSolicitacoes").addEventListener("click",function(){
+ativarAba("solicitacoes");
+});
+
+document.getElementById("abaPerfil").addEventListener("click",function(){
+ativarAba("perfil");
 });
 
 document.getElementById("arquivoFoto").addEventListener("change",enviarFoto);
+
+/* LOGIN, RECUPERAÇÃO E PRIMEIRO ACESSO */
 
 async function iniciar(){
 const hash=new URLSearchParams(window.location.hash.replace(/^#/,""));
@@ -1292,6 +1643,8 @@ botao.textContent="Entrar no Meu Ponto";
 }
 });
 
+/* SAIR */
+
 async function sair(){
 const {error}=await supabaseClient.auth.signOut();
 
@@ -1309,5 +1662,6 @@ document.getElementById("botaoSair").addEventListener("click",sair);
 
 iniciar();
 </script>
+
 </body>
 </html>
