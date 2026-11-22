@@ -534,7 +534,7 @@ botao.disabled=true;
 /* CÁLCULO DAS HORAS, INCLUINDO PAUSAS ADICIONAIS */
 function calcularHorasDoDia(eventos){
 let entrada=null,inicioIntervalo=null;
-let minutosIntervalo=0,minutosTrabalhados=0;
+let minutosIntervaloCiclo=0,minutosIntervaloTotal=0,minutosTrabalhados=0;
 let ciclosCompletos=0,pendente=false;
 let primeiraEntrada=null,ultimaSaida=null;
 let inconsistente=false,emIntervalo=false;
@@ -547,7 +547,7 @@ case "entrada":
 if(entrada!==null){inconsistente=true;break}
 entrada=instante;
 if(primeiraEntrada===null)primeiraEntrada=instante;
-inicioIntervalo=null;minutosIntervalo=0;
+inicioIntervalo=null;minutosIntervaloCiclo=0;
 pendente=true;emIntervalo=false;pausasAbertas=0;
 break;
 case "inicio_intervalo":
@@ -559,17 +559,19 @@ case "retorno_intervalo":
 case "retorno_pausa":
 if(entrada===null||inicioIntervalo===null){inconsistente=true;break}
 if(instante<inicioIntervalo){inconsistente=true;break}
-minutosIntervalo+=(instante-inicioIntervalo)/60000;
+const duracaoIntervalo=(instante-inicioIntervalo)/60000;
+minutosIntervaloCiclo+=duracaoIntervalo;
+minutosIntervaloTotal+=duracaoIntervalo;
 inicioIntervalo=null;emIntervalo=false;
 pausasAbertas=Math.max(0,pausasAbertas-1);
 break;
 case "saida":
 if(entrada===null||inicioIntervalo!==null){inconsistente=true;break}
-const total=(instante-entrada)/60000-minutosIntervalo;
+const total=(instante-entrada)/60000-minutosIntervaloCiclo;
 if(total>=0){
 minutosTrabalhados+=total;ciclosCompletos++;ultimaSaida=instante;
 }else inconsistente=true;
-entrada=null;inicioIntervalo=null;minutosIntervalo=0;
+entrada=null;inicioIntervalo=null;minutosIntervaloCiclo=0;
 pendente=false;emIntervalo=false;pausasAbertas=0;
 break;
 default:inconsistente=true;
@@ -577,7 +579,7 @@ default:inconsistente=true;
 });
 return {
 minutos:Math.round(minutosTrabalhados),
-intervalo:Math.round(minutosIntervalo),
+intervalo:Math.round(minutosIntervaloTotal),
 ciclos:ciclosCompletos,
 pendente:pendente||entrada!==null,
 emIntervalo,
