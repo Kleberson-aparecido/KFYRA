@@ -3,12 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cadastro Empresarial | NEXORA</title>
-
+<title>Cadastro Empresarial | KFYRA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
 <style>
 :root {
     --green: #0b332b;
@@ -20,20 +18,17 @@
     --white: #ffffff;
     --border: #e4ebe6;
 }
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-
 body {
     font-family: 'DM Sans', sans-serif;
     background: #f4f8f5;
     color: var(--text);
     min-height: 100vh;
 }
-
 header {
     width: 100%;
     padding: 24px 7%;
@@ -41,7 +36,6 @@ header {
     justify-content: space-between;
     align-items: center;
 }
-
 .logo {
     font-family: 'Manrope', sans-serif;
     font-size: 27px;
@@ -49,22 +43,18 @@ header {
     letter-spacing: 3px;
     color: var(--green);
 }
-
 .logo span {
     color: var(--gold);
 }
-
 .header-link {
     text-decoration: none;
     color: var(--green);
     font-weight: 700;
     font-size: 14px;
 }
-
 main {
     padding: 35px 18px 70px;
 }
-
 .container {
     max-width: 1100px;
     margin: auto;
@@ -75,7 +65,6 @@ main {
     overflow: hidden;
     box-shadow: 0 20px 70px rgba(15, 53, 41, 0.08);
 }
-
 .side {
     background: linear-gradient(145deg, #0b332b, #174b3c);
     color: white;
@@ -83,7 +72,6 @@ main {
     position: relative;
     overflow: hidden;
 }
-
 .side::after {
     content: "";
     position: absolute;
@@ -94,7 +82,6 @@ main {
     right: -160px;
     bottom: -120px;
 }
-
 .side-label {
     color: var(--mint);
     font-size: 12px;
@@ -102,30 +89,25 @@ main {
     letter-spacing: 3px;
     margin-bottom: 25px;
 }
-
 .side h1 {
     font-family: 'Manrope', sans-serif;
     font-size: 37px;
     line-height: 1.2;
     margin-bottom: 20px;
 }
-
 .side h1 span {
     color: #d8bd7d;
 }
-
 .side p {
     color: #d2e2d8;
     line-height: 1.8;
     font-size: 15px;
 }
-
 .benefits {
     margin-top: 42px;
     display: grid;
     gap: 20px;
 }
-
 .benefit {
     display: flex;
     gap: 13px;
@@ -133,7 +115,6 @@ main {
     color: #edf6f0;
     font-size: 14px;
 }
-
 .check {
     width: 27px;
     height: 27px;
@@ -145,24 +126,20 @@ main {
     justify-content: center;
     flex-shrink: 0;
 }
-
 .form-area {
     padding: 48px;
 }
-
 .form-area h2 {
     font-family: 'Manrope', sans-serif;
     color: var(--green);
     font-size: 27px;
     margin-bottom: 8px;
 }
-
 .subtitle {
     color: var(--muted);
     font-size: 14px;
     margin-bottom: 30px;
 }
-
 .section-title {
     color: var(--green);
     font-size: 12px;
@@ -170,21 +147,17 @@ main {
     letter-spacing: 1.5px;
     margin: 27px 0 15px;
 }
-
 .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
 }
-
 .field {
     margin-bottom: 16px;
 }
-
 .field.full {
     grid-column: 1 / -1;
 }
-
 label {
     display: block;
     font-size: 12px;
@@ -192,7 +165,6 @@ label {
     margin-bottom: 8px;
     color: #43564b;
 }
-
 input {
     width: 100%;
     padding: 14px 15px;
@@ -205,20 +177,16 @@ input {
     background: #fcfdfc;
     transition: .2s;
 }
-
 input:focus {
     border-color: #75ad8e;
     box-shadow: 0 0 0 3px rgba(117,173,142,.12);
 }
-
 .password-wrap {
     position: relative;
 }
-
 .password-wrap input {
     padding-right: 65px;
 }
-
 .toggle-password {
     position: absolute;
     right: 13px;
@@ -231,13 +199,11 @@ input:focus {
     cursor: pointer;
     font-size: 12px;
 }
-
 .plans {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
 }
-
 .plan {
     border: 1px solid var(--border);
     border-radius: 13px;
@@ -246,22 +212,18 @@ input:focus {
     transition: .2s;
     background: #fff;
 }
-
 .plan:hover {
     border-color: var(--gold);
 }
-
 .plan.selected {
     border: 2px solid var(--green);
     background: #f2f8f4;
 }
-
 .plan input {
     width: auto;
     margin-right: 6px;
     accent-color: var(--green);
 }
-
 .plan-name {
     display: block;
     color: var(--green);
@@ -269,44 +231,37 @@ input:focus {
     font-size: 14px;
     margin: 10px 0 5px;
 }
-
 .plan-price {
     font-family: 'Manrope', sans-serif;
     font-size: 21px;
     font-weight: 800;
     color: var(--green);
 }
-
 .plan-description {
     color: var(--muted);
     font-size: 12px;
     margin-top: 5px;
 }
-
 .enterprise {
     grid-column: 1 / -1;
 }
-
 .terms {
     display: flex;
     align-items: flex-start;
     gap: 10px;
     margin: 24px 0;
 }
-
 .terms input {
     width: auto;
     margin-top: 3px;
     accent-color: var(--green);
 }
-
 .terms label {
     font-size: 12px;
     line-height: 1.6;
     font-weight: 500;
     margin: 0;
 }
-
 .submit {
     width: 100%;
     padding: 17px;
@@ -321,18 +276,15 @@ input:focus {
     cursor: pointer;
     transition: .2s;
 }
-
 .submit:hover {
     background: #174b3c;
     transform: translateY(-1px);
 }
-
 .submit:disabled {
     opacity: .6;
     cursor: wait;
     transform: none;
 }
-
 .message {
     display: none;
     padding: 15px;
@@ -341,34 +293,29 @@ input:focus {
     line-height: 1.6;
     margin-bottom: 18px;
 }
-
 .message.success {
     display: block;
     background: #e8f6ed;
     color: #17633a;
     border: 1px solid #b9dfc6;
 }
-
 .message.error {
     display: block;
     background: #fff0ef;
     color: #a12e28;
     border: 1px solid #f0c6c2;
 }
-
 .login-link {
     text-align: center;
     color: var(--muted);
     font-size: 13px;
     margin-top: 22px;
 }
-
 .login-link a {
     color: var(--green);
     font-weight: 800;
     text-decoration: none;
 }
-
 footer {
     text-align: center;
     padding: 25px 15px;
@@ -376,272 +323,203 @@ footer {
     font-size: 12px;
     line-height: 1.8;
 }
-
 footer a {
     color: var(--green);
     text-decoration: none;
     font-weight: 700;
 }
-
 @media(max-width: 800px) {
     .container {
         grid-template-columns: 1fr;
     }
-
     .side {
         padding: 38px 28px;
     }
-
     .side h1 {
         font-size: 30px;
     }
-
     .benefits {
         margin-top: 25px;
         gap: 13px;
     }
-
     .form-area {
         padding: 35px 24px;
     }
 }
-
 @media(max-width: 500px) {
     header {
         padding: 20px;
     }
-
     .logo {
         font-size: 22px;
     }
-
     .grid,
     .plans {
         grid-template-columns: 1fr;
     }
-
     .enterprise {
         grid-column: auto;
     }
-
     .form-area h2 {
         font-size: 23px;
     }
 }
 </style>
 </head>
-
 <body>
-
 <header>
-    <div class="logo">NEX<span>ORA</span></div>
+    <div class="logo">KF<span>YRA</span></div>
     <a class="header-link" href="login.html">Já tenho uma conta →</a>
 </header>
-
 <main>
 <div class="container">
-
-    <section class="side">
-        <div class="side-label">NEXORA BUSINESS PLATFORM</div>
-
-        <h1>Uma nova forma de <span>gerenciar sua empresa.</span></h1>
-
-        <p>
-            Centralize pessoas, operações, departamentos e indicadores
-            em uma plataforma inteligente, desenvolvida para empresas
-            que querem crescer com organização e eficiência.
-        </p>
-
-        <div class="benefits">
-            <div class="benefit"><span class="check">✓</span> Gestão empresarial integrada</div>
-            <div class="benefit"><span class="check">✓</span> Controle de colaboradores e RH</div>
-            <div class="benefit"><span class="check">✓</span> Controle de ponto e jornadas</div>
-            <div class="benefit"><span class="check">✓</span> Indicadores e inteligência empresarial</div>
-            <div class="benefit"><span class="check">✓</span> Ambiente exclusivo para sua empresa</div>
+<section class="side">
+    <div class="side-label">KFYRA BUSINESS PLATFORM</div>
+    <h1>Uma nova forma de <span>gerenciar sua empresa.</span></h1>
+    <p>
+        Centralize pessoas, operações, departamentos e indicadores
+        em uma plataforma inteligente, desenvolvida para empresas
+        que querem crescer com organização e eficiência.
+    </p>
+    <div class="benefits">
+        <div class="benefit"><span class="check">✓</span> Gestão empresarial integrada</div>
+        <div class="benefit"><span class="check">✓</span> Controle de colaboradores e RH</div>
+        <div class="benefit"><span class="check">✓</span> Controle de ponto e jornadas</div>
+        <div class="benefit"><span class="check">✓</span> Indicadores e inteligência empresarial</div>
+        <div class="benefit"><span class="check">✓</span> Ambiente exclusivo para sua empresa</div>
+    </div>
+</section>
+<section class="form-area">
+    <h2>Cadastre sua empresa</h2>
+    <p class="subtitle">Preencha os dados para iniciar sua jornada com a KFYRA.</p>
+    <div id="mensagemCadastro" class="message" role="alert"></div>
+    <form id="cadastroEmpresa">
+        <div class="section-title">01 — DADOS DA EMPRESA</div>
+        <div class="grid">
+            <div class="field full">
+                <label for="empresa">Nome da empresa</label>
+                <input id="empresa" type="text" placeholder="Razão social ou nome empresarial" required>
+            </div>
+            <div class="field">
+                <label for="cnpj">CNPJ</label>
+                <input id="cnpj" type="text" placeholder="00.000.000/0000-00" maxlength="18" required>
+            </div>
+            <div class="field">
+                <label for="telefone">Telefone / WhatsApp</label>
+                <input id="telefone" type="tel" placeholder="(00) 00000-0000" maxlength="15" required>
+            </div>
+            <div class="field full">
+                <label for="email">E-mail corporativo (será seu login)</label>
+                <input id="email" type="email" placeholder="nome@empresa.com.br" required>
+            </div>
         </div>
-    </section>
-
-    <section class="form-area">
-
-        <h2>Cadastre sua empresa</h2>
-        <p class="subtitle">Preencha os dados para iniciar sua jornada com a NEXORA.</p>
-
-        <div id="mensagemCadastro" class="message" role="alert"></div>
-
-        <form id="cadastroEmpresa">
-
-            <div class="section-title">01 — DADOS DA EMPRESA</div>
-
-            <div class="grid">
-
-                <div class="field full">
-                    <label for="empresa">Nome da empresa</label>
-                    <input id="empresa" type="text" placeholder="Razão social ou nome empresarial" required>
-                </div>
-
-                <div class="field">
-                    <label for="cnpj">CNPJ</label>
-                    <input id="cnpj" type="text" placeholder="00.000.000/0000-00" maxlength="18" required>
-                </div>
-
-                <div class="field">
-                    <label for="telefone">Telefone / WhatsApp</label>
-                    <input id="telefone" type="tel" placeholder="(00) 00000-0000" maxlength="15" required>
-                </div>
-
-                <div class="field full">
-                    <label for="email">E-mail corporativo (será seu login)</label>
-                    <input id="email" type="email" placeholder="nome@empresa.com.br" required>
-                </div>
-
+        <div class="section-title">02 — RESPONSÁVEL PELO CADASTRO</div>
+        <div class="grid">
+            <div class="field full">
+                <label for="responsavel">Nome completo do responsável</label>
+                <input id="responsavel" type="text" placeholder="Nome completo" required>
             </div>
-
-            <div class="section-title">02 — RESPONSÁVEL PELO CADASTRO</div>
-
-            <div class="grid">
-
-                <div class="field full">
-                    <label for="responsavel">Nome completo do responsável</label>
-                    <input id="responsavel" type="text" placeholder="Nome completo" required>
+            <div class="field full">
+                <label for="senha">Crie sua senha</label>
+                <div class="password-wrap">
+                    <input id="senha" type="password" placeholder="Mínimo de 8 caracteres" minlength="8" required>
+                    <button class="toggle-password" type="button" id="toggleSenha">Mostrar</button>
                 </div>
-
-                <div class="field full">
-                    <label for="senha">Crie sua senha</label>
-                    <div class="password-wrap">
-                        <input id="senha" type="password" placeholder="Mínimo de 8 caracteres" minlength="8" required>
-                        <button class="toggle-password" type="button" id="toggleSenha">Mostrar</button>
-                    </div>
-                </div>
-
             </div>
-
-            <div class="section-title">03 — ESCOLHA SEU PLANO</div>
-
-            <div class="plans">
-
-                <label class="plan selected" for="plano700">
-                    <input type="radio" id="plano700" name="plano" value="700" checked>
-                    <span class="plan-name">NEXORA BUSINESS</span>
-                    <span class="plan-price">R$ 1.000<span style="font-size:12px">/mês</span></span>
-                    <div class="plan-description">Até 700 colaboradores</div>
-                </label>
-
-                <label class="plan" for="plano1400">
-                    <input type="radio" id="plano1400" name="plano" value="1400">
-                    <span class="plan-name">NEXORA CORPORATE</span>
-                    <span class="plan-price">R$ 3.000<span style="font-size:12px">/mês</span></span>
-                    <div class="plan-description">Até 1.400 colaboradores</div>
-                </label>
-
-                <label class="plan enterprise" for="planoEnterprise">
-                    <input type="radio" id="planoEnterprise" name="plano" value="enterprise">
-                    <span class="plan-name">NEXORA ENTERPRISE</span>
-                    <span class="plan-price">Sob consulta</span>
-                    <div class="plan-description">Mais de 1.400 colaboradores — solução personalizada.</div>
-                </label>
-
-            </div>
-
-            <div class="terms">
-                <input type="checkbox" id="termos" required>
-                <label for="termos">
-                    Declaro que as informações fornecidas são verdadeiras e concordo
-                    com os termos de utilização e a política de privacidade da NEXORA.
-                </label>
-            </div>
-
-            <button type="submit" class="submit" id="botaoCadastro">
-                CONTINUAR COM MEU CADASTRO →
-            </button>
-
-            <div class="login-link">
-                Já possui cadastro? <a href="login.html">Acesse sua conta</a>
-            </div>
-
-        </form>
-
-    </section>
-
+        </div>
+        <div class="section-title">03 — ESCOLHA SEU PLANO</div>
+        <div class="plans">
+            <label class="plan selected" for="plano700">
+                <input type="radio" id="plano700" name="plano" value="700" checked>
+                <span class="plan-name">KFYRA BUSINESS</span>
+                <span class="plan-price">R$ 1.000<span style="font-size:12px">/mês</span></span>
+                <div class="plan-description">Até 700 colaboradores</div>
+            </label>
+            <label class="plan" for="plano1400">
+                <input type="radio" id="plano1400" name="plano" value="1400">
+                <span class="plan-name">KFYRA CORPORATE</span>
+                <span class="plan-price">R$ 3.000<span style="font-size:12px">/mês</span></span>
+                <div class="plan-description">Até 1.400 colaboradores</div>
+            </label>
+            <label class="plan enterprise" for="planoEnterprise">
+                <input type="radio" id="planoEnterprise" name="plano" value="enterprise">
+                <span class="plan-name">KFYRA ENTERPRISE</span>
+                <span class="plan-price">Sob consulta</span>
+                <div class="plan-description">Mais de 1.400 colaboradores — solução personalizada.</div>
+            </label>
+        </div>
+        <div class="terms">
+            <input type="checkbox" id="termos" required>
+            <label for="termos">
+                Declaro que as informações fornecidas são verdadeiras e concordo
+                com os termos de utilização e a política de privacidade da KFYRA.
+            </label>
+        </div>
+        <button type="submit" class="submit" id="botaoCadastro">
+            CONTINUAR COM MEU CADASTRO →
+        </button>
+        <div class="login-link">
+            Já possui cadastro? <a href="login.html">Acesse sua conta</a>
+        </div>
+    </form>
+</section>
 </div>
 </main>
-
 <footer>
-    NEXORA — Gestão inteligente para empresas.<br>
+    KFYRA — Gestão inteligente para empresas.<br>
     Contato: <a href="mailto:Klebersonaparecidocorporativo@gmail.com">Klebersonaparecidocorporativo@gmail.com</a>
     &nbsp; | &nbsp;
     <a href="https://wa.me/5511985934594" target="_blank">(11) 98593-4594</a>
 </footer>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
 /* CONFIGURAÇÃO SUPABASE */
-
 const SUPABASE_URL = "https://guiadodxikdvsfrhedls.supabase.co";
-
 const SUPABASE_ANON_KEY = "sb_publishable_dhAqwNSfwGj8_nBnudx_Hw_gMZpnyEL";
-
 const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_ANON_KEY
 );
-
 /* ELEMENTOS */
-
 const form = document.getElementById("cadastroEmpresa");
 const mensagem = document.getElementById("mensagemCadastro");
 const botao = document.getElementById("botaoCadastro");
-
 const cnpjInput = document.getElementById("cnpj");
 const telefoneInput = document.getElementById("telefone");
-
 function mostrarMensagem(texto, tipo) {
     mensagem.textContent = texto;
     mensagem.className = "message " + tipo;
     mensagem.style.display = "block";
-
     mensagem.scrollIntoView({
         behavior: "smooth",
         block: "center"
     });
 }
-
 /* PLANOS */
-
 function atualizarPlanos() {
     document.querySelectorAll(".plan").forEach(plan => {
         plan.classList.remove("selected");
     });
-
     const selecionado = document.querySelector('input[name="plano"]:checked');
-
     if (selecionado) {
         selecionado.closest(".plan").classList.add("selected");
     }
 }
-
 document.querySelectorAll('input[name="plano"]').forEach(input => {
     input.addEventListener("change", atualizarPlanos);
 });
-
 /* MÁSCARA CNPJ */
-
 cnpjInput.addEventListener("input", function() {
     let v = this.value.replace(/\D/g, "").slice(0, 14);
-
     v = v.replace(/^(\d{2})(\d)/, "$1.$2");
     v = v.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
     v = v.replace(/\.(\d{3})(\d)/, ".$1/$2");
     v = v.replace(/(\d{4})(\d)/, "$1-$2");
-
     this.value = v;
 });
-
 /* MÁSCARA TELEFONE */
-
 telefoneInput.addEventListener("input", function() {
     let v = this.value.replace(/\D/g, "").slice(0, 11);
-
     if (v.length > 10) {
         v = v.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
     } else if (v.length > 6) {
@@ -649,15 +527,11 @@ telefoneInput.addEventListener("input", function() {
     } else if (v.length > 2) {
         v = v.replace(/^(\d{2})(\d+)/, "($1) $2");
     }
-
     this.value = v;
 });
-
 /* MOSTRAR SENHA */
-
 document.getElementById("toggleSenha").addEventListener("click", function() {
     const senha = document.getElementById("senha");
-
     if (senha.type === "password") {
         senha.type = "text";
         this.textContent = "Ocultar";
@@ -666,15 +540,11 @@ document.getElementById("toggleSenha").addEventListener("click", function() {
         this.textContent = "Mostrar";
     }
 });
-
 /* CADASTRO NO SUPABASE */
-
 form.addEventListener("submit", async function(event) {
     event.preventDefault();
-
     mensagem.className = "message";
     mensagem.style.display = "none";
-
     const empresa = document.getElementById("empresa").value.trim();
     const cnpj = cnpjInput.value.replace(/\D/g, "");
     const telefone = telefoneInput.value.replace(/\D/g, "");
@@ -682,30 +552,24 @@ form.addEventListener("submit", async function(event) {
     const responsavel = document.getElementById("responsavel").value.trim();
     const senha = document.getElementById("senha").value;
     const plano = document.querySelector('input[name="plano"]:checked');
-
     if (cnpj.length !== 14) {
         mostrarMensagem("Informe um CNPJ com 14 números.", "error");
         return;
     }
-
     if (telefone.length < 10) {
         mostrarMensagem("Informe um telefone válido com DDD.", "error");
         return;
     }
-
     if (!plano) {
         mostrarMensagem("Selecione um plano para continuar.", "error");
         return;
     }
-
     if (senha.length < 8) {
         mostrarMensagem("Sua senha precisa ter pelo menos 8 caracteres.", "error");
         return;
     }
-
     botao.disabled = true;
     botao.textContent = "CRIANDO SEU CADASTRO...";
-
     try {
         const { data, error } = await supabaseClient.auth.signUp({
             email: email,
@@ -722,11 +586,9 @@ form.addEventListener("submit", async function(event) {
                 emailRedirectTo: window.location.origin + "/Nexora/login.html"
             }
         });
-
         if (error) {
             throw error;
         }
-
         if (data.user) {
             if (data.session) {
                 mostrarMensagem(
@@ -741,18 +603,13 @@ form.addEventListener("submit", async function(event) {
                     "success"
                 );
             }
-
             form.reset();
             atualizarPlanos();
-
             botao.textContent = "CADASTRO REALIZADO";
         }
-
     } catch (error) {
-        console.error("Erro no cadastro NEXORA:", error);
-
+        console.error("Erro no cadastro KFYRA:", error);
         let texto = error.message || "Não foi possível concluir o cadastro.";
-
         if (
             texto.toLowerCase().includes("already registered") ||
             texto.toLowerCase().includes("already been registered")
@@ -762,16 +619,13 @@ form.addEventListener("submit", async function(event) {
             texto.toLowerCase().includes("companies_cnpj_key") ||
             texto.toLowerCase().includes("duplicate key")
         ) {
-            texto = "Este CNPJ já está cadastrado na NEXORA.";
+            texto = "Este CNPJ já está cadastrado na KFYRA.";
         }
-
         mostrarMensagem(texto, "error");
-
         botao.disabled = false;
         botao.textContent = "CONTINUAR COM MEU CADASTRO →";
     }
 });
 </script>
-
 </body>
 </html>
