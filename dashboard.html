@@ -76,11 +76,21 @@ th{color:var(--muted);font-weight:700}
 .page-description{color:var(--muted);font-size:13px;margin:-8px 0 20px}
 .actions{display:flex;gap:7px;flex-wrap:wrap}
 .hint{font-size:11px;color:var(--muted);line-height:1.5;margin-top:6px}
-.day-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
-.day-row{border:1px solid var(--border);border-radius:10px;padding:12px;display:grid;grid-template-columns:1.1fr .8fr .8fr .8fr;gap:8px;align-items:end}
+.day-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+.day-row{border:1px solid var(--border);border-radius:10px;padding:14px;display:block;min-width:0}
+.day-row-header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:13px}
+.day-check{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700}
+.day-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .day-row .field label{font-size:10px}
 .day-row .field input{padding:9px;font-size:11px}
-.day-check{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700}
+.day-section-title{font-size:11px;font-weight:800;color:var(--green);margin:15px 0 9px;padding-top:12px;border-top:1px solid var(--border)}
+.pause-list{display:grid;gap:8px}
+.pause-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:8px;align-items:end;padding:10px;background:#f7faf7;border:1px solid var(--border);border-radius:9px}
+.pause-row .field label{font-size:10px}
+.pause-row .field input{padding:9px;font-size:11px}
+.pause-remove{background:#fff0ed;color:#a43e30;border:0;border-radius:7px;padding:9px 11px;cursor:pointer;font-size:11px;font-weight:700}
+.add-pause-button{margin-top:9px;padding:9px 12px;font-size:11px}
+.day-row input:disabled,.day-row button:disabled{opacity:.45;cursor:not-allowed}
 .inline-note{background:#f2f7f3;padding:12px;border-radius:9px;color:#53675d;font-size:12px;line-height:1.5;margin:12px 0}
 .request-detail{background:#f7faf7;border:1px solid var(--border);padding:17px;border-radius:10px;margin-top:15px}
 .request-detail h4{font-size:14px;margin-bottom:12px}
@@ -126,7 +136,9 @@ th{color:var(--muted);font-weight:700}
 .panel{padding:17px}
 .panel-header{align-items:flex-start;flex-direction:column}
 .day-grid{grid-template-columns:1fr}
-.day-row{grid-template-columns:1fr 1fr}
+.day-fields{grid-template-columns:1fr 1fr}
+.pause-row{grid-template-columns:1fr 1fr}
+.pause-remove{grid-column:1/-1}
 .request-toolbar{align-items:stretch;flex-direction:column}
 .request-toolbar select{max-width:none}
 }
@@ -624,18 +636,56 @@ async function loadSchedules(){
  if(!currentCompany)return;
  const {data:templates,error}=await supabaseClient.from('work_schedule_templates').select('id,company_id,name,schedule_type,cycle_days,weekly_hours,active,created_at').eq('company_id',currentCompany.id).order('created_at',{ascending:false});
  if(error){$('schedulesTable').innerHTML=`<tr><td colspan="7" class="empty">Erro ao carregar escalas: ${escapeHTML(error.message)}</td></tr>`;showScheduleMessage('Verifique as tabelas e permissões de escalas: '+error.message,'error');return}
- schedulesData=templates||[];const ids=schedulesData.map(s=>s.id);
+ schedulesData=templates||[];
+ const ids=schedulesData.map(s=>s.id);
+
  if(ids.length){
-  const {data:days,error:de}=await supabaseClient.from('work_schedule_template_days').select('id,schedule_id,day_number,is_working,start_time,end_time,break_minutes').in('schedule_id',ids).order('day_number');
+  const {data:days,error:de}=await supabaseClient
+   .from('work_schedule_template_days')
+   .select('id,schedule_id,day_number,is_working,start_time,end_time,break_minutes,break_start_time,break_end_time')
+   .in('schedule_id',ids)
+   .order('day_number');
+
   if(de){showScheduleMessage('Erro ao carregar dias das escalas: '+de.message,'error');return}
   scheduleDaysData=days||[];
- }else scheduleDaysData=[];
+
+  const dayIds=scheduleDaysData.map(d=>d.id);
+  if(dayIds.length){
+   const {data:pauses,error:pauseError}=await supabaseClient
+    .from('work_schedule_day_pauses')
+    .select('id,schedule_day_id,pause_number,start_time,end_time,duration_minutes')
+    .in('schedule_day_id',dayIds)
+    .order('pause_number');
+
+   if(pauseError){
+    showScheduleMessage('Erro ao carregar pausas das escalas: '+pauseError.message,'error');
+    return;
+   }
+
+   const pausesByDay={};
+   (pauses||[]).forEach(p=>{
+    if(!pausesByDay[p.schedule_day_id])pausesByDay[p.schedule_day_id]=[];
+    pausesByDay[p.schedule_day_id].push(p);
+   });
+
+   scheduleDaysData.forEach(day=>{
+    day.pauses=pausesByDay[day.id]||[];
+   });
+  }else{
+   scheduleDaysData.forEach(day=>day.pauses=[]);
+  }
+ }else{
+  scheduleDaysData=[];
+ }
+
  const {data:assign,error:ae}=await supabaseClient.from('employee_work_schedules').select('id,company_id,employee_id,schedule_id,effective_from,effective_until,created_at').eq('company_id',currentCompany.id).order('effective_from',{ascending:false});
  if(ae){showScheduleMessage('Erro ao carregar atribuições: '+ae.message,'error');assignmentsData=[]}else assignmentsData=assign||[];
  renderSchedules();updateScheduleOptions();renderEmployeeScheduleAssignments();
 }
+
 function scheduleLabel(s){return s.schedule_type==='cyclic'?'Cíclica':'Fixa semanal'}
 function getScheduleDays(id){return scheduleDaysData.filter(d=>d.schedule_id===id)}
+
 function renderSchedules(){
  if(!schedulesData.length){$('schedulesTable').innerHTML='<tr><td colspan="7" class="empty">Nenhuma escala cadastrada. Clique em “Nova escala”.</td></tr>';$('scheduleCount').textContent='0 escalas';return}
  $('scheduleCount').textContent=schedulesData.length+(schedulesData.length===1?' escala':' escalas');
@@ -645,87 +695,461 @@ function renderSchedules(){
   return `<tr><td><strong>${escapeHTML(s.name)}</strong></td><td>${scheduleLabel(s)}</td><td>${duration}</td><td>${worked} de ${days.length}</td><td>${s.weekly_hours??'—'}</td><td><span class="badge ${s.active?'':'inactive'}">${s.active?'Ativa':'Inativa'}</span></td><td>${actions}</td></tr>`;
  }).join('');
 }
+
 function updateScheduleOptions(){
  const select=$('employeeSchedule');if(!select)return;
  const old=select.value;select.innerHTML='<option value="">Sem escala atribuída</option>';
  schedulesData.filter(s=>s.active).forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=`${s.name} (${scheduleLabel(s)})`;select.appendChild(o)});
  if([...select.options].some(o=>o.value===old))select.value=old;
 }
+
 function collectScheduleDayInputs(){
  return [...document.querySelectorAll('#scheduleDays .day-row')].map(row=>{
-  const check=row.querySelector('.work-day'),day=Number(check.dataset.day),working=check.checked;
-  return {day_number:day,is_working:working,start_time:working?(row.querySelector('.day-start').value||null):null,end_time:working?(row.querySelector('.day-end').value||null):null,break_minutes:working?(parseInt(row.querySelector('.day-break').value,10)||0):0};
+  const check=row.querySelector('.work-day');
+  const day=Number(check.dataset.day);
+  const working=check.checked;
+  const breakMinutes=working?(parseInt(row.querySelector('.day-break').value,10)||0):0;
+  const breakStart=working?(row.querySelector('.day-break-start').value||null):null;
+  const breakEnd=working?(row.querySelector('.day-break-end').value||null):null;
+
+  const pauses=working
+   ?[...row.querySelectorAll('.pause-row')].map((pause,index)=>({
+      pause_number:index+1,
+      start_time:pause.querySelector('.pause-start').value||null,
+      end_time:pause.querySelector('.pause-end').value||null,
+      duration_minutes:parseInt(pause.querySelector('.pause-duration').value,10)||0
+    }))
+   :[];
+
+  return {
+   day_number:day,
+   is_working:working,
+   start_time:working?(row.querySelector('.day-start').value||null):null,
+   end_time:working?(row.querySelector('.day-end').value||null):null,
+   break_minutes:breakMinutes,
+   break_start_time:breakStart,
+   break_end_time:breakEnd,
+   pauses
+  };
  });
 }
+
+function renderPauseRows(pauses=[],disabled=false){
+ return (pauses||[]).map((pause,index)=>`
+  <div class="pause-row">
+   <div class="field">
+    <label>Início da pausa ${index+1}</label>
+    <input type="time" class="pause-start" value="${escapeHTML(pause.start_time?.slice(0,5)||'')}" ${disabled?'disabled':''}>
+   </div>
+   <div class="field">
+    <label>Fim da pausa ${index+1}</label>
+    <input type="time" class="pause-end" value="${escapeHTML(pause.end_time?.slice(0,5)||'')}" ${disabled?'disabled':''}>
+   </div>
+   <div class="field">
+    <label>Duração (minutos)</label>
+    <input type="number" class="pause-duration" min="1" max="600" value="${escapeHTML(pause.duration_minutes??10)}" ${disabled?'disabled':''}>
+   </div>
+   <button type="button" class="pause-remove" onclick="removeSchedulePause(this)" ${disabled?'disabled':''}>Remover</button>
+  </div>
+ `).join('');
+}
+
+function addSchedulePause(button){
+ const row=button.closest('.day-row');
+ if(!row||!row.querySelector('.work-day').checked)return;
+
+ const list=row.querySelector('.pause-list');
+ const index=list.querySelectorAll('.pause-row').length+1;
+ const wrapper=document.createElement('div');
+ wrapper.innerHTML=`
+  <div class="pause-row">
+   <div class="field">
+    <label>Início da pausa ${index}</label>
+    <input type="time" class="pause-start">
+   </div>
+   <div class="field">
+    <label>Fim da pausa ${index}</label>
+    <input type="time" class="pause-end">
+   </div>
+   <div class="field">
+    <label>Duração (minutos)</label>
+    <input type="number" class="pause-duration" min="1" max="600" value="10">
+   </div>
+   <button type="button" class="pause-remove" onclick="removeSchedulePause(this)">Remover</button>
+  </div>
+ `;
+ list.appendChild(wrapper.firstElementChild);
+}
+
+function removeSchedulePause(button){
+ const row=button.closest('.pause-row');
+ if(row)row.remove();
+}
+
 function buildScheduleDays(existing=[]){
- const type=$('scheduleType').value,cyclic=type==='cyclic';$('cycleLengthField').classList.toggle('hidden',!cyclic);
- $('scheduleExplanation').textContent=cyclic?'Escala cíclica: configure cada dia do ciclo. O Dia 1 se repete após o último dia informado. Os dias de trabalho e descanso são definidos por você.':'Escala fixa: configure os sete dias da semana. Dia 1 = segunda-feira e Dia 7 = domingo. Os dias desmarcados serão descanso.';
+ const type=$('scheduleType').value;
+ const cyclic=type==='cyclic';
+ $('cycleLengthField').classList.toggle('hidden',!cyclic);
+
+ $('scheduleExplanation').textContent=cyclic
+  ?'Escala cíclica: configure cada dia do ciclo. O Dia 1 se repete após o último dia informado. Configure horários, intervalo principal e quantas pausas adicionais forem necessárias.'
+  :'Escala fixa: configure os sete dias da semana. Dia 1 = segunda-feira e Dia 7 = domingo. Configure horários, intervalo principal e pausas adicionais.';
+
  let count=cyclic?Math.max(1,Math.min(42,parseInt($('cycleDays').value,10)||6)):7;
  const labels=cyclic?Array.from({length:count},(_,i)=>`Dia ${i+1}`):dayNames;
+
  $('scheduleDays').innerHTML=labels.map((label,i)=>{
-  const day=existing.find(d=>Number(d.day_number)===i+1),working=day?Boolean(day.is_working):(i<5),start=day?.start_time?.slice(0,5)||'08:00',end=day?.end_time?.slice(0,5)||'17:00',br=day?.break_minutes??60;
-  return `<div class="day-row"><div><label class="day-check"><input type="checkbox" class="work-day" data-day="${i+1}" ${working?'checked':''} onchange="toggleDayInputs(this)">${label}</label><div class="hint">${working?'Dia de trabalho':'Dia de descanso'}</div></div><div class="field"><label>Entrada</label><input type="time" class="day-start" data-day="${i+1}" value="${start}" ${working?'':'disabled'}></div><div class="field"><label>Saída</label><input type="time" class="day-end" data-day="${i+1}" value="${end}" ${working?'':'disabled'}></div><div class="field"><label>Intervalo (min)</label><input type="number" min="0" max="600" class="day-break" data-day="${i+1}" value="${br}" ${working?'':'disabled'}></div></div>`;
+  const day=existing.find(d=>Number(d.day_number)===i+1);
+  const working=day?Boolean(day.is_working):(i<5);
+  const start=day?.start_time?.slice(0,5)||'08:00';
+  const end=day?.end_time?.slice(0,5)||'17:00';
+  const br=day?.break_minutes??0;
+  const breakStart=day?.break_start_time?.slice(0,5)||'';
+  const breakEnd=day?.break_end_time?.slice(0,5)||'';
+  const pauses=day?.pauses||[];
+
+  return `
+   <div class="day-row">
+    <div class="day-row-header">
+     <div>
+      <label class="day-check">
+       <input type="checkbox" class="work-day" data-day="${i+1}" ${working?'checked':''} onchange="toggleDayInputs(this)">
+       ${label}
+      </label>
+      <div class="hint">${working?'Dia de trabalho':'Dia de descanso'}</div>
+     </div>
+    </div>
+
+    <div class="day-fields">
+     <div class="field">
+      <label>Entrada</label>
+      <input type="time" class="day-start" data-day="${i+1}" value="${start}" ${working?'':'disabled'}>
+     </div>
+     <div class="field">
+      <label>Saída</label>
+      <input type="time" class="day-end" data-day="${i+1}" value="${end}" ${working?'':'disabled'}>
+     </div>
+    </div>
+
+    <div class="day-section-title">INTERVALO PRINCIPAL</div>
+    <div class="day-fields">
+     <div class="field">
+      <label>Início do intervalo</label>
+      <input type="time" class="day-break-start" value="${breakStart}" ${working?'':'disabled'}>
+     </div>
+     <div class="field">
+      <label>Fim do intervalo</label>
+      <input type="time" class="day-break-end" value="${breakEnd}" ${working?'':'disabled'}>
+     </div>
+     <div class="field">
+      <label>Duração do intervalo (minutos)</label>
+      <input type="number" min="0" max="600" class="day-break" value="${br}" ${working?'':'disabled'}>
+     </div>
+    </div>
+
+    <div class="day-section-title">PAUSAS ADICIONAIS</div>
+    <div class="pause-list">
+     ${renderPauseRows(pauses,!working)}
+    </div>
+    <button type="button" class="btn btn-secondary add-pause-button" onclick="addSchedulePause(this)" ${working?'':'disabled'}>
+     + Adicionar pausa
+    </button>
+   </div>
+  `;
  }).join('');
 }
-function toggleDayInputs(check){const row=check.closest('.day-row');row.querySelectorAll('.day-start,.day-end,.day-break').forEach(el=>el.disabled=!check.checked);row.querySelector('.hint').textContent=check.checked?'Dia de trabalho':'Dia de descanso'}
-function scheduleTypeChanged(){$('schedulePattern').value='custom';buildScheduleDays()}
+
+function toggleDayInputs(check){
+ const row=check.closest('.day-row');
+ const disabled=!check.checked;
+ row.querySelectorAll('.day-start,.day-end,.day-break,.day-break-start,.day-break-end,.pause-start,.pause-end,.pause-duration,.pause-remove,.add-pause-button').forEach(el=>el.disabled=disabled);
+ row.querySelector('.hint').textContent=check.checked?'Dia de trabalho':'Dia de descanso';
+}
+
+function scheduleTypeChanged(){
+ $('schedulePattern').value='custom';
+ buildScheduleDays();
+}
+
 function applySchedulePattern(){
- const pattern=$('schedulePattern').value;let type='fixed',cycle=7,workingDays=5;
+ const pattern=$('schedulePattern').value;
+ let type='fixed',cycle=7,workingDays=5;
  if(pattern==='5x1'){type='cyclic';cycle=6;workingDays=5}
  else if(pattern==='6x1'){type='cyclic';cycle=7;workingDays=6}
  else if(pattern==='5x2'){type='fixed';cycle=7;workingDays=5}
  else{buildScheduleDays();return}
- $('scheduleType').value=type;$('cycleDays').value=cycle;
- const rows=Array.from({length:cycle},(_,i)=>({day_number:i+1,is_working:i<workingDays,start_time:'08:00',end_time:'17:00',break_minutes:60}));
+
+ $('scheduleType').value=type;
+ $('cycleDays').value=cycle;
+ const rows=Array.from({length:cycle},(_,i)=>({
+  day_number:i+1,
+  is_working:i<workingDays,
+  start_time:'08:00',
+  end_time:'17:00',
+  break_minutes:0,
+  break_start_time:null,
+  break_end_time:null,
+  pauses:[]
+ }));
  buildScheduleDays(rows);
 }
+
 $('scheduleType').addEventListener('change',scheduleTypeChanged);
+
 $('cycleDays').addEventListener('input',()=>{
  if($('scheduleType').value!=='cyclic')return;
- const current=collectScheduleDayInputs(),count=Math.max(1,Math.min(42,parseInt($('cycleDays').value,10)||1));
- const adjusted=Array.from({length:count},(_,i)=>current.find(d=>d.day_number===i+1)||{day_number:i+1,is_working:i<5,start_time:'08:00',end_time:'17:00',break_minutes:60});
- $('schedulePattern').value='custom';buildScheduleDays(adjusted);
+ const current=collectScheduleDayInputs();
+ const count=Math.max(1,Math.min(42,parseInt($('cycleDays').value,10)||1));
+ const adjusted=Array.from({length:count},(_,i)=>current.find(d=>d.day_number===i+1)||{
+  day_number:i+1,
+  is_working:i<5,
+  start_time:'08:00',
+  end_time:'17:00',
+  break_minutes:0,
+  break_start_time:null,
+  break_end_time:null,
+  pauses:[]
+ });
+ $('schedulePattern').value='custom';
+ buildScheduleDays(adjusted);
 });
+
 function openScheduleForm(){
- if(!canManage())return;editingScheduleId=null;$('newScheduleForm').reset();$('schedulePattern').value='custom';$('scheduleType').value='fixed';$('cycleDays').value=6;$('scheduleFormTitle').textContent='Cadastrar modelo de escala';$('saveScheduleButton').textContent='Salvar escala';buildScheduleDays();$('scheduleForm').classList.remove('hidden');scrollTo({top:0,behavior:'smooth'});
+ if(!canManage())return;
+ editingScheduleId=null;
+ $('newScheduleForm').reset();
+ $('schedulePattern').value='custom';
+ $('scheduleType').value='fixed';
+ $('cycleDays').value=6;
+ $('scheduleFormTitle').textContent='Cadastrar modelo de escala';
+ $('saveScheduleButton').textContent='Salvar escala';
+ buildScheduleDays();
+ $('scheduleForm').classList.remove('hidden');
+ scrollTo({top:0,behavior:'smooth'});
 }
-function closeScheduleForm(){$('scheduleForm').classList.add('hidden');$('newScheduleForm').reset();editingScheduleId=null}
+
+function closeScheduleForm(){
+ $('scheduleForm').classList.add('hidden');
+ $('newScheduleForm').reset();
+ editingScheduleId=null;
+}
+
 function editSchedule(id){
- if(!canManage())return;const s=schedulesData.find(x=>x.id===id);if(!s)return;
- editingScheduleId=id;$('scheduleName').value=s.name;$('scheduleType').value=s.schedule_type;$('schedulePattern').value='custom';$('cycleDays').value=s.cycle_days||6;$('scheduleWeeklyHours').value=s.weekly_hours??'';buildScheduleDays(getScheduleDays(id));$('scheduleFormTitle').textContent='Editar modelo de escala';$('saveScheduleButton').textContent='Salvar alterações';$('scheduleForm').classList.remove('hidden');scrollTo({top:0,behavior:'smooth'});
+ if(!canManage())return;
+ const s=schedulesData.find(x=>x.id===id);
+ if(!s)return;
+
+ editingScheduleId=id;
+ $('scheduleName').value=s.name;
+ $('scheduleType').value=s.schedule_type;
+ $('schedulePattern').value='custom';
+ $('cycleDays').value=s.cycle_days||6;
+ $('scheduleWeeklyHours').value=s.weekly_hours??'';
+ buildScheduleDays(getScheduleDays(id));
+ $('scheduleFormTitle').textContent='Editar modelo de escala';
+ $('saveScheduleButton').textContent='Salvar alterações';
+ $('scheduleForm').classList.remove('hidden');
+ scrollTo({top:0,behavior:'smooth'});
 }
+
 async function toggleSchedule(id,active){
- if(!canManage())return;const {error}=await supabaseClient.from('work_schedule_templates').update({active}).eq('id',id).eq('company_id',currentCompany.id);
+ if(!canManage())return;
+ const {error}=await supabaseClient.from('work_schedule_templates').update({active}).eq('id',id).eq('company_id',currentCompany.id);
  if(error){showScheduleMessage('Não foi possível atualizar: '+error.message,'error');return}
- showScheduleMessage(active?'Escala ativada.':'Escala desativada.','success');await loadSchedules();
+ showScheduleMessage(active?'Escala ativada.':'Escala desativada.','success');
+ await loadSchedules();
 }
+
+function validateScheduleRows(rows){
+ for(const row of rows){
+  if(!row.is_working)continue;
+
+  if(!row.start_time||!row.end_time){
+   return `Preencha entrada e saída do Dia ${row.day_number}.`;
+  }
+
+  if((row.break_start_time&&!row.break_end_time)||(!row.break_start_time&&row.break_end_time)){
+   return `Informe início e fim do intervalo principal no Dia ${row.day_number}.`;
+  }
+
+  if(row.break_minutes<0||row.break_minutes>600){
+   return `A duração do intervalo principal no Dia ${row.day_number} deve estar entre 0 e 600 minutos.`;
+  }
+
+  if(row.break_minutes>0&&(!row.break_start_time||!row.break_end_time)){
+   return `Informe os horários de início e fim do intervalo principal no Dia ${row.day_number}, ou deixe a duração em zero.`;
+  }
+
+  for(let i=0;i<row.pauses.length;i++){
+   const pause=row.pauses[i];
+   if(!pause.start_time||!pause.end_time){
+    return `Preencha início e fim da pausa ${i+1} do Dia ${row.day_number}.`;
+   }
+   if(!Number.isInteger(pause.duration_minutes)||pause.duration_minutes<1||pause.duration_minutes>600){
+    return `A duração da pausa ${i+1} do Dia ${row.day_number} deve estar entre 1 e 600 minutos.`;
+   }
+  }
+ }
+ return null;
+}
+
 $('newScheduleForm').addEventListener('submit',async e=>{
- e.preventDefault();if(!canManage())return;
- const name=$('scheduleName').value.trim(),type=$('scheduleType').value,cycle=type==='cyclic'?parseInt($('cycleDays').value,10):7;
- if(!name){showScheduleMessage('Informe o nome da escala.','error');return}
- if(type==='cyclic'&&(!Number.isInteger(cycle)||cycle<1||cycle>42)){showScheduleMessage('O ciclo deve ter entre 1 e 42 dias.','error');return}
+ e.preventDefault();
+ if(!canManage())return;
+
+ const name=$('scheduleName').value.trim();
+ const type=$('scheduleType').value;
+ const cycle=type==='cyclic'?parseInt($('cycleDays').value,10):7;
+
+ if(!name){
+  showScheduleMessage('Informe o nome da escala.','error');
+  return;
+ }
+
+ if(type==='cyclic'&&(!Number.isInteger(cycle)||cycle<1||cycle>42)){
+  showScheduleMessage('O ciclo deve ter entre 1 e 42 dias.','error');
+  return;
+ }
+
  const rows=collectScheduleDayInputs();
- if(rows.length!==cycle){showScheduleMessage('A quantidade de dias configurados não corresponde à duração da escala.','error');return}
- if(rows.some(r=>r.is_working&&(!r.start_time||!r.end_time))){showScheduleMessage('Preencha entrada e saída de todos os dias trabalhados.','error');return}
- if(!rows.some(r=>r.is_working)){showScheduleMessage('A escala precisa ter pelo menos um dia de trabalho.','error');return}
- const b=$('saveScheduleButton'),editing=!!editingScheduleId;b.disabled=true;b.textContent='Salvando...';
+
+ if(rows.length!==cycle){
+  showScheduleMessage('A quantidade de dias configurados não corresponde à duração da escala.','error');
+  return;
+ }
+
+ if(!rows.some(r=>r.is_working)){
+  showScheduleMessage('A escala precisa ter pelo menos um dia de trabalho.','error');
+  return;
+ }
+
+ const validationError=validateScheduleRows(rows);
+ if(validationError){
+  showScheduleMessage(validationError,'error');
+  return;
+ }
+
+ const b=$('saveScheduleButton');
+ const editing=!!editingScheduleId;
+ b.disabled=true;
+ b.textContent='Salvando...';
+
  try{
   let scheduleId=editingScheduleId;
-  const payload={company_id:currentCompany.id,name,schedule_type:type,cycle_days:cycle,weekly_hours:$('scheduleWeeklyHours').value===''?null:Number($('scheduleWeeklyHours').value),active:true};
+
+  const payload={
+   company_id:currentCompany.id,
+   name,
+   schedule_type:type,
+   cycle_days:cycle,
+   weekly_hours:$('scheduleWeeklyHours').value===''?null:Number($('scheduleWeeklyHours').value),
+   active:true
+  };
+
   if(editing){
-   const {error}=await supabaseClient.from('work_schedule_templates').update({name,schedule_type:type,cycle_days:cycle,weekly_hours:payload.weekly_hours}).eq('id',scheduleId).eq('company_id',currentCompany.id);if(error)throw error;
-   const {error:delError}=await supabaseClient.from('work_schedule_template_days').delete().eq('schedule_id',scheduleId);if(delError)throw delError;
+   const {error}=await supabaseClient
+    .from('work_schedule_templates')
+    .update({
+     name,
+     schedule_type:type,
+     cycle_days:cycle,
+     weekly_hours:payload.weekly_hours
+    })
+    .eq('id',scheduleId)
+    .eq('company_id',currentCompany.id);
+
+   if(error)throw error;
+
+   const {error:delError}=await supabaseClient
+    .from('work_schedule_template_days')
+    .delete()
+    .eq('schedule_id',scheduleId);
+
+   if(delError)throw delError;
+
   }else{
-   const {data,error}=await supabaseClient.from('work_schedule_templates').insert(payload).select('id').single();if(error)throw error;scheduleId=data.id;
+   const {data,error}=await supabaseClient
+    .from('work_schedule_templates')
+    .insert(payload)
+    .select('id')
+    .single();
+
+   if(error)throw error;
+   scheduleId=data.id;
   }
-  const {error:dayError}=await supabaseClient.from('work_schedule_template_days').insert(rows.map(r=>({...r,schedule_id:scheduleId})));if(dayError)throw dayError;
-  closeScheduleForm();showScheduleMessage(editing?'Escala atualizada com sucesso.':'Escala criada com sucesso.','success');await loadSchedules();
- }catch(err){showScheduleMessage('Não foi possível salvar a escala: '+(err.message||err),'error')}
- finally{b.disabled=false;b.textContent=editing?'Salvar alterações':'Salvar escala'}
+
+  const daysPayload=rows.map(r=>({
+   schedule_id:scheduleId,
+   day_number:r.day_number,
+   is_working:r.is_working,
+   start_time:r.start_time,
+   end_time:r.end_time,
+   break_minutes:r.break_minutes,
+   break_start_time:r.break_start_time,
+   break_end_time:r.break_end_time
+  }));
+
+  const {data:savedDays,error:dayError}=await supabaseClient
+   .from('work_schedule_template_days')
+   .insert(daysPayload)
+   .select('id,day_number');
+
+  if(dayError)throw dayError;
+
+  const pausesPayload=[];
+
+  rows.forEach(row=>{
+   if(!row.is_working)return;
+
+   const savedDay=savedDays.find(d=>Number(d.day_number)===Number(row.day_number));
+   if(!savedDay)return;
+
+   row.pauses.forEach((pause,index)=>{
+    pausesPayload.push({
+     schedule_day_id:savedDay.id,
+     pause_number:index+1,
+     start_time:pause.start_time,
+     end_time:pause.end_time,
+     duration_minutes:pause.duration_minutes
+    });
+   });
+  });
+
+  if(pausesPayload.length){
+   const {error:pauseError}=await supabaseClient
+    .from('work_schedule_day_pauses')
+    .insert(pausesPayload);
+
+   if(pauseError)throw pauseError;
+  }
+
+  closeScheduleForm();
+
+  showScheduleMessage(
+   editing
+    ?'Escala atualizada com sucesso, incluindo intervalos e pausas.'
+    :'Escala criada com sucesso, incluindo intervalos e pausas.',
+   'success'
+  );
+
+  await loadSchedules();
+
+ }catch(err){
+  showScheduleMessage('Não foi possível salvar a escala: '+(err.message||err),'error');
+ }finally{
+  b.disabled=false;
+  b.textContent=editing?'Salvar alterações':'Salvar escala';
+ }
 });
+
 function renderEmployeeScheduleAssignments(){
- const body=$('employeeSchedulesTable');if(!assignmentsData.length){body.innerHTML='<tr><td colspan="4" class="empty">Nenhuma escala atribuída.</td></tr>';return}
- body.innerHTML=assignmentsData.map(a=>{const emp=employeesData.find(e=>e.id===a.employee_id),sch=schedulesData.find(s=>s.id===a.schedule_id);return `<tr><td>${escapeHTML(emp?.full_name||'Colaborador')}</td><td>${escapeHTML(sch?.name||'Escala')}</td><td>${a.effective_from?formatDate(a.effective_from):'—'}</td><td>${a.effective_until?formatDate(a.effective_until):'Em aberto'}</td></tr>`}).join('');
+ const body=$('employeeSchedulesTable');
+ if(!assignmentsData.length){body.innerHTML='<tr><td colspan="4" class="empty">Nenhuma escala atribuída.</td></tr>';return}
+ body.innerHTML=assignmentsData.map(a=>{
+  const emp=employeesData.find(e=>e.id===a.employee_id);
+  const sch=schedulesData.find(s=>s.id===a.schedule_id);
+  return `<tr><td>${escapeHTML(emp?.full_name||'Colaborador')}</td><td>${escapeHTML(sch?.name||'Escala')}</td><td>${a.effective_from?formatDate(a.effective_from):'—'}</td><td>${a.effective_until?formatDate(a.effective_until):'Em aberto'}</td></tr>`;
+ }).join('');
 }
 
 // COLABORADORES
@@ -741,7 +1165,8 @@ async function loadEmployees(){
 }
 function currentAssignment(employeeId){return assignmentsData.find(a=>a.employee_id===employeeId&&!a.effective_until)||assignmentsData.find(a=>a.employee_id===employeeId)}
 function renderEmployees(list){
- const tbody=$('employeesTable');if(!list.length){tbody.innerHTML='<tr><td colspan="9" class="empty">Nenhum colaborador cadastrado.</td></tr>';return}
+ const tbody=$('employeesTable');
+ if(!list.length){tbody.innerHTML='<tr><td colspan="9" class="empty">Nenhum colaborador cadastrado.</td></tr>';return}
  const labels={active:'Ativo',inactive:'Inativo',terminated:'Desligado'};
  tbody.innerHTML=list.map(e=>{
   const dep=departmentsData.find(d=>d.id===e.department_id),ass=currentAssignment(e.id),sch=schedulesData.find(s=>s.id===ass?.schedule_id);
@@ -752,7 +1177,10 @@ function renderEmployees(list){
 }
 function filterEmployees(){
  const q=$('employeeSearch').value.toLowerCase();
- renderEmployees(employeesData.filter(e=>{const d=departmentsData.find(x=>x.id===e.department_id),s=schedulesData.find(x=>x.id===currentAssignment(e.id)?.schedule_id);return [e.full_name,e.email,e.employee_code,e.job_title,e.employment_type,d?.nome,s?.name].some(v=>(v||'').toLowerCase().includes(q))}));
+ renderEmployees(employeesData.filter(e=>{
+  const d=departmentsData.find(x=>x.id===e.department_id),s=schedulesData.find(x=>x.id===currentAssignment(e.id)?.schedule_id);
+  return [e.full_name,e.email,e.employee_code,e.job_title,e.employment_type,d?.nome,s?.name].some(v=>(v||'').toLowerCase().includes(q));
+ }));
 }
 function resetPhotoState(){
  selectedPhotoFile=null;existingPhotoPath=null;
