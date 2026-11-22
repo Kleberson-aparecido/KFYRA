@@ -348,7 +348,7 @@ th{color:var(--muted);font-weight:700}
 
 <section id="page-ponto" class="hidden">
 <div class="panel">
-<div class="panel-header"><div><h3>Controle de ponto e horas excedentes</h3><p class="page-description">Acompanhe as horas excedentes identificadas e decida se serão pagas ou creditadas no banco de horas.</p></div><button class="btn btn-secondary" onclick="loadOvertime()">↻ Atualizar dados</button></div>
+<div class="panel-header"><div><h3>Controle de ponto e horas excedentes</h3><p class="page-description">Acompanhe as horas excedentes identificadas e decida se serão pagas ou creditadas no banco de horas.</p></div><div class="actions"><button class="btn" onclick="recalculateAttendance()">↻ Recalcular jornadas</button><button class="btn btn-secondary" onclick="loadOvertime()">Atualizar dados</button></div></div>
 <div id="overtimeMessage" class="message"></div>
 <div class="inline-note">As horas excedentes registradas aparecem para análise do RH. A aprovação como pagamento ou banco de horas é uma decisão administrativa. O tempo trabalhado não é apagado quando uma ocorrência é recusada.</div>
 <div class="cards" style="margin-bottom:20px">
@@ -1358,6 +1358,93 @@ async function decideRequest(decision){
 }
 
 // HORAS EXCEDENTES E BANCO DE HORAS
+function localDateInSaoPaulo(value){
+ const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date(value));
+ const p={};parts.forEach(x=>p[x.type]=x.value);return `${p.year}-${p.month}-${p.day}`;
+}
+function timeToMinutes(value){
+ if(!value)return null;const m=String(value).match(/^(\\d{1,2}):(\\d{2})/);return m?Number(m[1])*60+Number(m[2]):null;
+}
+function dateDiffDays(a,b){
+ const [ay,am,ad]=a.split('-').map(Number),[by,bm,bd]=b.split('-').map(Number);
+ return Math.round((Date.UTC(ay,am-1,ad)-Date.UTC(by,bm-1,bd))/86400000);
+}
+function scheduleForEmployeeDate(employeeId,date){
+ const assignment=assignmentsData.filter(a=>a.employee_id===employeeId&&a.effective_from<=date&&(!a.effective_until||a.effective_until>=date)).sort((a,b)=>b.effective_from.localeCompare(a.effective_from))[0];
+ if(!assignment)return null;
+ const schedule=schedulesData.find(s=>s.id===assignment.schedule_id);if(!schedule)return null;
+ let dayNumber;
+ if(schedule.schedule_type==='cyclic'){
+  const cycle=Math.max(1,Number(schedule.cycle_days)||1);
+  dayNumber=((dateDiffDays(date,assignment.effective_from)%cycle)+cycle)%cycle+1;
+ }else{
+  const [y,m,d]=date.split('-').map(Number),weekday=new Date(Date.UTC(y,m-1,d)).getUTCDay();
+  dayNumber=weekday===0?7:weekday;
+ }
+ const day=scheduleDaysData.find(x=>x.schedule_id===schedule.id&&Number(x.day_number)===dayNumber);
+ return day?{assignment,schedule,day}:null;
+}
+async function recalculateAttendance(){
+ if(!canManage()){showOvertimeMessage('Você não possui permissão para recalcular jornadas.','error');return}
+ if(!currentCompany)return;
+ const button=document.querySelector('button[onclick="recalculateAttendance()"]');
+ if(button){button.disabled=true;button.textContent='Recalculando...'}
+ try{
+  await loadSchedules();await loadEmployees();
+  const now=new Date(),today=localDateInSaoPaulo(now),monthStart=today.slice(0,7)+'-01';
+  const {data:marks,error:marksError}=await supabaseClient.from('attendance_records')
+   .select('id,company_id,employee_id,event_type,recorded_at')
+   .eq('company_id',currentCompany.id).gte('recorded_at',monthStart+'T00:00:00-03:00')
+   .order('recorded_at',{ascending:true});
+  if(marksError)throw marksError;
+  const grouped={};
+  (marks||[]).forEach(mark=>{
+   const date=localDateInSaoPaulo(mark.recorded_at),key=mark.employee_id+'|'+date;
+   if(date>today)return;
+   if(!grouped[key])grouped[key]={employee_id:mark.employee_id,date,events:[]};
+   grouped[key].events.push(mark);
+  });
+  const {data:existing,error:existingError}=await supabaseClient.from('overtime_records')
+   .select('id,employee_id,work_date,status,minutes_worked')
+   .eq('company_id',currentCompany.id).gte('work_date',monthStart);
+  if(existingError)throw existingError;
+  let created=0,updated=0,skipped=0;
+  for(const item of Object.values(grouped)){
+   const events=item.events,entry=events.find(x=>x.event_type==='entrada'),exit=[...events].reverse().find(x=>x.event_type==='saida');
+   if(!entry||!exit||new Date(exit.recorded_at)<=new Date(entry.recorded_at)){skipped++;continue}
+   const plan=scheduleForEmployeeDate(item.employee_id,item.date);
+   if(!plan||!plan.day.is_working||!plan.day.start_time||!plan.day.end_time){skipped++;continue}
+   const start=timeToMinutes(plan.day.start_time),end=timeToMinutes(plan.day.end_time);
+   if(start===null||end===null||end<=start){skipped++;continue}
+   const expectedSpan=end-start;
+   const plannedMainBreak=Math.max(0,Number(plan.day.break_minutes)||0);
+   const extraPauseMinutes=(plan.day.pauses||[]).reduce((sum,p)=>sum+Math.max(0,Number(p.duration_minutes)||0),0);
+   const mainStart=events.find(x=>x.event_type==='inicio_intervalo'),mainEnd=events.find(x=>x.event_type==='retorno_intervalo');
+   let actualMainBreak=0;
+   if(mainStart&&mainEnd&&new Date(mainEnd.recorded_at)>new Date(mainStart.recorded_at)){
+    actualMainBreak=Math.round((new Date(mainEnd.recorded_at)-new Date(mainStart.recorded_at))/60000);
+   }else if(plannedMainBreak>0){actualMainBreak=plannedMainBreak}
+   const elapsed=Math.round((new Date(exit.recorded_at)-new Date(entry.recorded_at))/60000);
+   const actualNet=elapsed-actualMainBreak-extraPauseMinutes;
+   const expectedNet=expectedSpan-plannedMainBreak-extraPauseMinutes;
+   const overtimeMinutes=Math.max(0,actualNet-expectedNet);
+   const description=`Jornada prevista: ${plan.day.start_time.slice(0,5)}–${plan.day.end_time.slice(0,5)}. Tempo líquido apurado: ${actualNet} min; previsto: ${expectedNet} min. Intervalo principal considerado: ${actualMainBreak} min; pausas adicionais: ${extraPauseMinutes} min. Cálculo automático sujeito à conferência do RH.`;
+   const previous=(existing||[]).find(x=>x.employee_id===item.employee_id&&x.work_date===item.date);
+   if(previous){
+    if(previous.status!=='pending')continue;
+    if(overtimeMinutes<=0)continue;
+    const {error}=await supabaseClient.from('overtime_records').update({minutes_worked:overtimeMinutes,description}).eq('id',previous.id).eq('company_id',currentCompany.id).eq('status','pending');
+    if(error)throw error;updated++;
+   }else if(overtimeMinutes>0){
+    const {error}=await supabaseClient.from('overtime_records').insert({company_id:currentCompany.id,employee_id:item.employee_id,work_date:item.date,minutes_worked:overtimeMinutes,status:'pending',description});
+    if(error)throw error;created++;
+   }
+  }
+  showOvertimeMessage(`Recalculo concluído. ${created} ocorrência(s) criada(s), ${updated} atualizada(s) e ${skipped} jornada(s) ignorada(s) por falta de marcações ou escala compatível. Confira os resultados antes de aprovar.`,'success');
+  await loadOvertime();
+ }catch(err){showOvertimeMessage('Não foi possível recalcular as jornadas: '+(err.message||err),'error')}
+ finally{if(button){button.disabled=false;button.textContent='↻ Recalcular jornadas'}}
+}
 const overtimeStatusLabels={pending:'Aguardando análise',approved:'Aprovada',rejected:'Recusada'};
 const overtimeApprovalLabels={payment:'Pagamento',bank:'Banco de horas'};
 const movementLabels={credit:'Crédito',debit:'Débito',compensation:'Compensação',adjustment:'Ajuste'};
@@ -1399,10 +1486,22 @@ async function approveOvertime(id,type){
  const employee=getOvertimeEmployee(record),destination=type==='payment'?'pagamento':'banco de horas';
  if(!confirm(`Confirma a aprovação de ${minutesToHours(record.minutes_worked)} para ${employee?.full_name||'colaborador'}, como ${destination}?`))return;
  try{
-  const {data,error}=await supabaseClient.from('overtime_records').update({status:'approved',approval_type:type}).eq('id',id).eq('company_id',currentCompany.id).eq('status','pending').select('id');
+  const reviewedAt=new Date().toISOString();
+  const {data,error}=await supabaseClient.from('overtime_records').update({status:'approved',approval_type:type,approved_by:currentUser.id,approved_at:reviewedAt,reviewed_at:reviewedAt}).eq('id',id).eq('company_id',currentCompany.id).eq('status','pending').select('id');
   if(error)throw error;if(!data||!data.length)throw new Error('A ocorrência não foi atualizada. Ela pode já ter sido analisada.');
-  showOvertimeMessage(type==='payment'?'Horas excedentes aprovadas para pagamento.':'Horas excedentes aprovadas e encaminhadas ao banco de horas.','success');await loadOvertime();
- }catch(err){showOvertimeMessage('Não foi possível aprovar: '+(err.message||err),'error')}
+  if(type==='bank'){
+   const {data:already,error:checkError}=await supabaseClient.from('time_bank_entries').select('id').eq('company_id',currentCompany.id).eq('overtime_record_id',id).limit(1);
+   if(checkError)throw checkError;
+   if(!already?.length){
+    const {error:bankError}=await supabaseClient.from('time_bank_entries').insert({company_id:currentCompany.id,employee_id:record.employee_id,movement_type:'credit',minutes:Number(record.minutes_worked)||0,status:'approved',reference_date:record.work_date,description:'Crédito de horas excedentes aprovado pelo RH.',created_by:currentUser.id,approved_by:currentUser.id,approved_at:reviewedAt,overtime_record_id:id});
+    if(bankError){
+     await supabaseClient.from('overtime_records').update({status:'pending',approval_type:null,approved_by:null,approved_at:null,reviewed_at:null}).eq('id',id).eq('company_id',currentCompany.id);
+     throw bankError;
+    }
+   }
+  }
+  showOvertimeMessage(type==='payment'?'Horas excedentes aprovadas para pagamento.':'Horas excedentes aprovadas e creditadas no banco de horas.','success');await loadOvertime();
+ }catch(err){showOvertimeMessage('Não foi possível concluir a aprovação: '+(err.message||err),'error')}
 }
 async function rejectOvertime(id){
  if(!canManage()){showOvertimeMessage('Você não possui permissão para analisar horas excedentes.','error');return}
