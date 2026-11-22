@@ -70,15 +70,11 @@ header{padding:22px}
 <div id="mensagem"></div>
 
 <form id="formLogin">
-
 <label for="email">E-mail</label>
 <input type="email" id="email" required autocomplete="email">
-
 <label for="senha">Senha</label>
 <input type="password" id="senha" required autocomplete="current-password">
-
 <button type="submit">Entrar no Meu Ponto</button>
-
 </form>
 
 <a class="link" id="linkRecuperacao">
@@ -86,26 +82,18 @@ Primeiro acesso / Esqueci minha senha
 </a>
 
 <form id="formRecuperacao" class="oculto">
-
 <label for="emailRecuperacao">Seu e-mail cadastrado</label>
 <input type="email" id="emailRecuperacao" required>
-
 <button type="submit">Enviar link para meu e-mail</button>
-
 <a class="link" id="voltarLogin">Voltar para o login</a>
-
 </form>
 
 <form id="formSenha" class="oculto">
-
 <label for="novaSenha">Crie sua senha</label>
 <input type="password" id="novaSenha" minlength="8" required autocomplete="new-password">
-
 <label for="confirmarSenha">Confirme sua senha</label>
 <input type="password" id="confirmarSenha" minlength="8" required autocomplete="new-password">
-
 <button type="submit">Salvar senha e continuar</button>
-
 </form>
 
 <div id="areaLogada" class="oculto">
@@ -141,11 +129,8 @@ Primeiro acesso / Esqueci minha senha
 <div class="painel-ponto">
 
 <div class="perfil-topo">
-
 <div id="avatarIniciais" class="avatar-iniciais">N</div>
-
 <img id="fotoPerfil" class="foto-perfil oculto" alt="Foto de perfil">
-
 <h2 class="nome-perfil" id="nomePerfil"></h2>
 <p class="cargo-perfil" id="cargoPerfil"></p>
 
@@ -153,7 +138,6 @@ Primeiro acesso / Esqueci minha senha
 Adicionar ou trocar foto
 <input type="file" id="arquivoFoto" accept="image/jpeg,image/png,image/webp">
 </label>
-
 </div>
 
 <div class="dado-perfil">
@@ -174,14 +158,11 @@ Adicionar ou trocar foto
 </div>
 
 <div class="painel-ponto">
-
 <h3>Minha jornada de trabalho</h3>
 <p>Horários previstos conforme a escala cadastrada pela empresa.</p>
-
 <div id="listaEscala">
 <p>Carregando horários...</p>
 </div>
-
 </div>
 
 </section>
@@ -238,7 +219,6 @@ function mostrarLogin(){
 esconderFormularios();
 formLogin.classList.remove("oculto");
 linkRecuperacao.classList.remove("oculto");
-
 titulo.textContent="Bem-vindo ao Meu Ponto";
 subtitulo.textContent="Acesse seu portal individual de colaborador.";
 }
@@ -246,10 +226,8 @@ subtitulo.textContent="Acesse seu portal individual de colaborador.";
 function mostrarFormularioSenha(tipo){
 esconderFormularios();
 formSenha.classList.remove("oculto");
-
 titulo.textContent=tipo==="invite"?"Primeiro acesso":"Redefinir senha";
 subtitulo.textContent="Defina sua senha pessoal para acessar o Meu Ponto.";
-
 mostrarMensagem("Crie uma senha com pelo menos 8 caracteres.","sucesso");
 }
 
@@ -431,12 +409,12 @@ avatar.classList.remove("oculto");
 foto.src=data.signedUrl;
 
 }catch(error){
-
 console.error("Erro ao carregar foto:",error.message);
-
 }
 
 }
+
+/* PERFIL: AGORA BUSCA O DEPARTAMENTO CADASTRADO PELA EMPRESA */
 
 async function carregarPerfil(){
 
@@ -444,7 +422,32 @@ document.getElementById("nomePerfil").textContent=colaboradorAtual.full_name||""
 document.getElementById("cargoPerfil").textContent=colaboradorAtual.job_title||"Cargo não informado";
 document.getElementById("emailPerfil").textContent=colaboradorAtual.email||usuarioAtual.email||"-";
 document.getElementById("cargoDado").textContent=colaboradorAtual.job_title||"Não informado";
-document.getElementById("departamentoPerfil").textContent="Não informado";
+
+const campoDepartamento=document.getElementById("departamentoPerfil");
+campoDepartamento.textContent="Não informado";
+
+if(colaboradorAtual.department_id){
+
+try{
+
+const {data,error}=await supabaseClient
+.from("departamentos")
+.select("nome")
+.eq("id",colaboradorAtual.department_id)
+.eq("id_da_empresa",colaboradorAtual.company_id)
+.maybeSingle();
+
+if(error)throw error;
+
+if(data && data.nome){
+campoDepartamento.textContent=data.nome;
+}
+
+}catch(error){
+console.error("Erro ao consultar departamento:",error);
+}
+
+}
 
 await carregarFotoPerfil();
 await carregarEscala();
@@ -487,7 +490,6 @@ return resto+"min";
 async function carregarEscala(){
 
 const lista=document.getElementById("listaEscala");
-
 lista.innerHTML="<p>Consultando escala...</p>";
 
 try{
@@ -507,10 +509,8 @@ const {data:atribuicoes,error:erroAtribuicao}=await supabaseClient
 if(erroAtribuicao)throw erroAtribuicao;
 
 if(!atribuicoes||atribuicoes.length===0){
-
 lista.innerHTML="<p>Você ainda não possui uma escala vigente. Consulte o RH da sua empresa.</p>";
 return;
-
 }
 
 const atribuicao=atribuicoes[0];
@@ -525,10 +525,8 @@ const {data:modelo,error:erroModelo}=await supabaseClient
 if(erroModelo)throw erroModelo;
 
 if(!modelo){
-
 lista.innerHTML="<p>Não foi possível localizar o modelo da sua escala. Procure o RH.</p>";
 return;
-
 }
 
 const {data:dias,error:erroDias}=await supabaseClient
@@ -540,10 +538,8 @@ const {data:dias,error:erroDias}=await supabaseClient
 if(erroDias)throw erroDias;
 
 if(!dias||dias.length===0){
-
 lista.innerHTML="<p>A escala foi encontrada, mas ainda não possui dias configurados. Consulte o RH.</p>";
 return;
-
 }
 
 const nomesDias=[
@@ -597,9 +593,7 @@ horario.textContent=
 " • Intervalo: "+formatarIntervalo(item.break_minutes);
 
 }else{
-
 horario.textContent="Folga";
-
 }
 
 bloco.appendChild(tituloDia);
@@ -629,7 +623,6 @@ lista.appendChild(vigencia);
 }catch(error){
 
 console.error("Erro ao consultar escala:",error);
-
 lista.innerHTML="<p>Não foi possível carregar sua escala: "+(error.message||"erro desconhecido")+"</p>";
 
 }
@@ -639,23 +632,18 @@ lista.innerHTML="<p>Não foi possível carregar sua escala: "+(error.message||"e
 async function enviarFoto(event){
 
 const arquivo=event.target.files[0];
-
 if(!arquivo)return;
 
 if(!["image/jpeg","image/png","image/webp"].includes(arquivo.type)){
-
 mostrarMensagem("Escolha uma imagem JPG, PNG ou WebP.","erro");
 event.target.value="";
 return;
-
 }
 
 if(arquivo.size>2*1024*1024){
-
 mostrarMensagem("A foto deve ter no máximo 2 MB.","erro");
 event.target.value="";
 return;
-
 }
 
 const extensoes={
@@ -692,7 +680,6 @@ caminho_foto:caminho
 if(perfilError)throw perfilError;
 
 colaboradorAtual.profile_photo_url=caminho;
-
 await carregarFotoPerfil();
 
 mostrarMensagem("Foto de perfil atualizada com sucesso!","sucesso");
@@ -736,7 +723,6 @@ document.getElementById("abaPonto").classList.add("ativa");
 document.getElementById("abaPerfil").classList.remove("ativa");
 
 iniciarRelogio();
-
 await atualizarEstadoPonto();
 
 }catch(error){
@@ -756,16 +742,13 @@ async function registrarPonto(){
 if(processandoPonto)return;
 
 if(!usuarioAtual||!colaboradorAtual){
-
 mostrarMensagem("Sua sessão não está válida. Entre novamente.","erro");
 return;
-
 }
 
 processandoPonto=true;
 
 const botao=document.getElementById("botaoPonto");
-
 botao.disabled=true;
 botao.textContent="Registrando...";
 
@@ -782,9 +765,7 @@ if(ultimo){
 const etapa=etapas[ultimo.event_type];
 
 if(!etapa){
-
 throw new Error("Não foi possível identificar a próxima marcação. Procure o RH.");
-
 }
 
 novoEvento=etapa.proximo;
@@ -817,13 +798,11 @@ saida:"Saída"
 };
 
 mostrarMensagem(nomes[novoEvento]+" registrado com sucesso! Seu horário foi salvo.","sucesso");
-
 await atualizarEstadoPonto();
 
 }catch(error){
 
 mostrarMensagem("Não foi possível registrar: "+error.message,"erro");
-
 await atualizarEstadoPonto();
 
 }finally{
@@ -870,35 +849,28 @@ async function iniciar(){
 
 const hash=new URLSearchParams(window.location.hash.replace(/^#/,""));
 const query=new URLSearchParams(window.location.search);
-
 const tipo=hash.get("type");
 
 const erroLink=hash.get("error_description")||query.get("error_description");
 
 if(erroLink){
-
 mostrarLogin();
 mostrarMensagem("O link é inválido ou expirou. Solicite um novo link.","erro");
 return;
-
 }
 
 const {data,error}=await supabaseClient.auth.getSession();
 
 if(error){
-
 mostrarMensagem(error.message,"erro");
 return;
-
 }
 
 if(["invite","recovery","signup"].includes(tipo)){
 
 if(data.session){
-
 mostrarFormularioSenha(tipo);
 return;
-
 }
 
 mostrarLogin();
@@ -908,13 +880,9 @@ return;
 }
 
 if(data.session){
-
 await abrirPortal(data.session.user);
-
 }else{
-
 mostrarLogin();
-
 }
 
 }
@@ -922,7 +890,6 @@ mostrarLogin();
 linkRecuperacao.addEventListener("click",function(){
 
 esconderFormularios();
-
 formRecuperacao.classList.remove("oculto");
 
 titulo.textContent="Primeiro acesso ou recuperação";
@@ -933,20 +900,16 @@ limparMensagem();
 });
 
 document.getElementById("voltarLogin").addEventListener("click",function(){
-
 mostrarLogin();
 limparMensagem();
-
 });
 
 formRecuperacao.addEventListener("submit",async function(e){
 
 e.preventDefault();
-
 limparMensagem();
 
 const email=document.getElementById("emailRecuperacao").value.trim();
-
 const botao=formRecuperacao.querySelector("button");
 
 botao.disabled=true;
@@ -978,28 +941,22 @@ botao.textContent="Enviar link para meu e-mail";
 formSenha.addEventListener("submit",async function(e){
 
 e.preventDefault();
-
 limparMensagem();
 
 const senha=document.getElementById("novaSenha").value;
 const confirmar=document.getElementById("confirmarSenha").value;
 
 if(senha.length<8){
-
 mostrarMensagem("A senha precisa ter pelo menos 8 caracteres.","erro");
 return;
-
 }
 
 if(senha!==confirmar){
-
 mostrarMensagem("As senhas não coincidem.","erro");
 return;
-
 }
 
 const botao=formSenha.querySelector("button");
-
 botao.disabled=true;
 botao.textContent="Salvando...";
 
@@ -1010,7 +967,6 @@ const {data,error}=await supabaseClient.auth.updateUser({password:senha});
 if(error)throw error;
 
 history.replaceState(null,"",window.location.pathname);
-
 mostrarMensagem("Senha criada com sucesso!","sucesso");
 
 await abrirPortal(data.user);
@@ -1031,12 +987,10 @@ botao.textContent="Salvar senha e continuar";
 formLogin.addEventListener("submit",async function(e){
 
 e.preventDefault();
-
 limparMensagem();
 
 const email=document.getElementById("email").value.trim();
 const senha=document.getElementById("senha").value;
-
 const botao=formLogin.querySelector("button");
 
 botao.disabled=true;
@@ -1071,10 +1025,8 @@ async function sair(){
 const {error}=await supabaseClient.auth.signOut();
 
 if(error){
-
 mostrarMensagem("Não foi possível sair da conta: "+error.message,"erro");
 return;
-
 }
 
 if(relogioIntervalo)clearInterval(relogioIntervalo);
