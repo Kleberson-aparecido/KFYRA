@@ -259,37 +259,53 @@ button:disabled {
 </style>
 </head>
 <body>
+
 <div class="page">
+
 <section class="brand-panel">
     <div class="logo">KFYRA<span>.</span></div>
+
     <div class="brand-content">
         <div class="eyebrow">GESTÃO INTELIGENTE • RESULTADOS REAIS</div>
+
         <h1>
             Sua empresa.<br>
             Sua gestão.<br>
             <span>Um novo nível.</span>
         </h1>
+
         <p>
             Tecnologia, inteligência e controle em um único ambiente.
             Entre na plataforma KFYRA e tenha sua operação na palma da mão.
         </p>
     </div>
+
     <div class="brand-footer">
         KFYRA — Inteligência que transforma gestão.
     </div>
 </section>
+
 <main class="form-panel">
+
     <a class="top-link" href="index.html">← Voltar ao início</a>
+
     <div class="login-box">
+
         <div class="eyebrow">ACESSO À PLATAFORMA</div>
+
         <h2 id="titulo">Bem-vindo à KFYRA</h2>
+
         <p class="subtitle" id="subtitulo">
             Acesse o ambiente exclusivo da sua empresa.
         </p>
+
         <div id="mensagem" class="message"></div>
+
         <form id="loginForm">
+
             <div class="input-group">
                 <label for="email">E-mail corporativo</label>
+
                 <input
                     type="email"
                     id="email"
@@ -298,13 +314,17 @@ button:disabled {
                     required
                 >
             </div>
+
             <div class="input-group">
+
                 <div class="password-line">
                     <label for="senha">Senha</label>
+
                     <a href="#" class="forgot" id="esqueciSenha">
                         Esqueci minha senha
                     </a>
                 </div>
+
                 <input
                     type="password"
                     id="senha"
@@ -313,27 +333,36 @@ button:disabled {
                     required
                 >
             </div>
+
             <button type="submit" id="entrar">
                 Entrar na plataforma
             </button>
+
         </form>
+
         <div class="bottom-text">
             Ainda não tem uma conta?
             <a href="cadastro.html">Cadastre sua empresa</a>
         </div>
+
         <div class="security">
             🔒 Ambiente protegido por autenticação segura.
         </div>
+
     </div>
 </main>
 </div>
+
 <script>
 const SUPABASE_URL = "https://guiadodxikdvsfrhedls.supabase.co";
+
 const SUPABASE_ANON_KEY = "sb_publishable_dhAqwNSfwGj8_nBnudx_Hw_gMZpnyEL";
+
 const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_ANON_KEY
 );
+
 const loginForm = document.getElementById("loginForm");
 const emailInput = document.getElementById("email");
 const senhaInput = document.getElementById("senha");
@@ -341,81 +370,128 @@ const mensagem = document.getElementById("mensagem");
 const botao = document.getElementById("entrar");
 const titulo = document.getElementById("titulo");
 const subtitulo = document.getElementById("subtitulo");
+
 function mostrarMensagem(texto, tipo) {
     mensagem.textContent = texto;
     mensagem.className = "message " + tipo;
 }
+
 function limparMensagem() {
     mensagem.textContent = "";
     mensagem.className = "message";
 }
+
+/* LOGIN */
 loginForm.addEventListener("submit", async function(event) {
     event.preventDefault();
+
     limparMensagem();
+
     const email = emailInput.value.trim();
     const senha = senhaInput.value;
+
     botao.disabled = true;
     botao.textContent = "Autenticando...";
+
     try {
         const { data, error } = await supabaseClient.auth.signInWithPassword({
             email: email,
             password: senha
         });
+
         if (error) {
             throw error;
         }
+
         if (!data.session) {
             throw new Error("Não foi possível iniciar sua sessão. Tente novamente.");
         }
-        mostrarMensagem("Login confirmado! Acessando a plataforma...", "success");
+
+        mostrarMensagem(
+            "Login confirmado! Acessando a plataforma...",
+            "success"
+        );
+
         window.location.href = "dashboard.html";
+
     } catch (error) {
+
         let texto = error.message || "Não foi possível entrar.";
+
         if (texto.toLowerCase().includes("email not confirmed")) {
             texto = "Seu e-mail ainda não foi confirmado. Verifique sua caixa de entrada.";
+
         } else if (
             texto.toLowerCase().includes("invalid login credentials")
         ) {
             texto = "E-mail ou senha incorretos. Confira seus dados e tente novamente.";
         }
+
         mostrarMensagem(texto, "error");
+
         botao.disabled = false;
         botao.textContent = "Entrar na plataforma";
     }
 });
+
+/* RECUPERAÇÃO DE SENHA */
 document.getElementById("esqueciSenha").addEventListener("click", async function(event) {
+
     event.preventDefault();
+
     limparMensagem();
+
     const email = emailInput.value.trim();
+
     if (!email) {
         mostrarMensagem(
             "Digite seu e-mail corporativo para receber o link de recuperação.",
             "error"
         );
+
         emailInput.focus();
         return;
     }
+
     try {
+
         const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-            redirectTo: window.location.origin + "/Nexora/login.html"
+
+            /* ENDEREÇO ATUALIZADO PARA KFYRA */
+            redirectTo: window.location.origin + "/KFYRA/login.html"
+
         });
-        if (error) throw error;
+
+        if (error) {
+            throw error;
+        }
+
         mostrarMensagem(
             "Se o endereço estiver cadastrado, você receberá um e-mail com as instruções para redefinir sua senha.",
             "success"
         );
+
     } catch (error) {
+
         mostrarMensagem(error.message, "error");
+
     }
 });
+
+/* EVENTO DE RECUPERAÇÃO */
 supabaseClient.auth.onAuthStateChange(async function(event, session) {
+
     if (event === "PASSWORD_RECOVERY") {
+
         mostrarMensagem(
             "Link de recuperação validado. A próxima etapa será definir sua nova senha.",
             "success"
         );
+
     }
+
 });
 </script>
+
 </body>
 </html>
