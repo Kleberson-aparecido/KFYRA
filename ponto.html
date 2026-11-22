@@ -50,6 +50,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .historico-topo>div{flex:1;min-width:150px}
 .historico-topo label{margin:8px 0}
 .historico-topo button{width:auto;min-width:110px;margin:0}
+.historico-topo .navegar-mes{width:44px;min-width:44px;padding:12px 5px;font-size:20px;flex-shrink:0}
 .resumo-historico{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:14px 0}
 .resumo-item{background:#f4f7f4;border:1px solid #e1eae3;border-radius:9px;padding:12px}
 .resumo-item strong{display:block;font-size:20px;color:#123d32}
@@ -203,10 +204,12 @@ header{padding:22px}
 <h3>Espelho de Ponto</h3>
 <p>Consulte suas marcações organizadas por dia.</p>
 <div class="historico-topo">
+<button type="button" id="mesAnterior" class="secundario navegar-mes" aria-label="Mês anterior">←</button>
 <div>
 <label for="mesEspelho">Mês de referência</label>
 <input type="month" id="mesEspelho">
 </div>
+<button type="button" id="proximoMes" class="secundario navegar-mes" aria-label="Próximo mês">→</button>
 <button type="button" id="botaoConsultarEspelho">Consultar</button>
 </div>
 <div id="resumoEspelho" class="resumo-historico"></div>
@@ -1334,8 +1337,43 @@ processandoPonto=false;
 }
 }
 document.getElementById("botaoPonto").addEventListener("click",registrarPonto);
+
+/* NAVEGAÇÃO ENTRE OS MESES DO ESPELHO */
+function alterarMesEspelho(direcao){
+const campo=document.getElementById("mesEspelho");
+
+if(!campo.value){
+const agora=new Date();
+campo.value=agora.getFullYear()+"-"+String(agora.getMonth()+1).padStart(2,"0");
+}
+
+const partes=campo.value.split("-");
+const ano=Number(partes[0]);
+const mes=Number(partes[1]);
+
+if(!ano||!mes||mes<1||mes>12)return;
+
+const novaData=new Date(ano,mes-1+direcao,1,12,0,0);
+campo.value=novaData.getFullYear()+"-"+String(novaData.getMonth()+1).padStart(2,"0");
+
+dataSelecionadaCalendario=null;
+carregarEspelhoPonto();
+}
+
+document.getElementById("mesAnterior").addEventListener("click",function(){
+alterarMesEspelho(-1);
+});
+
+document.getElementById("proximoMes").addEventListener("click",function(){
+alterarMesEspelho(1);
+});
+
 document.getElementById("botaoConsultarEspelho").addEventListener("click",carregarEspelhoPonto);
-document.getElementById("mesEspelho").addEventListener("change",carregarEspelhoPonto);
+document.getElementById("mesEspelho").addEventListener("change",function(){
+dataSelecionadaCalendario=null;
+carregarEspelhoPonto();
+});
+
 /* NAVEGAÇÃO ENTRE ABAS */
 function ativarAba(nome){
 const secoes={
