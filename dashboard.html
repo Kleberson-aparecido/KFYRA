@@ -351,6 +351,7 @@ th{color:var(--muted);font-weight:700}
 <div class="panel">
 <div class="panel-header"><div><h3>Controle de ponto e horas excedentes</h3><p class="page-description">Acompanhe as horas excedentes identificadas e decida se serão pagas ou creditadas no banco de horas.</p></div><div class="actions"><button class="btn" onclick="recalculateAttendance()">↻ Recalcular jornadas</button><button class="btn btn-secondary" onclick="loadOvertime()">Atualizar dados</button></div></div>
 <div id="overtimeMessage" class="message"></div>
+<div id="recalcDiagnostics" class="panel hidden" style="margin:14px 0;background:#fbfdfb"><div class="panel-header"><h3 style="font-size:14px">Diagnóstico do recálculo</h3><span id="recalcDiagnosticsMeta" class="muted"></span></div><div id="recalcDiagnosticsBody"></div></div>
 <div class="inline-note">As horas excedentes registradas aparecem para análise do RH. A aprovação como pagamento ou banco de horas é uma decisão administrativa. O tempo trabalhado não é apagado quando uma ocorrência é recusada.</div>
 <div class="cards" style="margin-bottom:20px">
 <div class="card"><div class="card-label">Horas aguardando análise</div><div class="card-number" id="overtimePendingTotal">0h</div><div class="card-note" id="overtimePendingCount">0 ocorrências pendentes</div></div>
@@ -370,7 +371,7 @@ th{color:var(--muted);font-weight:700}
 </div>
 <div class="overtime-toolbar">
 <div class="field"><label>Filtrar ocorrências</label><select id="overtimeStatusFilter" onchange="renderOvertime()"><option value="all">Todas</option><option value="pending">Aguardando análise</option><option value="approved">Aprovadas</option><option value="rejected">Recusadas</option></select></div>
-<div class="field"><label>Pesquisar colaborador</label><input type="search" id="overtimeSearch" placeholder="Nome do colaborador..." oninput="renderOvertime()"></div>
+<div class="field"><label>Pesquisar nas ocorrências</label><input type="search" id="overtimeSearch" placeholder="Nome do colaborador..." oninput="renderOvertime()"></div>
 </div>
 <h3 style="font-size:15px;margin:20px 0 12px">Ocorrências de horas excedentes</h3>
 <div class="table-wrap"><table><thead><tr><th>Colaborador</th><th>Data</th><th>Tempo excedente</th><th>Status</th><th>Classificação</th><th>Descrição</th><th>Ações</th></tr></thead><tbody id="overtimeTable"><tr><td colspan="7" class="empty">Carregando ocorrências...</td></tr></tbody></table></div>
@@ -1399,10 +1400,12 @@ async function recalculateAttendance(){
  if(!canManage()){showOvertimeMessage('Você não possui permissão para recalcular jornadas.','error');return}
  if(!currentCompany)return;
  const button=document.querySelector('button[onclick="recalculateAttendance()"]');
+ const diagnostic=$('recalcDiagnostics'),diagnosticBody=$('recalcDiagnosticsBody'),diagnosticMeta=$('recalcDiagnosticsMeta');
+ if(diagnostic)diagnostic.classList.add('hidden');
  if(button){button.disabled=true;button.textContent='Recalculando...'}
  try{
   await loadSchedules();await loadEmployees();
-  const now=new Date(),today=localDateInSaoPaulo(now),monthStart=today.slice(0,7)+'-01';
+  const today=localDateInSaoPaulo(new Date()),monthStart=today.slice(0,7)+'-01';
   const {data:marks,error:marksError}=await supabaseClient.from('attendance_records')
    .select('id,company_id,employee_id,event_type,recorded_at')
    .eq('company_id',currentCompany.id).gte('recorded_at',monthStart+'T00:00:00-03:00')
@@ -1419,39 +1422,58 @@ async function recalculateAttendance(){
    .select('id,employee_id,work_date,status,minutes_worked')
    .eq('company_id',currentCompany.id).gte('work_date',monthStart);
   if(existingError)throw existingError;
-  let created=0,updated=0,skipped=0;
+  let created=0,updated=0,skipped=0,analyzed=0,protected=0,noOvertime=0;
+  const diagnostics=[];
+  const employeeName=id=>{const e=employeesData.find(x=>x.id===id);return e?.full_name||('Colaborador '+String(id).slice(0,8))};
+  const reportSkip=(item,reason)=>{skipped++;diagnostics.push({name:employeeName(item.employee_id),date:item.date,reason})};
   for(const item of Object.values(grouped)){
    const events=item.events,entry=events.find(x=>x.event_type==='entrada'),exit=[...events].reverse().find(x=>x.event_type==='saida');
-   if(!entry||!exit||new Date(exit.recorded_at)<=new Date(entry.recorded_at)){skipped++;continue}
+   if(!entry&&!exit){reportSkip(item,'Não há marcação de entrada nem de saída.');continue}
+   if(!entry){reportSkip(item,'Falta a marcação de entrada.');continue}
+   if(!exit){reportSkip(item,'Falta a marcação de saída.');continue}
+   if(new Date(exit.recorded_at)<=new Date(entry.recorded_at)){reportSkip(item,'A saída está no mesmo horário ou antes da entrada.');continue}
+   const assignment=assignmentsData.filter(a=>a.employee_id===item.employee_id&&a.effective_from<=item.date&&(!a.effective_until||a.effective_until>=item.date)).sort((a,b)=>b.effective_from.localeCompare(a.effective_from))[0];
+   if(!assignment){reportSkip(item,'Não existe escala atribuída válida para esta data.');continue}
+   const schedule=schedulesData.find(x=>x.id===assignment.schedule_id);
+   if(!schedule){reportSkip(item,'A escala atribuída não foi encontrada ou não está acessível.');continue}
    const plan=scheduleForEmployeeDate(item.employee_id,item.date);
-   if(!plan||!plan.day.is_working||!plan.day.start_time||!plan.day.end_time){skipped++;continue}
-   const start=timeToMinutes(plan.day.start_time),end=timeToMinutes(plan.day.end_time);
-   if(start===null||end===null||end<=start){skipped++;continue}
-   const expectedSpan=end-start;
+   if(!plan){reportSkip(item,'Não foi encontrado o dia correspondente dentro da escala.');continue}
+   if(!plan.day.is_working){reportSkip(item,'A escala define esta data como folga; nenhuma jornada foi calculada.');continue}
+   if(!plan.day.start_time||!plan.day.end_time){reportSkip(item,'O dia da escala não possui horário inicial e final configurados.');continue}
+   const startMinutes=timeToMinutes(plan.day.start_time),endMinutes=timeToMinutes(plan.day.end_time);
+   if(startMinutes===null||endMinutes===null||endMinutes<=startMinutes){reportSkip(item,'Os horários previstos na escala são inválidos ou não estão em ordem.');continue}
+   const mainStart=events.find(x=>x.event_type==='inicio_intervalo'),mainEnd=events.find(x=>x.event_type==='retorno_intervalo');
+   if(mainStart&&mainEnd&&new Date(mainEnd.recorded_at)<=new Date(mainStart.recorded_at)){reportSkip(item,'O retorno do intervalo está antes ou no mesmo horário do início do intervalo.');continue}
+   if(mainStart&&new Date(mainStart.recorded_at)<=new Date(entry.recorded_at)){reportSkip(item,'O início do intervalo não ocorreu depois da entrada.');continue}
+   if(mainEnd&&new Date(mainEnd.recorded_at)>=new Date(exit.recorded_at)){reportSkip(item,'O retorno do intervalo não ocorreu antes da saída.');continue}
+   analyzed++;
+   const expectedSpan=endMinutes-startMinutes;
    const plannedMainBreak=Math.max(0,Number(plan.day.break_minutes)||0);
    const extraPauseMinutes=(plan.day.pauses||[]).reduce((sum,p)=>sum+Math.max(0,Number(p.duration_minutes)||0),0);
-   const mainStart=events.find(x=>x.event_type==='inicio_intervalo'),mainEnd=events.find(x=>x.event_type==='retorno_intervalo');
-   let actualMainBreak=0;
-   if(mainStart&&mainEnd&&new Date(mainEnd.recorded_at)>new Date(mainStart.recorded_at)){
-    actualMainBreak=Math.round((new Date(mainEnd.recorded_at)-new Date(mainStart.recorded_at))/60000);
-   }else if(plannedMainBreak>0){actualMainBreak=plannedMainBreak}
+   let actualMainBreak=plannedMainBreak;
+   if(mainStart&&mainEnd)actualMainBreak=Math.round((new Date(mainEnd.recorded_at)-new Date(mainStart.recorded_at))/60000);
    const elapsed=Math.round((new Date(exit.recorded_at)-new Date(entry.recorded_at))/60000);
    const actualNet=elapsed-actualMainBreak-extraPauseMinutes;
    const expectedNet=expectedSpan-plannedMainBreak-extraPauseMinutes;
    const overtimeMinutes=Math.max(0,actualNet-expectedNet);
-   const description=`Jornada prevista: ${plan.day.start_time.slice(0,5)}–${plan.day.end_time.slice(0,5)}. Tempo líquido apurado: ${actualNet} min; previsto: ${expectedNet} min. Intervalo principal considerado: ${actualMainBreak} min; pausas adicionais: ${extraPauseMinutes} min. Cálculo automático sujeito à conferência do RH.`;
+   const description=`Jornada prevista: ${String(plan.day.start_time).slice(0,5)}–${String(plan.day.end_time).slice(0,5)}. Tempo líquido apurado: ${actualNet} min; previsto: ${expectedNet} min. Intervalo principal considerado: ${actualMainBreak} min; pausas adicionais previstas: ${extraPauseMinutes} min. Cálculo automático sujeito à conferência do RH.`;
    const previous=(existing||[]).find(x=>x.employee_id===item.employee_id&&x.work_date===item.date);
    if(previous){
-    if(previous.status!=='pending')continue;
-    if(overtimeMinutes<=0)continue;
+    if(previous.status!=='pending'){protected++;diagnostics.push({name:employeeName(item.employee_id),date:item.date,reason:'Já existe ocorrência '+(previous.status==='approved'?'aprovada':'recusada')+'; preservada sem alteração.'});continue}
+    if(overtimeMinutes<=0){noOvertime++;diagnostics.push({name:employeeName(item.employee_id),date:item.date,reason:'Jornada analisada sem tempo excedente positivo. Ocorrência pendente existente foi preservada.'});continue}
     const {error}=await supabaseClient.from('overtime_records').update({minutes_worked:overtimeMinutes,description}).eq('id',previous.id).eq('company_id',currentCompany.id).eq('status','pending');
     if(error)throw error;updated++;
    }else if(overtimeMinutes>0){
     const {error}=await supabaseClient.from('overtime_records').insert({company_id:currentCompany.id,employee_id:item.employee_id,work_date:item.date,minutes_worked:overtimeMinutes,status:'pending',description});
     if(error)throw error;created++;
-   }
+   }else{noOvertime++}
   }
-  showOvertimeMessage(`Recalculo concluído. ${created} ocorrência(s) criada(s), ${updated} atualizada(s) e ${skipped} jornada(s) ignorada(s) por falta de marcações ou escala compatível. Confira os resultados antes de aprovar.`,'success');
+  const total=Object.keys(grouped).length;
+  const rows=diagnostics.slice(0,40).map(d=>`<tr><td>${escapeHTML(d.name)}</td><td>${formatDate(d.date)}</td><td>${escapeHTML(d.reason)}</td></tr>`).join('');
+  if(diagnosticBody)diagnosticBody.innerHTML=`<div class="inline-note">Foram verificadas ${total} jornada(s) com marcações neste mês até hoje. ${analyzed} jornada(s) tiveram cálculo realizado; ${noOvertime} não apresentaram excedente positivo; ${protected} ocorrência(s) aprovadas/recusadas foram preservadas; ${skipped} jornada(s) precisam de conferência.</div>${diagnostics.length?`<div class="table-wrap"><table><thead><tr><th>Colaborador</th><th>Data</th><th>Resultado / motivo</th></tr></thead><tbody>${rows}</tbody></table></div>${diagnostics.length>40?`<p class="muted">Exibindo os primeiros 40 de ${diagnostics.length} registros de diagnóstico.</p>`:''}`:'<div class="empty">Nenhuma inconsistência ou ocorrência protegida foi identificada.</div>'}`;
+  if(diagnosticMeta)diagnosticMeta.textContent=`${total} jornada(s) verificadas`;
+  if(diagnostic)diagnostic.classList.remove('hidden');
+  showOvertimeMessage(`Recálculo concluído: ${created} ocorrência(s) criada(s), ${updated} atualizada(s), ${analyzed} jornada(s) calculadas, ${noOvertime} sem excedente, ${protected} ocorrência(s) protegidas e ${skipped} jornada(s) com pendência de conferência. Veja o diagnóstico abaixo.`,'success');
   await loadOvertime();
  }catch(err){showOvertimeMessage('Não foi possível recalcular as jornadas: '+(err.message||err),'error')}
  finally{if(button){button.disabled=false;button.textContent='↻ Recalcular jornadas'}}
