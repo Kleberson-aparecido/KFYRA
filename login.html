@@ -3,13 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Entrar | NEXORA</title>
-
+<title>Entrar | KFYRA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
 :root {
     --green: #123d32;
@@ -20,26 +17,22 @@
     --muted: #788a82;
     --white: #ffffff;
 }
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-
 body {
     font-family: 'DM Sans', sans-serif;
     min-height: 100vh;
     background: #f5f8f5;
     color: var(--text);
 }
-
 .page {
     min-height: 100vh;
     display: grid;
     grid-template-columns: 1.05fr 0.95fr;
 }
-
 .brand-panel {
     background:
         radial-gradient(circle at 20% 20%, rgba(197,164,91,.18), transparent 30%),
@@ -52,7 +45,6 @@ body {
     position: relative;
     overflow: hidden;
 }
-
 .brand-panel::after {
     content: "";
     position: absolute;
@@ -65,24 +57,20 @@ body {
     box-shadow: 0 0 0 45px rgba(255,255,255,.025),
                 0 0 0 90px rgba(255,255,255,.02);
 }
-
 .logo {
     font-family: 'Manrope', sans-serif;
     font-size: 30px;
     font-weight: 800;
     letter-spacing: 4px;
 }
-
 .logo span {
     color: var(--gold);
 }
-
 .brand-content {
     max-width: 540px;
     position: relative;
     z-index: 1;
 }
-
 .eyebrow {
     color: #d9c38e;
     font-size: 11px;
@@ -90,7 +78,6 @@ body {
     letter-spacing: 3px;
     margin-bottom: 24px;
 }
-
 .brand-content h1 {
     font-family: 'Manrope', sans-serif;
     font-size: clamp(36px, 4.5vw, 58px);
@@ -98,25 +85,21 @@ body {
     margin-bottom: 25px;
     letter-spacing: -2px;
 }
-
 .brand-content h1 span {
     color: #b9e5cf;
 }
-
 .brand-content p {
     color: rgba(255,255,255,.72);
     font-size: 16px;
     line-height: 1.8;
     max-width: 430px;
 }
-
 .brand-footer {
     color: rgba(255,255,255,.48);
     font-size: 12px;
     position: relative;
     z-index: 1;
 }
-
 .form-panel {
     display: flex;
     flex-direction: column;
@@ -125,7 +108,6 @@ body {
     padding: 45px 8%;
     position: relative;
 }
-
 .top-link {
     position: absolute;
     top: 35px;
@@ -135,42 +117,35 @@ body {
     font-size: 13px;
     font-weight: 700;
 }
-
 .login-box {
     width: 100%;
     max-width: 420px;
 }
-
 .login-box .eyebrow {
     color: var(--gold);
     margin-bottom: 13px;
 }
-
 .login-box h2 {
     font-family: 'Manrope', sans-serif;
     font-size: 34px;
     letter-spacing: -1px;
     margin-bottom: 10px;
 }
-
 .subtitle {
     color: var(--muted);
     font-size: 14px;
     line-height: 1.6;
     margin-bottom: 34px;
 }
-
 label {
     display: block;
     font-size: 12px;
     font-weight: 700;
     margin-bottom: 9px;
 }
-
 .input-group {
     margin-bottom: 21px;
 }
-
 input {
     width: 100%;
     height: 54px;
@@ -183,25 +158,21 @@ input {
     background: white;
     transition: .2s;
 }
-
 input:focus {
     border-color: #4c9274;
     box-shadow: 0 0 0 4px rgba(76,146,116,.10);
 }
-
 .password-line {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-
 .forgot {
     color: #648b75;
     text-decoration: none;
     font-size: 12px;
     font-weight: 700;
 }
-
 button {
     width: 100%;
     height: 55px;
@@ -216,18 +187,15 @@ button {
     transition: .2s;
     box-shadow: 0 9px 20px rgba(18,61,50,.16);
 }
-
 button:hover {
     transform: translateY(-2px);
     box-shadow: 0 12px 25px rgba(18,61,50,.22);
 }
-
 button:disabled {
     opacity: .65;
     cursor: wait;
     transform: none;
 }
-
 .message {
     display: none;
     padding: 13px 15px;
@@ -236,179 +204,136 @@ button:disabled {
     font-size: 13px;
     line-height: 1.5;
 }
-
 .message.error {
     display: block;
     background: #fff0ef;
     color: #a53d35;
 }
-
 .message.success {
     display: block;
     background: #eaf7ef;
     color: #216343;
 }
-
 .bottom-text {
     margin-top: 27px;
     text-align: center;
     color: var(--muted);
     font-size: 13px;
 }
-
 .bottom-text a {
     color: var(--green);
     font-weight: 800;
     text-decoration: none;
 }
-
 .security {
     margin-top: 38px;
     text-align: center;
     color: #9aa9a0;
     font-size: 11px;
 }
-
 @media(max-width: 850px) {
     .page {
         grid-template-columns: 1fr;
     }
-
     .brand-panel {
         min-height: 290px;
         padding: 30px 8%;
     }
-
     .brand-content {
         margin-top: 55px;
     }
-
     .brand-content h1 {
         font-size: 36px;
     }
-
     .brand-footer {
         margin-top: 40px;
     }
-
     .form-panel {
         min-height: 600px;
         padding: 80px 8% 45px;
     }
-
     .top-link {
         top: 28px;
     }
 }
 </style>
 </head>
-
 <body>
-
 <div class="page">
-
-    <section class="brand-panel">
-
-        <div class="logo">NEXORA<span>.</span></div>
-
-        <div class="brand-content">
-            <div class="eyebrow">GESTÃO INTELIGENTE • RESULTADOS REAIS</div>
-
-            <h1>
-                Sua empresa.<br>
-                Sua gestão.<br>
-                <span>Um novo nível.</span>
-            </h1>
-
-            <p>
-                Tecnologia, inteligência e controle em um único ambiente.
-                Entre na plataforma NEXORA e tenha sua operação na palma da mão.
-            </p>
-        </div>
-
-        <div class="brand-footer">
-            NEXORA — Inteligência que transforma gestão.
-        </div>
-
-    </section>
-
-    <main class="form-panel">
-
-        <a class="top-link" href="index.html">← Voltar ao início</a>
-
-        <div class="login-box">
-
-            <div class="eyebrow">ACESSO À PLATAFORMA</div>
-
-            <h2 id="titulo">Bem-vindo à NEXORA</h2>
-
-            <p class="subtitle" id="subtitulo">
-                Acesse o ambiente exclusivo da sua empresa.
-            </p>
-
-            <div id="mensagem" class="message"></div>
-
-            <form id="loginForm">
-
-                <div class="input-group">
-                    <label for="email">E-mail corporativo</label>
-                    <input
-                        type="email"
-                        id="email"
-                        placeholder="nome@empresa.com.br"
-                        autocomplete="email"
-                        required
-                    >
-                </div>
-
-                <div class="input-group">
-                    <div class="password-line">
-                        <label for="senha">Senha</label>
-                        <a href="#" class="forgot" id="esqueciSenha">
-                            Esqueci minha senha
-                        </a>
-                    </div>
-
-                    <input
-                        type="password"
-                        id="senha"
-                        placeholder="Digite sua senha"
-                        autocomplete="current-password"
-                        required
-                    >
-                </div>
-
-                <button type="submit" id="entrar">
-                    Entrar na plataforma
-                </button>
-
-            </form>
-
-            <div class="bottom-text">
-                Ainda não tem uma conta?
-                <a href="cadastro.html">Cadastre sua empresa</a>
+<section class="brand-panel">
+    <div class="logo">KFYRA<span>.</span></div>
+    <div class="brand-content">
+        <div class="eyebrow">GESTÃO INTELIGENTE • RESULTADOS REAIS</div>
+        <h1>
+            Sua empresa.<br>
+            Sua gestão.<br>
+            <span>Um novo nível.</span>
+        </h1>
+        <p>
+            Tecnologia, inteligência e controle em um único ambiente.
+            Entre na plataforma KFYRA e tenha sua operação na palma da mão.
+        </p>
+    </div>
+    <div class="brand-footer">
+        KFYRA — Inteligência que transforma gestão.
+    </div>
+</section>
+<main class="form-panel">
+    <a class="top-link" href="index.html">← Voltar ao início</a>
+    <div class="login-box">
+        <div class="eyebrow">ACESSO À PLATAFORMA</div>
+        <h2 id="titulo">Bem-vindo à KFYRA</h2>
+        <p class="subtitle" id="subtitulo">
+            Acesse o ambiente exclusivo da sua empresa.
+        </p>
+        <div id="mensagem" class="message"></div>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="email">E-mail corporativo</label>
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="nome@empresa.com.br"
+                    autocomplete="email"
+                    required
+                >
             </div>
-
-            <div class="security">
-                🔒 Ambiente protegido por autenticação segura.
+            <div class="input-group">
+                <div class="password-line">
+                    <label for="senha">Senha</label>
+                    <a href="#" class="forgot" id="esqueciSenha">
+                        Esqueci minha senha
+                    </a>
+                </div>
+                <input
+                    type="password"
+                    id="senha"
+                    placeholder="Digite sua senha"
+                    autocomplete="current-password"
+                    required
+                >
             </div>
-
+            <button type="submit" id="entrar">
+                Entrar na plataforma
+            </button>
+        </form>
+        <div class="bottom-text">
+            Ainda não tem uma conta?
+            <a href="cadastro.html">Cadastre sua empresa</a>
         </div>
-
-    </main>
-
+        <div class="security">
+            🔒 Ambiente protegido por autenticação segura.
+        </div>
+    </div>
+</main>
 </div>
-
 <script>
 const SUPABASE_URL = "https://guiadodxikdvsfrhedls.supabase.co";
-
 const SUPABASE_ANON_KEY = "sb_publishable_dhAqwNSfwGj8_nBnudx_Hw_gMZpnyEL";
-
 const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_ANON_KEY
 );
-
 const loginForm = document.getElementById("loginForm");
 const emailInput = document.getElementById("email");
 const senhaInput = document.getElementById("senha");
@@ -416,48 +341,36 @@ const mensagem = document.getElementById("mensagem");
 const botao = document.getElementById("entrar");
 const titulo = document.getElementById("titulo");
 const subtitulo = document.getElementById("subtitulo");
-
 function mostrarMensagem(texto, tipo) {
     mensagem.textContent = texto;
     mensagem.className = "message " + tipo;
 }
-
 function limparMensagem() {
     mensagem.textContent = "";
     mensagem.className = "message";
 }
-
 loginForm.addEventListener("submit", async function(event) {
     event.preventDefault();
     limparMensagem();
-
     const email = emailInput.value.trim();
     const senha = senhaInput.value;
-
     botao.disabled = true;
     botao.textContent = "Autenticando...";
-
     try {
         const { data, error } = await supabaseClient.auth.signInWithPassword({
             email: email,
             password: senha
         });
-
         if (error) {
             throw error;
         }
-
         if (!data.session) {
             throw new Error("Não foi possível iniciar sua sessão. Tente novamente.");
         }
-
         mostrarMensagem("Login confirmado! Acessando a plataforma...", "success");
-
         window.location.href = "dashboard.html";
-
     } catch (error) {
         let texto = error.message || "Não foi possível entrar.";
-
         if (texto.toLowerCase().includes("email not confirmed")) {
             texto = "Seu e-mail ainda não foi confirmado. Verifique sua caixa de entrada.";
         } else if (
@@ -465,20 +378,15 @@ loginForm.addEventListener("submit", async function(event) {
         ) {
             texto = "E-mail ou senha incorretos. Confira seus dados e tente novamente.";
         }
-
         mostrarMensagem(texto, "error");
-
         botao.disabled = false;
         botao.textContent = "Entrar na plataforma";
     }
 });
-
 document.getElementById("esqueciSenha").addEventListener("click", async function(event) {
     event.preventDefault();
     limparMensagem();
-
     const email = emailInput.value.trim();
-
     if (!email) {
         mostrarMensagem(
             "Digite seu e-mail corporativo para receber o link de recuperação.",
@@ -487,24 +395,19 @@ document.getElementById("esqueciSenha").addEventListener("click", async function
         emailInput.focus();
         return;
     }
-
     try {
         const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
             redirectTo: window.location.origin + "/Nexora/login.html"
         });
-
         if (error) throw error;
-
         mostrarMensagem(
             "Se o endereço estiver cadastrado, você receberá um e-mail com as instruções para redefinir sua senha.",
             "success"
         );
-
     } catch (error) {
         mostrarMensagem(error.message, "error");
     }
 });
-
 supabaseClient.auth.onAuthStateChange(async function(event, session) {
     if (event === "PASSWORD_RECOVERY") {
         mostrarMensagem(
@@ -514,6 +417,5 @@ supabaseClient.auth.onAuthStateChange(async function(event, session) {
     }
 });
 </script>
-
 </body>
 </html>
