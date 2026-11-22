@@ -7,7 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
 :root{--green:#123c32;--green2:#1d5949;--mint:#dff4e9;--gold:#c9a96e;--bg:#f5f7f5;--text:#20332d;--muted:#82918a;--white:#fff;--border:#e8eee9;--shadow:0 8px 30px rgba(20,55,43,.06)}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -53,6 +52,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text)}
 input,select,textarea{width:100%;padding:12px 13px;border:1px solid #dfe8e1;border-radius:8px;font-family:inherit;font-size:13px;outline:none;background:white;color:var(--text)}
 textarea{min-height:80px;resize:vertical}
 input:focus,select:focus,textarea:focus{border-color:var(--green2)}
+input[type="checkbox"]{width:auto}
 .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
 .field label{display:block;font-size:12px;font-weight:700;margin-bottom:7px}
 .form-actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
@@ -81,25 +81,32 @@ th{color:var(--muted);font-weight:700}
 .day-row .field label{font-size:10px}
 .day-row .field input{padding:9px;font-size:11px}
 .day-check{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700}
-.day-check input{width:auto}
 .inline-note{background:#f2f7f3;padding:12px;border-radius:9px;color:#53675d;font-size:12px;line-height:1.5;margin:12px 0}
 .request-detail{background:#f7faf7;border:1px solid var(--border);padding:17px;border-radius:10px;margin-top:15px}
 .request-detail h4{font-size:14px;margin-bottom:12px}
 .request-detail p{font-size:12px;line-height:1.7;margin:6px 0;overflow-wrap:anywhere}
 .history-item{border-left:3px solid var(--gold);padding:10px 13px;margin:12px 0;background:#f8faf8;border-radius:0 8px 8px 0;font-size:12px;line-height:1.6}
-.request-toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.request-toolbar,.overtime-toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
 .request-toolbar select{max-width:220px}
 .request-document-link{display:inline-flex;align-items:center;gap:7px;margin-top:10px;padding:11px 15px;background:#e5f5eb;color:#17654c;border-radius:8px;text-decoration:none;font-weight:700;font-size:12px;border:1px solid #cce8d7}
-.request-document-link:hover{background:#d5eddf}
-.overtime-toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin-bottom:18px}
+.overtime-toolbar{align-items:end;margin-bottom:18px}
 .overtime-toolbar .field{flex:1;min-width:180px}
-.overtime-toolbar .field select,.overtime-toolbar .field input{max-width:100%}
 .overtime-detail{background:#f7faf7;border:1px solid var(--border);padding:16px;border-radius:10px;margin:12px 0}
 .overtime-detail p{font-size:12px;line-height:1.8}
 .overtime-actions{display:flex;gap:7px;flex-wrap:wrap}
 .ledger-positive{color:#24714d;font-weight:800}
 .ledger-negative{color:#a43e30;font-weight:800}
 .ledger-neutral{color:#82918a;font-weight:800}
+.private-section{border:1px solid #e8eee9;background:#fbfdfb;border-radius:12px;padding:18px;margin-top:20px}
+.private-section h4{font-family:Manrope,sans-serif;font-size:14px;margin-bottom:5px;color:var(--green)}
+.private-section>p{font-size:11px;color:var(--muted);margin-bottom:16px;line-height:1.5}
+.photo-area{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.photo-preview{width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid var(--gold);background:#edf4ef}
+.photo-placeholder{width:90px;height:90px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#edf4ef;color:var(--green);font-size:28px;font-weight:800;border:3px solid var(--gold)}
+.first-job-option{display:flex;gap:10px;align-items:center;padding:12px;background:#edf4ef;border-radius:8px;margin-top:12px}
+.first-job-option input{width:17px;height:17px}
+.first-job-option label{font-size:12px;font-weight:700;margin:0}
+.private-warning{font-size:11px;color:#8b6a2b;margin-top:10px;line-height:1.5}
 @media(max-width:950px){.cards{grid-template-columns:repeat(2,1fr)}.main{padding:25px}}
 @media(max-width:650px){
 .sidebar{width:100%;height:auto;position:relative;padding:15px}
@@ -125,13 +132,11 @@ th{color:var(--muted);font-weight:700}
 }
 </style>
 </head>
-
 <body>
 <div class="layout">
 <aside class="sidebar">
 <div class="logo">KFY<span>RA</span></div>
 <div class="logo-sub">GESTÃO INTELIGENTE</div>
-
 <div class="menu">
 <div class="menu-title">PRINCIPAL</div>
 <button class="active" onclick="showPage('inicio',this)">▦ Visão geral</button>
@@ -146,29 +151,17 @@ th{color:var(--muted);font-weight:700}
 <button onclick="showPage('configuracoes',this)">⚙ Configurações</button>
 <button onclick="showPage('ajuda',this)">✧ KFYRA AI</button>
 </div>
-
-<div class="sidebar-bottom">
-<button onclick="logout()">↪ Sair da plataforma</button>
-</div>
+<div class="sidebar-bottom"><button onclick="logout()">↪ Sair da plataforma</button></div>
 </aside>
 
 <main class="main">
 <header class="topbar">
-<div class="welcome">
-<h1 id="pageTitle">Visão geral</h1>
-<p id="pageSubtitle">Acompanhe os indicadores da sua empresa.</p>
-</div>
-<div class="user-box">
-<strong id="userName">Carregando...</strong>
-<div id="userRole" style="color:#82918a;margin-top:4px">KFYRA</div>
-</div>
+<div class="welcome"><h1 id="pageTitle">Visão geral</h1><p id="pageSubtitle">Acompanhe os indicadores da sua empresa.</p></div>
+<div class="user-box"><strong id="userName">Carregando...</strong><div id="userRole" style="color:#82918a;margin-top:4px">KFYRA</div></div>
 </header>
 
 <div id="companyBanner" class="company-banner">
-<div>
-<h2 id="companyName">Carregando empresa...</h2>
-<p>Ambiente empresarial exclusivo KFYRA</p>
-</div>
+<div><h2 id="companyName">Carregando empresa...</h2><p>Ambiente empresarial exclusivo KFYRA</p></div>
 <div class="plan-tag" id="companyPlan">Plano contratado</div>
 </div>
 
@@ -180,10 +173,7 @@ th{color:var(--muted);font-weight:700}
 <div class="card"><div class="card-label">Departamentos</div><div class="card-number" id="totalDepartments">—</div><div class="card-note">Estrutura organizacional</div></div>
 <div class="card"><div class="card-label">Plano</div><div class="card-number" style="font-size:19px" id="planIndicator">—</div><div class="card-note">Plano da empresa</div></div>
 </div>
-<div class="panel">
-<div class="panel-header"><h3>Bem-vindo à KFYRA</h3></div>
-<p style="font-size:13px;color:#82918a;line-height:1.8">Sua empresa está conectada ao ambiente KFYRA. Utilize o menu lateral para acessar os módulos de gestão, acompanhar colaboradores e organizar as operações da sua empresa.</p>
-</div>
+<div class="panel"><div class="panel-header"><h3>Bem-vindo à KFYRA</h3></div><p style="font-size:13px;color:#82918a;line-height:1.8">Sua empresa está conectada ao ambiente KFYRA. Utilize o menu lateral para acessar os módulos de gestão, acompanhar colaboradores e organizar as operações da sua empresa.</p></div>
 </section>
 
 <section id="page-colaboradores" class="hidden">
@@ -209,6 +199,51 @@ th{color:var(--muted);font-weight:700}
 <div class="field"><label>Escala de trabalho</label><select id="employeeSchedule"><option value="">Sem escala atribuída</option></select><div class="hint">Você pode cadastrar os modelos na aba Escalas.</div></div>
 <div class="field"><label>Início da vigência da escala</label><input type="date" id="employeeScheduleStart"></div>
 </div>
+
+<div class="private-section" id="employeePrivateSection">
+<h4>Dados pessoais e trabalhistas</h4>
+<p>Informações restritas ao RH e aos administradores da empresa.</p>
+<div class="form-grid">
+<div class="field"><label>CPF</label><input type="text" id="employeeCPF" maxlength="14" placeholder="000.000.000-00"></div>
+<div class="field"><label>Salário (R$)</label><input type="number" id="employeeSalary" min="0" step="0.01" placeholder="0,00"></div>
+<div class="field"><label>PIS / PASEP / NIT</label><input type="text" id="employeePisNit" maxlength="20" placeholder="Número do PIS, PASEP ou NIT"></div>
+</div>
+<div class="first-job-option">
+<input type="checkbox" id="employeeFirstJob">
+<label for="employeeFirstJob">Primeiro emprego — colaborador ainda não possui PIS/PASEP/NIT</label>
+</div>
+<div class="private-warning">Ao marcar primeiro emprego, o campo PIS/PASEP/NIT ficará opcional. O sistema armazenará essa informação no cadastro.</div>
+</div>
+
+<div class="private-section" id="employeeBankSection">
+<h4>Dados bancários e pagamento</h4>
+<p>Dados utilizados para organização das informações de pagamento. A visualização é restrita ao RH e aos administradores.</p>
+<div class="form-grid">
+<div class="field"><label>Banco</label><input type="text" id="employeeBankName" placeholder="Nome do banco"></div>
+<div class="field"><label>Código do banco</label><input type="text" id="employeeBankCode" placeholder="Ex.: 001"></div>
+<div class="field"><label>Agência</label><input type="text" id="employeeBankBranch"></div>
+<div class="field"><label>Conta</label><input type="text" id="employeeBankAccount"></div>
+<div class="field"><label>Dígito da conta</label><input type="text" id="employeeBankAccountDigit"></div>
+<div class="field"><label>Tipo de conta</label><select id="employeeBankAccountType"><option value="">Selecione</option><option value="corrente">Corrente</option><option value="poupanca">Poupança</option><option value="salario">Salário</option><option value="pagamento">Pagamento</option></select></div>
+<div class="field"><label>Chave PIX</label><input type="text" id="employeePixKey"></div>
+<div class="field"><label>Tipo de chave PIX</label><select id="employeePixKeyType"><option value="">Selecione</option><option value="cpf">CPF</option><option value="cnpj">CNPJ</option><option value="email">E-mail</option><option value="telefone">Telefone</option><option value="aleatoria">Aleatória</option></select></div>
+</div>
+</div>
+
+<div class="private-section">
+<h4>Foto do colaborador</h4>
+<p>Imagem de perfil privada, armazenada no bucket seguro da empresa.</p>
+<div class="photo-area">
+<div id="employeePhotoPlaceholder" class="photo-placeholder">👤</div>
+<img id="employeePhotoPreview" class="photo-preview hidden" alt="Foto do colaborador">
+<div style="flex:1;min-width:200px">
+<div class="field"><label>Selecionar foto</label><input type="file" id="employeePhoto" accept="image/jpeg,image/png,image/webp"></div>
+<div class="hint">Formatos aceitos: JPG, PNG ou WEBP. Tamanho máximo: 2 MB.</div>
+<button type="button" class="btn btn-secondary" style="margin-top:10px" onclick="clearEmployeePhoto()">Remover seleção</button>
+</div>
+</div>
+</div>
+
 <div class="form-actions">
 <button type="submit" class="btn" id="employeeSubmitButton">Salvar colaborador</button>
 <button type="button" class="btn btn-secondary" onclick="closeEmployeeForm()">Cancelar</button>
@@ -218,25 +253,17 @@ th{color:var(--muted);font-weight:700}
 </div>
 
 <div class="panel">
-<div class="panel-header">
-<h3>Colaboradores cadastrados</h3>
-<input class="search" type="search" id="employeeSearch" placeholder="Pesquisar colaborador..." oninput="filterEmployees()">
-</div>
-<div class="table-wrap">
-<table>
+<div class="panel-header"><h3>Colaboradores cadastrados</h3><input class="search" type="search" id="employeeSearch" placeholder="Pesquisar colaborador..." oninput="filterEmployees()"></div>
+<div class="table-wrap"><table>
 <thead><tr><th>Nome</th><th>Código</th><th>Cargo</th><th>Vínculo</th><th>Departamento</th><th>Escala</th><th>E-mail</th><th>Status</th><th>Ações</th></tr></thead>
 <tbody id="employeesTable"><tr><td colspan="9" class="empty">Carregando colaboradores...</td></tr></tbody>
-</table>
-</div>
+</table></div>
 </div>
 </section>
 
 <section id="page-departamentos" class="hidden">
 <div class="panel">
-<div class="panel-header">
-<div><h3>Gestão de departamentos</h3><p class="page-description">Organize os setores e departamentos da sua empresa.</p></div>
-<button class="btn" id="newDepartmentButton" onclick="openDepartmentForm()">+ Novo departamento</button>
-</div>
+<div class="panel-header"><div><h3>Gestão de departamentos</h3><p class="page-description">Organize os setores e departamentos da sua empresa.</p></div><button class="btn" id="newDepartmentButton" onclick="openDepartmentForm()">+ Novo departamento</button></div>
 <div id="departmentMessage" class="message"></div>
 <div id="departmentForm" class="hidden">
 <h3 id="departmentFormTitle" style="font-size:15px;margin-bottom:18px">Cadastrar departamento</h3>
@@ -245,132 +272,47 @@ th{color:var(--muted);font-weight:700}
 <div class="field"><label>Nome do departamento *</label><input type="text" id="departmentName" required></div>
 <div class="field"><label>Descrição</label><input type="text" id="departmentDescription"></div>
 </div>
-<div class="form-actions">
-<button type="submit" class="btn" id="saveDepartmentButton">Salvar departamento</button>
-<button type="button" class="btn btn-secondary" onclick="closeDepartmentForm()">Cancelar</button>
-</div>
+<div class="form-actions"><button type="submit" class="btn" id="saveDepartmentButton">Salvar departamento</button><button type="button" class="btn btn-secondary" onclick="closeDepartmentForm()">Cancelar</button></div>
 </form>
 </div>
 </div>
 <div class="panel">
 <div class="panel-header"><h3>Departamentos cadastrados</h3><strong id="departmentCount" style="font-size:12px;color:#82918a">0 departamentos</strong></div>
-<div class="table-wrap">
-<table>
-<thead><tr><th>Nome</th><th>Descrição</th><th>Colaboradores</th><th>Data de criação</th><th>Ações</th></tr></thead>
-<tbody id="departmentsTable"><tr><td colspan="5" class="empty">Carregando departamentos...</td></tr></tbody>
-</table>
-</div>
+<div class="table-wrap"><table><thead><tr><th>Nome</th><th>Descrição</th><th>Colaboradores</th><th>Data de criação</th><th>Ações</th></tr></thead><tbody id="departmentsTable"><tr><td colspan="5" class="empty">Carregando departamentos...</td></tr></tbody></table></div>
 </div>
 </section>
 
 <section id="page-escalas" class="hidden">
 <div class="panel">
-<div class="panel-header">
-<div><h3>Modelos de escalas</h3><p class="page-description">Crie escalas semanais fixas ou ciclos personalizados de trabalho e descanso.</p></div>
-<button class="btn" id="newScheduleButton" onclick="openScheduleForm()">+ Nova escala</button>
-</div>
+<div class="panel-header"><div><h3>Modelos de escalas</h3><p class="page-description">Crie escalas semanais fixas ou ciclos personalizados de trabalho e descanso.</p></div><button class="btn" id="newScheduleButton" onclick="openScheduleForm()">+ Nova escala</button></div>
 <div id="scheduleMessage" class="message"></div>
-
 <div id="scheduleForm" class="hidden">
 <h3 id="scheduleFormTitle" style="font-size:15px;margin-bottom:18px">Cadastrar modelo de escala</h3>
 <form id="newScheduleForm">
 <div class="form-grid">
-<div class="field">
-<label>Nome da escala *</label>
-<input id="scheduleName" required placeholder="Ex.: Administrativo - manhã">
+<div class="field"><label>Nome da escala *</label><input id="scheduleName" required placeholder="Ex.: Administrativo - manhã"></div>
+<div class="field"><label>Modelo de escala</label><select id="schedulePattern" onchange="applySchedulePattern()"><option value="custom">Personalizada</option><option value="5x1">5x1 — 5 dias de trabalho e 1 folga</option><option value="6x1">6x1 — 6 dias de trabalho e 1 folga</option><option value="5x2">5x2 — 5 dias de trabalho e 2 folgas</option></select><div class="hint">O modelo preenche os dias inicialmente. Você ainda pode editar cada dia manualmente.</div></div>
+<div class="field"><label>Tipo de escala *</label><select id="scheduleType" onchange="scheduleTypeChanged()"><option value="fixed">Fixa semanal</option><option value="cyclic">Cíclica</option></select></div>
+<div class="field hidden" id="cycleLengthField"><label>Duração do ciclo (dias) *</label><input id="cycleDays" type="number" min="1" max="42" value="6"></div>
+<div class="field"><label>Carga horária semanal de referência (horas)</label><input id="scheduleWeeklyHours" type="number" min="0" max="168" step="0.5" placeholder="Ex.: 44"></div>
 </div>
-
-<div class="field">
-<label>Modelo de escala</label>
-<select id="schedulePattern" onchange="applySchedulePattern()">
-<option value="custom">Personalizada</option>
-<option value="5x1">5x1 — 5 dias de trabalho e 1 folga</option>
-<option value="6x1">6x1 — 6 dias de trabalho e 1 folga</option>
-<option value="5x2">5x2 — 5 dias de trabalho e 2 folgas</option>
-</select>
-<div class="hint">O modelo preenche os dias inicialmente. Você ainda pode editar cada dia manualmente.</div>
-</div>
-
-<div class="field">
-<label>Tipo de escala *</label>
-<select id="scheduleType" onchange="scheduleTypeChanged()">
-<option value="fixed">Fixa semanal</option>
-<option value="cyclic">Cíclica</option>
-</select>
-</div>
-
-<div class="field hidden" id="cycleLengthField">
-<label>Duração do ciclo (dias) *</label>
-<input id="cycleDays" type="number" min="1" max="42" value="6">
-<div class="hint">Informe quantos dias tem o ciclo completo, incluindo trabalho e descanso.</div>
-</div>
-
-<div class="field">
-<label>Carga horária semanal de referência (horas)</label>
-<input id="scheduleWeeklyHours" type="number" min="0" max="168" step="0.5" placeholder="Ex.: 44">
-</div>
-</div>
-
-<div class="inline-note" id="scheduleExplanation">
-Escala personalizada: configure os sete dias da semana. Marque os dias trabalhados e informe horários e intervalo. Dias desmarcados serão descanso.
-</div>
-
+<div class="inline-note" id="scheduleExplanation">Escala personalizada: configure os sete dias da semana. Marque os dias trabalhados e informe horários e intervalo. Dias desmarcados serão descanso.</div>
 <div id="scheduleDays" class="day-grid"></div>
-
-<div class="form-actions">
-<button type="submit" class="btn" id="saveScheduleButton">Salvar escala</button>
-<button type="button" class="btn btn-secondary" onclick="closeScheduleForm()">Cancelar</button>
-</div>
+<div class="form-actions"><button type="submit" class="btn" id="saveScheduleButton">Salvar escala</button><button type="button" class="btn btn-secondary" onclick="closeScheduleForm()">Cancelar</button></div>
 </form>
 </div>
 </div>
-
-<div class="panel">
-<div class="panel-header"><h3>Escalas cadastradas</h3><strong id="scheduleCount" style="font-size:12px;color:#82918a">0 escalas</strong></div>
-<div class="table-wrap">
-<table>
-<thead><tr><th>Nome</th><th>Tipo</th><th>Duração</th><th>Dias trabalhados</th><th>Horas/semana</th><th>Status</th><th>Ações</th></tr></thead>
-<tbody id="schedulesTable"><tr><td colspan="7" class="empty">Carregando escalas...</td></tr></tbody>
-</table>
-</div>
-</div>
-
-<div class="panel">
-<div class="panel-header"><h3>Escalas atribuídas aos colaboradores</h3></div>
-<div class="table-wrap">
-<table>
-<thead><tr><th>Colaborador</th><th>Modelo</th><th>Início da vigência</th><th>Fim da vigência</th></tr></thead>
-<tbody id="employeeSchedulesTable"><tr><td colspan="4" class="empty">Carregando atribuições...</td></tr></tbody>
-</table>
-</div>
-</div>
+<div class="panel"><div class="panel-header"><h3>Escalas cadastradas</h3><strong id="scheduleCount" style="font-size:12px;color:#82918a">0 escalas</strong></div><div class="table-wrap"><table><thead><tr><th>Nome</th><th>Tipo</th><th>Duração</th><th>Dias trabalhados</th><th>Horas/semana</th><th>Status</th><th>Ações</th></tr></thead><tbody id="schedulesTable"><tr><td colspan="7" class="empty">Carregando escalas...</td></tr></tbody></table></div></div>
+<div class="panel"><div class="panel-header"><h3>Escalas atribuídas aos colaboradores</h3></div><div class="table-wrap"><table><thead><tr><th>Colaborador</th><th>Modelo</th><th>Início da vigência</th><th>Fim da vigência</th></tr></thead><tbody id="employeeSchedulesTable"><tr><td colspan="4" class="empty">Carregando atribuições...</td></tr></tbody></table></div></div>
 </section>
 
 <section id="page-solicitacoes" class="hidden">
 <div class="panel">
-<div class="panel-header">
-<div>
-<h3>Solicitações dos colaboradores</h3>
-<p class="page-description">Consulte, analise e acompanhe as solicitações enviadas pelo portal Meu Ponto.</p>
-</div>
-<button class="btn btn-secondary" onclick="loadRequests()">↻ Atualizar</button>
-</div>
+<div class="panel-header"><div><h3>Solicitações dos colaboradores</h3><p class="page-description">Consulte, analise e acompanhe as solicitações enviadas pelo portal Meu Ponto.</p></div><button class="btn btn-secondary" onclick="loadRequests()">↻ Atualizar</button></div>
 <div id="requestMessage" class="message"></div>
 <div class="request-toolbar">
-<div style="flex:1;min-width:180px">
-<label style="display:block;font-size:12px;font-weight:700;margin-bottom:7px">Filtrar solicitações</label>
-<select id="requestStatusFilter" onchange="renderRequests()">
-<option value="all">Todas as solicitações</option>
-<option value="pending">Pendentes</option>
-<option value="approved">Aprovadas</option>
-<option value="rejected">Recusadas</option>
-<option value="cancelled">Canceladas</option>
-</select>
-</div>
-<div style="flex:1;min-width:180px">
-<label style="display:block;font-size:12px;font-weight:700;margin-bottom:7px">Pesquisar colaborador</label>
-<input type="search" id="requestSearch" placeholder="Nome do colaborador..." oninput="renderRequests()">
-</div>
+<div style="flex:1;min-width:180px"><label style="display:block;font-size:12px;font-weight:700;margin-bottom:7px">Filtrar solicitações</label><select id="requestStatusFilter" onchange="renderRequests()"><option value="all">Todas as solicitações</option><option value="pending">Pendentes</option><option value="approved">Aprovadas</option><option value="rejected">Recusadas</option><option value="cancelled">Canceladas</option></select></div>
+<div style="flex:1;min-width:180px"><label style="display:block;font-size:12px;font-weight:700;margin-bottom:7px">Pesquisar colaborador</label><input type="search" id="requestSearch" placeholder="Nome do colaborador..." oninput="renderRequests()"></div>
 </div>
 <div class="cards" style="margin-top:22px;margin-bottom:15px">
 <div class="card"><div class="card-label">Total</div><div class="card-number" id="requestTotal">0</div><div class="card-note">Solicitações recebidas</div></div>
@@ -378,51 +320,25 @@ Escala personalizada: configure os sete dias da semana. Marque os dias trabalhad
 <div class="card"><div class="card-label">Aprovadas</div><div class="card-number" id="requestApproved">0</div><div class="card-note">Solicitações aprovadas</div></div>
 <div class="card"><div class="card-label">Recusadas</div><div class="card-number" id="requestRejected">0</div><div class="card-note">Solicitações recusadas</div></div>
 </div>
-<div class="table-wrap">
-<table>
-<thead><tr><th>Colaborador</th><th>Tipo</th><th>Data solicitada</th><th>Enviada em</th><th>Status</th><th>Ações</th></tr></thead>
-<tbody id="requestsTable"><tr><td colspan="6" class="empty">Carregando solicitações...</td></tr></tbody>
-</table>
+<div class="table-wrap"><table><thead><tr><th>Colaborador</th><th>Tipo</th><th>Data solicitada</th><th>Enviada em</th><th>Status</th><th>Ações</th></tr></thead><tbody id="requestsTable"><tr><td colspan="6" class="empty">Carregando solicitações...</td></tr></tbody></table></div>
 </div>
-</div>
-
 <div class="panel hidden" id="requestDetailPanel">
-<div class="panel-header">
-<h3>Detalhes da solicitação</h3>
-<button class="btn btn-secondary" onclick="closeRequestDetails()">Fechar detalhes</button>
-</div>
+<div class="panel-header"><h3>Detalhes da solicitação</h3><button class="btn btn-secondary" onclick="closeRequestDetails()">Fechar detalhes</button></div>
 <div id="requestDetails"></div>
 <div id="requestDecisionArea" class="hidden">
 <div class="inline-note">A decisão será registrada no histórico da solicitação. Os dados originais enviados pelo colaborador serão preservados.</div>
-<div class="field">
-<label for="requestDecisionReason">Observação da decisão</label>
-<textarea id="requestDecisionReason" placeholder="Informe uma observação. Para recusar, o motivo é obrigatório."></textarea>
+<div class="field"><label for="requestDecisionReason">Observação da decisão</label><textarea id="requestDecisionReason" placeholder="Informe uma observação. Para recusar, o motivo é obrigatório."></textarea></div>
+<div class="form-actions"><button class="btn btn-approve" id="approveRequestButton" onclick="decideRequest('approved')">✓ Aprovar solicitação</button><button class="btn btn-reject" id="rejectRequestButton" onclick="decideRequest('rejected')">✕ Recusar solicitação</button></div>
 </div>
-<div class="form-actions">
-<button class="btn btn-approve" id="approveRequestButton" onclick="decideRequest('approved')">✓ Aprovar solicitação</button>
-<button class="btn btn-reject" id="rejectRequestButton" onclick="decideRequest('rejected')">✕ Recusar solicitação</button>
-</div>
-</div>
-<div class="panel" style="margin-top:20px;background:#fafcfb">
-<h3 style="font-size:14px;margin-bottom:12px">Histórico da solicitação</h3>
-<div id="requestHistory"><div class="empty">Carregando histórico...</div></div>
-</div>
+<div class="panel" style="margin-top:20px;background:#fafcfb"><h3 style="font-size:14px;margin-bottom:12px">Histórico da solicitação</h3><div id="requestHistory"><div class="empty">Carregando histórico...</div></div></div>
 </div>
 </section>
 
 <section id="page-ponto" class="hidden">
 <div class="panel">
-<div class="panel-header">
-<div>
-<h3>Controle de ponto e horas excedentes</h3>
-<p class="page-description">Acompanhe as horas excedentes identificadas e decida se serão pagas ou creditadas no banco de horas.</p>
-</div>
-<button class="btn btn-secondary" onclick="loadOvertime()">↻ Atualizar dados</button>
-</div>
+<div class="panel-header"><div><h3>Controle de ponto e horas excedentes</h3><p class="page-description">Acompanhe as horas excedentes identificadas e decida se serão pagas ou creditadas no banco de horas.</p></div><button class="btn btn-secondary" onclick="loadOvertime()">↻ Atualizar dados</button></div>
 <div id="overtimeMessage" class="message"></div>
-<div class="inline-note">
-As horas excedentes registradas aparecem para análise do RH. A aprovação como pagamento ou banco de horas é uma decisão administrativa. O tempo trabalhado não é apagado quando uma ocorrência é recusada.
-</div>
+<div class="inline-note">As horas excedentes registradas aparecem para análise do RH. A aprovação como pagamento ou banco de horas é uma decisão administrativa. O tempo trabalhado não é apagado quando uma ocorrência é recusada.</div>
 <div class="cards" style="margin-bottom:20px">
 <div class="card"><div class="card-label">Horas aguardando análise</div><div class="card-number" id="overtimePendingTotal">0h</div><div class="card-note" id="overtimePendingCount">0 ocorrências pendentes</div></div>
 <div class="card"><div class="card-label">Horas aprovadas</div><div class="card-number" id="overtimeApprovedTotal">0h</div><div class="card-note">Ocorrências aprovadas</div></div>
@@ -430,65 +346,23 @@ As horas excedentes registradas aparecem para análise do RH. A aprovação como
 <div class="card"><div class="card-label">Saldo do banco de horas</div><div class="card-number" id="timeBankBalance">0h</div><div class="card-note">Créditos menos débitos e compensações aprovados</div></div>
 </div>
 <div class="overtime-toolbar">
-<div class="field">
-<label>Filtrar ocorrências</label>
-<select id="overtimeStatusFilter" onchange="renderOvertime()">
-<option value="all">Todas</option>
-<option value="pending">Aguardando análise</option>
-<option value="approved">Aprovadas</option>
-<option value="rejected">Recusadas</option>
-</select>
-</div>
-<div class="field">
-<label>Pesquisar colaborador</label>
-<input type="search" id="overtimeSearch" placeholder="Nome do colaborador..." oninput="renderOvertime()">
-</div>
+<div class="field"><label>Filtrar ocorrências</label><select id="overtimeStatusFilter" onchange="renderOvertime()"><option value="all">Todas</option><option value="pending">Aguardando análise</option><option value="approved">Aprovadas</option><option value="rejected">Recusadas</option></select></div>
+<div class="field"><label>Pesquisar colaborador</label><input type="search" id="overtimeSearch" placeholder="Nome do colaborador..." oninput="renderOvertime()"></div>
 </div>
 <h3 style="font-size:15px;margin:20px 0 12px">Ocorrências de horas excedentes</h3>
-<div class="table-wrap">
-<table>
-<thead><tr><th>Colaborador</th><th>Data</th><th>Tempo excedente</th><th>Status</th><th>Classificação</th><th>Descrição</th><th>Ações</th></tr></thead>
-<tbody id="overtimeTable"><tr><td colspan="7" class="empty">Carregando ocorrências...</td></tr></tbody>
-</table>
+<div class="table-wrap"><table><thead><tr><th>Colaborador</th><th>Data</th><th>Tempo excedente</th><th>Status</th><th>Classificação</th><th>Descrição</th><th>Ações</th></tr></thead><tbody id="overtimeTable"><tr><td colspan="7" class="empty">Carregando ocorrências...</td></tr></tbody></table></div>
 </div>
-</div>
-
 <div class="panel">
-<div class="panel-header">
-<div>
-<h3>Extrato do banco de horas</h3>
-<p class="page-description">Histórico de créditos, débitos e compensações aprovados.</p>
-</div>
-<button class="btn btn-secondary" onclick="loadOvertime()">Atualizar extrato</button>
-</div>
-<div class="inline-note">
-O saldo apresentado é calculado a partir dos movimentos aprovados: créditos positivos menos débitos e compensações. Ajustes administrativos são exibidos no extrato, mas não entram nesse cálculo automático porque precisam de uma regra de sinal definida.
-</div>
-<div class="table-wrap">
-<table>
-<thead><tr><th>Colaborador</th><th>Data</th><th>Movimento</th><th>Minutos</th><th>Status</th><th>Descrição</th></tr></thead>
-<tbody id="timeBankTable"><tr><td colspan="6" class="empty">Carregando extrato...</td></tr></tbody>
-</table>
-</div>
+<div class="panel-header"><div><h3>Extrato do banco de horas</h3><p class="page-description">Histórico de créditos, débitos e compensações aprovados.</p></div><button class="btn btn-secondary" onclick="loadOvertime()">Atualizar extrato</button></div>
+<div class="inline-note">O saldo apresentado é calculado a partir dos movimentos aprovados: créditos positivos menos débitos e compensações. Ajustes administrativos são exibidos no extrato, mas não entram nesse cálculo automático porque precisam de uma regra de sinal definida.</div>
+<div class="table-wrap"><table><thead><tr><th>Colaborador</th><th>Data</th><th>Movimento</th><th>Minutos</th><th>Status</th><th>Descrição</th></tr></thead><tbody id="timeBankTable"><tr><td colspan="6" class="empty">Carregando extrato...</td></tr></tbody></table></div>
 </div>
 </section>
 
-<section id="page-relatorios" class="hidden">
-<div class="panel"><h3>Relatórios</h3><div class="empty">Módulo de relatórios em desenvolvimento.</div></div>
-</section>
-
-<section id="page-disciplinar" class="hidden">
-<div class="panel"><h3>KFYRA Disciplinar</h3><div class="empty">Módulo disciplinar em desenvolvimento.</div></div>
-</section>
-
-<section id="page-configuracoes" class="hidden">
-<div class="panel"><h3>Configurações da empresa</h3><div class="empty">Configurações em desenvolvimento.</div></div>
-</section>
-
-<section id="page-ajuda" class="hidden">
-<div class="panel"><h3>KFYRA AI</h3><div class="empty">Assistente inteligente em desenvolvimento.</div></div>
-</section>
-
+<section id="page-relatorios" class="hidden"><div class="panel"><h3>Relatórios</h3><div class="empty">Módulo de relatórios em desenvolvimento.</div></div></section>
+<section id="page-disciplinar" class="hidden"><div class="panel"><h3>KFYRA Disciplinar</h3><div class="empty">Módulo disciplinar em desenvolvimento.</div></div></section>
+<section id="page-configuracoes" class="hidden"><div class="panel"><h3>Configurações da empresa</h3><div class="empty">Configurações em desenvolvimento.</div></div></section>
+<section id="page-ajuda" class="hidden"><div class="panel"><h3>KFYRA AI</h3><div class="empty">Assistente inteligente em desenvolvimento.</div></div></section>
 </main>
 </div>
 
@@ -498,890 +372,432 @@ const SUPABASE_KEY='sb_publishable_dhAqwNSfwGj8_nBnudx_Hw_gMZpnyEL';
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 const BUCKET_COMPROVANTES='employee-request-documents';
+const BUCKET_FOTOS='profile-photos';
+const MAX_PHOTO_SIZE=2*1024*1024;
+const ALLOWED_PHOTO_TYPES=['image/jpeg','image/png','image/webp'];
 
 let currentUser=null,currentCompany=null,currentRole=null;
 let employeesData=[],departmentsData=[],schedulesData=[],scheduleDaysData=[],assignmentsData=[];
 let requestsData=[],selectedRequest=null;
 let overtimeData=[],timeBankData=[];
+let privateEmployeesData={};
 let editingEmployeeId=null,editingDepartmentId=null,editingScheduleId=null;
+let selectedPhotoFile=null,existingPhotoPath=null,employeePhotoObjectUrl=null;
 
 const canManage=()=>['admin_empresa','rh'].includes(currentRole);
 const canViewRequests=()=>['admin_empresa','rh','gerente','coordenador','supervisor'].includes(currentRole);
 const dayNames=['Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado','Domingo'];
-
 function $(id){return document.getElementById(id)}
-
-function escapeHTML(v){
- return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
-}
-
-function showBox(id,msg,type){
- const b=$(id);
- b.textContent=msg;
- b.className='message '+type;
- setTimeout(()=>b.className='message',7000);
-}
-
+function escapeHTML(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function showBox(id,msg,type){const b=$(id);b.textContent=msg;b.className='message '+type;setTimeout(()=>b.className='message',7000)}
 function showMessage(m,t){showBox('employeeMessage',m,t)}
 function showDepartmentMessage(m,t){showBox('departmentMessage',m,t)}
 function showScheduleMessage(m,t){showBox('scheduleMessage',m,t)}
 function showRequestMessage(m,t){showBox('requestMessage',m,t)}
 function showOvertimeMessage(m,t){showBox('overtimeMessage',m,t)}
-
-function formatDate(value){
- if(!value)return '—';
- const d=new Date(value+'T00:00:00');
- return Number.isNaN(d.getTime())?'—':d.toLocaleDateString('pt-BR');
-}
-
-function formatDateTime(value){
- if(!value)return '—';
- const d=new Date(value);
- return Number.isNaN(d.getTime())?'—':d.toLocaleString('pt-BR');
-}
+function formatDate(value){if(!value)return '—';const d=new Date(value+'T00:00:00');return Number.isNaN(d.getTime())?'—':d.toLocaleDateString('pt-BR')}
+function formatDateTime(value){if(!value)return '—';const d=new Date(value);return Number.isNaN(d.getTime())?'—':d.toLocaleString('pt-BR')}
+function onlyDigits(value){return String(value||'').replace(/\D/g,'')}
 
 // INICIALIZAÇÃO
 async function initializeDashboard(){
  const {data:{session},error}=await supabaseClient.auth.getSession();
- if(error||!session){
-  location.href='login.html';
-  return;
- }
+ if(error||!session){location.href='login.html';return}
  currentUser=session.user;
-
- const {data:membership,error:me}=await supabaseClient
-  .from('company_memberships')
-  .select('company_id,role')
-  .eq('user_id',currentUser.id)
-  .limit(1)
-  .maybeSingle();
-
- if(me||!membership){
-  alert('Não foi possível localizar o vínculo da sua empresa.');
-  return;
- }
-
+ const {data:membership,error:me}=await supabaseClient.from('company_memberships').select('company_id,role').eq('user_id',currentUser.id).limit(1).maybeSingle();
+ if(me||!membership){alert('Não foi possível localizar o vínculo da sua empresa.');return}
  currentRole=membership.role;
-
- const {data:company,error:ce}=await supabaseClient
-  .from('companies')
-  .select('*')
-  .eq('id',membership.company_id)
-  .single();
-
- if(ce||!company){
-  alert('Não foi possível carregar os dados da empresa.');
-  return;
- }
-
+ const {data:company,error:ce}=await supabaseClient.from('companies').select('*').eq('id',membership.company_id).single();
+ if(ce||!company){alert('Não foi possível carregar os dados da empresa.');return}
  currentCompany=company;
-
- const {data:profile}=await supabaseClient
-  .from('profiles')
-  .select('full_name')
-  .eq('id',currentUser.id)
-  .maybeSingle();
-
+ const {data:profile}=await supabaseClient.from('profiles').select('full_name').eq('id',currentUser.id).maybeSingle();
  $('userName').textContent=profile?.full_name||currentUser.email;
  $('userRole').textContent=currentRole||'Usuário';
  $('companyName').textContent=company.name||'Minha empresa';
-
- const plans={
-  '700':'Até 700 colaboradores',
-  '1400':'Até 1.400 colaboradores',
-  'enterprise':'Enterprise'
- };
-
+ const plans={'700':'Até 700 colaboradores','1400':'Até 1.400 colaboradores','enterprise':'Enterprise'};
  const plan=plans[company.plan_code]||'Plano contratado';
  $('companyPlan').textContent=plan;
  $('planIndicator').textContent=plan;
-
- ['newEmployeeButton','newDepartmentButton','newScheduleButton'].forEach(id=>{
-  $(id).classList.toggle('hidden',!canManage());
- });
-
+ ['newEmployeeButton','newDepartmentButton','newScheduleButton'].forEach(id=>$(id).classList.toggle('hidden',!canManage()));
+ $('employeePrivateSection').classList.toggle('hidden',!canManage());
+ $('employeeBankSection').classList.toggle('hidden',!canManage());
  const requestButton=document.querySelector('.menu button[onclick*="solicitacoes"]');
- if(requestButton){
-  requestButton.classList.toggle('hidden',!canViewRequests());
- }
-
+ if(requestButton)requestButton.classList.toggle('hidden',!canViewRequests());
  await loadDepartments();
  await loadSchedules();
  await loadEmployees();
+}
+
+// DADOS PRIVADOS DOS COLABORADORES
+async function loadPrivateEmployeeData(){
+ privateEmployeesData={};
+ if(!canManage())return;
+ const {data,error}=await supabaseClient
+  .from('employee_private_data')
+  .select('employee_id,company_id,cpf,salary,pis_nit,first_job,bank_name,bank_code,bank_branch,bank_account,bank_account_digit,bank_account_type,pix_key,pix_key_type')
+  .eq('company_id',currentCompany.id);
+ if(error){
+  console.error('Erro ao carregar dados privados:',error);
+  showMessage('Não foi possível carregar os dados privados dos colaboradores: '+error.message,'error');
+  return;
+ }
+ (data||[]).forEach(row=>{privateEmployeesData[row.employee_id]=row});
+}
+
+function fillPrivateEmployeeForm(row){
+ row=row||{};
+ $('employeeCPF').value=row.cpf||'';
+ $('employeeSalary').value=row.salary??'';
+ $('employeePisNit').value=row.pis_nit||'';
+ $('employeeFirstJob').checked=!!row.first_job;
+ $('employeeBankName').value=row.bank_name||'';
+ $('employeeBankCode').value=row.bank_code||'';
+ $('employeeBankBranch').value=row.bank_branch||'';
+ $('employeeBankAccount').value=row.bank_account||'';
+ $('employeeBankAccountDigit').value=row.bank_account_digit||'';
+ $('employeeBankAccountType').value=row.bank_account_type||'';
+ $('employeePixKey').value=row.pix_key||'';
+ $('employeePixKeyType').value=row.pix_key_type||'';
+ toggleFirstJobFields();
+}
+
+function toggleFirstJobFields(){
+ const first=$('employeeFirstJob').checked;
+ $('employeePisNit').disabled=first;
+ if(first)$('employeePisNit').value='';
+}
+
+$('employeeFirstJob').addEventListener('change',toggleFirstJobFields);
+
+async function savePrivateEmployeeData(employeeId){
+ if(!canManage())return;
+ const payload={
+  company_id:currentCompany.id,
+  employee_id:employeeId,
+  cpf:onlyDigits($('employeeCPF').value)||null,
+  salary:$('employeeSalary').value===''?null:Number($('employeeSalary').value),
+  pis_nit:$('employeeFirstJob').checked?null:($('employeePisNit').value.trim()||null),
+  first_job:$('employeeFirstJob').checked,
+  bank_name:$('employeeBankName').value.trim()||null,
+  bank_code:$('employeeBankCode').value.trim()||null,
+  bank_branch:$('employeeBankBranch').value.trim()||null,
+  bank_account:$('employeeBankAccount').value.trim()||null,
+  bank_account_digit:$('employeeBankAccountDigit').value.trim()||null,
+  bank_account_type:$('employeeBankAccountType').value||null,
+  pix_key:$('employeePixKey').value.trim()||null,
+  pix_key_type:$('employeePixKeyType').value||null
+ };
+ const existing=privateEmployeesData[employeeId];
+ let result;
+ if(existing){
+  result=await supabaseClient.from('employee_private_data').update(payload).eq('employee_id',employeeId).eq('company_id',currentCompany.id);
+ }else{
+  result=await supabaseClient.from('employee_private_data').insert(payload);
+ }
+ if(result.error)throw new Error('O cadastro principal foi salvo, mas os dados privados não foram salvos: '+result.error.message);
+ privateEmployeesData[employeeId]=payload;
+}
+
+function clearEmployeePhoto(){
+ selectedPhotoFile=null;
+ $('employeePhoto').value='';
+ if(employeePhotoObjectUrl){URL.revokeObjectURL(employeePhotoObjectUrl);employeePhotoObjectUrl=null}
+ if(existingPhotoPath){
+  loadEmployeePhotoPreview(existingPhotoPath);
+ }else{
+  $('employeePhotoPreview').classList.add('hidden');
+  $('employeePhotoPlaceholder').classList.remove('hidden');
+ }
+}
+
+$('employeePhoto').addEventListener('change',()=>{
+ const file=$('employeePhoto').files?.[0];
+ selectedPhotoFile=null;
+ if(!file)return;
+ if(!ALLOWED_PHOTO_TYPES.includes(file.type)){
+  showMessage('Formato inválido. Utilize JPG, PNG ou WEBP.','error');
+  $('employeePhoto').value='';
+  return;
+ }
+ if(file.size>MAX_PHOTO_SIZE){
+  showMessage('A foto ultrapassa o limite de 2 MB. Escolha uma imagem menor.','error');
+  $('employeePhoto').value='';
+  return;
+ }
+ selectedPhotoFile=file;
+ if(employeePhotoObjectUrl)URL.revokeObjectURL(employeePhotoObjectUrl);
+ employeePhotoObjectUrl=URL.createObjectURL(file);
+ $('employeePhotoPreview').src=employeePhotoObjectUrl;
+ $('employeePhotoPreview').classList.remove('hidden');
+ $('employeePhotoPlaceholder').classList.add('hidden');
+});
+
+async function loadEmployeePhotoPreview(path){
+ if(!path){
+  $('employeePhotoPreview').classList.add('hidden');
+  $('employeePhotoPlaceholder').classList.remove('hidden');
+  return;
+ }
+ try{
+  const {data,error}=await supabaseClient.storage.from(BUCKET_FOTOS).createSignedUrl(path,3600);
+  if(error)throw error;
+  $('employeePhotoPreview').src=data.signedUrl;
+  $('employeePhotoPreview').classList.remove('hidden');
+  $('employeePhotoPlaceholder').classList.add('hidden');
+ }catch(err){
+  console.error('Erro ao gerar foto:',err);
+  $('employeePhotoPreview').classList.add('hidden');
+  $('employeePhotoPlaceholder').classList.remove('hidden');
+ }
+}
+
+async function uploadEmployeePhoto(employeeId){
+ if(!selectedPhotoFile)return existingPhotoPath;
+ const extension=selectedPhotoFile.type==='image/png'?'png':selectedPhotoFile.type==='image/webp'?'webp':'jpg';
+ const path=`${currentCompany.id}/${employeeId}/${Date.now()}.${extension}`;
+ const {error:uploadError}=await supabaseClient.storage.from(BUCKET_FOTOS).upload(path,selectedPhotoFile,{contentType:selectedPhotoFile.type,upsert:true});
+ if(uploadError)throw new Error('Não foi possível enviar a foto: '+uploadError.message);
+ const {error:updateError}=await supabaseClient.from('employees').update({profile_photo_url:path}).eq('id',employeeId).eq('company_id',currentCompany.id);
+ if(updateError)throw new Error('A foto foi enviada, mas não foi possível vincular ao colaborador: '+updateError.message);
+ if(existingPhotoPath&&existingPhotoPath!==path){
+  await supabaseClient.storage.from(BUCKET_FOTOS).remove([existingPhotoPath]);
+ }
+ existingPhotoPath=path;
+ selectedPhotoFile=null;
+ return path;
 }
 
 // DEPARTAMENTOS
 async function loadDepartments(){
  if(!currentCompany)return;
-
- const {data,error}=await supabaseClient
-  .from('departamentos')
-  .select('id,id_da_empresa,nome,descrição,criado_em')
-  .eq('id_da_empresa',currentCompany.id)
-  .order('nome');
-
- if(error){
-  $('departmentsTable').innerHTML=`<tr><td colspan="5" class="empty">Erro: ${escapeHTML(error.message)}</td></tr>`;
-  return;
- }
-
+ const {data,error}=await supabaseClient.from('departamentos').select('id,id_da_empresa,nome,descrição,criado_em').eq('id_da_empresa',currentCompany.id).order('nome');
+ if(error){$('departmentsTable').innerHTML=`<tr><td colspan="5" class="empty">Erro: ${escapeHTML(error.message)}</td></tr>`;return}
  departmentsData=data||[];
  $('totalDepartments').textContent=departmentsData.length;
- $('departmentCount').textContent=departmentsData.length+
-  (departmentsData.length===1?' departamento':' departamentos');
-
- renderDepartments();
- updateDepartmentOptions();
+ $('departmentCount').textContent=departmentsData.length+(departmentsData.length===1?' departamento':' departamentos');
+ renderDepartments();updateDepartmentOptions();
 }
-
 function renderDepartments(){
  if(!$('departmentsTable'))return;
-
- if(!departmentsData.length){
-  $('departmentsTable').innerHTML='<tr><td colspan="5" class="empty">Nenhum departamento cadastrado.</td></tr>';
-  return;
- }
-
+ if(!departmentsData.length){$('departmentsTable').innerHTML='<tr><td colspan="5" class="empty">Nenhum departamento cadastrado.</td></tr>';return}
  $('departmentsTable').innerHTML=departmentsData.map(d=>{
   const count=employeesData.filter(e=>e.department_id===d.id).length;
   const date=d.criado_em?new Date(d.criado_em).toLocaleDateString('pt-BR'):'—';
-
-  const actions=canManage()
-   ?`<div class="actions"><button class="btn btn-edit" onclick="editDepartment('${d.id}')">Editar</button><button class="btn btn-delete" onclick="deleteDepartment('${d.id}')">Excluir</button></div>`
-   :'—';
-
-  return `<tr>
-   <td><strong>${escapeHTML(d.nome)}</strong></td>
-   <td>${escapeHTML(d['descrição']||'—')}</td>
-   <td>${count}</td>
-   <td>${date}</td>
-   <td>${actions}</td>
-  </tr>`;
+  const actions=canManage()?`<div class="actions"><button class="btn btn-edit" onclick="editDepartment('${d.id}')">Editar</button><button class="btn btn-delete" onclick="deleteDepartment('${d.id}')">Excluir</button></div>`:'—';
+  return `<tr><td><strong>${escapeHTML(d.nome)}</strong></td><td>${escapeHTML(d['descrição']||'—')}</td><td>${count}</td><td>${date}</td><td>${actions}</td></tr>`;
  }).join('');
 }
-
 function updateDepartmentOptions(){
- const s=$('employeeDepartment');
- if(!s)return;
-
- const old=s.value;
- s.innerHTML='<option value="">Sem departamento</option>';
-
- departmentsData.forEach(d=>{
-  const o=document.createElement('option');
-  o.value=d.id;
-  o.textContent=d.nome;
-  s.appendChild(o);
- });
-
+ const s=$('employeeDepartment');if(!s)return;
+ const old=s.value;s.innerHTML='<option value="">Sem departamento</option>';
+ departmentsData.forEach(d=>{const o=document.createElement('option');o.value=d.id;o.textContent=d.nome;s.appendChild(o)});
  if(departmentsData.some(d=>d.id===old))s.value=old;
 }
-
 function openDepartmentForm(){
- if(!canManage())return;
- editingDepartmentId=null;
- $('newDepartmentForm').reset();
- $('departmentFormTitle').textContent='Cadastrar departamento';
- $('saveDepartmentButton').textContent='Salvar departamento';
- $('departmentForm').classList.remove('hidden');
+ if(!canManage())return;editingDepartmentId=null;$('newDepartmentForm').reset();$('departmentFormTitle').textContent='Cadastrar departamento';$('saveDepartmentButton').textContent='Salvar departamento';$('departmentForm').classList.remove('hidden');
 }
-
-function closeDepartmentForm(){
- $('departmentForm').classList.add('hidden');
- $('newDepartmentForm').reset();
- editingDepartmentId=null;
-}
-
+function closeDepartmentForm(){$('departmentForm').classList.add('hidden');$('newDepartmentForm').reset();editingDepartmentId=null}
 function editDepartment(id){
- const d=departmentsData.find(x=>x.id===id);
- if(!d||!canManage())return;
-
- editingDepartmentId=id;
- $('departmentName').value=d.nome||'';
- $('departmentDescription').value=d['descrição']||'';
- $('departmentFormTitle').textContent='Editar departamento';
- $('saveDepartmentButton').textContent='Salvar alterações';
- $('departmentForm').classList.remove('hidden');
- scrollTo({top:0,behavior:'smooth'});
+ const d=departmentsData.find(x=>x.id===id);if(!d||!canManage())return;
+ editingDepartmentId=id;$('departmentName').value=d.nome||'';$('departmentDescription').value=d['descrição']||'';$('departmentFormTitle').textContent='Editar departamento';$('saveDepartmentButton').textContent='Salvar alterações';$('departmentForm').classList.remove('hidden');scrollTo({top:0,behavior:'smooth'});
 }
-
 $('newDepartmentForm').addEventListener('submit',async e=>{
- e.preventDefault();
- if(!canManage())return;
-
- const payload={
-  nome:$('departmentName').value.trim(),
-  'descrição':$('departmentDescription').value.trim()||null
- };
-
- if(!payload.nome){
-  showDepartmentMessage('Informe o nome do departamento.','error');
-  return;
- }
-
- const editing=!!editingDepartmentId;
- const b=$('saveDepartmentButton');
- b.disabled=true;
- b.textContent='Salvando...';
-
- const result=editing
-  ?await supabaseClient.from('departamentos').update(payload).eq('id',editingDepartmentId).eq('id_da_empresa',currentCompany.id)
-  :await supabaseClient.from('departamentos').insert({...payload,id_da_empresa:currentCompany.id});
-
- b.disabled=false;
- b.textContent=editing?'Salvar alterações':'Salvar departamento';
-
- if(result.error){
-  showDepartmentMessage('Não foi possível salvar: '+result.error.message,'error');
-  return;
- }
-
- closeDepartmentForm();
- showDepartmentMessage('Departamento salvo com sucesso.','success');
- await loadDepartments();
- await loadEmployees();
+ e.preventDefault();if(!canManage())return;
+ const payload={nome:$('departmentName').value.trim(),'descrição':$('departmentDescription').value.trim()||null};
+ if(!payload.nome){showDepartmentMessage('Informe o nome do departamento.','error');return}
+ const editing=!!editingDepartmentId,b=$('saveDepartmentButton');b.disabled=true;b.textContent='Salvando...';
+ const result=editing?await supabaseClient.from('departamentos').update(payload).eq('id',editingDepartmentId).eq('id_da_empresa',currentCompany.id):await supabaseClient.from('departamentos').insert({...payload,id_da_empresa:currentCompany.id});
+ b.disabled=false;b.textContent=editing?'Salvar alterações':'Salvar departamento';
+ if(result.error){showDepartmentMessage('Não foi possível salvar: '+result.error.message,'error');return}
+ closeDepartmentForm();showDepartmentMessage('Departamento salvo com sucesso.','success');await loadDepartments();await loadEmployees();
 });
-
 async function deleteDepartment(id){
- const d=departmentsData.find(x=>x.id===id);
- if(!d||!canManage())return;
-
+ const d=departmentsData.find(x=>x.id===id);if(!d||!canManage())return;
  if(!confirm(`Excluir o departamento "${d.nome}"? Colaboradores vinculados poderão ficar sem departamento.`))return;
-
- const {error}=await supabaseClient
-  .from('departamentos')
-  .delete()
-  .eq('id',id)
-  .eq('id_da_empresa',currentCompany.id);
-
- if(error){
-  showDepartmentMessage('Não foi possível excluir: '+error.message,'error');
-  return;
- }
-
- showDepartmentMessage('Departamento excluído.','success');
- await loadDepartments();
- await loadEmployees();
+ const {error}=await supabaseClient.from('departamentos').delete().eq('id',id).eq('id_da_empresa',currentCompany.id);
+ if(error){showDepartmentMessage('Não foi possível excluir: '+error.message,'error');return}
+ showDepartmentMessage('Departamento excluído.','success');await loadDepartments();await loadEmployees();
 }
 
-// =====================================================
-// ESCALAS - MODELOS FIXOS, CICLICOS E PERSONALIZADOS
-// =====================================================
-
+// ESCALAS
 async function loadSchedules(){
  if(!currentCompany)return;
-
- const {data:templates,error}=await supabaseClient
-  .from('work_schedule_templates')
-  .select('id,company_id,name,schedule_type,cycle_days,weekly_hours,active,created_at')
-  .eq('company_id',currentCompany.id)
-  .order('created_at',{ascending:false});
-
- if(error){
-  $('schedulesTable').innerHTML=`<tr><td colspan="7" class="empty">Erro ao carregar escalas: ${escapeHTML(error.message)}</td></tr>`;
-  showScheduleMessage('Verifique as tabelas e permissões de escalas: '+error.message,'error');
-  return;
- }
-
- schedulesData=templates||[];
- const ids=schedulesData.map(s=>s.id);
-
+ const {data:templates,error}=await supabaseClient.from('work_schedule_templates').select('id,company_id,name,schedule_type,cycle_days,weekly_hours,active,created_at').eq('company_id',currentCompany.id).order('created_at',{ascending:false});
+ if(error){$('schedulesTable').innerHTML=`<tr><td colspan="7" class="empty">Erro ao carregar escalas: ${escapeHTML(error.message)}</td></tr>`;showScheduleMessage('Verifique as tabelas e permissões de escalas: '+error.message,'error');return}
+ schedulesData=templates||[];const ids=schedulesData.map(s=>s.id);
  if(ids.length){
-  const {data:days,error:de}=await supabaseClient
-   .from('work_schedule_template_days')
-   .select('id,schedule_id,day_number,is_working,start_time,end_time,break_minutes')
-   .in('schedule_id',ids)
-   .order('day_number');
-
-  if(de){
-   showScheduleMessage('Erro ao carregar dias das escalas: '+de.message,'error');
-   return;
-  }
-
+  const {data:days,error:de}=await supabaseClient.from('work_schedule_template_days').select('id,schedule_id,day_number,is_working,start_time,end_time,break_minutes').in('schedule_id',ids).order('day_number');
+  if(de){showScheduleMessage('Erro ao carregar dias das escalas: '+de.message,'error');return}
   scheduleDaysData=days||[];
- }else{
-  scheduleDaysData=[];
- }
-
- const {data:assign,error:ae}=await supabaseClient
-  .from('employee_work_schedules')
-  .select('id,company_id,employee_id,schedule_id,effective_from,effective_until,created_at')
-  .eq('company_id',currentCompany.id)
-  .order('effective_from',{ascending:false});
-
- if(ae){
-  showScheduleMessage('Erro ao carregar atribuições: '+ae.message,'error');
-  assignmentsData=[];
- }else{
-  assignmentsData=assign||[];
- }
-
- renderSchedules();
- updateScheduleOptions();
- renderEmployeeScheduleAssignments();
+ }else scheduleDaysData=[];
+ const {data:assign,error:ae}=await supabaseClient.from('employee_work_schedules').select('id,company_id,employee_id,schedule_id,effective_from,effective_until,created_at').eq('company_id',currentCompany.id).order('effective_from',{ascending:false});
+ if(ae){showScheduleMessage('Erro ao carregar atribuições: '+ae.message,'error');assignmentsData=[]}else assignmentsData=assign||[];
+ renderSchedules();updateScheduleOptions();renderEmployeeScheduleAssignments();
 }
-
-function scheduleLabel(s){
- return s.schedule_type==='cyclic'?'Cíclica':'Fixa semanal';
-}
-
-function getScheduleDays(id){
- return scheduleDaysData.filter(d=>d.schedule_id===id);
-}
-
+function scheduleLabel(s){return s.schedule_type==='cyclic'?'Cíclica':'Fixa semanal'}
+function getScheduleDays(id){return scheduleDaysData.filter(d=>d.schedule_id===id)}
 function renderSchedules(){
- if(!schedulesData.length){
-  $('schedulesTable').innerHTML='<tr><td colspan="7" class="empty">Nenhuma escala cadastrada. Clique em “Nova escala”.</td></tr>';
-  $('scheduleCount').textContent='0 escalas';
-  return;
- }
-
+ if(!schedulesData.length){$('schedulesTable').innerHTML='<tr><td colspan="7" class="empty">Nenhuma escala cadastrada. Clique em “Nova escala”.</td></tr>';$('scheduleCount').textContent='0 escalas';return}
  $('scheduleCount').textContent=schedulesData.length+(schedulesData.length===1?' escala':' escalas');
-
  $('schedulesTable').innerHTML=schedulesData.map(s=>{
-  const days=getScheduleDays(s.id);
-  const worked=days.filter(d=>d.is_working).length;
-  const duration=s.schedule_type==='cyclic'?`${s.cycle_days} dias`:'7 dias';
-
-  const actions=canManage()
-   ?`<div class="actions"><button class="btn btn-edit" onclick="editSchedule('${s.id}')">Editar</button><button class="btn ${s.active?'btn-delete':'btn-invite'}" onclick="toggleSchedule('${s.id}',${!s.active})">${s.active?'Desativar':'Ativar'}</button></div>`
-   :'—';
-
-  return `<tr>
-   <td><strong>${escapeHTML(s.name)}</strong></td>
-   <td>${scheduleLabel(s)}</td>
-   <td>${duration}</td>
-   <td>${worked} de ${days.length}</td>
-   <td>${s.weekly_hours??'—'}</td>
-   <td><span class="badge ${s.active?'':'inactive'}">${s.active?'Ativa':'Inativa'}</span></td>
-   <td>${actions}</td>
-  </tr>`;
+  const days=getScheduleDays(s.id),worked=days.filter(d=>d.is_working).length,duration=s.schedule_type==='cyclic'?`${s.cycle_days} dias`:'7 dias';
+  const actions=canManage()?`<div class="actions"><button class="btn btn-edit" onclick="editSchedule('${s.id}')">Editar</button><button class="btn ${s.active?'btn-delete':'btn-invite'}" onclick="toggleSchedule('${s.id}',${!s.active})">${s.active?'Desativar':'Ativar'}</button></div>`:'—';
+  return `<tr><td><strong>${escapeHTML(s.name)}</strong></td><td>${scheduleLabel(s)}</td><td>${duration}</td><td>${worked} de ${days.length}</td><td>${s.weekly_hours??'—'}</td><td><span class="badge ${s.active?'':'inactive'}">${s.active?'Ativa':'Inativa'}</span></td><td>${actions}</td></tr>`;
  }).join('');
 }
-
 function updateScheduleOptions(){
- const select=$('employeeSchedule');
- if(!select)return;
-
- const old=select.value;
- select.innerHTML='<option value="">Sem escala atribuída</option>';
-
- schedulesData.filter(s=>s.active).forEach(s=>{
-  const o=document.createElement('option');
-  o.value=s.id;
-  o.textContent=`${s.name} (${scheduleLabel(s)})`;
-  select.appendChild(o);
- });
-
+ const select=$('employeeSchedule');if(!select)return;
+ const old=select.value;select.innerHTML='<option value="">Sem escala atribuída</option>';
+ schedulesData.filter(s=>s.active).forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=`${s.name} (${scheduleLabel(s)})`;select.appendChild(o)});
  if([...select.options].some(o=>o.value===old))select.value=old;
 }
-
 function collectScheduleDayInputs(){
  return [...document.querySelectorAll('#scheduleDays .day-row')].map(row=>{
-  const check=row.querySelector('.work-day');
-  const day=Number(check.dataset.day);
-  const working=check.checked;
-
-  return {
-   day_number:day,
-   is_working:working,
-   start_time:working?(row.querySelector('.day-start').value||null):null,
-   end_time:working?(row.querySelector('.day-end').value||null):null,
-   break_minutes:working?(parseInt(row.querySelector('.day-break').value,10)||0):0
-  };
+  const check=row.querySelector('.work-day'),day=Number(check.dataset.day),working=check.checked;
+  return {day_number:day,is_working:working,start_time:working?(row.querySelector('.day-start').value||null):null,end_time:working?(row.querySelector('.day-end').value||null):null,break_minutes:working?(parseInt(row.querySelector('.day-break').value,10)||0):0};
  });
 }
-
 function buildScheduleDays(existing=[]){
- const type=$('scheduleType').value;
- const cyclic=type==='cyclic';
-
- $('cycleLengthField').classList.toggle('hidden',!cyclic);
-
- $('scheduleExplanation').textContent=cyclic
-  ?'Escala cíclica: configure cada dia do ciclo. O Dia 1 se repete após o último dia informado. Os dias de trabalho e descanso são definidos por você.'
-  :'Escala fixa: configure os sete dias da semana. Dia 1 = segunda-feira e Dia 7 = domingo. Os dias desmarcados serão descanso.';
-
- let count=7;
-
- if(cyclic){
-  count=Math.max(1,Math.min(42,parseInt($('cycleDays').value,10)||6));
- }
-
+ const type=$('scheduleType').value,cyclic=type==='cyclic';$('cycleLengthField').classList.toggle('hidden',!cyclic);
+ $('scheduleExplanation').textContent=cyclic?'Escala cíclica: configure cada dia do ciclo. O Dia 1 se repete após o último dia informado. Os dias de trabalho e descanso são definidos por você.':'Escala fixa: configure os sete dias da semana. Dia 1 = segunda-feira e Dia 7 = domingo. Os dias desmarcados serão descanso.';
+ let count=cyclic?Math.max(1,Math.min(42,parseInt($('cycleDays').value,10)||6)):7;
  const labels=cyclic?Array.from({length:count},(_,i)=>`Dia ${i+1}`):dayNames;
-
  $('scheduleDays').innerHTML=labels.map((label,i)=>{
-  const day=existing.find(d=>Number(d.day_number)===i+1);
-  const working=day?Boolean(day.is_working):(i<5);
-  const start=day?.start_time?.slice(0,5)||'08:00';
-  const end=day?.end_time?.slice(0,5)||'17:00';
-  const br=day?.break_minutes??60;
-
-  return `<div class="day-row">
-   <div>
-    <label class="day-check">
-     <input type="checkbox" class="work-day" data-day="${i+1}" ${working?'checked':''} onchange="toggleDayInputs(this)">
-     ${label}
-    </label>
-    <div class="hint">${working?'Dia de trabalho':'Dia de descanso'}</div>
-   </div>
-   <div class="field">
-    <label>Entrada</label>
-    <input type="time" class="day-start" data-day="${i+1}" value="${start}" ${working?'':'disabled'}>
-   </div>
-   <div class="field">
-    <label>Saída</label>
-    <input type="time" class="day-end" data-day="${i+1}" value="${end}" ${working?'':'disabled'}>
-   </div>
-   <div class="field">
-    <label>Intervalo (min)</label>
-    <input type="number" min="0" max="600" class="day-break" data-day="${i+1}" value="${br}" ${working?'':'disabled'}>
-   </div>
-  </div>`;
+  const day=existing.find(d=>Number(d.day_number)===i+1),working=day?Boolean(day.is_working):(i<5),start=day?.start_time?.slice(0,5)||'08:00',end=day?.end_time?.slice(0,5)||'17:00',br=day?.break_minutes??60;
+  return `<div class="day-row"><div><label class="day-check"><input type="checkbox" class="work-day" data-day="${i+1}" ${working?'checked':''} onchange="toggleDayInputs(this)">${label}</label><div class="hint">${working?'Dia de trabalho':'Dia de descanso'}</div></div><div class="field"><label>Entrada</label><input type="time" class="day-start" data-day="${i+1}" value="${start}" ${working?'':'disabled'}></div><div class="field"><label>Saída</label><input type="time" class="day-end" data-day="${i+1}" value="${end}" ${working?'':'disabled'}></div><div class="field"><label>Intervalo (min)</label><input type="number" min="0" max="600" class="day-break" data-day="${i+1}" value="${br}" ${working?'':'disabled'}></div></div>`;
  }).join('');
 }
-
-function toggleDayInputs(check){
- const row=check.closest('.day-row');
- row.querySelectorAll('.day-start,.day-end,.day-break').forEach(el=>el.disabled=!check.checked);
- row.querySelector('.hint').textContent=check.checked?'Dia de trabalho':'Dia de descanso';
-}
-
-function scheduleTypeChanged(){
- $('schedulePattern').value='custom';
- buildScheduleDays();
-}
-
+function toggleDayInputs(check){const row=check.closest('.day-row');row.querySelectorAll('.day-start,.day-end,.day-break').forEach(el=>el.disabled=!check.checked);row.querySelector('.hint').textContent=check.checked?'Dia de trabalho':'Dia de descanso'}
+function scheduleTypeChanged(){$('schedulePattern').value='custom';buildScheduleDays()}
 function applySchedulePattern(){
- const pattern=$('schedulePattern').value;
- let type='fixed';
- let cycle=7;
- let workingDays=5;
-
- if(pattern==='5x1'){
-  type='cyclic';
-  cycle=6;
-  workingDays=5;
- }else if(pattern==='6x1'){
-  type='cyclic';
-  cycle=7;
-  workingDays=6;
- }else if(pattern==='5x2'){
-  type='fixed';
-  cycle=7;
-  workingDays=5;
- }else{
-  buildScheduleDays();
-  return;
- }
-
- $('scheduleType').value=type;
- $('cycleDays').value=cycle;
-
- const rows=Array.from({length:cycle},(_,i)=>({
-  day_number:i+1,
-  is_working:i<workingDays,
-  start_time:'08:00',
-  end_time:'17:00',
-  break_minutes:60
- }));
-
+ const pattern=$('schedulePattern').value;let type='fixed',cycle=7,workingDays=5;
+ if(pattern==='5x1'){type='cyclic';cycle=6;workingDays=5}
+ else if(pattern==='6x1'){type='cyclic';cycle=7;workingDays=6}
+ else if(pattern==='5x2'){type='fixed';cycle=7;workingDays=5}
+ else{buildScheduleDays();return}
+ $('scheduleType').value=type;$('cycleDays').value=cycle;
+ const rows=Array.from({length:cycle},(_,i)=>({day_number:i+1,is_working:i<workingDays,start_time:'08:00',end_time:'17:00',break_minutes:60}));
  buildScheduleDays(rows);
 }
-
 $('scheduleType').addEventListener('change',scheduleTypeChanged);
-
 $('cycleDays').addEventListener('input',()=>{
  if($('scheduleType').value!=='cyclic')return;
-
- const current=collectScheduleDayInputs();
- const count=Math.max(1,Math.min(42,parseInt($('cycleDays').value,10)||1));
-
- const adjusted=Array.from({length:count},(_,i)=>{
-  const old=current.find(d=>d.day_number===i+1);
-  return old||{
-   day_number:i+1,
-   is_working:i<5,
-   start_time:'08:00',
-   end_time:'17:00',
-   break_minutes:60
-  };
- });
-
- $('schedulePattern').value='custom';
- buildScheduleDays(adjusted);
+ const current=collectScheduleDayInputs(),count=Math.max(1,Math.min(42,parseInt($('cycleDays').value,10)||1));
+ const adjusted=Array.from({length:count},(_,i)=>current.find(d=>d.day_number===i+1)||{day_number:i+1,is_working:i<5,start_time:'08:00',end_time:'17:00',break_minutes:60});
+ $('schedulePattern').value='custom';buildScheduleDays(adjusted);
 });
-
 function openScheduleForm(){
- if(!canManage())return;
-
- editingScheduleId=null;
- $('newScheduleForm').reset();
- $('schedulePattern').value='custom';
- $('scheduleType').value='fixed';
- $('cycleDays').value=6;
- $('scheduleFormTitle').textContent='Cadastrar modelo de escala';
- $('saveScheduleButton').textContent='Salvar escala';
- buildScheduleDays();
- $('scheduleForm').classList.remove('hidden');
- scrollTo({top:0,behavior:'smooth'});
+ if(!canManage())return;editingScheduleId=null;$('newScheduleForm').reset();$('schedulePattern').value='custom';$('scheduleType').value='fixed';$('cycleDays').value=6;$('scheduleFormTitle').textContent='Cadastrar modelo de escala';$('saveScheduleButton').textContent='Salvar escala';buildScheduleDays();$('scheduleForm').classList.remove('hidden');scrollTo({top:0,behavior:'smooth'});
 }
-
-function closeScheduleForm(){
- $('scheduleForm').classList.add('hidden');
- $('newScheduleForm').reset();
- editingScheduleId=null;
-}
-
+function closeScheduleForm(){$('scheduleForm').classList.add('hidden');$('newScheduleForm').reset();editingScheduleId=null}
 function editSchedule(id){
- if(!canManage())return;
-
- const s=schedulesData.find(x=>x.id===id);
- if(!s)return;
-
- editingScheduleId=id;
- $('scheduleName').value=s.name;
- $('scheduleType').value=s.schedule_type;
- $('schedulePattern').value='custom';
- $('cycleDays').value=s.cycle_days||6;
- $('scheduleWeeklyHours').value=s.weekly_hours??'';
- buildScheduleDays(getScheduleDays(id));
- $('scheduleFormTitle').textContent='Editar modelo de escala';
- $('saveScheduleButton').textContent='Salvar alterações';
- $('scheduleForm').classList.remove('hidden');
- scrollTo({top:0,behavior:'smooth'});
+ if(!canManage())return;const s=schedulesData.find(x=>x.id===id);if(!s)return;
+ editingScheduleId=id;$('scheduleName').value=s.name;$('scheduleType').value=s.schedule_type;$('schedulePattern').value='custom';$('cycleDays').value=s.cycle_days||6;$('scheduleWeeklyHours').value=s.weekly_hours??'';buildScheduleDays(getScheduleDays(id));$('scheduleFormTitle').textContent='Editar modelo de escala';$('saveScheduleButton').textContent='Salvar alterações';$('scheduleForm').classList.remove('hidden');scrollTo({top:0,behavior:'smooth'});
 }
-
 async function toggleSchedule(id,active){
- if(!canManage())return;
-
- const {error}=await supabaseClient
-  .from('work_schedule_templates')
-  .update({active})
-  .eq('id',id)
-  .eq('company_id',currentCompany.id);
-
- if(error){
-  showScheduleMessage('Não foi possível atualizar: '+error.message,'error');
-  return;
- }
-
- showScheduleMessage(active?'Escala ativada.':'Escala desativada.','success');
- await loadSchedules();
+ if(!canManage())return;const {error}=await supabaseClient.from('work_schedule_templates').update({active}).eq('id',id).eq('company_id',currentCompany.id);
+ if(error){showScheduleMessage('Não foi possível atualizar: '+error.message,'error');return}
+ showScheduleMessage(active?'Escala ativada.':'Escala desativada.','success');await loadSchedules();
 }
-
 $('newScheduleForm').addEventListener('submit',async e=>{
- e.preventDefault();
- if(!canManage())return;
-
- const name=$('scheduleName').value.trim();
- const type=$('scheduleType').value;
- const cycle=type==='cyclic'?parseInt($('cycleDays').value,10):7;
-
- if(!name){
-  showScheduleMessage('Informe o nome da escala.','error');
-  return;
- }
-
- if(type==='cyclic'&&(!Number.isInteger(cycle)||cycle<1||cycle>42)){
-  showScheduleMessage('O ciclo deve ter entre 1 e 42 dias.','error');
-  return;
- }
-
+ e.preventDefault();if(!canManage())return;
+ const name=$('scheduleName').value.trim(),type=$('scheduleType').value,cycle=type==='cyclic'?parseInt($('cycleDays').value,10):7;
+ if(!name){showScheduleMessage('Informe o nome da escala.','error');return}
+ if(type==='cyclic'&&(!Number.isInteger(cycle)||cycle<1||cycle>42)){showScheduleMessage('O ciclo deve ter entre 1 e 42 dias.','error');return}
  const rows=collectScheduleDayInputs();
-
- if(rows.length!==cycle){
-  showScheduleMessage('A quantidade de dias configurados não corresponde à duração da escala.','error');
-  return;
- }
-
- if(rows.some(r=>r.is_working&&(!r.start_time||!r.end_time))){
-  showScheduleMessage('Preencha entrada e saída de todos os dias trabalhados.','error');
-  return;
- }
-
- if(!rows.some(r=>r.is_working)){
-  showScheduleMessage('A escala precisa ter pelo menos um dia de trabalho.','error');
-  return;
- }
-
- const b=$('saveScheduleButton');
- const editing=!!editingScheduleId;
- b.disabled=true;
- b.textContent='Salvando...';
-
+ if(rows.length!==cycle){showScheduleMessage('A quantidade de dias configurados não corresponde à duração da escala.','error');return}
+ if(rows.some(r=>r.is_working&&(!r.start_time||!r.end_time))){showScheduleMessage('Preencha entrada e saída de todos os dias trabalhados.','error');return}
+ if(!rows.some(r=>r.is_working)){showScheduleMessage('A escala precisa ter pelo menos um dia de trabalho.','error');return}
+ const b=$('saveScheduleButton'),editing=!!editingScheduleId;b.disabled=true;b.textContent='Salvando...';
  try{
   let scheduleId=editingScheduleId;
-
-  const payload={
-   company_id:currentCompany.id,
-   name,
-   schedule_type:type,
-   cycle_days:cycle,
-   weekly_hours:$('scheduleWeeklyHours').value===''?null:Number($('scheduleWeeklyHours').value),
-   active:true
-  };
-
+  const payload={company_id:currentCompany.id,name,schedule_type:type,cycle_days:cycle,weekly_hours:$('scheduleWeeklyHours').value===''?null:Number($('scheduleWeeklyHours').value),active:true};
   if(editing){
-   const {error}=await supabaseClient
-    .from('work_schedule_templates')
-    .update({
-     name,
-     schedule_type:type,
-     cycle_days:cycle,
-     weekly_hours:payload.weekly_hours
-    })
-    .eq('id',scheduleId)
-    .eq('company_id',currentCompany.id);
-
-   if(error)throw error;
-
-   const {error:delError}=await supabaseClient
-    .from('work_schedule_template_days')
-    .delete()
-    .eq('schedule_id',scheduleId);
-
-   if(delError)throw delError;
+   const {error}=await supabaseClient.from('work_schedule_templates').update({name,schedule_type:type,cycle_days:cycle,weekly_hours:payload.weekly_hours}).eq('id',scheduleId).eq('company_id',currentCompany.id);if(error)throw error;
+   const {error:delError}=await supabaseClient.from('work_schedule_template_days').delete().eq('schedule_id',scheduleId);if(delError)throw delError;
   }else{
-   const {data,error}=await supabaseClient
-    .from('work_schedule_templates')
-    .insert(payload)
-    .select('id')
-    .single();
-
-   if(error)throw error;
-   scheduleId=data.id;
+   const {data,error}=await supabaseClient.from('work_schedule_templates').insert(payload).select('id').single();if(error)throw error;scheduleId=data.id;
   }
-
-  const dayPayload=rows.map(r=>({...r,schedule_id:scheduleId}));
-
-  const {error:dayError}=await supabaseClient
-   .from('work_schedule_template_days')
-   .insert(dayPayload);
-
-  if(dayError)throw dayError;
-
-  closeScheduleForm();
-  showScheduleMessage(editing?'Escala atualizada com sucesso.':'Escala criada com sucesso.','success');
-  await loadSchedules();
-
- }catch(err){
-  showScheduleMessage('Não foi possível salvar a escala: '+(err.message||err),'error');
- }finally{
-  b.disabled=false;
-  b.textContent=editing?'Salvar alterações':'Salvar escala';
- }
+  const {error:dayError}=await supabaseClient.from('work_schedule_template_days').insert(rows.map(r=>({...r,schedule_id:scheduleId})));if(dayError)throw dayError;
+  closeScheduleForm();showScheduleMessage(editing?'Escala atualizada com sucesso.':'Escala criada com sucesso.','success');await loadSchedules();
+ }catch(err){showScheduleMessage('Não foi possível salvar a escala: '+(err.message||err),'error')}
+ finally{b.disabled=false;b.textContent=editing?'Salvar alterações':'Salvar escala'}
 });
-
 function renderEmployeeScheduleAssignments(){
- const body=$('employeeSchedulesTable');
-
- if(!assignmentsData.length){
-  body.innerHTML='<tr><td colspan="4" class="empty">Nenhuma escala atribuída.</td></tr>';
-  return;
- }
-
- body.innerHTML=assignmentsData.map(a=>{
-  const emp=employeesData.find(e=>e.id===a.employee_id);
-  const sch=schedulesData.find(s=>s.id===a.schedule_id);
-
-  return `<tr>
-   <td>${escapeHTML(emp?.full_name||'Colaborador')}</td>
-   <td>${escapeHTML(sch?.name||'Escala')}</td>
-   <td>${a.effective_from?formatDate(a.effective_from):'—'}</td>
-   <td>${a.effective_until?formatDate(a.effective_until):'Em aberto'}</td>
-  </tr>`;
- }).join('');
+ const body=$('employeeSchedulesTable');if(!assignmentsData.length){body.innerHTML='<tr><td colspan="4" class="empty">Nenhuma escala atribuída.</td></tr>';return}
+ body.innerHTML=assignmentsData.map(a=>{const emp=employeesData.find(e=>e.id===a.employee_id),sch=schedulesData.find(s=>s.id===a.schedule_id);return `<tr><td>${escapeHTML(emp?.full_name||'Colaborador')}</td><td>${escapeHTML(sch?.name||'Escala')}</td><td>${a.effective_from?formatDate(a.effective_from):'—'}</td><td>${a.effective_until?formatDate(a.effective_until):'Em aberto'}</td></tr>`}).join('');
 }
 
 // COLABORADORES
 async function loadEmployees(){
  if(!currentCompany)return;
-
- const {data,error}=await supabaseClient
-  .from('employees')
-  .select('id,employee_code,full_name,email,phone,job_title,status,hire_date,created_at,department_id,user_id,employment_type')
-  .eq('company_id',currentCompany.id)
-  .order('created_at',{ascending:false});
-
- if(error){
-  $('employeesTable').innerHTML=`<tr><td colspan="9" class="empty">Erro ao carregar colaboradores: ${escapeHTML(error.message)}</td></tr>`;
-  return;
- }
-
+ const {data,error}=await supabaseClient.from('employees').select('id,employee_code,full_name,email,phone,job_title,status,hire_date,created_at,department_id,user_id,employment_type,profile_photo_url').eq('company_id',currentCompany.id).order('created_at',{ascending:false});
+ if(error){$('employeesTable').innerHTML=`<tr><td colspan="9" class="empty">Erro ao carregar colaboradores: ${escapeHTML(error.message)}</td></tr>`;return}
  employeesData=data||[];
+ if(canManage())await loadPrivateEmployeeData();
  $('totalEmployees').textContent=employeesData.length;
  $('activeEmployees').textContent=employeesData.filter(e=>e.status==='active').length;
-
- renderEmployees(employeesData);
- renderDepartments();
- renderEmployeeScheduleAssignments();
+ renderEmployees(employeesData);renderDepartments();renderEmployeeScheduleAssignments();
 }
-
-function currentAssignment(employeeId){
- return assignmentsData.find(a=>a.employee_id===employeeId&&!a.effective_until)||assignmentsData.find(a=>a.employee_id===employeeId);
-}
-
+function currentAssignment(employeeId){return assignmentsData.find(a=>a.employee_id===employeeId&&!a.effective_until)||assignmentsData.find(a=>a.employee_id===employeeId)}
 function renderEmployees(list){
- const tbody=$('employeesTable');
-
- if(!list.length){
-  tbody.innerHTML='<tr><td colspan="9" class="empty">Nenhum colaborador cadastrado.</td></tr>';
-  return;
- }
-
+ const tbody=$('employeesTable');if(!list.length){tbody.innerHTML='<tr><td colspan="9" class="empty">Nenhum colaborador cadastrado.</td></tr>';return}
  const labels={active:'Ativo',inactive:'Inativo',terminated:'Desligado'};
-
  tbody.innerHTML=list.map(e=>{
-  const dep=departmentsData.find(d=>d.id===e.department_id);
-  const ass=currentAssignment(e.id);
-  const sch=schedulesData.find(s=>s.id===ass?.schedule_id);
-
-  let access=e.user_id
-   ?'<button class="btn btn-linked" disabled>Acesso vinculado</button>'
-   :e.status==='active'&&e.email
-    ?`<button class="btn btn-invite" id="invite-${e.id}" onclick="inviteEmployee('${e.id}')">Enviar convite</button>`
-    :'<button class="btn btn-linked" disabled>Sem acesso</button>';
-
-  const actions=canManage()
-   ?`<div class="actions"><button class="btn btn-edit" onclick="editEmployee('${e.id}')">Editar</button><button class="btn btn-delete" onclick="deleteEmployee('${e.id}')">Excluir</button>${access}</div>`
-   :'—';
-
-  return `<tr>
-   <td><strong>${escapeHTML(e.full_name)}</strong></td>
-   <td>${escapeHTML(e.employee_code||'—')}</td>
-   <td>${escapeHTML(e.job_title||'—')}</td>
-   <td>${escapeHTML(e.employment_type||'CLT')}</td>
-   <td>${escapeHTML(dep?.nome||'—')}</td>
-   <td>${escapeHTML(sch?.name||'—')}</td>
-   <td>${escapeHTML(e.email||'—')}</td>
-   <td><span class="badge ${escapeHTML(e.status||'active')}">${escapeHTML(labels[e.status]||e.status||'Ativo')}</span></td>
-   <td>${actions}</td>
-  </tr>`;
+  const dep=departmentsData.find(d=>d.id===e.department_id),ass=currentAssignment(e.id),sch=schedulesData.find(s=>s.id===ass?.schedule_id);
+  let access=e.user_id?'<button class="btn btn-linked" disabled>Acesso vinculado</button>':e.status==='active'&&e.email?`<button class="btn btn-invite" id="invite-${e.id}" onclick="inviteEmployee('${e.id}')">Enviar convite</button>`:'<button class="btn btn-linked" disabled>Sem acesso</button>';
+  const actions=canManage()?`<div class="actions"><button class="btn btn-edit" onclick="editEmployee('${e.id}')">Editar</button><button class="btn btn-delete" onclick="deleteEmployee('${e.id}')">Excluir</button>${access}</div>`:'—';
+  return `<tr><td><strong>${escapeHTML(e.full_name)}</strong></td><td>${escapeHTML(e.employee_code||'—')}</td><td>${escapeHTML(e.job_title||'—')}</td><td>${escapeHTML(e.employment_type||'CLT')}</td><td>${escapeHTML(dep?.nome||'—')}</td><td>${escapeHTML(sch?.name||'—')}</td><td>${escapeHTML(e.email||'—')}</td><td><span class="badge ${escapeHTML(e.status||'active')}">${escapeHTML(labels[e.status]||e.status||'Ativo')}</span></td><td>${actions}</td></tr>`;
  }).join('');
 }
-
 function filterEmployees(){
  const q=$('employeeSearch').value.toLowerCase();
-
- renderEmployees(employeesData.filter(e=>{
-  const d=departmentsData.find(x=>x.id===e.department_id);
-  const s=schedulesData.find(x=>x.id===currentAssignment(e.id)?.schedule_id);
-
-  return [e.full_name,e.email,e.employee_code,e.job_title,e.employment_type,d?.nome,s?.name]
-   .some(v=>(v||'').toLowerCase().includes(q));
- }));
+ renderEmployees(employeesData.filter(e=>{const d=departmentsData.find(x=>x.id===e.department_id),s=schedulesData.find(x=>x.id===currentAssignment(e.id)?.schedule_id);return [e.full_name,e.email,e.employee_code,e.job_title,e.employment_type,d?.nome,s?.name].some(v=>(v||'').toLowerCase().includes(q))}));
 }
-
+function resetPhotoState(){
+ selectedPhotoFile=null;existingPhotoPath=null;
+ if(employeePhotoObjectUrl){URL.revokeObjectURL(employeePhotoObjectUrl);employeePhotoObjectUrl=null}
+ $('employeePhoto').value='';$('employeePhotoPreview').src='';$('employeePhotoPreview').classList.add('hidden');$('employeePhotoPlaceholder').classList.remove('hidden');
+}
 function openEmployeeForm(){
  if(!canManage())return;
-
- editingEmployeeId=null;
- $('newEmployeeForm').reset();
- $('employeeEmploymentType').value='CLT';
- $('employeeStatus').value='active';
- $('employeeFormTitle').textContent='Cadastro de colaborador';
- $('employeeSubmitButton').textContent='Salvar colaborador';
-
- updateDepartmentOptions();
- updateScheduleOptions();
-
- $('employeeScheduleStart').value=new Date().toISOString().slice(0,10);
- $('employeeForm').classList.remove('hidden');
- scrollTo({top:0,behavior:'smooth'});
+ editingEmployeeId=null;$('newEmployeeForm').reset();resetPhotoState();fillPrivateEmployeeForm(null);
+ $('employeeEmploymentType').value='CLT';$('employeeStatus').value='active';$('employeeFormTitle').textContent='Cadastro de colaborador';$('employeeSubmitButton').textContent='Salvar colaborador';
+ updateDepartmentOptions();updateScheduleOptions();$('employeeScheduleStart').value=new Date().toISOString().slice(0,10);
+ $('employeeForm').classList.remove('hidden');scrollTo({top:0,behavior:'smooth'});
 }
-
 function closeEmployeeForm(){
- $('employeeForm').classList.add('hidden');
- $('newEmployeeForm').reset();
- editingEmployeeId=null;
+ $('employeeForm').classList.add('hidden');$('newEmployeeForm').reset();editingEmployeeId=null;resetPhotoState();
 }
-
-function editEmployee(id){
- if(!canManage())return;
-
- const e=employeesData.find(x=>x.id===id);
- if(!e)return;
-
- editingEmployeeId=id;
- updateDepartmentOptions();
- updateScheduleOptions();
-
- $('employeeName').value=e.full_name||'';
- $('employeeCode').value=e.employee_code||'';
- $('employeeEmail').value=e.email||'';
- $('employeePhone').value=e.phone||'';
- $('employeePosition').value=e.job_title||'';
- $('employeeDepartment').value=e.department_id||'';
- $('employeeEmploymentType').value=e.employment_type||'CLT';
- $('employeeHireDate').value=e.hire_date||'';
- $('employeeStatus').value=e.status||'active';
-
- const ass=currentAssignment(id);
- $('employeeSchedule').value=ass?.schedule_id||'';
- $('employeeScheduleStart').value=ass?.effective_from||new Date().toISOString().slice(0,10);
-
- $('employeeFormTitle').textContent='Editar colaborador';
- $('employeeSubmitButton').textContent='Salvar alterações';
- $('employeeForm').classList.remove('hidden');
- scrollTo({top:0,behavior:'smooth'});
+async function editEmployee(id){
+ if(!canManage())return;const e=employeesData.find(x=>x.id===id);if(!e)return;
+ editingEmployeeId=id;updateDepartmentOptions();updateScheduleOptions();resetPhotoState();
+ $('employeeName').value=e.full_name||'';$('employeeCode').value=e.employee_code||'';$('employeeEmail').value=e.email||'';$('employeePhone').value=e.phone||'';$('employeePosition').value=e.job_title||'';$('employeeDepartment').value=e.department_id||'';$('employeeEmploymentType').value=e.employment_type||'CLT';$('employeeHireDate').value=e.hire_date||'';$('employeeStatus').value=e.status||'active';
+ const ass=currentAssignment(id);$('employeeSchedule').value=ass?.schedule_id||'';$('employeeScheduleStart').value=ass?.effective_from||new Date().toISOString().slice(0,10);
+ fillPrivateEmployeeForm(privateEmployeesData[id]||null);
+ existingPhotoPath=e.profile_photo_url||null;
+ if(existingPhotoPath)await loadEmployeePhotoPreview(existingPhotoPath);
+ $('employeeFormTitle').textContent='Editar colaborador';$('employeeSubmitButton').textContent='Salvar alterações';$('employeeForm').classList.remove('hidden');scrollTo({top:0,behavior:'smooth'});
 }
-
 async function saveEmployeeSchedule(employeeId,scheduleId,effectiveFrom){
  const current=assignmentsData.find(a=>a.employee_id===employeeId&&!a.effective_until);
-
- if(!scheduleId){
-  if(current){
-   const {error}=await supabaseClient
-    .from('employee_work_schedules')
-    .update({effective_until:effectiveFrom})
-    .eq('id',current.id)
-    .eq('company_id',currentCompany.id);
-
-   if(error)throw error;
-  }
-  return;
- }
-
+ if(!scheduleId){if(current){const {error}=await supabaseClient.from('employee_work_schedules').update({effective_until:effectiveFrom}).eq('id',current.id).eq('company_id',currentCompany.id);if(error)throw error}return}
  if(!effectiveFrom)throw new Error('Informe a data de início da vigência da escala.');
-
  if(current&&current.schedule_id===scheduleId&&current.effective_from===effectiveFrom)return;
-
  if(current){
-  const endDate=new Date(effectiveFrom+'T00:00:00');
-  endDate.setDate(endDate.getDate()-1);
-  const until=endDate.toISOString().slice(0,10);
-
-  if(current.effective_from>=effectiveFrom){
-   throw new Error('A nova vigência precisa começar depois do início da escala atual.');
-  }
-
-  const {error}=await supabaseClient
-   .from('employee_work_schedules')
-   .update({effective_until:until})
-   .eq('id',current.id)
-   .eq('company_id',currentCompany.id);
-
-  if(error)throw error;
+  const endDate=new Date(effectiveFrom+'T00:00:00');endDate.setDate(endDate.getDate()-1);const until=endDate.toISOString().slice(0,10);
+  if(current.effective_from>=effectiveFrom)throw new Error('A nova vigência precisa começar depois do início da escala atual.');
+  const {error}=await supabaseClient.from('employee_work_schedules').update({effective_until:until}).eq('id',current.id).eq('company_id',currentCompany.id);if(error)throw error;
  }
-
- const {error}=await supabaseClient
-  .from('employee_work_schedules')
-  .insert({
-   company_id:currentCompany.id,
-   employee_id:employeeId,
-   schedule_id:scheduleId,
-   effective_from:effectiveFrom,
-   effective_until:null
-  });
-
- if(error)throw error;
+ const {error}=await supabaseClient.from('employee_work_schedules').insert({company_id:currentCompany.id,employee_id:employeeId,schedule_id:scheduleId,effective_from:effectiveFrom,effective_until:null});if(error)throw error;
 }
-
+async function validateDuplicatePhone(phone,employeeId){
+ const digits=onlyDigits(phone);if(!digits)return;
+ const duplicate=employeesData.find(e=>e.id!==employeeId&&onlyDigits(e.phone)===digits);
+ if(duplicate)throw new Error(`Este telefone já está cadastrado para o colaborador ${duplicate.full_name}. Utilize outro número.`);
+}
 $('newEmployeeForm').addEventListener('submit',async e=>{
- e.preventDefault();
- if(!canManage())return;
-
+ e.preventDefault();if(!canManage())return;
  const emp={
   company_id:currentCompany.id,
   full_name:$('employeeName').value.trim(),
@@ -1394,769 +810,198 @@ $('newEmployeeForm').addEventListener('submit',async e=>{
   hire_date:$('employeeHireDate').value||null,
   status:$('employeeStatus').value
  };
-
- if(!emp.full_name){
-  showMessage('Informe o nome completo.','error');
-  return;
+ if(!emp.full_name){showMessage('Informe o nome completo.','error');return}
+ if($('employeeSalary').value!==''&&Number($('employeeSalary').value)<0){showMessage('O salário não pode ser negativo.','error');return}
+ if(!$('employeeFirstJob').checked&&!$('employeePisNit').value.trim()){
+  // O número pode ser informado posteriormente quando não houver dado disponível.
  }
-
- const editing=!!editingEmployeeId;
- const button=$('employeeSubmitButton');
- button.disabled=true;
- button.textContent='Salvando...';
-
+ const editing=!!editingEmployeeId,button=$('employeeSubmitButton');button.disabled=true;button.textContent='Salvando...';
  try{
+  await validateDuplicatePhone(emp.phone,editingEmployeeId);
   let employeeId=editingEmployeeId;
-
   if(editing){
-   const {error}=await supabaseClient
-    .from('employees')
-    .update({
-     full_name:emp.full_name,
-     employee_code:emp.employee_code,
-     email:emp.email,
-     phone:emp.phone,
-     job_title:emp.job_title,
-     department_id:emp.department_id,
-     employment_type:emp.employment_type,
-     hire_date:emp.hire_date,
-     status:emp.status
-    })
-    .eq('id',employeeId)
-    .eq('company_id',currentCompany.id);
-
+   const {error}=await supabaseClient.from('employees').update({
+    full_name:emp.full_name,employee_code:emp.employee_code,email:emp.email,phone:emp.phone,job_title:emp.job_title,department_id:emp.department_id,employment_type:emp.employment_type,hire_date:emp.hire_date,status:emp.status
+   }).eq('id',employeeId).eq('company_id',currentCompany.id);
    if(error)throw error;
   }else{
-   const {data,error}=await supabaseClient
-    .from('employees')
-    .insert(emp)
-    .select('id')
-    .single();
-
-   if(error)throw error;
-   employeeId=data.id;
+   const {data,error}=await supabaseClient.from('employees').insert(emp).select('id').single();
+   if(error)throw error;employeeId=data.id;
   }
-
+  await savePrivateEmployeeData(employeeId);
   await saveEmployeeSchedule(employeeId,$('employeeSchedule').value,$('employeeScheduleStart').value);
-
+  await uploadEmployeePhoto(employeeId);
   closeEmployeeForm();
   showMessage(editing?'Colaborador atualizado com sucesso!':'Colaborador cadastrado com sucesso!','success');
-
-  await loadSchedules();
-  await loadEmployees();
-
+  await loadSchedules();await loadEmployees();
  }catch(err){
-  showMessage('Colaborador salvo parcialmente ou não salvo: '+(err.message||err)+'. Confira os dados e tente novamente.','error');
-  await loadEmployees();
-  await loadSchedules();
- }finally{
-  button.disabled=false;
-  button.textContent=editing?'Salvar alterações':'Salvar colaborador';
- }
+  showMessage('Não foi possível concluir o salvamento: '+(err.message||err)+'. Verifique os dados e tente novamente.','error');
+  await loadEmployees();await loadSchedules();
+ }finally{button.disabled=false;button.textContent=editing?'Salvar alterações':'Salvar colaborador'}
 });
-
 async function deleteEmployee(id){
- if(!canManage())return;
-
- const e=employeesData.find(x=>x.id===id);
- if(!e)return;
-
+ if(!canManage())return;const e=employeesData.find(x=>x.id===id);if(!e)return;
  if(!confirm(`Excluir o cadastro de "${e.full_name}"? Isso não apaga automaticamente a conta de acesso.`))return;
-
- const {error}=await supabaseClient
-  .from('employees')
-  .delete()
-  .eq('id',id)
-  .eq('company_id',currentCompany.id);
-
- if(error){
-  showMessage('Não foi possível excluir: '+error.message,'error');
-  return;
- }
-
- showMessage('Colaborador excluído.','success');
- await loadEmployees();
- await loadSchedules();
+ const {error}=await supabaseClient.from('employees').delete().eq('id',id).eq('company_id',currentCompany.id);
+ if(error){showMessage('Não foi possível excluir: '+error.message,'error');return}
+ showMessage('Colaborador excluído.','success');await loadEmployees();await loadSchedules();
 }
 
 // CONVITE MEU PONTO
 async function inviteEmployee(id){
- const employee=employeesData.find(e=>e.id===id);
-
- if(!canManage()||!employee)return;
-
- if(employee.user_id){
-  alert('Este colaborador já possui acesso.');
-  return;
- }
-
- if(employee.status!=='active'||!employee.email){
-  alert('É necessário que o colaborador esteja ativo e tenha e-mail cadastrado.');
-  return;
- }
-
+ const employee=employeesData.find(e=>e.id===id);if(!canManage()||!employee)return;
+ if(employee.user_id){alert('Este colaborador já possui acesso.');return}
+ if(employee.status!=='active'||!employee.email){alert('É necessário que o colaborador esteja ativo e tenha e-mail cadastrado.');return}
  if(!confirm(`Enviar convite de acesso ao Meu Ponto para ${employee.full_name} (${employee.email})?`))return;
-
- const button=$('invite-'+id);
-
- if(button){
-  button.disabled=true;
-  button.textContent='Enviando...';
- }
-
+ const button=$('invite-'+id);if(button){button.disabled=true;button.textContent='Enviando...'}
  try{
-  const {data,error}=await supabaseClient.functions.invoke('invite-employee',{
-   body:{employee_id:id}
-  });
-
-  if(error)throw error;
-  if(!data?.success)throw new Error(data?.error||'A função não confirmou o envio.');
-
-  showMessage(data.message||'Convite enviado com sucesso!','success');
-  await loadEmployees();
-
- }catch(err){
-  showMessage('Não foi possível enviar o convite: '+(err.message||err),'error');
- }finally{
-  if(button&&document.body.contains(button)){
-   button.disabled=false;
-   button.textContent='Enviar convite';
-  }
- }
+  const {data,error}=await supabaseClient.functions.invoke('invite-employee',{body:{employee_id:id}});
+  if(error)throw error;if(!data?.success)throw new Error(data?.error||'A função não confirmou o envio.');
+  showMessage(data.message||'Convite enviado com sucesso!','success');await loadEmployees();
+ }catch(err){showMessage('Não foi possível enviar o convite: '+(err.message||err),'error')}
+ finally{if(button&&document.body.contains(button)){button.disabled=false;button.textContent='Enviar convite'}}
 }
 
-// MÓDULO DE SOLICITAÇÕES
-const requestTypeLabels={
- time_correction:'Correção de ponto',
- day_off_change:'Troca de folga',
- schedule_change:'Alteração de escala',
- medical_certificate:'Atestado médico',
- attendance_declaration:'Declaração de horas/comparecimento',
- union_declaration:'Declaração sindical',
- other_declaration:'Outra declaração'
-};
-
-const requestStatusLabels={
- pending:'Pendente',
- approved:'Aprovada',
- rejected:'Recusada',
- cancelled:'Cancelada'
-};
-
-function requestStatusBadge(status){
- const label=requestStatusLabels[status]||status||'—';
- return `<span class="badge ${escapeHTML(status)}">${escapeHTML(label)}</span>`;
-}
-
-function getRequestEmployee(request){
- return employeesData.find(e=>e.id===request.employee_id);
-}
-
+// SOLICITAÇÕES
+const requestTypeLabels={time_correction:'Correção de ponto',day_off_change:'Troca de folga',schedule_change:'Alteração de escala',medical_certificate:'Atestado médico',attendance_declaration:'Declaração de horas/comparecimento',union_declaration:'Declaração sindical',other_declaration:'Outra declaração'};
+const requestStatusLabels={pending:'Pendente',approved:'Aprovada',rejected:'Recusada',cancelled:'Cancelada'};
+function requestStatusBadge(status){return `<span class="badge ${escapeHTML(status)}">${escapeHTML(requestStatusLabels[status]||status||'—')}</span>`}
+function getRequestEmployee(request){return employeesData.find(e=>e.id===request.employee_id)}
 async function loadRequests(){
  if(!currentCompany||!canViewRequests())return;
-
  $('requestsTable').innerHTML='<tr><td colspan="6" class="empty">Carregando solicitações...</td></tr>';
-
- const {data,error}=await supabaseClient
-  .from('employee_requests')
-  .select('id,company_id,employee_id,user_id,request_type,description,requested_date,requested_start_time,requested_end_time,document_path,status,decision_reason,decided_by,decided_at,created_at,updated_at')
-  .eq('company_id',currentCompany.id)
-  .order('created_at',{ascending:false});
-
- if(error){
-  $('requestsTable').innerHTML=`<tr><td colspan="6" class="empty">Erro ao carregar solicitações: ${escapeHTML(error.message)}</td></tr>`;
-  showRequestMessage('Não foi possível carregar as solicitações: '+error.message,'error');
-  return;
- }
-
- requestsData=data||[];
- updateRequestCounters();
- renderRequests();
-
- if(selectedRequest){
-  const updated=requestsData.find(r=>r.id===selectedRequest.id);
-
-  if(updated){
-   selectedRequest=updated;
-   await showRequestDetails(updated.id);
-  }else{
-   closeRequestDetails();
-  }
- }
+ const {data,error}=await supabaseClient.from('employee_requests').select('id,company_id,employee_id,user_id,request_type,description,requested_date,requested_start_time,requested_end_time,document_path,status,decision_reason,decided_by,decided_at,created_at,updated_at').eq('company_id',currentCompany.id).order('created_at',{ascending:false});
+ if(error){$('requestsTable').innerHTML=`<tr><td colspan="6" class="empty">Erro ao carregar solicitações: ${escapeHTML(error.message)}</td></tr>`;showRequestMessage('Não foi possível carregar as solicitações: '+error.message,'error');return}
+ requestsData=data||[];updateRequestCounters();renderRequests();
+ if(selectedRequest){const updated=requestsData.find(r=>r.id===selectedRequest.id);if(updated){selectedRequest=updated;await showRequestDetails(updated.id)}else closeRequestDetails()}
 }
-
 function updateRequestCounters(){
- $('requestTotal').textContent=requestsData.length;
- $('requestPending').textContent=requestsData.filter(r=>r.status==='pending').length;
- $('requestApproved').textContent=requestsData.filter(r=>r.status==='approved').length;
- $('requestRejected').textContent=requestsData.filter(r=>r.status==='rejected').length;
+ $('requestTotal').textContent=requestsData.length;$('requestPending').textContent=requestsData.filter(r=>r.status==='pending').length;$('requestApproved').textContent=requestsData.filter(r=>r.status==='approved').length;$('requestRejected').textContent=requestsData.filter(r=>r.status==='rejected').length;
 }
-
 function renderRequests(){
- const tbody=$('requestsTable');
- let list=[...requestsData];
-
- const status=$('requestStatusFilter').value;
- const search=$('requestSearch').value.trim().toLowerCase();
-
- if(status!=='all'){
-  list=list.filter(r=>r.status===status);
- }
-
- if(search){
-  list=list.filter(r=>{
-   const emp=getRequestEmployee(r);
-   return (emp?.full_name||'').toLowerCase().includes(search);
-  });
- }
-
- if(!list.length){
-  tbody.innerHTML='<tr><td colspan="6" class="empty">Nenhuma solicitação encontrada.</td></tr>';
-  return;
- }
-
- tbody.innerHTML=list.map(r=>{
-  const emp=getRequestEmployee(r);
-  const name=emp?.full_name||'Colaborador não identificado';
-  const requestedDate=formatDate(r.requested_date);
-  const created=formatDateTime(r.created_at);
-
-  return `<tr>
-   <td><strong>${escapeHTML(name)}</strong></td>
-   <td>${escapeHTML(requestTypeLabels[r.request_type]||r.request_type)}</td>
-   <td>${requestedDate}</td>
-   <td>${created}</td>
-   <td>${requestStatusBadge(r.status)}</td>
-   <td><button class="btn btn-secondary" onclick="showRequestDetails('${r.id}')">Ver detalhes</button></td>
-  </tr>`;
- }).join('');
+ const tbody=$('requestsTable');let list=[...requestsData],status=$('requestStatusFilter').value,search=$('requestSearch').value.trim().toLowerCase();
+ if(status!=='all')list=list.filter(r=>r.status===status);
+ if(search)list=list.filter(r=>(getRequestEmployee(r)?.full_name||'').toLowerCase().includes(search));
+ if(!list.length){tbody.innerHTML='<tr><td colspan="6" class="empty">Nenhuma solicitação encontrada.</td></tr>';return}
+ tbody.innerHTML=list.map(r=>{const emp=getRequestEmployee(r);return `<tr><td><strong>${escapeHTML(emp?.full_name||'Colaborador não identificado')}</strong></td><td>${escapeHTML(requestTypeLabels[r.request_type]||r.request_type)}</td><td>${formatDate(r.requested_date)}</td><td>${formatDateTime(r.created_at)}</td><td>${requestStatusBadge(r.status)}</td><td><button class="btn btn-secondary" onclick="showRequestDetails('${r.id}')">Ver detalhes</button></td></tr>`}).join('');
 }
-
 async function openRequestDocument(path,button){
- if(!path){
-  showRequestMessage('Esta solicitação não possui comprovante anexado.','error');
-  return;
- }
-
- if(!canViewRequests()){
-  showRequestMessage('Você não possui permissão para visualizar este comprovante.','error');
-  return;
- }
-
- const originalText=button?button.textContent:'Visualizar comprovante';
-
- if(button){
-  button.disabled=true;
-  button.textContent='Gerando acesso seguro...';
- }
-
+ if(!path){showRequestMessage('Esta solicitação não possui comprovante anexado.','error');return}
+ if(!canViewRequests()){showRequestMessage('Você não possui permissão para visualizar este comprovante.','error');return}
+ const originalText=button?button.textContent:'Visualizar comprovante';if(button){button.disabled=true;button.textContent='Gerando acesso seguro...'}
  try{
-  const {data,error}=await supabaseClient
-   .storage
-   .from(BUCKET_COMPROVANTES)
-   .createSignedUrl(path,300);
-
-  if(error)throw error;
-
-  if(!data?.signedUrl){
-   throw new Error('O Supabase não retornou o endereço do documento.');
-  }
-
-  const opened=window.open(data.signedUrl,'_blank');
-
-  if(!opened){
-   showRequestMessage('O navegador bloqueou a abertura. Permita pop-ups para este site e tente novamente.','error');
-  }
-
- }catch(err){
-  console.error('Erro ao abrir comprovante:',err);
-  showRequestMessage('Não foi possível abrir o comprovante: '+(err.message||err),'error');
- }finally{
-  if(button){
-   button.disabled=false;
-   button.textContent=originalText;
-  }
- }
+  const {data,error}=await supabaseClient.storage.from(BUCKET_COMPROVANTES).createSignedUrl(path,300);if(error)throw error;
+  if(!data?.signedUrl)throw new Error('O Supabase não retornou o endereço do documento.');
+  const opened=window.open(data.signedUrl,'_blank');if(!opened)showRequestMessage('O navegador bloqueou a abertura. Permita pop-ups para este site e tente novamente.','error');
+ }catch(err){showRequestMessage('Não foi possível abrir o comprovante: '+(err.message||err),'error')}
+ finally{if(button){button.disabled=false;button.textContent=originalText}}
 }
-
 async function showRequestDetails(id){
- const request=requestsData.find(r=>r.id===id);
- if(!request)return;
-
- selectedRequest=request;
-
- const emp=getRequestEmployee(request);
- const employeeName=emp?.full_name||'Colaborador não identificado';
- const type=requestTypeLabels[request.request_type]||request.request_type;
- const canDecide=canManage()&&request.status==='pending';
-
- $('requestDetailPanel').classList.remove('hidden');
- $('requestDecisionArea').classList.toggle('hidden',!canDecide);
- $('requestDecisionReason').value='';
-
- let period='—';
-
- if(request.requested_start_time||request.requested_end_time){
-  period=`${request.requested_start_time||'—'} até ${request.requested_end_time||'—'}`;
- }
-
- const documentHTML=request.document_path
-  ?`<p><strong>Comprovante anexado:</strong></p>
-    <button type="button" class="request-document-link" onclick="openRequestDocument('${escapeHTML(request.document_path)}',this)">
-     ↗ Visualizar comprovante
-    </button>
-    <p class="hint">O documento será aberto em uma nova aba por meio de um link privado e temporário.</p>`
-  :`<p><strong>Comprovante:</strong> Nenhum arquivo anexado.</p>`;
-
- $('requestDetails').innerHTML=`
- <div class="request-detail">
-  <h4>${escapeHTML(type)}</h4>
-  <p><strong>Colaborador:</strong> ${escapeHTML(employeeName)}</p>
-  <p><strong>Tipo de solicitação:</strong> ${escapeHTML(type)}</p>
-  <p><strong>Data solicitada:</strong> ${formatDate(request.requested_date)}</p>
-  <p><strong>Horário solicitado:</strong> ${escapeHTML(period)}</p>
-  <p><strong>Enviada em:</strong> ${formatDateTime(request.created_at)}</p>
-  <p><strong>Status:</strong> ${requestStatusBadge(request.status)}</p>
-  <p><strong>Justificativa / descrição:</strong></p>
-  <p>${escapeHTML(request.description||'Nenhuma descrição informada.').replace(/\n/g,'<br>')}</p>
-  ${documentHTML}
-  ${request.decision_reason?`<p><strong>Observação da decisão:</strong></p><p>${escapeHTML(request.decision_reason)}</p>`:''}
-  ${request.decided_at?`<p><strong>Decidida em:</strong> ${formatDateTime(request.decided_at)}</p>`:''}
- </div>`;
-
- $('requestHistory').innerHTML='<div class="empty">Carregando histórico...</div>';
- $('requestDetailPanel').scrollIntoView({behavior:'smooth',block:'start'});
-
- await loadRequestHistory(id);
+ const request=requestsData.find(r=>r.id===id);if(!request)return;selectedRequest=request;
+ const emp=getRequestEmployee(request),employeeName=emp?.full_name||'Colaborador não identificado',type=requestTypeLabels[request.request_type]||request.request_type,canDecide=canManage()&&request.status==='pending';
+ $('requestDetailPanel').classList.remove('hidden');$('requestDecisionArea').classList.toggle('hidden',!canDecide);$('requestDecisionReason').value='';
+ const period=request.requested_start_time||request.requested_end_time?`${request.requested_start_time||'—'} até ${request.requested_end_time||'—'}`:'—';
+ const documentHTML=request.document_path?`<p><strong>Comprovante anexado:</strong></p><button type="button" class="request-document-link" onclick="openRequestDocument('${escapeHTML(request.document_path)}',this)">↗ Visualizar comprovante</button><p class="hint">O documento será aberto em uma nova aba por meio de um link privado e temporário.</p>`:'<p><strong>Comprovante:</strong> Nenhum arquivo anexado.</p>';
+ $('requestDetails').innerHTML=`<div class="request-detail"><h4>${escapeHTML(type)}</h4><p><strong>Colaborador:</strong> ${escapeHTML(employeeName)}</p><p><strong>Tipo de solicitação:</strong> ${escapeHTML(type)}</p><p><strong>Data solicitada:</strong> ${formatDate(request.requested_date)}</p><p><strong>Horário solicitado:</strong> ${escapeHTML(period)}</p><p><strong>Enviada em:</strong> ${formatDateTime(request.created_at)}</p><p><strong>Status:</strong> ${requestStatusBadge(request.status)}</p><p><strong>Justificativa / descrição:</strong></p><p>${escapeHTML(request.description||'Nenhuma descrição informada.').replace(/\n/g,'<br>')}</p>${documentHTML}${request.decision_reason?`<p><strong>Observação da decisão:</strong></p><p>${escapeHTML(request.decision_reason)}</p>`:''}${request.decided_at?`<p><strong>Decidida em:</strong> ${formatDateTime(request.decided_at)}</p>`:''}</div>`;
+ $('requestHistory').innerHTML='<div class="empty">Carregando histórico...</div>';$('requestDetailPanel').scrollIntoView({behavior:'smooth',block:'start'});await loadRequestHistory(id);
 }
-
 async function loadRequestHistory(requestId){
- const container=$('requestHistory');
-
- const {data,error}=await supabaseClient
-  .from('employee_request_history')
-  .select('id,request_id,action,changed_by,old_data,new_data,created_at')
-  .eq('request_id',requestId)
-  .order('created_at',{ascending:false});
-
- if(error){
-  container.innerHTML=`<div class="empty">Não foi possível consultar o histórico: ${escapeHTML(error.message)}</div>`;
-  return;
- }
-
- if(!data||!data.length){
-  container.innerHTML='<div class="empty">Nenhum registro de histórico encontrado.</div>';
-  return;
- }
-
- container.innerHTML=data.map(item=>{
-  const action=item.action==='created'?'Solicitação criada':'Solicitação atualizada';
-  let detail='';
-
-  if(item.new_data?.status){
-   const status=requestStatusLabels[item.new_data.status]||item.new_data.status;
-   detail=`Status registrado: ${escapeHTML(status)}.`;
-  }
-
-  if(item.new_data?.decision_reason){
-   detail+=` Observação: ${escapeHTML(item.new_data.decision_reason)}`;
-  }
-
-  return `<div class="history-item">
-   <strong>${escapeHTML(action)}</strong>
-   <div>${formatDateTime(item.created_at)}</div>
-   <div>${detail||'Registro de alteração armazenado.'}</div>
-  </div>`;
- }).join('');
+ const container=$('requestHistory');const {data,error}=await supabaseClient.from('employee_request_history').select('id,request_id,action,changed_by,old_data,new_data,created_at').eq('request_id',requestId).order('created_at',{ascending:false});
+ if(error){container.innerHTML=`<div class="empty">Não foi possível consultar o histórico: ${escapeHTML(error.message)}</div>`;return}
+ if(!data||!data.length){container.innerHTML='<div class="empty">Nenhum registro de histórico encontrado.</div>';return}
+ container.innerHTML=data.map(item=>{const action=item.action==='created'?'Solicitação criada':'Solicitação atualizada';let detail='';if(item.new_data?.status)detail=`Status registrado: ${escapeHTML(requestStatusLabels[item.new_data.status]||item.new_data.status)}.`;if(item.new_data?.decision_reason)detail+=` Observação: ${escapeHTML(item.new_data.decision_reason)}`;return `<div class="history-item"><strong>${escapeHTML(action)}</strong><div>${formatDateTime(item.created_at)}</div><div>${detail||'Registro de alteração armazenado.'}</div></div>`}).join('');
 }
-
-function closeRequestDetails(){
- selectedRequest=null;
- $('requestDetailPanel').classList.add('hidden');
- $('requestDetails').innerHTML='';
- $('requestHistory').innerHTML='';
- $('requestDecisionReason').value='';
-}
-
+function closeRequestDetails(){selectedRequest=null;$('requestDetailPanel').classList.add('hidden');$('requestDetails').innerHTML='';$('requestHistory').innerHTML='';$('requestDecisionReason').value=''}
 async function decideRequest(decision){
- if(!canManage()){
-  showRequestMessage('Você não possui permissão para decidir solicitações.','error');
-  return;
- }
-
- if(!selectedRequest){
-  showRequestMessage('Selecione uma solicitação.','error');
-  return;
- }
-
- if(selectedRequest.status!=='pending'){
-  showRequestMessage('Esta solicitação não está mais pendente.','error');
-  return;
- }
-
+ if(!canManage()){showRequestMessage('Você não possui permissão para decidir solicitações.','error');return}
+ if(!selectedRequest){showRequestMessage('Selecione uma solicitação.','error');return}
+ if(selectedRequest.status!=='pending'){showRequestMessage('Esta solicitação não está mais pendente.','error');return}
  if(!['approved','rejected'].includes(decision))return;
-
  const reason=$('requestDecisionReason').value.trim();
-
- if(decision==='rejected'&&!reason){
-  showRequestMessage('Para recusar uma solicitação, informe o motivo.','error');
-  $('requestDecisionReason').focus();
-  return;
- }
-
- const action=decision==='approved'?'aprovar':'recusar';
-
- if(!confirm(`Confirma que deseja ${action} esta solicitação?`))return;
-
- const approveButton=$('approveRequestButton');
- const rejectButton=$('rejectRequestButton');
-
- approveButton.disabled=true;
- rejectButton.disabled=true;
- approveButton.textContent='Processando...';
-
+ if(decision==='rejected'&&!reason){showRequestMessage('Para recusar uma solicitação, informe o motivo.','error');$('requestDecisionReason').focus();return}
+ if(!confirm(`Confirma que deseja ${decision==='approved'?'aprovar':'recusar'} esta solicitação?`))return;
+ const approveButton=$('approveRequestButton'),rejectButton=$('rejectRequestButton');approveButton.disabled=true;rejectButton.disabled=true;approveButton.textContent='Processando...';
  try{
-  const {error}=await supabaseClient.rpc('decide_employee_request',{
-   p_request_id:selectedRequest.id,
-   p_decision:decision,
-   p_reason:reason||null
-  });
-
-  if(error)throw error;
-
-  showRequestMessage(
-   decision==='approved'
-    ?'Solicitação aprovada com sucesso!'
-    :'Solicitação recusada com sucesso!',
-   'success'
-  );
-
-  await loadRequests();
-
-  const updated=requestsData.find(r=>r.id===selectedRequest?.id);
-
-  if(updated){
-   selectedRequest=updated;
-   await showRequestDetails(updated.id);
-  }
-
- }catch(err){
-  showRequestMessage('Não foi possível registrar a decisão: '+(err.message||err),'error');
- }finally{
-  approveButton.disabled=false;
-  rejectButton.disabled=false;
-  approveButton.textContent='✓ Aprovar solicitação';
-  rejectButton.textContent='✕ Recusar solicitação';
- }
+  const {error}=await supabaseClient.rpc('decide_employee_request',{p_request_id:selectedRequest.id,p_decision:decision,p_reason:reason||null});if(error)throw error;
+  showRequestMessage(decision==='approved'?'Solicitação aprovada com sucesso!':'Solicitação recusada com sucesso!','success');await loadRequests();
+  const updated=requestsData.find(r=>r.id===selectedRequest?.id);if(updated){selectedRequest=updated;await showRequestDetails(updated.id)}
+ }catch(err){showRequestMessage('Não foi possível registrar a decisão: '+(err.message||err),'error')}
+ finally{approveButton.disabled=false;rejectButton.disabled=false;approveButton.textContent='✓ Aprovar solicitação';rejectButton.textContent='✕ Recusar solicitação'}
 }
 
 // HORAS EXCEDENTES E BANCO DE HORAS
-const overtimeStatusLabels={
- pending:'Aguardando análise',
- approved:'Aprovada',
- rejected:'Recusada'
-};
-
-const overtimeApprovalLabels={
- payment:'Pagamento',
- bank:'Banco de horas'
-};
-
-const movementLabels={
- credit:'Crédito',
- debit:'Débito',
- compensation:'Compensação',
- adjustment:'Ajuste'
-};
-
-function minutesToHours(minutes){
- const value=Number(minutes)||0;
- const sign=value<0?'-':'';
- const absolute=Math.abs(value);
- const hours=Math.floor(absolute/60);
- const mins=absolute%60;
- return `${sign}${hours}h${String(mins).padStart(2,'0')}min`;
-}
-
-function overtimeStatusBadge(status){
- const label=overtimeStatusLabels[status]||status||'—';
- return `<span class="badge ${escapeHTML(status)}">${escapeHTML(label)}</span>`;
-}
-
-function getOvertimeEmployee(record){
- return employeesData.find(e=>e.id===record.employee_id);
-}
-
+const overtimeStatusLabels={pending:'Aguardando análise',approved:'Aprovada',rejected:'Recusada'};
+const overtimeApprovalLabels={payment:'Pagamento',bank:'Banco de horas'};
+const movementLabels={credit:'Crédito',debit:'Débito',compensation:'Compensação',adjustment:'Ajuste'};
+function minutesToHours(minutes){const value=Number(minutes)||0,sign=value<0?'-':'',absolute=Math.abs(value),hours=Math.floor(absolute/60),mins=absolute%60;return `${sign}${hours}h${String(mins).padStart(2,'0')}min`}
+function overtimeStatusBadge(status){return `<span class="badge ${escapeHTML(status)}">${escapeHTML(overtimeStatusLabels[status]||status||'—')}</span>`}
+function getOvertimeEmployee(record){return employeesData.find(e=>e.id===record.employee_id)}
 async function loadOvertime(){
  if(!currentCompany)return;
-
- $('overtimeTable').innerHTML='<tr><td colspan="7" class="empty">Carregando ocorrências...</td></tr>';
- $('timeBankTable').innerHTML='<tr><td colspan="6" class="empty">Carregando extrato...</td></tr>';
-
+ $('overtimeTable').innerHTML='<tr><td colspan="7" class="empty">Carregando ocorrências...</td></tr>';$('timeBankTable').innerHTML='<tr><td colspan="6" class="empty">Carregando extrato...</td></tr>';
  const [overtimeResult,bankResult]=await Promise.all([
-  supabaseClient
-   .from('overtime_records')
-   .select('id,company_id,employee_id,work_date,minutes_worked,additional_rate,status,description,approved_by,approved_at,created_at,approval_type,decision_reason,reviewed_at')
-   .eq('company_id',currentCompany.id)
-   .order('work_date',{ascending:false}),
-
-  supabaseClient
-   .from('time_bank_entries')
-   .select('id,company_id,employee_id,movement_type,minutes,status,reference_date,description,created_by,approved_by,approved_at,created_at,overtime_record_id')
-   .eq('company_id',currentCompany.id)
-   .order('reference_date',{ascending:false})
+  supabaseClient.from('overtime_records').select('id,company_id,employee_id,work_date,minutes_worked,additional_rate,status,description,approved_by,approved_at,created_at,approval_type,decision_reason,reviewed_at').eq('company_id',currentCompany.id).order('work_date',{ascending:false}),
+  supabaseClient.from('time_bank_entries').select('id,company_id,employee_id,movement_type,minutes,status,reference_date,description,created_by,approved_by,approved_at,created_at,overtime_record_id').eq('company_id',currentCompany.id).order('reference_date',{ascending:false})
  ]);
-
- if(overtimeResult.error){
-  $('overtimeTable').innerHTML=`<tr><td colspan="7" class="empty">Erro ao carregar horas excedentes: ${escapeHTML(overtimeResult.error.message)}</td></tr>`;
-  showOvertimeMessage('Não foi possível carregar as ocorrências: '+overtimeResult.error.message,'error');
- }else{
-  overtimeData=overtimeResult.data||[];
- }
-
- if(bankResult.error){
-  $('timeBankTable').innerHTML=`<tr><td colspan="6" class="empty">Erro ao carregar extrato: ${escapeHTML(bankResult.error.message)}</td></tr>`;
-  showOvertimeMessage('Não foi possível carregar o banco de horas: '+bankResult.error.message,'error');
- }else{
-  timeBankData=bankResult.data||[];
- }
-
- updateOvertimeCounters();
- renderOvertime();
- renderTimeBank();
+ if(overtimeResult.error){$('overtimeTable').innerHTML=`<tr><td colspan="7" class="empty">Erro ao carregar horas excedentes: ${escapeHTML(overtimeResult.error.message)}</td></tr>`;showOvertimeMessage('Não foi possível carregar as ocorrências: '+overtimeResult.error.message,'error')}else overtimeData=overtimeResult.data||[];
+ if(bankResult.error){$('timeBankTable').innerHTML=`<tr><td colspan="6" class="empty">Erro ao carregar extrato: ${escapeHTML(bankResult.error.message)}</td></tr>`;showOvertimeMessage('Não foi possível carregar o banco de horas: '+bankResult.error.message,'error')}else timeBankData=bankResult.data||[];
+ updateOvertimeCounters();renderOvertime();renderTimeBank();
 }
-
 function updateOvertimeCounters(){
- const pending=overtimeData.filter(r=>r.status==='pending');
- const approved=overtimeData.filter(r=>r.status==='approved');
- const payment=approved.filter(r=>r.approval_type==='payment');
-
- const pendingMinutes=pending.reduce((sum,r)=>sum+Number(r.minutes_worked||0),0);
- const approvedMinutes=approved.reduce((sum,r)=>sum+Number(r.minutes_worked||0),0);
- const paymentMinutes=payment.reduce((sum,r)=>sum+Number(r.minutes_worked||0),0);
-
- $('overtimePendingTotal').textContent=minutesToHours(pendingMinutes);
- $('overtimePendingCount').textContent=pending.length+' ocorrências pendentes';
- $('overtimeApprovedTotal').textContent=minutesToHours(approvedMinutes);
- $('overtimePaymentTotal').textContent=minutesToHours(paymentMinutes);
-
- const approvedEntries=timeBankData.filter(e=>e.status==='approved');
-
- const credits=approvedEntries
-  .filter(e=>e.movement_type==='credit')
-  .reduce((sum,e)=>sum+Number(e.minutes||0),0);
-
- const debits=approvedEntries
-  .filter(e=>e.movement_type==='debit'||e.movement_type==='compensation')
-  .reduce((sum,e)=>sum+Number(e.minutes||0),0);
-
+ const pending=overtimeData.filter(r=>r.status==='pending'),approved=overtimeData.filter(r=>r.status==='approved'),payment=approved.filter(r=>r.approval_type==='payment');
+ $('overtimePendingTotal').textContent=minutesToHours(pending.reduce((s,r)=>s+Number(r.minutes_worked||0),0));$('overtimePendingCount').textContent=pending.length+' ocorrências pendentes';$('overtimeApprovedTotal').textContent=minutesToHours(approved.reduce((s,r)=>s+Number(r.minutes_worked||0),0));$('overtimePaymentTotal').textContent=minutesToHours(payment.reduce((s,r)=>s+Number(r.minutes_worked||0),0));
+ const entries=timeBankData.filter(e=>e.status==='approved'),credits=entries.filter(e=>e.movement_type==='credit').reduce((s,e)=>s+Number(e.minutes||0),0),debits=entries.filter(e=>e.movement_type==='debit'||e.movement_type==='compensation').reduce((s,e)=>s+Number(e.minutes||0),0);
  $('timeBankBalance').textContent=minutesToHours(credits-debits);
 }
-
 function renderOvertime(){
- const tbody=$('overtimeTable');
- if(!tbody)return;
-
- let list=[...overtimeData];
-
- const status=$('overtimeStatusFilter')?.value||'all';
- const search=($('overtimeSearch')?.value||'').trim().toLowerCase();
-
- if(status!=='all'){
-  list=list.filter(r=>r.status===status);
- }
-
- if(search){
-  list=list.filter(r=>{
-   const emp=getOvertimeEmployee(r);
-   return (emp?.full_name||'').toLowerCase().includes(search);
-  });
- }
-
- if(!list.length){
-  tbody.innerHTML='<tr><td colspan="7" class="empty">Nenhuma ocorrência encontrada. Quando houver horas excedentes registradas no sistema, elas aparecerão aqui para análise.</td></tr>';
-  return;
- }
-
+ const tbody=$('overtimeTable');if(!tbody)return;let list=[...overtimeData],status=$('overtimeStatusFilter')?.value||'all',search=($('overtimeSearch')?.value||'').trim().toLowerCase();
+ if(status!=='all')list=list.filter(r=>r.status===status);
+ if(search)list=list.filter(r=>(getOvertimeEmployee(r)?.full_name||'').toLowerCase().includes(search));
+ if(!list.length){tbody.innerHTML='<tr><td colspan="7" class="empty">Nenhuma ocorrência encontrada. Quando houver horas excedentes registradas no sistema, elas aparecerão aqui para análise.</td></tr>';return}
  tbody.innerHTML=list.map(r=>{
-  const emp=getOvertimeEmployee(r);
-  const name=emp?.full_name||'Colaborador não identificado';
-  const approval=overtimeApprovalLabels[r.approval_type]||'—';
-  const description=r.description||'—';
-
-  const actions=canManage()&&r.status==='pending'
-   ?`<div class="overtime-actions">
-      <button class="btn btn-approve" onclick="approveOvertime('${r.id}','payment')">Aprovar pagamento</button>
-      <button class="btn btn-approve" onclick="approveOvertime('${r.id}','bank')">Enviar ao banco</button>
-      <button class="btn btn-reject" onclick="rejectOvertime('${r.id}')">Recusar</button>
-     </div>`
-   :r.status==='rejected'&&r.decision_reason
-    ?`<span title="${escapeHTML(r.decision_reason)}">Motivo registrado</span>`
-    :'—';
-
-  return `<tr>
-   <td><strong>${escapeHTML(name)}</strong></td>
-   <td>${formatDate(r.work_date)}</td>
-   <td><strong>${minutesToHours(r.minutes_worked)}</strong></td>
-   <td>${overtimeStatusBadge(r.status)}</td>
-   <td>${escapeHTML(approval)}</td>
-   <td>${escapeHTML(description)}</td>
-   <td>${actions}</td>
-  </tr>`;
+  const emp=getOvertimeEmployee(r),approval=overtimeApprovalLabels[r.approval_type]||'—',description=r.description||'—';
+  const actions=canManage()&&r.status==='pending'?`<div class="overtime-actions"><button class="btn btn-approve" onclick="approveOvertime('${r.id}','payment')">Aprovar pagamento</button><button class="btn btn-approve" onclick="approveOvertime('${r.id}','bank')">Enviar ao banco</button><button class="btn btn-reject" onclick="rejectOvertime('${r.id}')">Recusar</button></div>`:r.status==='rejected'&&r.decision_reason?`<span title="${escapeHTML(r.decision_reason)}">Motivo registrado</span>`:'—';
+  return `<tr><td><strong>${escapeHTML(emp?.full_name||'Colaborador não identificado')}</strong></td><td>${formatDate(r.work_date)}</td><td><strong>${minutesToHours(r.minutes_worked)}</strong></td><td>${overtimeStatusBadge(r.status)}</td><td>${escapeHTML(approval)}</td><td>${escapeHTML(description)}</td><td>${actions}</td></tr>`;
  }).join('');
 }
-
 async function approveOvertime(id,type){
- if(!canManage()){
-  showOvertimeMessage('Você não possui permissão para analisar horas excedentes.','error');
-  return;
- }
-
+ if(!canManage()){showOvertimeMessage('Você não possui permissão para analisar horas excedentes.','error');return}
  if(!['payment','bank'].includes(type))return;
-
- const record=overtimeData.find(r=>r.id===id);
-
- if(!record||record.status!=='pending'){
-  showOvertimeMessage('Esta ocorrência não está mais pendente. Atualize os dados.','error');
-  return;
- }
-
- const employee=getOvertimeEmployee(record);
- const employeeName=employee?.full_name||'colaborador';
-
- const destination=type==='payment'?'pagamento':'banco de horas';
-
- if(!confirm(`Confirma a aprovação de ${minutesToHours(record.minutes_worked)} para ${employeeName}, como ${destination}?`))return;
-
+ const record=overtimeData.find(r=>r.id===id);if(!record||record.status!=='pending'){showOvertimeMessage('Esta ocorrência não está mais pendente. Atualize os dados.','error');return}
+ const employee=getOvertimeEmployee(record),destination=type==='payment'?'pagamento':'banco de horas';
+ if(!confirm(`Confirma a aprovação de ${minutesToHours(record.minutes_worked)} para ${employee?.full_name||'colaborador'}, como ${destination}?`))return;
  try{
-  const {data,error}=await supabaseClient
-   .from('overtime_records')
-   .update({
-    status:'approved',
-    approval_type:type
-   })
-   .eq('id',id)
-   .eq('company_id',currentCompany.id)
-   .eq('status','pending')
-   .select('id');
-
-  if(error)throw error;
-
-  if(!data||!data.length){
-   throw new Error('A ocorrência não foi atualizada. Ela pode já ter sido analisada.');
-  }
-
-  showOvertimeMessage(
-   type==='payment'
-    ?'Horas excedentes aprovadas para pagamento.'
-    :'Horas excedentes aprovadas e encaminhadas ao banco de horas.',
-   'success'
-  );
-
-  await loadOvertime();
-
- }catch(err){
-  showOvertimeMessage('Não foi possível aprovar: '+(err.message||err),'error');
- }
+  const {data,error}=await supabaseClient.from('overtime_records').update({status:'approved',approval_type:type}).eq('id',id).eq('company_id',currentCompany.id).eq('status','pending').select('id');
+  if(error)throw error;if(!data||!data.length)throw new Error('A ocorrência não foi atualizada. Ela pode já ter sido analisada.');
+  showOvertimeMessage(type==='payment'?'Horas excedentes aprovadas para pagamento.':'Horas excedentes aprovadas e encaminhadas ao banco de horas.','success');await loadOvertime();
+ }catch(err){showOvertimeMessage('Não foi possível aprovar: '+(err.message||err),'error')}
 }
-
 async function rejectOvertime(id){
- if(!canManage()){
-  showOvertimeMessage('Você não possui permissão para analisar horas excedentes.','error');
-  return;
- }
-
- const record=overtimeData.find(r=>r.id===id);
-
- if(!record||record.status!=='pending'){
-  showOvertimeMessage('Esta ocorrência não está mais pendente. Atualize os dados.','error');
-  return;
- }
-
- const reason=prompt('Informe o motivo da recusa desta ocorrência:');
-
- if(reason===null)return;
-
- if(!reason.trim()){
-  alert('É obrigatório informar o motivo da recusa.');
-  return;
- }
-
+ if(!canManage()){showOvertimeMessage('Você não possui permissão para analisar horas excedentes.','error');return}
+ const record=overtimeData.find(r=>r.id===id);if(!record||record.status!=='pending'){showOvertimeMessage('Esta ocorrência não está mais pendente. Atualize os dados.','error');return}
+ const reason=prompt('Informe o motivo da recusa desta ocorrência:');if(reason===null)return;if(!reason.trim()){alert('É obrigatório informar o motivo da recusa.');return}
  if(!confirm('Confirma a recusa desta ocorrência? O tempo trabalhado permanecerá registrado.'))return;
-
  try{
-  const {data,error}=await supabaseClient
-   .from('overtime_records')
-   .update({
-    status:'rejected',
-    decision_reason:reason.trim()
-   })
-   .eq('id',id)
-   .eq('company_id',currentCompany.id)
-   .eq('status','pending')
-   .select('id');
-
-  if(error)throw error;
-
-  if(!data||!data.length){
-   throw new Error('A ocorrência não foi atualizada. Ela pode já ter sido analisada.');
-  }
-
-  showOvertimeMessage('Ocorrência recusada. O registro do tempo trabalhado foi preservado.','success');
-  await loadOvertime();
-
- }catch(err){
-  showOvertimeMessage('Não foi possível recusar: '+(err.message||err),'error');
- }
+  const {data,error}=await supabaseClient.from('overtime_records').update({status:'rejected',decision_reason:reason.trim()}).eq('id',id).eq('company_id',currentCompany.id).eq('status','pending').select('id');
+  if(error)throw error;if(!data||!data.length)throw new Error('A ocorrência não foi atualizada. Ela pode já ter sido analisada.');
+  showOvertimeMessage('Ocorrência recusada. O registro do tempo trabalhado foi preservado.','success');await loadOvertime();
+ }catch(err){showOvertimeMessage('Não foi possível recusar: '+(err.message||err),'error')}
 }
-
 function renderTimeBank(){
- const tbody=$('timeBankTable');
- if(!tbody)return;
-
- if(!timeBankData.length){
-  tbody.innerHTML='<tr><td colspan="6" class="empty">Nenhum movimento registrado no banco de horas.</td></tr>';
-  return;
- }
-
+ const tbody=$('timeBankTable');if(!tbody)return;
+ if(!timeBankData.length){tbody.innerHTML='<tr><td colspan="6" class="empty">Nenhum movimento registrado no banco de horas.</td></tr>';return}
  tbody.innerHTML=timeBankData.map(entry=>{
-  const emp=employeesData.find(e=>e.id===entry.employee_id);
-  const name=emp?.full_name||'Colaborador não identificado';
-
-  let valueClass='ledger-neutral';
-  let prefix='';
-
-  if(entry.movement_type==='credit'){
-   valueClass='ledger-positive';
-   prefix='+';
-  }else if(entry.movement_type==='debit'||entry.movement_type==='compensation'){
-   valueClass='ledger-negative';
-   prefix='-';
-  }
-
+  const emp=employeesData.find(e=>e.id===entry.employee_id);let valueClass='ledger-neutral',prefix='';
+  if(entry.movement_type==='credit'){valueClass='ledger-positive';prefix='+'}else if(entry.movement_type==='debit'||entry.movement_type==='compensation'){valueClass='ledger-negative';prefix='-'}
   const statusLabel=overtimeStatusLabels[entry.status]||entry.status||'—';
-  const statusBadge=`<span class="badge ${escapeHTML(entry.status)}">${escapeHTML(statusLabel)}</span>`;
-
-  return `<tr>
-   <td><strong>${escapeHTML(name)}</strong></td>
-   <td>${formatDate(entry.reference_date)}</td>
-   <td>${escapeHTML(movementLabels[entry.movement_type]||entry.movement_type)}</td>
-   <td class="${valueClass}">${prefix}${minutesToHours(entry.minutes)}</td>
-   <td>${statusBadge}</td>
-   <td>${escapeHTML(entry.description||'—')}</td>
-  </tr>`;
+  return `<tr><td><strong>${escapeHTML(emp?.full_name||'Colaborador não identificado')}</strong></td><td>${formatDate(entry.reference_date)}</td><td>${escapeHTML(movementLabels[entry.movement_type]||entry.movement_type)}</td><td class="${valueClass}">${prefix}${minutesToHours(entry.minutes)}</td><td><span class="badge ${escapeHTML(entry.status)}">${escapeHTML(statusLabel)}</span></td><td>${escapeHTML(entry.description||'—')}</td></tr>`;
  }).join('');
 }
 
 // NAVEGAÇÃO / SESSÃO
 async function showPage(page,button){
- document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));
- $('page-'+page)?.classList.remove('hidden');
-
- document.querySelectorAll('.menu button').forEach(b=>b.classList.remove('active'));
-
- if(button)button.classList.add('active');
-
+ document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));$('page-'+page)?.classList.remove('hidden');
+ document.querySelectorAll('.menu button').forEach(b=>b.classList.remove('active'));if(button)button.classList.add('active');
  const titles={
   inicio:['Visão geral','Acompanhe os indicadores da sua empresa.'],
   colaboradores:['Colaboradores','Gestão e cadastro de colaboradores.'],
@@ -2169,49 +1014,20 @@ async function showPage(page,button){
   configuracoes:['Configurações','Configurações da empresa.'],
   ajuda:['KFYRA AI','Inteligência para sua gestão.']
  };
-
- $('pageTitle').textContent=titles[page][0];
- $('pageSubtitle').textContent=titles[page][1];
- $('companyBanner').classList.toggle('hidden',page!=='inicio');
-
- if(page==='departamentos'){
-  await loadDepartments();
- }
-
- if(page==='colaboradores'){
-  updateDepartmentOptions();
-  updateScheduleOptions();
- }
-
- if(page==='escalas'){
-  await loadSchedules();
-  await loadEmployees();
- }
-
+ $('pageTitle').textContent=titles[page][0];$('pageSubtitle').textContent=titles[page][1];$('companyBanner').classList.toggle('hidden',page!=='inicio');
+ if(page==='departamentos')await loadDepartments();
+ if(page==='colaboradores'){updateDepartmentOptions();updateScheduleOptions()}
+ if(page==='escalas'){await loadSchedules();await loadEmployees()}
  if(page==='solicitacoes'){
-  if(!canViewRequests()){
-   showRequestMessage('Você não possui permissão para consultar solicitações.','error');
-   return;
-  }
-
-  closeRequestDetails();
-  await loadRequests();
+  if(!canViewRequests()){showRequestMessage('Você não possui permissão para consultar solicitações.','error');return}
+  closeRequestDetails();await loadRequests();
  }
-
  if(page==='ponto'){
-  if(!canManage()){
-   showOvertimeMessage('Você não possui permissão para analisar horas excedentes.','error');
-  }
-
+  if(!canManage())showOvertimeMessage('Você não possui permissão para analisar horas excedentes.','error');
   await loadOvertime();
  }
 }
-
-async function logout(){
- await supabaseClient.auth.signOut();
- location.href='login.html';
-}
-
+async function logout(){await supabaseClient.auth.signOut();location.href='login.html'}
 initializeDashboard();
 </script>
 </body>
