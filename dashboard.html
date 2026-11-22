@@ -100,6 +100,7 @@ th{color:var(--muted);font-weight:700}
 .request-toolbar select{max-width:220px}
 .request-document-link{display:inline-flex;align-items:center;gap:7px;margin-top:10px;padding:11px 15px;background:#e5f5eb;color:#17654c;border-radius:8px;text-decoration:none;font-weight:700;font-size:12px;border:1px solid #cce8d7}
 .overtime-toolbar{align-items:end;margin-bottom:18px}
+.point-employee-results{display:flex;flex-direction:column;gap:5px;max-height:220px;overflow:auto;position:relative;z-index:5}.point-employee-results button{border:1px solid var(--border);background:#fff;padding:9px 12px;text-align:left;border-radius:7px;cursor:pointer;color:var(--text)}.point-employee-results button:hover{background:#edf4ef}.point-mark-count{font-weight:800;color:var(--green)}
 .overtime-toolbar .field{flex:1;min-width:180px}
 .overtime-detail{background:#f7faf7;border:1px solid var(--border);padding:16px;border-radius:10px;margin:12px 0}
 .overtime-detail p{font-size:12px;line-height:1.8}
@@ -356,6 +357,16 @@ th{color:var(--muted);font-weight:700}
 <div class="card"><div class="card-label">Horas aprovadas</div><div class="card-number" id="overtimeApprovedTotal">0h</div><div class="card-note">Ocorrências aprovadas</div></div>
 <div class="card"><div class="card-label">Aprovadas para pagamento</div><div class="card-number" id="overtimePaymentTotal">0h</div><div class="card-note">Horas destinadas ao pagamento</div></div>
 <div class="card"><div class="card-label">Saldo do banco de horas</div><div class="card-number" id="timeBankBalance">0h</div><div class="card-note">Créditos menos débitos e compensações aprovados</div></div>
+</div>
+<div class="panel" id="employeePointPanel">
+<div class="panel-header"><div><h3>Consulta individual de ponto</h3><p class="page-description">Pesquise qualquer colaborador e consulte as marcações registradas, mesmo quando não houver horas extras.</p></div></div>
+<div class="overtime-toolbar">
+<div class="field" style="flex:2"><label for="pointEmployeeSearch">Pesquisar colaborador</label><input id="pointEmployeeSearch" type="search" placeholder="Digite o nome do colaborador..." oninput="renderPointEmployeeSearch()" autocomplete="off"><div id="pointEmployeeResults" class="point-employee-results"></div></div>
+<div class="field"><label for="pointMonth">Mês de consulta</label><input id="pointMonth" type="month" onchange="loadEmployeePointHistory()"></div>
+</div>
+<div id="employeePointMessage" class="message"></div>
+<div id="employeePointSummary" class="inline-note">Pesquise e selecione um colaborador para visualizar o histórico de ponto.</div>
+<div class="table-wrap"><table><thead><tr><th>Data</th><th>Entrada</th><th>Início intervalo</th><th>Retorno</th><th>Saída</th><th>Marcações</th></tr></thead><tbody id="employeePointTable"><tr><td colspan="6" class="empty">Nenhum colaborador selecionado.</td></tr></tbody></table></div>
 </div>
 <div class="overtime-toolbar">
 <div class="field"><label>Filtrar ocorrências</label><select id="overtimeStatusFilter" onchange="renderOvertime()"><option value="all">Todas</option><option value="pending">Aguardando análise</option><option value="approved">Aprovadas</option><option value="rejected">Recusadas</option></select></div>
@@ -1451,6 +1462,46 @@ const movementLabels={credit:'Crédito',debit:'Débito',compensation:'Compensaç
 function minutesToHours(minutes){const value=Number(minutes)||0,sign=value<0?'-':'',absolute=Math.abs(value),hours=Math.floor(absolute/60),mins=absolute%60;return `${sign}${hours}h${String(mins).padStart(2,'0')}min`}
 function overtimeStatusBadge(status){return `<span class="badge ${escapeHTML(status)}">${escapeHTML(overtimeStatusLabels[status]||status||'—')}</span>`}
 function getOvertimeEmployee(record){return employeesData.find(e=>e.id===record.employee_id)}
+let selectedPointEmployeeId=null,employeePointMarks=[];
+function renderPointEmployeeSearch(){
+ const box=$('pointEmployeeResults'),input=$('pointEmployeeSearch');if(!box||!input)return;
+ const q=input.value.trim().toLocaleLowerCase('pt-BR');
+ if(!q){box.innerHTML='';return}
+ const matches=employeesData.filter(e=>(e.full_name||'').toLocaleLowerCase('pt-BR').includes(q)||(e.employee_code||'').toLocaleLowerCase('pt-BR').includes(q)).slice(0,10);
+ box.innerHTML=matches.length?matches.map(e=>`<button type="button" onclick="selectPointEmployee('${e.id}')"><strong>${escapeHTML(e.full_name)}</strong><span style="color:var(--muted);font-size:11px"> · ${escapeHTML(e.employee_code||'Sem matrícula')}</span></button>`).join(''):'<div class="empty">Nenhum colaborador encontrado.</div>';
+}
+async function selectPointEmployee(id){
+ const employee=employeesData.find(e=>e.id===id);if(!employee)return;
+ selectedPointEmployeeId=id;$('pointEmployeeSearch').value=employee.full_name;$('pointEmployeeResults').innerHTML='';
+ await loadEmployeePointHistory();
+}
+function formatPointTime(value){
+ if(!value)return '—';
+ return new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(value));
+}
+async function loadEmployeePointHistory(){
+ const tbody=$('employeePointTable'),summary=$('employeePointSummary');
+ if(!tbody||!currentCompany)return;
+ if(!selectedPointEmployeeId){tbody.innerHTML='<tr><td colspan="6" class="empty">Pesquise e selecione um colaborador.</td></tr>';return}
+ const month=$('pointMonth')?.value||new Date().toISOString().slice(0,7);
+ if(!/^\\d{4}-\\d{2}$/.test(month)){return}
+ const [year,mon]=month.split('-').map(Number),start=`${month}-01`,end=new Date(Date.UTC(year,mon,1)).toISOString().slice(0,10);
+ tbody.innerHTML='<tr><td colspan="6" class="empty">Carregando marcações...</td></tr>';
+ const {data,error}=await supabaseClient.from('attendance_records').select('id,employee_id,event_type,recorded_at').eq('company_id',currentCompany.id).eq('employee_id',selectedPointEmployeeId).gte('recorded_at',start+'T00:00:00-03:00').lt('recorded_at',end+'T00:00:00-03:00').order('recorded_at',{ascending:true});
+ if(error){tbody.innerHTML=`<tr><td colspan="6" class="empty">Erro ao consultar marcações: ${escapeHTML(error.message)}</td></tr>`;return}
+ employeePointMarks=data||[];
+ const grouped={};employeePointMarks.forEach(m=>{const d=localDateInSaoPaulo(m.recorded_at);(grouped[d]||(grouped[d]=[])).push(m)});
+ const dates=Object.keys(grouped).sort((a,b)=>b.localeCompare(a));
+ const employee=employeesData.find(e=>e.id===selectedPointEmployeeId);
+ summary.innerHTML=`<strong>${escapeHTML(employee?.full_name||'Colaborador')}</strong> · ${month} · <span class="point-mark-count">${employeePointMarks.length} marcação(ões)</span> em ${dates.length} dia(s). A consulta exibe os registros originais, sem modificá-los.`;
+ if(!dates.length){tbody.innerHTML='<tr><td colspan="6" class="empty">Nenhuma marcação encontrada para este colaborador neste mês.</td></tr>';return}
+ const labels={entrada:'Entrada',inicio_intervalo:'Início intervalo',retorno_intervalo:'Retorno',saida:'Saída'};
+ tbody.innerHTML=dates.map(date=>{
+  const events=grouped[date],first=type=>events.find(m=>m.event_type===type);
+  const all=events.map(m=>`${labels[m.event_type]||m.event_type}: ${formatPointTime(m.recorded_at)}`).join(' · ');
+  return `<tr><td><strong>${formatDate(date)}</strong></td><td>${formatPointTime(first('entrada')?.recorded_at)}</td><td>${formatPointTime(first('inicio_intervalo')?.recorded_at)}</td><td>${formatPointTime(first('retorno_intervalo')?.recorded_at)}</td><td>${formatPointTime([...events].reverse().find(m=>m.event_type==='saida')?.recorded_at)}</td><td>${escapeHTML(all)}</td></tr>`;
+ }).join('');
+}
 async function loadOvertime(){
  if(!currentCompany)return;
  $('overtimeTable').innerHTML='<tr><td colspan="7" class="empty">Carregando ocorrências...</td></tr>';$('timeBankTable').innerHTML='<tr><td colspan="6" class="empty">Carregando extrato...</td></tr>';
@@ -1551,7 +1602,8 @@ async function showPage(page,button){
  }
  if(page==='ponto'){
   if(!canManage())showOvertimeMessage('Você não possui permissão para analisar horas excedentes.','error');
-  await loadOvertime();
+  if($('pointMonth')&&!$('pointMonth').value)$('pointMonth').value=localDateInSaoPaulo(new Date()).slice(0,7);
+  await loadSchedules();await loadEmployees();await loadOvertime();
  }
 }
 async function logout(){await supabaseClient.auth.signOut();location.href='login.html'}
