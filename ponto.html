@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Meu Ponto | NEXORA</title>
+<title>Meu Ponto | KFYRA</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box}
@@ -82,7 +82,7 @@ header{padding:22px}
 </head>
 <body>
 <header>
-<h2>NEXORA<span>.</span></h2>
+<h2>KFYRA<span>.</span></h2>
 <p>MEU PONTO • PORTAL DO COLABORADOR</p>
 </header>
 <main>
@@ -90,7 +90,6 @@ header{padding:22px}
 <h1 id="titulo">Bem-vindo ao Meu Ponto</h1>
 <p id="subtitulo">Acesse seu portal individual de colaborador.</p>
 <div id="mensagem"></div>
-
 <form id="formLogin">
 <label for="email">E-mail</label>
 <input type="email" id="email" required autocomplete="email">
@@ -99,7 +98,7 @@ header{padding:22px}
 <button type="submit">Entrar no Meu Ponto</button>
 </form>
 
-<a class="link" id="linkRecuperacao">Primeiro acesso / Esqueci minha senha</a>
+Primeiro acesso / Esqueci minha senha
 
 <form id="formRecuperacao" class="oculto">
 <label for="emailRecuperacao">Seu e-mail cadastrado</label>
@@ -107,7 +106,6 @@ header{padding:22px}
 <button type="submit">Enviar link para meu e-mail</button>
 <a class="link" id="voltarLogin">Voltar para o login</a>
 </form>
-
 <form id="formSenha" class="oculto">
 <label for="novaSenha">Crie sua senha</label>
 <input type="password" id="novaSenha" minlength="8" required autocomplete="new-password">
@@ -115,31 +113,26 @@ header{padding:22px}
 <input type="password" id="confirmarSenha" minlength="8" required autocomplete="new-password">
 <button type="submit">Salvar senha e continuar</button>
 </form>
-
 <div id="areaLogada" class="oculto">
 <div class="abas">
 <button type="button" class="aba ativa" id="abaPonto">Meu Ponto</button>
 <button type="button" class="aba" id="abaPerfil">Meu Perfil</button>
 </div>
-
 <section id="conteudoPonto">
 <div class="painel-ponto">
 <p>Colaborador</p>
 <h2 id="nomeColaborador"></h2>
 <p id="emailColaborador"></p>
 </div>
-
 <div class="painel-ponto">
 <p>Data e horário atual</p>
 <div id="relogio" class="relogio"></div>
 </div>
-
 <div class="painel-ponto">
 <p>Registro de ponto</p>
 <div id="statusPonto" class="status-ponto">Verificando registros...</div>
 <button type="button" id="botaoPonto" disabled>Carregando...</button>
 </div>
-
 <div class="painel-ponto" id="painelEspelho">
 <h3>Espelho de Ponto</h3>
 <p>Consulte suas marcações organizadas por dia.</p>
@@ -150,9 +143,7 @@ header{padding:22px}
 </div>
 <button type="button" id="botaoConsultarEspelho">Consultar</button>
 </div>
-
 <div id="resumoEspelho" class="resumo-historico"></div>
-
 <div class="painel-ponto">
 <h3>Calendário mensal</h3>
 <div id="calendarioMensal"></div>
@@ -162,17 +153,15 @@ header{padding:22px}
 <span>🟠 Ocorrência</span>
 </div>
 </div>
-
 <div id="listaEspelho">
 <p>Carregando histórico...</p>
 </div>
 </div>
 </section>
-
 <section id="conteudoPerfil" class="oculto">
 <div class="painel-ponto">
 <div class="perfil-topo">
-<div id="avatarIniciais" class="avatar-iniciais">N</div>
+<div id="avatarIniciais" class="avatar-iniciais">K</div>
 <img id="fotoPerfil" class="foto-perfil oculto" alt="Foto de perfil">
 <h2 class="nome-perfil" id="nomePerfil"></h2>
 <p class="cargo-perfil" id="cargoPerfil"></p>
@@ -185,7 +174,6 @@ Adicionar ou trocar foto
 <div class="dado-perfil"><span>Cargo</span><strong id="cargoDado">-</strong></div>
 <div class="dado-perfil"><span>Departamento</span><strong id="departamentoPerfil">Não informado</strong></div>
 </div>
-
 <div class="painel-ponto">
 <h3>Minha jornada de trabalho</h3>
 <p>Horários previstos conforme a escala cadastrada pela empresa.</p>
@@ -193,16 +181,15 @@ Adicionar ou trocar foto
 </div>
 </section>
 
-<button type="button" id="botaoSair" class="secundario">Sair da conta</button>
+Sair da conta
+
 </div>
 </div>
 </main>
-
 <script>
 const SUPABASE_URL="https://guiadodxikdvsfrhedls.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable_dhAqwNSfwGj8_nBnudx_Hw_gMZpnyEL";
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-
 const mensagem=document.getElementById("mensagem");
 const formLogin=document.getElementById("formLogin");
 const formSenha=document.getElementById("formSenha");
@@ -211,12 +198,10 @@ const areaLogada=document.getElementById("areaLogada");
 const linkRecuperacao=document.getElementById("linkRecuperacao");
 const titulo=document.getElementById("titulo");
 const subtitulo=document.getElementById("subtitulo");
-
 let usuarioAtual=null;
 let colaboradorAtual=null;
 let relogioIntervalo=null;
 let processandoPonto=false;
-
 function mostrarMensagem(texto,tipo){
 mensagem.textContent=texto;
 mensagem.className=tipo;
@@ -310,7 +295,6 @@ botao.textContent="Registro indisponível";
 botao.disabled=true;
 }
 }
-
 /* FUNÇÕES DE CÁLCULO */
 function nomeEvento(tipo){
 return {entrada:"Entrada",inicio_intervalo:"Início do intervalo",retorno_intervalo:"Retorno do intervalo",saida:"Saída"}[tipo]||tipo;
@@ -346,7 +330,6 @@ let primeiraEntrada=null;
 let ultimaSaida=null;
 let inconsistente=false;
 let emIntervalo=false;
-
 eventos.forEach(registro=>{
 const instante=new Date(registro.recorded_at).getTime();
 if(!Number.isFinite(instante)){inconsistente=true;return;}
@@ -402,7 +385,6 @@ ultimaSaida,
 inconsistente
 };
 }
-
 /* CONSULTA DAS ESCALAS PARA CÁLCULO */
 async function carregarJornadasPrevistas(ano,mes){
 const primeiroDia=ano+"-"+String(mes).padStart(2,"0")+"-01";
@@ -465,7 +447,6 @@ intervalo:Number(dia.break_minutes||0)
 }
 return resultado;
 }
-
 /* CLASSIFICA ATRASOS, SAÍDAS ANTECIPADAS E EXTRAS */
 function calcularOcorrencias(calculo,jornada){
 if(!jornada)return {atraso:0,antecipada:0,extra:0,saldo:0};
@@ -489,7 +470,6 @@ antecipada=Math.max(0,fimPrevisto-saidaReal);
 if(saldo>0)extra=saldo;
 return {atraso,antecipada,extra,saldo};
 }
-
 function criarResumoItem(valor,legenda){
 const caixa=document.createElement("div");
 caixa.className="resumo-item";
@@ -500,7 +480,6 @@ span.textContent=legenda;
 caixa.append(strong,span);
 return caixa;
 }
-
 function renderizarCalendario(ano,mes,jornadas,dias){
 const area=document.getElementById("calendarioMensal");
 area.innerHTML="";
@@ -537,7 +516,6 @@ celula.append(numero,pequeno);
 area.appendChild(celula);
 }
 }
-
 /* ESPELHO DE PONTO E RESUMO */
 async function carregarEspelhoPonto(){
 const campo=document.getElementById("mesEspelho");
@@ -672,9 +650,8 @@ aviso.textContent="Não foi possível carregar o espelho: "+error.message;
 lista.appendChild(aviso);
 }
 }
-
 function iniciais(nome){
-return (nome||"N").trim().split(/\s+/).slice(0,2).map(p=>p.charAt(0).toUpperCase()).join("");
+return (nome||"K").trim().split(/\s+/).slice(0,2).map(p=>p.charAt(0).toUpperCase()).join("");
 }
 async function carregarFotoPerfil(){
 const avatar=document.getElementById("avatarIniciais");
@@ -889,7 +866,6 @@ await atualizarEstadoPonto();
 processandoPonto=false;
 }
 }
-
 document.getElementById("botaoPonto").addEventListener("click",registrarPonto);
 document.getElementById("botaoConsultarEspelho").addEventListener("click",carregarEspelhoPonto);
 document.getElementById("mesEspelho").addEventListener("change",carregarEspelhoPonto);
@@ -911,7 +887,6 @@ subtitulo.textContent="Consulte seus dados e sua jornada.";
 await carregarPerfil();
 });
 document.getElementById("arquivoFoto").addEventListener("change",enviarFoto);
-
 async function iniciar(){
 const hash=new URLSearchParams(window.location.hash.replace(/^#/,""));
 const query=new URLSearchParams(window.location.search);
