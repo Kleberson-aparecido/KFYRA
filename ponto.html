@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Meu Ponto | NEXORA</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f4f7f4;color:#18352d}
@@ -12,13 +13,13 @@ header{background:#123d32;color:white;padding:25px}
 header h2{margin:0;letter-spacing:3px}
 header span{color:#c5a45b}
 header p{color:#c6ddd1;margin-bottom:0}
-main{max-width:480px;margin:35px auto;padding:20px}
-.card{background:white;padding:28px;border-radius:15px;box-shadow:0 5px 25px #0001}
+main{max-width:520px;margin:30px auto;padding:18px}
+.card{background:white;padding:25px;border-radius:15px;box-shadow:0 5px 25px #0001}
 h1{font-size:25px}
 p{color:#788a82;line-height:1.6}
 label{display:block;margin:18px 0 7px;font-weight:bold;font-size:14px}
 input{width:100%;padding:15px;border:1px solid #dce6df;border-radius:8px;font-size:16px}
-button{width:100%;padding:16px;margin-top:15px;background:#123d32;color:white;border:0;border-radius:8px;font-weight:bold;font-size:15px;cursor:pointer}
+button{width:100%;padding:15px;margin-top:13px;background:#123d32;color:white;border:0;border-radius:8px;font-weight:bold;font-size:15px;cursor:pointer}
 button:disabled{opacity:.55;cursor:not-allowed}
 .secundario{background:#e9efeb;color:#123d32}
 .link{display:block;text-align:center;margin-top:20px;color:#17654c;cursor:pointer;font-size:14px;text-decoration:underline}
@@ -26,13 +27,33 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .erro{display:block!important;background:#fff0ef;color:#a53d35}
 .sucesso{display:block!important;background:#eaf7ef;color:#216343}
 .oculto{display:none!important}
-.painel-ponto{background:#f4f7f4;border:1px solid #e1eae3;border-radius:12px;padding:18px;margin-top:20px}
+.painel-ponto{background:#f4f7f4;border:1px solid #e1eae3;border-radius:12px;padding:18px;margin-top:17px}
 .painel-ponto p{margin:8px 0}
 .relogio{font-size:19px;font-weight:bold;color:#123d32;margin-top:12px}
 .status-ponto{font-size:14px;font-weight:bold;color:#17654c;line-height:1.5}
-@media(max-width:500px){main{margin:20px auto}.card{padding:23px}}
+.abas{display:flex;gap:8px;margin:20px 0 12px}
+.aba{flex:1;background:#e9efeb;color:#123d32;padding:13px 8px;margin:0;font-size:14px}
+.aba.ativa{background:#123d32;color:white}
+.perfil-topo{text-align:center;padding:15px 0}
+.foto-perfil{width:125px;height:125px;border-radius:50%;object-fit:cover;border:4px solid #e1eae3;background:#e9efeb}
+.avatar-iniciais{width:125px;height:125px;border-radius:50%;background:#123d32;color:white;display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:bold;margin:auto;border:4px solid #e1eae3}
+.nome-perfil{font-size:21px;margin:14px 0 4px}
+.cargo-perfil{color:#17654c;font-weight:bold;margin:4px 0}
+.dado-perfil{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid #e5ece7;font-size:14px}
+.dado-perfil strong{text-align:right;overflow-wrap:anywhere}
+.dia-escala{background:white;border:1px solid #e1eae3;border-radius:9px;padding:13px;margin-top:9px}
+.dia-escala strong{display:block;margin-bottom:6px}
+.dia-escala span{font-size:14px;color:#52665d}
+.upload-label{display:block;background:#e9efeb;color:#123d32;text-align:center;padding:13px;border-radius:8px;margin:15px 0 0;cursor:pointer;font-weight:bold}
+.upload-label input{display:none}
+@media(max-width:500px){
+main{margin:15px auto;padding:12px}
+.card{padding:20px}
+header{padding:22px}
+}
 </style>
 </head>
+
 <body>
 <header>
 <h2>NEXORA<span>.</span></h2>
@@ -41,6 +62,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 
 <main>
 <div class="card">
+
 <h1 id="titulo">Bem-vindo ao Meu Ponto</h1>
 <p id="subtitulo">Acesse seu portal individual de colaborador.</p>
 <div id="mensagem"></div>
@@ -48,8 +70,10 @@ button:disabled{opacity:.55;cursor:not-allowed}
 <form id="formLogin">
 <label for="email">E-mail</label>
 <input type="email" id="email" required autocomplete="email">
+
 <label for="senha">Senha</label>
 <input type="password" id="senha" required autocomplete="current-password">
+
 <button type="submit">Entrar no Meu Ponto</button>
 </form>
 
@@ -65,12 +89,22 @@ button:disabled{opacity:.55;cursor:not-allowed}
 <form id="formSenha" class="oculto">
 <label for="novaSenha">Crie sua senha</label>
 <input type="password" id="novaSenha" minlength="8" required autocomplete="new-password">
+
 <label for="confirmarSenha">Confirme sua senha</label>
 <input type="password" id="confirmarSenha" minlength="8" required autocomplete="new-password">
+
 <button type="submit">Salvar senha e continuar</button>
 </form>
 
 <div id="areaLogada" class="oculto">
+
+<div class="abas">
+<button type="button" class="aba ativa" id="abaPonto">Meu Ponto</button>
+<button type="button" class="aba" id="abaPerfil">Meu Perfil</button>
+</div>
+
+<section id="conteudoPonto">
+
 <div class="painel-ponto">
 <p>Colaborador</p>
 <h2 id="nomeColaborador"></h2>
@@ -88,7 +122,57 @@ button:disabled{opacity:.55;cursor:not-allowed}
 <button type="button" id="botaoPonto" disabled>Carregando...</button>
 </div>
 
+</section>
+
+<section id="conteudoPerfil" class="oculto">
+
+<div class="painel-ponto">
+
+<div class="perfil-topo">
+
+<div id="avatarIniciais" class="avatar-iniciais">N</div>
+
+<img id="fotoPerfil" class="foto-perfil oculto" alt="Foto de perfil">
+
+<h2 class="nome-perfil" id="nomePerfil"></h2>
+<p class="cargo-perfil" id="cargoPerfil"></p>
+
+<label class="upload-label" for="arquivoFoto">
+Adicionar ou trocar foto
+<input type="file" id="arquivoFoto" accept="image/jpeg,image/png,image/webp">
+</label>
+
+</div>
+
+<div class="dado-perfil">
+<span>E-mail</span>
+<strong id="emailPerfil">-</strong>
+</div>
+
+<div class="dado-perfil">
+<span>Cargo</span>
+<strong id="cargoDado">-</strong>
+</div>
+
+<div class="dado-perfil">
+<span>Departamento</span>
+<strong id="departamentoPerfil">Não informado</strong>
+</div>
+
+</div>
+
+<div class="painel-ponto">
+<h3>Minha jornada de trabalho</h3>
+<p>Horários previstos conforme a escala cadastrada pela empresa.</p>
+<div id="listaEscala">
+<p>Carregando horários...</p>
+</div>
+</div>
+
+</section>
+
 <button type="button" id="botaoSair" class="secundario">Sair da conta</button>
+
 </div>
 </div>
 </main>
@@ -97,7 +181,10 @@ button:disabled{opacity:.55;cursor:not-allowed}
 const SUPABASE_URL="https://guiadodxikdvsfrhedls.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable_dhAqwNSfwGj8_nBnudx_Hw_gMZpnyEL";
 
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+const supabaseClient=window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_ANON_KEY
+);
 
 const mensagem=document.getElementById("mensagem");
 const formLogin=document.getElementById("formLogin");
@@ -149,10 +236,15 @@ mostrarMensagem("Crie uma senha com pelo menos 8 caracteres.","sucesso");
 
 function iniciarRelogio(){
 if(relogioIntervalo)clearInterval(relogioIntervalo);
+
 function atualizar(){
 document.getElementById("relogio").textContent=
-new Date().toLocaleString("pt-BR",{dateStyle:"full",timeStyle:"medium"});
+new Date().toLocaleString("pt-BR",{
+dateStyle:"full",
+timeStyle:"medium"
+});
 }
+
 atualizar();
 relogioIntervalo=setInterval(atualizar,1000);
 }
@@ -160,13 +252,14 @@ relogioIntervalo=setInterval(atualizar,1000);
 async function buscarColaborador(user){
 const {data,error}=await supabaseClient
 .from("employees")
-.select("id,full_name,email,company_id,status")
+.select("id,full_name,email,company_id,status,job_title,department_id,profile_photo_url")
 .eq("user_id",user.id)
 .eq("status","active")
 .maybeSingle();
 
 if(error)throw new Error("Erro ao consultar colaborador: "+error.message);
 if(!data)throw new Error("Seu cadastro não está vinculado a um colaborador ativo. Procure o RH.");
+
 return data;
 }
 
@@ -256,6 +349,200 @@ botao.disabled=true;
 }
 }
 
+function iniciais(nome){
+return (nome||"N")
+.trim()
+.split(/\s+/)
+.slice(0,2)
+.map(p=>p.charAt(0).toUpperCase())
+.join("");
+}
+
+async function carregarFotoPerfil(){
+const avatar=document.getElementById("avatarIniciais");
+const foto=document.getElementById("fotoPerfil");
+
+avatar.textContent=iniciais(colaboradorAtual.full_name);
+avatar.classList.remove("oculto");
+foto.classList.add("oculto");
+
+const caminho=colaboradorAtual.profile_photo_url;
+
+if(!caminho)return;
+
+try{
+const {data,error}=await supabaseClient
+.storage
+.from("profile-photos")
+.createSignedUrl(caminho,3600);
+
+if(error)throw error;
+
+foto.src=data.signedUrl;
+foto.onload=function(){
+foto.classList.remove("oculto");
+avatar.classList.add("oculto");
+};
+foto.onerror=function(){
+foto.classList.add("oculto");
+avatar.classList.remove("oculto");
+};
+
+}catch(error){
+console.error("Erro ao carregar foto:",error.message);
+}
+}
+
+async function carregarPerfil(){
+document.getElementById("nomePerfil").textContent=colaboradorAtual.full_name||"";
+document.getElementById("cargoPerfil").textContent=colaboradorAtual.job_title||"Cargo não informado";
+document.getElementById("emailPerfil").textContent=colaboradorAtual.email||usuarioAtual.email||"-";
+document.getElementById("cargoDado").textContent=colaboradorAtual.job_title||"Não informado";
+document.getElementById("departamentoPerfil").textContent="Não informado";
+
+await carregarFotoPerfil();
+await carregarEscala();
+}
+
+function formatarHora(hora){
+if(!hora)return "--:--";
+return hora.substring(0,5);
+}
+
+async function carregarEscala(){
+const lista=document.getElementById("listaEscala");
+lista.innerHTML="<p>Consultando escala...</p>";
+
+try{
+const {data,error}=await supabaseClient
+.from("employee_schedules")
+.select("day_of_week,start_time,end_time,effective_from,effective_until")
+.eq("employee_id",colaboradorAtual.id)
+.eq("company_id",colaboradorAtual.company_id);
+
+if(error)throw error;
+
+const hoje=new Date();
+const hojeTexto=[
+hoje.getFullYear(),
+String(hoje.getMonth()+1).padStart(2,"0"),
+String(hoje.getDate()).padStart(2,"0")
+].join("-");
+
+const escalas=(data||[]).filter(item=>{
+const inicio=!item.effective_from||item.effective_from<=hojeTexto;
+const fim=!item.effective_until||item.effective_until>=hojeTexto;
+return inicio&&fim;
+});
+
+if(escalas.length===0){
+lista.innerHTML="<p>Você ainda não possui uma jornada cadastrada. Consulte o RH da sua empresa.</p>";
+return;
+}
+
+const dias=[
+"Domingo",
+"Segunda-feira",
+"Terça-feira",
+"Quarta-feira",
+"Quinta-feira",
+"Sexta-feira",
+"Sábado"
+];
+
+escalas.sort((a,b)=>a.day_of_week-b.day_of_week);
+
+lista.innerHTML="";
+
+escalas.forEach(item=>{
+const dia=Number(item.day_of_week);
+const nomeDia=dias[dia]||("Dia "+dia);
+
+const bloco=document.createElement("div");
+bloco.className="dia-escala";
+
+const tituloDia=document.createElement("strong");
+tituloDia.textContent=nomeDia;
+
+const horario=document.createElement("span");
+horario.textContent=
+"Entrada: "+formatarHora(item.start_time)+
+" • Saída: "+formatarHora(item.end_time);
+
+bloco.appendChild(tituloDia);
+bloco.appendChild(horario);
+lista.appendChild(bloco);
+});
+
+}catch(error){
+console.error("Erro ao consultar escala:",error.message);
+lista.innerHTML="<p>Não foi possível carregar sua escala neste momento.</p>";
+}
+}
+
+async function enviarFoto(event){
+const arquivo=event.target.files[0];
+if(!arquivo)return;
+
+if(!["image/jpeg","image/png","image/webp"].includes(arquivo.type)){
+mostrarMensagem("Escolha uma imagem JPG, PNG ou WebP.","erro");
+event.target.value="";
+return;
+}
+
+if(arquivo.size>2*1024*1024){
+mostrarMensagem("A foto deve ter no máximo 2 MB.","erro");
+event.target.value="";
+return;
+}
+
+const extensoes={
+"image/jpeg":"jpg",
+"image/png":"png",
+"image/webp":"webp"
+};
+
+const extensao=extensoes[arquivo.type];
+const caminho=usuarioAtual.id+"/"+colaboradorAtual.id+"."+extensao;
+
+const input=document.getElementById("arquivoFoto");
+input.disabled=true;
+limparMensagem();
+
+try{
+
+const {error:uploadError}=await supabaseClient
+.storage
+.from("profile-photos")
+.upload(caminho,arquivo,{
+upsert:true,
+contentType:arquivo.type
+});
+
+if(uploadError)throw uploadError;
+
+const {error:perfilError}=await supabaseClient
+.rpc("atualizar_minha_foto",{
+caminho_foto:caminho
+});
+
+if(perfilError)throw perfilError;
+
+colaboradorAtual.profile_photo_url=caminho;
+
+await carregarFotoPerfil();
+
+mostrarMensagem("Foto de perfil atualizada com sucesso!","sucesso");
+
+}catch(error){
+mostrarMensagem("Não foi possível atualizar a foto: "+error.message,"erro");
+console.error(error);
+}finally{
+input.disabled=false;
+input.value="";
+}
+}
+
 async function abrirPortal(user){
 esconderFormularios();
 limparMensagem();
@@ -268,8 +555,15 @@ document.getElementById("nomeColaborador").textContent=colaboradorAtual.full_nam
 document.getElementById("emailColaborador").textContent=colaboradorAtual.email||user.email;
 
 areaLogada.classList.remove("oculto");
+
 titulo.textContent="Meu Ponto";
 subtitulo.textContent="Bem-vindo ao seu portal de colaborador.";
+
+document.getElementById("conteudoPonto").classList.remove("oculto");
+document.getElementById("conteudoPerfil").classList.add("oculto");
+
+document.getElementById("abaPonto").classList.add("ativa");
+document.getElementById("abaPerfil").classList.remove("ativa");
 
 iniciarRelogio();
 await atualizarEstadoPonto();
@@ -291,6 +585,7 @@ return;
 }
 
 processandoPonto=true;
+
 const botao=document.getElementById("botaoPonto");
 botao.disabled=true;
 botao.textContent="Registrando...";
@@ -348,6 +643,32 @@ processandoPonto=false;
 
 document.getElementById("botaoPonto").addEventListener("click",registrarPonto);
 
+document.getElementById("abaPonto").addEventListener("click",function(){
+document.getElementById("conteudoPonto").classList.remove("oculto");
+document.getElementById("conteudoPerfil").classList.add("oculto");
+
+this.classList.add("ativa");
+document.getElementById("abaPerfil").classList.remove("ativa");
+
+titulo.textContent="Meu Ponto";
+subtitulo.textContent="Registre sua jornada de trabalho.";
+});
+
+document.getElementById("abaPerfil").addEventListener("click",async function(){
+document.getElementById("conteudoPonto").classList.add("oculto");
+document.getElementById("conteudoPerfil").classList.remove("oculto");
+
+this.classList.add("ativa");
+document.getElementById("abaPonto").classList.remove("ativa");
+
+titulo.textContent="Meu Perfil";
+subtitulo.textContent="Consulte seus dados e sua jornada.";
+
+await carregarPerfil();
+});
+
+document.getElementById("arquivoFoto").addEventListener("change",enviarFoto);
+
 async function iniciar(){
 const hash=new URLSearchParams(window.location.hash.replace(/^#/,""));
 const query=new URLSearchParams(window.location.search);
@@ -373,6 +694,7 @@ if(data.session){
 mostrarFormularioSenha(tipo);
 return;
 }
+
 mostrarLogin();
 mostrarMensagem("Não foi possível validar o link. Solicite um novo.","erro");
 return;
@@ -388,8 +710,10 @@ mostrarLogin();
 linkRecuperacao.addEventListener("click",function(){
 esconderFormularios();
 formRecuperacao.classList.remove("oculto");
+
 titulo.textContent="Primeiro acesso ou recuperação";
 subtitulo.textContent="Informe seu e-mail cadastrado para receber um link.";
+
 limparMensagem();
 });
 
@@ -448,9 +772,11 @@ botao.textContent="Salvando...";
 
 try{
 const {data,error}=await supabaseClient.auth.updateUser({password:senha});
+
 if(error)throw error;
 
 history.replaceState(null,"",window.location.pathname);
+
 mostrarMensagem("Senha criada com sucesso!","sucesso");
 await abrirPortal(data.user);
 
@@ -474,8 +800,13 @@ botao.disabled=true;
 botao.textContent="Entrando...";
 
 try{
-const {data,error}=await supabaseClient.auth.signInWithPassword({email, password:senha});
+const {data,error}=await supabaseClient.auth.signInWithPassword({
+email,
+password:senha
+});
+
 if(error)throw error;
+
 await abrirPortal(data.user);
 
 }catch(error){
@@ -495,18 +826,8 @@ return;
 }
 
 if(relogioIntervalo)clearInterval(relogioIntervalo);
+
 window.location.replace(window.location.pathname);
 }
 
-document.getElementById("botaoSair").addEventListener("click",sair);
-
-supabaseClient.auth.onAuthStateChange(function(event,session){
-if(event==="PASSWORD_RECOVERY"&&session){
-mostrarFormularioSenha("recovery");
-}
-});
-
-iniciar();
-</script>
-</body>
-</html>
+document.getElementById("bot
