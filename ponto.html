@@ -862,6 +862,13 @@ bloco.appendChild(aviso);
 }
 lista.appendChild(bloco);
 });
+}catch(error){
+console.error("Erro ao carregar espelho de ponto:",error);
+lista.innerHTML="";
+lista.appendChild(criarElemento("p","","Não foi possível carregar o espelho de ponto: "+error.message));
+resumo.innerHTML="";
+document.getElementById("calendarioDetalhe").textContent="Não foi possível carregar os detalhes do calendário.";
+}
 }
 /* PERFIL */
 function iniciais(nome){
