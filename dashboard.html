@@ -91,8 +91,6 @@ th{color:var(--muted);font-weight:700}
 .request-toolbar select{max-width:220px}
 .request-document-link{display:inline-flex;align-items:center;gap:7px;margin-top:10px;padding:11px 15px;background:#e5f5eb;color:#17654c;border-radius:8px;text-decoration:none;font-weight:700;font-size:12px;border:1px solid #cce8d7}
 .request-document-link:hover{background:#d5eddf}
-
-/* CONTROLE DE HORAS EXCEDENTES */
 .overtime-toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin-bottom:18px}
 .overtime-toolbar .field{flex:1;min-width:180px}
 .overtime-toolbar .field select,.overtime-toolbar .field input{max-width:100%}
@@ -142,7 +140,6 @@ th{color:var(--muted);font-weight:700}
 <button onclick="showPage('ponto',this)">◷ Controle de ponto</button>
 <button onclick="showPage('escalas',this)">▦ Escalas</button>
 <button onclick="showPage('solicitacoes',this)">▣ Solicitações</button>
-
 <div class="menu-title">GESTÃO</div>
 <button onclick="showPage('relatorios',this)">▥ Relatórios</button>
 <button onclick="showPage('disciplinar',this)">⚖ Disciplinar</button>
@@ -183,7 +180,6 @@ th{color:var(--muted);font-weight:700}
 <div class="card"><div class="card-label">Departamentos</div><div class="card-number" id="totalDepartments">—</div><div class="card-note">Estrutura organizacional</div></div>
 <div class="card"><div class="card-label">Plano</div><div class="card-number" style="font-size:19px" id="planIndicator">—</div><div class="card-note">Plano da empresa</div></div>
 </div>
-
 <div class="panel">
 <div class="panel-header"><h3>Bem-vindo à KFYRA</h3></div>
 <p style="font-size:13px;color:#82918a;line-height:1.8">Sua empresa está conectada ao ambiente KFYRA. Utilize o menu lateral para acessar os módulos de gestão, acompanhar colaboradores e organizar as operações da sua empresa.</p>
@@ -193,13 +189,9 @@ th{color:var(--muted);font-weight:700}
 <section id="page-colaboradores" class="hidden">
 <div class="panel">
 <div class="panel-header">
-<div>
-<h3>Gestão de colaboradores</h3>
-<p class="page-description">Cadastre, edite e consulte os colaboradores da empresa.</p>
-</div>
+<div><h3>Gestão de colaboradores</h3><p class="page-description">Cadastre, edite e consulte os colaboradores da empresa.</p></div>
 <button class="btn" id="newEmployeeButton" onclick="openEmployeeForm()">+ Novo colaborador</button>
 </div>
-
 <div id="employeeMessage" class="message"></div>
 <div id="employeeForm" class="hidden">
 <h3 id="employeeFormTitle" style="font-size:15px;margin-bottom:18px">Cadastro de colaborador</h3>
@@ -260,7 +252,6 @@ th{color:var(--muted);font-weight:700}
 </form>
 </div>
 </div>
-
 <div class="panel">
 <div class="panel-header"><h3>Departamentos cadastrados</h3><strong id="departmentCount" style="font-size:12px;color:#82918a">0 departamentos</strong></div>
 <div class="table-wrap">
@@ -279,17 +270,53 @@ th{color:var(--muted);font-weight:700}
 <button class="btn" id="newScheduleButton" onclick="openScheduleForm()">+ Nova escala</button>
 </div>
 <div id="scheduleMessage" class="message"></div>
+
 <div id="scheduleForm" class="hidden">
 <h3 id="scheduleFormTitle" style="font-size:15px;margin-bottom:18px">Cadastrar modelo de escala</h3>
 <form id="newScheduleForm">
 <div class="form-grid">
-<div class="field"><label>Nome da escala *</label><input id="scheduleName" required placeholder="Ex.: Administrativo - manhã"></div>
-<div class="field"><label>Tipo de escala *</label><select id="scheduleType" onchange="buildScheduleDays()"><option value="fixed">Fixa semanal</option><option value="cyclic">Cíclica</option></select></div>
-<div class="field hidden" id="cycleLengthField"><label>Duração do ciclo (dias) *</label><input id="cycleDays" type="number" min="1" max="42" value="6"><div class="hint">Informe quantos dias tem o ciclo completo, incluindo trabalho e descanso.</div></div>
-<div class="field"><label>Carga horária semanal de referência (horas)</label><input id="scheduleWeeklyHours" type="number" min="0" max="168" step="0.5" placeholder="Ex.: 44"></div>
+<div class="field">
+<label>Nome da escala *</label>
+<input id="scheduleName" required placeholder="Ex.: Administrativo - manhã">
 </div>
-<div class="inline-note" id="scheduleExplanation">Escala fixa: configure os sete dias da semana. Marque os dias trabalhados e informe horários e intervalo. Dias desmarcados serão descanso.</div>
+
+<div class="field">
+<label>Modelo de escala</label>
+<select id="schedulePattern" onchange="applySchedulePattern()">
+<option value="custom">Personalizada</option>
+<option value="5x1">5x1 — 5 dias de trabalho e 1 folga</option>
+<option value="6x1">6x1 — 6 dias de trabalho e 1 folga</option>
+<option value="5x2">5x2 — 5 dias de trabalho e 2 folgas</option>
+</select>
+<div class="hint">O modelo preenche os dias inicialmente. Você ainda pode editar cada dia manualmente.</div>
+</div>
+
+<div class="field">
+<label>Tipo de escala *</label>
+<select id="scheduleType" onchange="scheduleTypeChanged()">
+<option value="fixed">Fixa semanal</option>
+<option value="cyclic">Cíclica</option>
+</select>
+</div>
+
+<div class="field hidden" id="cycleLengthField">
+<label>Duração do ciclo (dias) *</label>
+<input id="cycleDays" type="number" min="1" max="42" value="6">
+<div class="hint">Informe quantos dias tem o ciclo completo, incluindo trabalho e descanso.</div>
+</div>
+
+<div class="field">
+<label>Carga horária semanal de referência (horas)</label>
+<input id="scheduleWeeklyHours" type="number" min="0" max="168" step="0.5" placeholder="Ex.: 44">
+</div>
+</div>
+
+<div class="inline-note" id="scheduleExplanation">
+Escala personalizada: configure os sete dias da semana. Marque os dias trabalhados e informe horários e intervalo. Dias desmarcados serão descanso.
+</div>
+
 <div id="scheduleDays" class="day-grid"></div>
+
 <div class="form-actions">
 <button type="submit" class="btn" id="saveScheduleButton">Salvar escala</button>
 <button type="button" class="btn btn-secondary" onclick="closeScheduleForm()">Cancelar</button>
@@ -345,14 +372,12 @@ th{color:var(--muted);font-weight:700}
 <input type="search" id="requestSearch" placeholder="Nome do colaborador..." oninput="renderRequests()">
 </div>
 </div>
-
 <div class="cards" style="margin-top:22px;margin-bottom:15px">
 <div class="card"><div class="card-label">Total</div><div class="card-number" id="requestTotal">0</div><div class="card-note">Solicitações recebidas</div></div>
 <div class="card"><div class="card-label">Pendentes</div><div class="card-number" id="requestPending">0</div><div class="card-note">Aguardando análise</div></div>
 <div class="card"><div class="card-label">Aprovadas</div><div class="card-number" id="requestApproved">0</div><div class="card-note">Solicitações aprovadas</div></div>
 <div class="card"><div class="card-label">Recusadas</div><div class="card-number" id="requestRejected">0</div><div class="card-note">Solicitações recusadas</div></div>
 </div>
-
 <div class="table-wrap">
 <table>
 <thead><tr><th>Colaborador</th><th>Tipo</th><th>Data solicitada</th><th>Enviada em</th><th>Status</th><th>Ações</th></tr></thead>
@@ -385,7 +410,6 @@ th{color:var(--muted);font-weight:700}
 </div>
 </section>
 
-<!-- MÓDULO DE CONTROLE DE PONTO E HORAS EXCEDENTES -->
 <section id="page-ponto" class="hidden">
 <div class="panel">
 <div class="panel-header">
@@ -395,36 +419,16 @@ th{color:var(--muted);font-weight:700}
 </div>
 <button class="btn btn-secondary" onclick="loadOvertime()">↻ Atualizar dados</button>
 </div>
-
 <div id="overtimeMessage" class="message"></div>
-
 <div class="inline-note">
 As horas excedentes registradas aparecem para análise do RH. A aprovação como pagamento ou banco de horas é uma decisão administrativa. O tempo trabalhado não é apagado quando uma ocorrência é recusada.
 </div>
-
 <div class="cards" style="margin-bottom:20px">
-<div class="card">
-<div class="card-label">Horas aguardando análise</div>
-<div class="card-number" id="overtimePendingTotal">0h</div>
-<div class="card-note" id="overtimePendingCount">0 ocorrências pendentes</div>
+<div class="card"><div class="card-label">Horas aguardando análise</div><div class="card-number" id="overtimePendingTotal">0h</div><div class="card-note" id="overtimePendingCount">0 ocorrências pendentes</div></div>
+<div class="card"><div class="card-label">Horas aprovadas</div><div class="card-number" id="overtimeApprovedTotal">0h</div><div class="card-note">Ocorrências aprovadas</div></div>
+<div class="card"><div class="card-label">Aprovadas para pagamento</div><div class="card-number" id="overtimePaymentTotal">0h</div><div class="card-note">Horas destinadas ao pagamento</div></div>
+<div class="card"><div class="card-label">Saldo do banco de horas</div><div class="card-number" id="timeBankBalance">0h</div><div class="card-note">Créditos menos débitos e compensações aprovados</div></div>
 </div>
-<div class="card">
-<div class="card-label">Horas aprovadas</div>
-<div class="card-number" id="overtimeApprovedTotal">0h</div>
-<div class="card-note">Ocorrências aprovadas</div>
-</div>
-<div class="card">
-<div class="card-label">Aprovadas para pagamento</div>
-<div class="card-number" id="overtimePaymentTotal">0h</div>
-<div class="card-note">Horas destinadas ao pagamento</div>
-</div>
-<div class="card">
-<div class="card-label">Saldo do banco de horas</div>
-<div class="card-number" id="timeBankBalance">0h</div>
-<div class="card-note">Créditos menos débitos e compensações aprovados</div>
-</div>
-</div>
-
 <div class="overtime-toolbar">
 <div class="field">
 <label>Filtrar ocorrências</label>
@@ -440,24 +444,11 @@ As horas excedentes registradas aparecem para análise do RH. A aprovação como
 <input type="search" id="overtimeSearch" placeholder="Nome do colaborador..." oninput="renderOvertime()">
 </div>
 </div>
-
 <h3 style="font-size:15px;margin:20px 0 12px">Ocorrências de horas excedentes</h3>
 <div class="table-wrap">
 <table>
-<thead>
-<tr>
-<th>Colaborador</th>
-<th>Data</th>
-<th>Tempo excedente</th>
-<th>Status</th>
-<th>Classificação</th>
-<th>Descrição</th>
-<th>Ações</th>
-</tr>
-</thead>
-<tbody id="overtimeTable">
-<tr><td colspan="7" class="empty">Carregando ocorrências...</td></tr>
-</tbody>
+<thead><tr><th>Colaborador</th><th>Data</th><th>Tempo excedente</th><th>Status</th><th>Classificação</th><th>Descrição</th><th>Ações</th></tr></thead>
+<tbody id="overtimeTable"><tr><td colspan="7" class="empty">Carregando ocorrências...</td></tr></tbody>
 </table>
 </div>
 </div>
@@ -470,26 +461,13 @@ As horas excedentes registradas aparecem para análise do RH. A aprovação como
 </div>
 <button class="btn btn-secondary" onclick="loadOvertime()">Atualizar extrato</button>
 </div>
-
 <div class="inline-note">
 O saldo apresentado é calculado a partir dos movimentos aprovados: créditos positivos menos débitos e compensações. Ajustes administrativos são exibidos no extrato, mas não entram nesse cálculo automático porque precisam de uma regra de sinal definida.
 </div>
-
 <div class="table-wrap">
 <table>
-<thead>
-<tr>
-<th>Colaborador</th>
-<th>Data</th>
-<th>Movimento</th>
-<th>Minutos</th>
-<th>Status</th>
-<th>Descrição</th>
-</tr>
-</thead>
-<tbody id="timeBankTable">
-<tr><td colspan="6" class="empty">Carregando extrato...</td></tr>
-</tbody>
+<thead><tr><th>Colaborador</th><th>Data</th><th>Movimento</th><th>Minutos</th><th>Status</th><th>Descrição</th></tr></thead>
+<tbody id="timeBankTable"><tr><td colspan="6" class="empty">Carregando extrato...</td></tr></tbody>
 </table>
 </div>
 </div>
@@ -786,7 +764,10 @@ async function deleteDepartment(id){
  await loadEmployees();
 }
 
-// ESCALAS
+// =====================================================
+// ESCALAS - MODELOS FIXOS, CICLICOS E PERSONALIZADOS
+// =====================================================
+
 async function loadSchedules(){
  if(!currentCompany)return;
 
@@ -895,6 +876,22 @@ function updateScheduleOptions(){
  if([...select.options].some(o=>o.value===old))select.value=old;
 }
 
+function collectScheduleDayInputs(){
+ return [...document.querySelectorAll('#scheduleDays .day-row')].map(row=>{
+  const check=row.querySelector('.work-day');
+  const day=Number(check.dataset.day);
+  const working=check.checked;
+
+  return {
+   day_number:day,
+   is_working:working,
+   start_time:working?(row.querySelector('.day-start').value||null):null,
+   end_time:working?(row.querySelector('.day-end').value||null):null,
+   break_minutes:working?(parseInt(row.querySelector('.day-break').value,10)||0):0
+  };
+ });
+}
+
 function buildScheduleDays(existing=[]){
  const type=$('scheduleType').value;
  const cyclic=type==='cyclic';
@@ -902,7 +899,7 @@ function buildScheduleDays(existing=[]){
  $('cycleLengthField').classList.toggle('hidden',!cyclic);
 
  $('scheduleExplanation').textContent=cyclic
-  ?'Escala cíclica: configure cada dia do ciclo. O Dia 1 se repete após o último dia informado. Exemplo: ciclo de 6 dias com 5 dias trabalhados e 1 descanso.'
+  ?'Escala cíclica: configure cada dia do ciclo. O Dia 1 se repete após o último dia informado. Os dias de trabalho e descanso são definidos por você.'
   :'Escala fixa: configure os sete dias da semana. Dia 1 = segunda-feira e Dia 7 = domingo. Os dias desmarcados serão descanso.';
 
  let count=7;
@@ -915,19 +912,31 @@ function buildScheduleDays(existing=[]){
 
  $('scheduleDays').innerHTML=labels.map((label,i)=>{
   const day=existing.find(d=>Number(d.day_number)===i+1);
-  const working=day?day.is_working:(cyclic?i<5:i<5);
+  const working=day?Boolean(day.is_working):(i<5);
   const start=day?.start_time?.slice(0,5)||'08:00';
   const end=day?.end_time?.slice(0,5)||'17:00';
   const br=day?.break_minutes??60;
 
   return `<div class="day-row">
    <div>
-    <label class="day-check"><input type="checkbox" class="work-day" data-day="${i+1}" ${working?'checked':''} onchange="toggleDayInputs(this)"> ${label}</label>
+    <label class="day-check">
+     <input type="checkbox" class="work-day" data-day="${i+1}" ${working?'checked':''} onchange="toggleDayInputs(this)">
+     ${label}
+    </label>
     <div class="hint">${working?'Dia de trabalho':'Dia de descanso'}</div>
    </div>
-   <div class="field"><label>Entrada</label><input type="time" class="day-start" data-day="${i+1}" value="${start}" ${working?'':'disabled'}></div>
-   <div class="field"><label>Saída</label><input type="time" class="day-end" data-day="${i+1}" value="${end}" ${working?'':'disabled'}></div>
-   <div class="field"><label>Intervalo (min)</label><input type="number" min="0" max="600" class="day-break" data-day="${i+1}" value="${br}" ${working?'':'disabled'}></div>
+   <div class="field">
+    <label>Entrada</label>
+    <input type="time" class="day-start" data-day="${i+1}" value="${start}" ${working?'':'disabled'}>
+   </div>
+   <div class="field">
+    <label>Saída</label>
+    <input type="time" class="day-end" data-day="${i+1}" value="${end}" ${working?'':'disabled'}>
+   </div>
+   <div class="field">
+    <label>Intervalo (min)</label>
+    <input type="number" min="0" max="600" class="day-break" data-day="${i+1}" value="${br}" ${working?'':'disabled'}>
+   </div>
   </div>`;
  }).join('');
 }
@@ -938,10 +947,69 @@ function toggleDayInputs(check){
  row.querySelector('.hint').textContent=check.checked?'Dia de trabalho':'Dia de descanso';
 }
 
-$('scheduleType').addEventListener('change',()=>buildScheduleDays());
+function scheduleTypeChanged(){
+ $('schedulePattern').value='custom';
+ buildScheduleDays();
+}
+
+function applySchedulePattern(){
+ const pattern=$('schedulePattern').value;
+ let type='fixed';
+ let cycle=7;
+ let workingDays=5;
+
+ if(pattern==='5x1'){
+  type='cyclic';
+  cycle=6;
+  workingDays=5;
+ }else if(pattern==='6x1'){
+  type='cyclic';
+  cycle=7;
+  workingDays=6;
+ }else if(pattern==='5x2'){
+  type='fixed';
+  cycle=7;
+  workingDays=5;
+ }else{
+  buildScheduleDays();
+  return;
+ }
+
+ $('scheduleType').value=type;
+ $('cycleDays').value=cycle;
+
+ const rows=Array.from({length:cycle},(_,i)=>({
+  day_number:i+1,
+  is_working:i<workingDays,
+  start_time:'08:00',
+  end_time:'17:00',
+  break_minutes:60
+ }));
+
+ buildScheduleDays(rows);
+}
+
+$('scheduleType').addEventListener('change',scheduleTypeChanged);
 
 $('cycleDays').addEventListener('input',()=>{
- if($('scheduleType').value==='cyclic')buildScheduleDays();
+ if($('scheduleType').value!=='cyclic')return;
+
+ const current=collectScheduleDayInputs();
+ const count=Math.max(1,Math.min(42,parseInt($('cycleDays').value,10)||1));
+
+ const adjusted=Array.from({length:count},(_,i)=>{
+  const old=current.find(d=>d.day_number===i+1);
+  return old||{
+   day_number:i+1,
+   is_working:i<5,
+   start_time:'08:00',
+   end_time:'17:00',
+   break_minutes:60
+  };
+ });
+
+ $('schedulePattern').value='custom';
+ buildScheduleDays(adjusted);
 });
 
 function openScheduleForm(){
@@ -949,6 +1017,7 @@ function openScheduleForm(){
 
  editingScheduleId=null;
  $('newScheduleForm').reset();
+ $('schedulePattern').value='custom';
  $('scheduleType').value='fixed';
  $('cycleDays').value=6;
  $('scheduleFormTitle').textContent='Cadastrar modelo de escala';
@@ -973,6 +1042,7 @@ function editSchedule(id){
  editingScheduleId=id;
  $('scheduleName').value=s.name;
  $('scheduleType').value=s.schedule_type;
+ $('schedulePattern').value='custom';
  $('cycleDays').value=s.cycle_days||6;
  $('scheduleWeeklyHours').value=s.weekly_hours??'';
  buildScheduleDays(getScheduleDays(id));
@@ -1018,19 +1088,12 @@ $('newScheduleForm').addEventListener('submit',async e=>{
   return;
  }
 
- const rows=[...document.querySelectorAll('.day-row')].map(row=>{
-  const check=row.querySelector('.work-day');
-  const day=Number(check.dataset.day);
-  const working=check.checked;
+ const rows=collectScheduleDayInputs();
 
-  return {
-   day_number:day,
-   is_working:working,
-   start_time:working?(row.querySelector('.day-start').value||null):null,
-   end_time:working?(row.querySelector('.day-end').value||null):null,
-   break_minutes:working?(parseInt(row.querySelector('.day-break').value,10)||0):0
-  };
- });
+ if(rows.length!==cycle){
+  showScheduleMessage('A quantidade de dias configurados não corresponde à duração da escala.','error');
+  return;
+ }
 
  if(rows.some(r=>r.is_working&&(!r.start_time||!r.end_time))){
   showScheduleMessage('Preencha entrada e saída de todos os dias trabalhados.','error');
@@ -1062,7 +1125,12 @@ $('newScheduleForm').addEventListener('submit',async e=>{
   if(editing){
    const {error}=await supabaseClient
     .from('work_schedule_templates')
-    .update({name,schedule_type:type,cycle_days:cycle,weekly_hours:payload.weekly_hours})
+    .update({
+     name,
+     schedule_type:type,
+     cycle_days:cycle,
+     weekly_hours:payload.weekly_hours
+    })
     .eq('id',scheduleId)
     .eq('company_id',currentCompany.id);
 
@@ -1564,7 +1632,6 @@ function renderRequests(){
  }).join('');
 }
 
-// ABRIR COMPROVANTE PRIVADO
 async function openRequestDocument(path,button){
  if(!path){
   showRequestMessage('Esta solicitação não possui comprovante anexado.','error');
@@ -1783,10 +1850,7 @@ async function decideRequest(decision){
  }
 }
 
-// =====================================================
-// MÓDULO DE HORAS EXCEDENTES E BANCO DE HORAS
-// =====================================================
-
+// HORAS EXCEDENTES E BANCO DE HORAS
 const overtimeStatusLabels={
  pending:'Aguardando análise',
  approved:'Aprovada',
