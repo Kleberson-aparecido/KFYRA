@@ -371,9 +371,9 @@ th{color:var(--muted);font-weight:700}
 </div>
 <div class="overtime-toolbar">
 <div class="field"><label>Filtrar ocorrências</label><select id="overtimeStatusFilter" onchange="renderOvertime()"><option value="all">Todas</option><option value="pending">Aguardando análise</option><option value="approved">Aprovadas</option><option value="rejected">Recusadas</option></select></div>
-<div class="field"><label>Pesquisar nas ocorrências</label><input type="search" id="overtimeSearch" placeholder="Nome do colaborador..." oninput="renderOvertime()"></div>
+<div class="field"><label>Pesquisar somente nas horas excedentes</label><input type="search" id="overtimeSearch" placeholder="Nome do colaborador..." oninput="renderOvertime()"></div>
 </div>
-<h3 style="font-size:15px;margin:20px 0 12px">Ocorrências de horas excedentes</h3>
+<p class="muted" style="margin:8px 0 12px">Este filtro pesquisa apenas ocorrências de horas excedentes. Ele não pesquisa marcações de ponto nem solicitações; essas áreas têm consultas próprias.</p><h3 style="font-size:15px;margin:20px 0 12px">Ocorrências de horas excedentes</h3>
 <div class="table-wrap"><table><thead><tr><th>Colaborador</th><th>Data</th><th>Tempo excedente</th><th>Status</th><th>Classificação</th><th>Descrição</th><th>Ações</th></tr></thead><tbody id="overtimeTable"><tr><td colspan="7" class="empty">Carregando ocorrências...</td></tr></tbody></table></div>
 </div>
 <div class="panel">
@@ -1493,36 +1493,56 @@ function renderPointEmployeeSearch(){
  box.innerHTML=matches.length?matches.map(e=>`<button type="button" onclick="selectPointEmployee('${e.id}')"><strong>${escapeHTML(e.full_name)}</strong><span style="color:var(--muted);font-size:11px"> · ${escapeHTML(e.employee_code||'Sem matrícula')}</span></button>`).join(''):'<div class="empty">Nenhum colaborador encontrado.</div>';
 }
 async function selectPointEmployee(id){
- const employee=employeesData.find(e=>e.id===id);if(!employee)return;
- selectedPointEmployeeId=id;$('pointEmployeeSearch').value=employee.full_name;$('pointEmployeeResults').innerHTML='';
+ const employee=employeesData.find(e=>String(e.id)===String(id));if(!employee)return;
+ selectedPointEmployeeId=employee.id;
+ $('pointEmployeeSearch').value=employee.full_name;
+ $('pointEmployeeResults').innerHTML='';
+ if($('pointMonth')&&!$('pointMonth').value)$('pointMonth').value=localDateInSaoPaulo(new Date()).slice(0,7);
  await loadEmployeePointHistory();
 }
 function formatPointTime(value){
  if(!value)return '—';
- return new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(value));
+ const date=new Date(value);if(Number.isNaN(date.getTime()))return '—';
+ return new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',hour:'2-digit',minute:'2-digit',hour12:false}).format(date);
 }
 async function loadEmployeePointHistory(){
- const tbody=$('employeePointTable'),summary=$('employeePointSummary');
+ const tbody=$('employeePointTable'),summary=$('employeePointSummary'),message=$('employeePointMessage');
  if(!tbody||!currentCompany)return;
  if(!selectedPointEmployeeId){tbody.innerHTML='<tr><td colspan="6" class="empty">Pesquise e selecione um colaborador.</td></tr>';return}
- const month=$('pointMonth')?.value||new Date().toISOString().slice(0,7);
- if(!/^\\d{4}-\\d{2}$/.test(month)){return}
- const [year,mon]=month.split('-').map(Number),start=`${month}-01`,end=new Date(Date.UTC(year,mon,1)).toISOString().slice(0,10);
+ const month=$('pointMonth')?.value||localDateInSaoPaulo(new Date()).slice(0,7);
+ if(!/^\\d{4}-\\d{2}$/.test(month)){tbody.innerHTML='<tr><td colspan="6" class="empty">Selecione um mês válido.</td></tr>';return}
+ const [year,mon]=month.split('-').map(Number);
+ // Usa os mesmos limites locais do calendário Meu Ponto e converte para UTC.
+ const start=new Date(year,mon-1,1,0,0,0,0),end=new Date(year,mon,1,0,0,0,0);
  tbody.innerHTML='<tr><td colspan="6" class="empty">Carregando marcações...</td></tr>';
- const {data,error}=await supabaseClient.from('attendance_records').select('id,employee_id,event_type,recorded_at').eq('company_id',currentCompany.id).eq('employee_id',selectedPointEmployeeId).gte('recorded_at',start+'T00:00:00-03:00').lt('recorded_at',end+'T00:00:00-03:00').order('recorded_at',{ascending:true});
- if(error){tbody.innerHTML=`<tr><td colspan="6" class="empty">Erro ao consultar marcações: ${escapeHTML(error.message)}</td></tr>`;return}
- employeePointMarks=data||[];
- const grouped={};employeePointMarks.forEach(m=>{const d=localDateInSaoPaulo(m.recorded_at);(grouped[d]||(grouped[d]=[])).push(m)});
- const dates=Object.keys(grouped).sort((a,b)=>b.localeCompare(a));
- const employee=employeesData.find(e=>e.id===selectedPointEmployeeId);
- summary.innerHTML=`<strong>${escapeHTML(employee?.full_name||'Colaborador')}</strong> · ${month} · <span class="point-mark-count">${employeePointMarks.length} marcação(ões)</span> em ${dates.length} dia(s). A consulta exibe os registros originais, sem modificá-los.`;
- if(!dates.length){tbody.innerHTML='<tr><td colspan="6" class="empty">Nenhuma marcação encontrada para este colaborador neste mês.</td></tr>';return}
- const labels={entrada:'Entrada',inicio_intervalo:'Início intervalo',retorno_intervalo:'Retorno',saida:'Saída'};
- tbody.innerHTML=dates.map(date=>{
-  const events=grouped[date],first=type=>events.find(m=>m.event_type===type);
-  const all=events.map(m=>`${labels[m.event_type]||m.event_type}: ${formatPointTime(m.recorded_at)}`).join(' · ');
-  return `<tr><td><strong>${formatDate(date)}</strong></td><td>${formatPointTime(first('entrada')?.recorded_at)}</td><td>${formatPointTime(first('inicio_intervalo')?.recorded_at)}</td><td>${formatPointTime(first('retorno_intervalo')?.recorded_at)}</td><td>${formatPointTime([...events].reverse().find(m=>m.event_type==='saida')?.recorded_at)}</td><td>${escapeHTML(all)}</td></tr>`;
- }).join('');
+ if(message){message.className='message';message.textContent='';}
+ try{
+  const {data,error}=await supabaseClient.from('attendance_records')
+   .select('id,employee_id,event_type,recorded_at')
+   .eq('company_id',currentCompany.id).eq('employee_id',selectedPointEmployeeId)
+   .gte('recorded_at',start.toISOString()).lt('recorded_at',end.toISOString())
+   .order('recorded_at',{ascending:true}).limit(2000);
+  if(error)throw error;
+  employeePointMarks=data||[];
+  const grouped={};employeePointMarks.forEach(m=>{const d=localDateInSaoPaulo(m.recorded_at);(grouped[d]||(grouped[d]=[])).push(m)});
+  const dates=Object.keys(grouped).sort((a,b)=>b.localeCompare(a));
+  const employee=employeesData.find(e=>String(e.id)===String(selectedPointEmployeeId));
+  summary.innerHTML=`<strong>${escapeHTML(employee?.full_name||'Colaborador')}</strong> · ${month} · <span class="point-mark-count">${employeePointMarks.length} marcação(ões)</span> em ${dates.length} dia(s). Os registros originais são exibidos sem alteração.`;
+  if(!dates.length){
+   tbody.innerHTML='<tr><td colspan="6" class="empty">A consulta funcionou, mas não existem marcações registradas para este colaborador neste mês. Confira o Meu Ponto e o vínculo do colaborador.</td></tr>';
+   return;
+  }
+  const labels={entrada:'Entrada',inicio_intervalo:'Início intervalo',retorno_intervalo:'Retorno intervalo',inicio_pausa:'Início pausa adicional',retorno_pausa:'Retorno pausa adicional',saida:'Saída'};
+  tbody.innerHTML=dates.map(date=>{
+   const events=grouped[date],first=type=>events.find(m=>m.event_type===type);
+   const all=events.map(m=>`${labels[m.event_type]||('Registro: '+m.event_type)}: ${formatPointTime(m.recorded_at)}`).join(' · ');
+   return `<tr><td><strong>${formatDate(date)}</strong></td><td>${formatPointTime(first('entrada')?.recorded_at)}</td><td>${formatPointTime(first('inicio_intervalo')?.recorded_at)}</td><td>${formatPointTime(first('retorno_intervalo')?.recorded_at)}</td><td>${formatPointTime([...events].reverse().find(m=>m.event_type==='saida')?.recorded_at)}</td><td>${escapeHTML(all)}</td></tr>`;
+  }).join('');
+ }catch(err){
+  tbody.innerHTML=`<tr><td colspan="6" class="empty">Não foi possível consultar as marcações: ${escapeHTML(err.message||String(err))}</td></tr>`;
+  summary.textContent='Falha na consulta. O erro foi exibido na tabela para facilitar a correção.';
+  if(message){message.className='message error';message.textContent='Erro ao consultar ponto: '+(err.message||String(err));}
+ }
 }
 async function loadOvertime(){
  if(!currentCompany)return;
