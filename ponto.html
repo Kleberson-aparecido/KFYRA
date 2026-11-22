@@ -367,11 +367,11 @@ const valor=Math.max(0,Math.floor(minutos||0));
 return Math.floor(valor/60)+"h "+String(valor%60).padStart(2,"0")+"min";
 }
 
-/* Calcula somente jornadas completas e desconta o intervalo. */
 function calcularHorasDoDia(eventos){
 let entrada=null;
 let inicioIntervalo=null;
 let minutosIntervalo=0;
+let minutosIntervaloTotal=0;
 let minutosTrabalhados=0;
 let ciclosCompletos=0;
 let pendente=false;
@@ -396,6 +396,7 @@ break;
 case "retorno_intervalo":
 if(entrada!==null && inicioIntervalo!==null){
 minutosIntervalo+=(instante-inicioIntervalo)/60000;
+minutosIntervaloTotal+=(instante-inicioIntervalo)/60000;
 inicioIntervalo=null;
 }
 break;
@@ -422,9 +423,97 @@ break;
 
 return {
 minutos:minutosTrabalhados,
+intervalo:minutosIntervaloTotal,
 ciclos:ciclosCompletos,
 pendente:pendente||entrada!==null
 };
+}
+
+/* Busca a escala vigente e calcula a jornada prevista. */
+async function carregarJornadasPrevistas(ano,mes){
+const primeiroDia=ano+"-"+String(mes).padStart(2,"0")+"-01";
+const ultimoDia=dataChaveLocal(new Date(ano,mes,0));
+
+const {data:atribuicoes,error}=await supabaseClient
+.from("employee_work_schedules")
+.select("schedule_id,effective_from,effective_until")
+.eq("employee_id",colaboradorAtual.id)
+.eq("company_id",colaboradorAtual.company_id)
+.lte("effective_from",ultimoDia)
+.or("effective_until.is.null,effective_until.gte."+primeiroDia)
+.order("effective_from",{ascending:true});
+
+if(error)throw error;
+if(!atribuicoes||!atribuicoes.length)return {};
+
+const ids=[...new Set(atribuicoes.map(a=>a.schedule_id))];
+
+const {data:modelos,error:erroModelos}=await supabaseClient
+.from("work_schedule_templates")
+.select("id,schedule_type,cycle_days")
+.in("id",ids)
+.eq("company_id",colaboradorAtual.company_id);
+
+if(erroModelos)throw erroModelos;
+
+const {data:dias,error:erroDias}=await supabaseClient
+.from("work_schedule_template_days")
+.select("schedule_id,day_number,is_working,start_time,end_time,break_minutes")
+.in("schedule_id",ids);
+
+if(erroDias)throw erroDias;
+
+const resultado={};
+const hoje=dataChaveLocal(new Date());
+
+for(let numero=1;numero<=new Date(ano,mes,0).getDate();numero++){
+const data=new Date(ano,mes-1,numero,12,0,0);
+const chave=dataChaveLocal(data);
+
+if(chave>hoje)continue;
+
+const atribuicao=atribuicoes
+.filter(a=>a.effective_from<=chave&&(!a.effective_until||a.effective_until>=chave))
+.sort((a,b)=>b.effective_from.localeCompare(a.effective_from))[0];
+
+if(!atribuicao)continue;
+
+const modelo=modelos.find(m=>m.id===atribuicao.schedule_id);
+if(!modelo)continue;
+
+let numeroDia;
+
+if(modelo.schedule_type==="cyclic"){
+const ciclo=Number(modelo.cycle_days||0);
+if(ciclo<1)continue;
+
+const inicioCiclo=new Date(atribuicao.effective_from+"T12:00:00");
+const diferenca=Math.floor((data-inicioCiclo)/86400000);
+numeroDia=((diferenca%ciclo)+ciclo)%ciclo+1;
+}else{
+numeroDia=data.getDay()===0?7:data.getDay();
+}
+
+const dia=(dias||[]).find(d=>d.schedule_id===modelo.id&&Number(d.day_number)===numeroDia);
+if(!dia)continue;
+
+let previsto=0;
+
+if(dia.is_working){
+const inicio=String(dia.start_time||"").slice(0,5).split(":").map(Number);
+const fim=String(dia.end_time||"").slice(0,5).split(":").map(Number);
+
+if(inicio.length===2&&fim.length===2&&inicio.every(Number.isFinite)&&fim.every(Number.isFinite)){
+let total=(fim[0]*60+fim[1])-(inicio[0]*60+inicio[1]);
+if(total<=0)total+=1440;
+previsto=Math.max(0,total-Number(dia.break_minutes||0));
+}
+}
+
+resultado[chave]={minutos:previsto,trabalho:!!dia.is_working};
+}
+
+return resultado;
 }
 
 async function carregarEspelhoPonto(){
@@ -478,14 +567,24 @@ dias[chave].push(registro);
 /* Resumo do mês */
 resumo.innerHTML="";
 
+const jornadasPrevistas=await carregarJornadasPrevistas(ano,mes);
+
 const totalMes=Object.values(dias).reduce((soma,eventos)=>{
 return soma+calcularHorasDoDia(eventos).minutos;
 },0);
 
+const previstoMes=Object.values(jornadasPrevistas).reduce((soma,dia)=>{
+return soma+dia.minutos;
+},0);
+
+const saldoMes=totalMes-previstoMes;
+
 const itensResumo=[
 [registros.length,"Marcações"],
 [Object.keys(dias).length,"Dias com registro"],
-[formatarDuracao(totalMes),"Horas trabalhadas completas"]
+[formatarDuracao(totalMes),"Horas trabalhadas"],
+[formatarDuracao(previstoMes),"Jornada prevista até hoje"],
+[(saldoMes>=0?"+":"-")+formatarDuracao(Math.abs(saldoMes)),"Saldo até hoje"]
 ];
 
 itensResumo.forEach(item=>{
@@ -543,10 +642,25 @@ bloco.appendChild(linha);
 
 /* Total diário */
 const calculoDia=calcularHorasDoDia(eventos);
+const jornada=jornadasPrevistas[chave];
+
 const totalDia=document.createElement("div");
 totalDia.className="horas-dia";
-totalDia.textContent="Horas trabalhadas (ciclos completos): "+formatarDuracao(calculoDia.minutos);
+totalDia.textContent="Horas trabalhadas: "+formatarDuracao(calculoDia.minutos)+
+" • Intervalos registrados: "+formatarDuracao(calculoDia.intervalo);
 bloco.appendChild(totalDia);
+
+if(jornada){
+const comparacao=document.createElement("div");
+comparacao.className="horas-dia";
+
+const saldo=calculoDia.minutos-jornada.minutos;
+
+comparacao.textContent="Jornada prevista: "+formatarDuracao(jornada.minutos)+
+" • Saldo do dia: "+(saldo>=0?"+":"-")+formatarDuracao(Math.abs(saldo));
+
+bloco.appendChild(comparacao);
+}
 
 /* Avisos */
 const tipos=eventos.map(registro=>registro.event_type);
@@ -555,12 +669,15 @@ const avisos=[];
 if(tipos.includes("entrada")&&!tipos.includes("saida")){
 avisos.push("Saída não encontrada neste dia.");
 }
+
 if(tipos.includes("inicio_intervalo")&&!tipos.includes("retorno_intervalo")){
 avisos.push("Retorno do intervalo não encontrado.");
 }
+
 if(tipos.includes("retorno_intervalo")&&!tipos.includes("inicio_intervalo")){
 avisos.push("Início do intervalo não encontrado.");
 }
+
 if(calculoDia.pendente){
 avisos.push("Existe uma jornada incompleta; ela não foi somada como ciclo completo.");
 }
