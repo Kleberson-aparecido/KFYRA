@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NEXORA | Painel Empresarial</title>
+<title>KFYRA | Painel Empresarial</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -25,7 +25,7 @@ input,select,textarea{width:100%;padding:12px 13px;border:1px solid #dfe8e1;bord
 <body>
 <div class="layout">
 <aside class="sidebar">
-<div class="logo">NEX<span>ORA</span></div><div class="logo-sub">GESTÃO INTELIGENTE</div>
+<div class="logo">KFY<span>RA</span></div><div class="logo-sub">GESTÃO INTELIGENTE</div>
 <div class="menu">
 <div class="menu-title">PRINCIPAL</div>
 <button class="active" onclick="showPage('inicio',this)">▦ Visão geral</button>
@@ -34,23 +34,21 @@ input,select,textarea{width:100%;padding:12px 13px;border:1px solid #dfe8e1;bord
 <button onclick="showPage('ponto',this)">◷ Controle de ponto</button>
 <button onclick="showPage('escalas',this)">▦ Escalas</button>
 <div class="menu-title">GESTÃO</div>
-<button onclick="showPage('relatorios',this)">▥ Relatórios</button><button onclick="showPage('disciplinar',this)">⚖ Disciplinar</button><button onclick="showPage('configuracoes',this)">⚙ Configurações</button><button onclick="showPage('ajuda',this)">✧ NEXORA AI</button>
+<button onclick="showPage('relatorios',this)">▥ Relatórios</button><button onclick="showPage('disciplinar',this)">⚖ Disciplinar</button><button onclick="showPage('configuracoes',this)">⚙ Configurações</button><button onclick="showPage('ajuda',this)">✧ KFYRA AI</button>
 </div>
 <div class="sidebar-bottom"><button onclick="logout()">↪ Sair da plataforma</button></div>
 </aside>
 <main class="main">
-<header class="topbar"><div class="welcome"><h1 id="pageTitle">Visão geral</h1><p id="pageSubtitle">Acompanhe os indicadores da sua empresa.</p></div><div class="user-box"><strong id="userName">Carregando...</strong><div id="userRole" style="color:#82918a;margin-top:4px">NEXORA</div></div></header>
-<div id="companyBanner" class="company-banner"><div><h2 id="companyName">Carregando empresa...</h2><p>Ambiente empresarial exclusivo NEXORA</p></div><div class="plan-tag" id="companyPlan">Plano contratado</div></div>
-
+<header class="topbar"><div class="welcome"><h1 id="pageTitle">Visão geral</h1><p id="pageSubtitle">Acompanhe os indicadores da sua empresa.</p></div><div class="user-box"><strong id="userName">Carregando...</strong><div id="userRole" style="color:#82918a;margin-top:4px">KFYRA</div></div></header>
+<div id="companyBanner" class="company-banner"><div><h2 id="companyName">Carregando empresa...</h2><p>Ambiente empresarial exclusivo KFYRA</p></div><div class="plan-tag" id="companyPlan">Plano contratado</div></div>
 <section id="page-inicio">
 <h2 class="section-title">Indicadores da empresa</h2><div class="cards">
 <div class="card"><div class="card-label">Colaboradores</div><div class="card-number" id="totalEmployees">—</div><div class="card-note">Total cadastrado</div></div>
 <div class="card"><div class="card-label">Ativos</div><div class="card-number" id="activeEmployees">—</div><div class="card-note">Colaboradores ativos</div></div>
 <div class="card"><div class="card-label">Departamentos</div><div class="card-number" id="totalDepartments">—</div><div class="card-note">Estrutura organizacional</div></div>
 <div class="card"><div class="card-label">Plano</div><div class="card-number" style="font-size:19px" id="planIndicator">—</div><div class="card-note">Plano da empresa</div></div>
-</div><div class="panel"><div class="panel-header"><h3>Bem-vindo à NEXORA</h3></div><p style="font-size:13px;color:#82918a;line-height:1.8">Sua empresa está conectada ao ambiente NEXORA. Utilize o menu lateral para acessar os módulos de gestão, acompanhar colaboradores e organizar as operações da sua empresa.</p></div>
+</div><div class="panel"><div class="panel-header"><h3>Bem-vindo à KFYRA</h3></div><p style="font-size:13px;color:#82918a;line-height:1.8">Sua empresa está conectada ao ambiente KFYRA. Utilize o menu lateral para acessar os módulos de gestão, acompanhar colaboradores e organizar as operações da sua empresa.</p></div>
 </section>
-
 <section id="page-colaboradores" class="hidden">
 <div class="panel"><div class="panel-header"><div><h3>Gestão de colaboradores</h3><p class="page-description">Cadastre, edite e consulte os colaboradores da empresa.</p></div><button class="btn" id="newEmployeeButton" onclick="openEmployeeForm()">+ Novo colaborador</button></div>
 <div id="employeeMessage" class="message"></div><div id="employeeForm" class="hidden"><h3 id="employeeFormTitle" style="font-size:15px;margin-bottom:18px">Cadastro de colaborador</h3>
@@ -70,13 +68,11 @@ input,select,textarea{width:100%;padding:12px 13px;border:1px solid #dfe8e1;bord
 <div class="panel"><div class="panel-header"><h3>Colaboradores cadastrados</h3><input class="search" type="search" id="employeeSearch" placeholder="Pesquisar colaborador..." oninput="filterEmployees()"></div>
 <div class="table-wrap"><table><thead><tr><th>Nome</th><th>Código</th><th>Cargo</th><th>Vínculo</th><th>Departamento</th><th>Escala</th><th>E-mail</th><th>Status</th><th>Ações</th></tr></thead><tbody id="employeesTable"><tr><td colspan="9" class="empty">Carregando colaboradores...</td></tr></tbody></table></div></div>
 </section>
-
 <section id="page-departamentos" class="hidden">
 <div class="panel"><div class="panel-header"><div><h3>Gestão de departamentos</h3><p class="page-description">Organize os setores e departamentos da sua empresa.</p></div><button class="btn" id="newDepartmentButton" onclick="openDepartmentForm()">+ Novo departamento</button></div><div id="departmentMessage" class="message"></div>
 <div id="departmentForm" class="hidden"><h3 id="departmentFormTitle" style="font-size:15px;margin-bottom:18px">Cadastrar departamento</h3><form id="newDepartmentForm"><div class="form-grid"><div class="field"><label>Nome do departamento *</label><input type="text" id="departmentName" required></div><div class="field"><label>Descrição</label><input type="text" id="departmentDescription"></div></div><div class="form-actions"><button type="submit" class="btn" id="saveDepartmentButton">Salvar departamento</button><button type="button" class="btn btn-secondary" onclick="closeDepartmentForm()">Cancelar</button></div></form></div></div>
 <div class="panel"><div class="panel-header"><h3>Departamentos cadastrados</h3><strong id="departmentCount" style="font-size:12px;color:#82918a">0 departamentos</strong></div><div class="table-wrap"><table><thead><tr><th>Nome</th><th>Descrição</th><th>Colaboradores</th><th>Data de criação</th><th>Ações</th></tr></thead><tbody id="departmentsTable"><tr><td colspan="5" class="empty">Carregando departamentos...</td></tr></tbody></table></div></div>
 </section>
-
 <section id="page-escalas" class="hidden">
 <div class="panel"><div class="panel-header"><div><h3>Modelos de escalas</h3><p class="page-description">Crie escalas semanais fixas ou ciclos personalizados de trabalho e descanso.</p></div><button class="btn" id="newScheduleButton" onclick="openScheduleForm()">+ Nova escala</button></div><div id="scheduleMessage" class="message"></div>
 <div id="scheduleForm" class="hidden"><h3 id="scheduleFormTitle" style="font-size:15px;margin-bottom:18px">Cadastrar modelo de escala</h3>
@@ -93,14 +89,12 @@ input,select,textarea{width:100%;padding:12px 13px;border:1px solid #dfe8e1;bord
 <div class="panel"><div class="panel-header"><h3>Escalas cadastradas</h3><strong id="scheduleCount" style="font-size:12px;color:#82918a">0 escalas</strong></div><div class="table-wrap"><table><thead><tr><th>Nome</th><th>Tipo</th><th>Duração</th><th>Dias trabalhados</th><th>Horas/semana</th><th>Status</th><th>Ações</th></tr></thead><tbody id="schedulesTable"><tr><td colspan="7" class="empty">Carregando escalas...</td></tr></tbody></table></div></div>
 <div class="panel"><div class="panel-header"><h3>Escalas atribuídas aos colaboradores</h3></div><div class="table-wrap"><table><thead><tr><th>Colaborador</th><th>Modelo</th><th>Início da vigência</th><th>Fim da vigência</th></tr></thead><tbody id="employeeSchedulesTable"><tr><td colspan="4" class="empty">Carregando atribuições...</td></tr></tbody></table></div></div>
 </section>
-
 <section id="page-ponto" class="hidden"><div class="panel"><h3>Controle de ponto</h3><div class="empty">Os registros individuais de ponto são realizados pelo portal Meu Ponto.</div></div></section>
 <section id="page-relatorios" class="hidden"><div class="panel"><h3>Relatórios</h3><div class="empty">Módulo de relatórios em desenvolvimento.</div></div></section>
-<section id="page-disciplinar" class="hidden"><div class="panel"><h3>NEXORA Disciplinar</h3><div class="empty">Módulo disciplinar em desenvolvimento.</div></div></section>
+<section id="page-disciplinar" class="hidden"><div class="panel"><h3>KFYRA Disciplinar</h3><div class="empty">Módulo disciplinar em desenvolvimento.</div></div></section>
 <section id="page-configuracoes" class="hidden"><div class="panel"><h3>Configurações da empresa</h3><div class="empty">Configurações em desenvolvimento.</div></div></section>
-<section id="page-ajuda" class="hidden"><div class="panel"><h3>NEXORA AI</h3><div class="empty">Assistente inteligente em desenvolvimento.</div></div></section>
+<section id="page-ajuda" class="hidden"><div class="panel"><h3>KFYRA AI</h3><div class="empty">Assistente inteligente em desenvolvimento.</div></div></section>
 </main></div>
-
 <script>
 const SUPABASE_URL='https://guiadodxikdvsfrhedls.supabase.co';
 const SUPABASE_KEY='sb_publishable_dhAqwNSfwGj8_nBnudx_Hw_gMZpnyEL';
@@ -110,7 +104,6 @@ let employeesData=[],departmentsData=[],schedulesData=[],scheduleDaysData=[],ass
 let editingEmployeeId=null,editingDepartmentId=null,editingScheduleId=null;
 const canManage=()=>['admin_empresa','rh'].includes(currentRole);
 const dayNames=['Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado','Domingo'];
-
 async function initializeDashboard(){
  const {data:{session},error}=await supabaseClient.auth.getSession();
  if(error||!session){location.href='login.html';return}
@@ -137,7 +130,6 @@ function showBox(id,msg,type){const b=$(id);b.textContent=msg;b.className='messa
 function showMessage(m,t){showBox('employeeMessage',m,t)}
 function showDepartmentMessage(m,t){showBox('departmentMessage',m,t)}
 function showScheduleMessage(m,t){showBox('scheduleMessage',m,t)}
-
 // DEPARTAMENTOS
 async function loadDepartments(){
  if(!currentCompany)return;
@@ -181,7 +173,6 @@ async function deleteDepartment(id){
  if(error){showDepartmentMessage('Não foi possível excluir: '+error.message,'error');return}
  showDepartmentMessage('Departamento excluído.','success');await loadDepartments();await loadEmployees();
 }
-
 // ESCALAS: day_number 1-7 para fixa (segunda-domingo), 1-cycle_days para cíclica.
 async function loadSchedules(){
  if(!currentCompany)return;
@@ -284,7 +275,6 @@ function renderEmployeeScheduleAssignments(){
  return `<tr><td>${escapeHTML(emp?.full_name||'Colaborador')}</td><td>${escapeHTML(sch?.name||'Escala')}</td><td>${a.effective_from?new Date(a.effective_from+'T00:00:00').toLocaleDateString('pt-BR'):'—'}</td><td>${a.effective_until?new Date(a.effective_until+'T00:00:00').toLocaleDateString('pt-BR'):'Em aberto'}</td></tr>`;
  }).join('');
 }
-
 // COLABORADORES
 async function loadEmployees(){
  if(!currentCompany)return;
@@ -357,7 +347,6 @@ async function deleteEmployee(id){
  if(error){showMessage('Não foi possível excluir: '+error.message,'error');return}
  showMessage('Colaborador excluído.','success');await loadEmployees();await loadSchedules();
 }
-
 // CONVITE MEU PONTO
 async function inviteEmployee(id){
  const employee=employeesData.find(e=>e.id===id);if(!canManage()||!employee)return;
@@ -372,12 +361,11 @@ async function inviteEmployee(id){
  }catch(err){showMessage('Não foi possível enviar o convite: '+(err.message||err),'error')}
  finally{if(button&&document.body.contains(button)){button.disabled=false;button.textContent='Enviar convite'}}
 }
-
 // NAVEGAÇÃO / SESSÃO
 async function showPage(page,button){
  document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));$('page-'+page)?.classList.remove('hidden');
  document.querySelectorAll('.menu button').forEach(b=>b.classList.remove('active'));if(button)button.classList.add('active');
- const titles={inicio:['Visão geral','Acompanhe os indicadores da sua empresa.'],colaboradores:['Colaboradores','Gestão e cadastro de colaboradores.'],departamentos:['Departamentos','Organização da estrutura empresarial.'],ponto:['Controle de ponto','Registro e acompanhamento de jornada.'],escalas:['Escalas','Modelos fixos e cíclicos e atribuição aos colaboradores.'],relatorios:['Relatórios','Indicadores e informações gerenciais.'],disciplinar:['NEXORA Disciplinar','Gestão disciplinar empresarial.'],configuracoes:['Configurações','Configurações da empresa.'],ajuda:['NEXORA AI','Inteligência para sua gestão.']};
+ const titles={inicio:['Visão geral','Acompanhe os indicadores da sua empresa.'],colaboradores:['Colaboradores','Gestão e cadastro de colaboradores.'],departamentos:['Departamentos','Organização da estrutura empresarial.'],ponto:['Controle de ponto','Registro e acompanhamento de jornada.'],escalas:['Escalas','Modelos fixos e cíclicos e atribuição aos colaboradores.'],relatorios:['Relatórios','Indicadores e informações gerenciais.'],disciplinar:['KFYRA Disciplinar','Gestão disciplinar empresarial.'],configuracoes:['Configurações','Configurações da empresa.'],ajuda:['KFYRA AI','Inteligência para sua gestão.']};
  $('pageTitle').textContent=titles[page][0];$('pageSubtitle').textContent=titles[page][1];$('companyBanner').classList.toggle('hidden',page!=='inicio');
  if(page==='departamentos')await loadDepartments();if(page==='colaboradores'){updateDepartmentOptions();updateScheduleOptions()}if(page==='escalas'){await loadSchedules();await loadEmployees()}
 }
