@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Meu Ponto | KFYRA</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f4f7f4;color:#18352d}
@@ -74,7 +73,6 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .cal-legenda{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:#687c72;margin-top:10px}
 .cal-legenda span{display:flex;align-items:center;gap:5px}
 .ponto-bolinha{width:9px;height:9px;border-radius:50%;display:inline-block;background:#e0f3e7}
-
 .status-solicitacao{display:inline-block;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:bold}
 .status-pending{background:#fff4d9;color:#8a6417}
 .status-approved{background:#e0f3e7;color:#216343}
@@ -86,7 +84,45 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .solicitacao-card .detalhe{color:#52665d}
 .solicitacao-vazia{text-align:center;padding:20px;background:#f4f7f4;border-radius:9px;color:#687c72;margin-top:12px}
 .aviso-solicitacao{font-size:13px;background:#fff8e8;color:#805d20;padding:12px;border-radius:8px;line-height:1.6;margin-top:12px}
-
+/* COMPROVANTES DAS SOLICITAÇÕES */
+.arquivo-solicitacao{
+background:white;
+border:1px dashed #a9beb0;
+border-radius:9px;
+padding:14px;
+margin-top:8px;
+}
+.arquivo-solicitacao input{
+padding:10px;
+border:0;
+background:transparent;
+}
+.arquivo-ajuda{
+font-size:12px;
+color:#687c72;
+margin-top:7px;
+line-height:1.5;
+}
+.arquivo-selecionado{
+font-size:13px;
+color:#216343;
+margin-top:8px;
+overflow-wrap:anywhere;
+}
+.link-comprovante{
+display:inline-block;
+margin-top:8px;
+padding:9px 12px;
+background:#e9efeb;
+color:#123d32;
+border-radius:7px;
+font-size:13px;
+font-weight:bold;
+text-decoration:none;
+}
+.link-comprovante:hover{
+background:#dce9df;
+}
 @media(max-width:500px){
 main{margin:15px auto;padding:12px}
 .card{padding:20px}
@@ -97,85 +133,64 @@ header{padding:22px}
 }
 </style>
 </head>
-
 <body>
-
 <header>
 <h2>KFYRA<span>.</span></h2>
 <p>MEU PONTO • PORTAL DO COLABORADOR</p>
 </header>
-
 <main>
 <div class="card">
-
 <h1 id="titulo">Bem-vindo ao Meu Ponto</h1>
 <p id="subtitulo">Acesse seu portal individual de colaborador.</p>
 <div id="mensagem"></div>
-
 <form id="formLogin">
 <label for="email">E-mail</label>
 <input type="email" id="email" required autocomplete="email">
-
 <label for="senha">Senha</label>
 <input type="password" id="senha" required autocomplete="current-password">
-
 <button type="submit">Entrar no Meu Ponto</button>
 </form>
-
 <a class="link" id="linkRecuperacao" href="javascript:void(0)">
 Primeiro acesso / Esqueci minha senha
 </a>
-
 <form id="formRecuperacao" class="oculto">
 <label for="emailRecuperacao">Seu e-mail cadastrado</label>
 <input type="email" id="emailRecuperacao" required>
 <button type="submit">Enviar link para meu e-mail</button>
 <a class="link" id="voltarLogin" href="javascript:void(0)">Voltar para o login</a>
 </form>
-
 <form id="formSenha" class="oculto">
 <label for="novaSenha">Crie sua senha</label>
 <input type="password" id="novaSenha" minlength="8" required autocomplete="new-password">
-
 <label for="confirmarSenha">Confirme sua senha</label>
 <input type="password" id="confirmarSenha" minlength="8" required autocomplete="new-password">
-
 <button type="submit">Salvar senha e continuar</button>
 </form>
-
 <div id="areaLogada" class="oculto">
-
 <div class="abas">
 <button type="button" class="aba ativa" id="abaPonto">Meu Ponto</button>
 <button type="button" class="aba" id="abaSolicitacoes">Solicitações</button>
 <button type="button" class="aba" id="abaPerfil">Meu Perfil</button>
 </div>
-
 <!-- MEU PONTO -->
-
 <section id="conteudoPonto">
-
 <div class="painel-ponto">
 <p>Colaborador</p>
 <h2 id="nomeColaborador"></h2>
 <p id="emailColaborador"></p>
 </div>
-
 <div class="painel-ponto">
 <p>Data e horário atual</p>
 <div id="relogio" class="relogio"></div>
 </div>
-
 <div class="painel-ponto">
 <p>Registro de ponto</p>
 <div id="statusPonto" class="status-ponto">Verificando registros...</div>
 <button type="button" id="botaoPonto" disabled>Carregando...</button>
 </div>
-
 <div class="painel-ponto" id="painelEspelho">
 <h3>Espelho de Ponto</h3>
 <p>Consulte suas marcações organizadas por dia.</p>
-
 <div class="historico-topo">
 <div>
 <label for="mesEspelho">Mês de referência</label>
@@ -183,9 +198,7 @@ Primeiro acesso / Esqueci minha senha
 </div>
 <button type="button" id="botaoConsultarEspelho">Consultar</button>
 </div>
-
 <div id="resumoEspelho" class="resumo-historico"></div>
-
 <div class="painel-ponto">
 <h3>Calendário mensal</h3>
 <div id="calendarioMensal"></div>
@@ -195,23 +208,17 @@ Primeiro acesso / Esqueci minha senha
 <span>🟠 Ocorrência</span>
 </div>
 </div>
-
 <div id="listaEspelho">
 <p>Carregando histórico...</p>
 </div>
 </div>
 </section>
-
 <!-- SOLICITAÇÕES -->
-
 <section id="conteudoSolicitacoes" class="oculto">
-
 <div class="painel-ponto">
 <h3>Nova solicitação</h3>
 <p>Envie uma solicitação para análise do RH ou do responsável autorizado pela sua empresa.</p>
-
 <form id="formSolicitacao">
-
 <label for="tipoSolicitacao">Tipo de solicitação</label>
 <select id="tipoSolicitacao" required>
 <option value="">Selecione uma opção</option>
@@ -223,30 +230,34 @@ Primeiro acesso / Esqueci minha senha
 <option value="union_declaration">Declaração sindical</option>
 <option value="other_declaration">Outra declaração</option>
 </select>
-
 <label for="dataSolicitacao">Data relacionada à solicitação</label>
 <input type="date" id="dataSolicitacao">
-
 <div id="camposHorario" class="oculto">
 <label for="horaInicial">Horário correto / horário inicial</label>
 <input type="time" id="horaInicial">
-
 <label for="horaFinal">Horário final (se necessário)</label>
 <input type="time" id="horaFinal">
 </div>
-
 <label for="descricaoSolicitacao">Justificativa e detalhes</label>
 <textarea id="descricaoSolicitacao" required maxlength="3000" placeholder="Explique o motivo da sua solicitação com o máximo de detalhes possível."></textarea>
-
+<label for="comprovanteSolicitacao">Comprovante ou documento (opcional)</label>
+<div class="arquivo-solicitacao">
+<input
+type="file"
+id="comprovanteSolicitacao"
+accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+>
+<div class="arquivo-ajuda">
+Você pode anexar um PDF ou uma imagem JPG/PNG. Tamanho máximo: 10 MB.
+</div>
+<div id="nomeComprovante" class="arquivo-selecionado"></div>
+</div>
 <div class="aviso-solicitacao">
 Sua solicitação será encaminhada para análise. O envio não significa aprovação e não altera automaticamente seu ponto ou sua escala.
 </div>
-
 <button type="submit" id="botaoEnviarSolicitacao">Enviar solicitação</button>
-
 </form>
 </div>
-
 <div class="painel-ponto">
 <h3>Minhas solicitações</h3>
 <p>Acompanhe o andamento das solicitações que você enviou.</p>
@@ -255,52 +266,41 @@ Sua solicitação será encaminhada para análise. O envio não significa aprova
 <p>Carregando solicitações...</p>
 </div>
 </div>
-
 </section>
-
 <!-- MEU PERFIL -->
-
 <section id="conteudoPerfil" class="oculto">
-
 <div class="painel-ponto">
 <div class="perfil-topo">
 <div id="avatarIniciais" class="avatar-iniciais">K</div>
 <img id="fotoPerfil" class="foto-perfil oculto" alt="Foto de perfil">
-
 <h2 class="nome-perfil" id="nomePerfil"></h2>
 <p class="cargo-perfil" id="cargoPerfil"></p>
-
 <label class="upload-label" for="arquivoFoto">
 Adicionar ou trocar foto
 <input type="file" id="arquivoFoto" accept="image/jpeg,image/png,image/webp">
 </label>
 </div>
-
 <div class="dado-perfil"><span>E-mail</span><strong id="emailPerfil">-</strong></div>
 <div class="dado-perfil"><span>Cargo</span><strong id="cargoDado">-</strong></div>
 <div class="dado-perfil"><span>Departamento</span><strong id="departamentoPerfil">Não informado</strong></div>
 </div>
-
 <div class="painel-ponto">
 <h3>Minha jornada de trabalho</h3>
 <p>Horários previstos conforme a escala cadastrada pela empresa.</p>
 <div id="listaEscala"><p>Carregando horários...</p></div>
 </div>
-
 </section>
-
 <button type="button" id="botaoSair" class="secundario">Sair da conta</button>
-
 </div>
 </div>
 </main>
-
 <script>
 const SUPABASE_URL="https://guiadodxikdvsfrhedls.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable_dhAqwNSfwGj8_nBnudx_Hw_gMZpnyEL";
-
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-
+/* BUCKET PRIVADO DOS COMPROVANTES */
+const BUCKET_COMPROVANTES="employee-request-documents";
+const TAMANHO_MAXIMO_COMPROVANTE=10*1024*1024;
 const mensagem=document.getElementById("mensagem");
 const formLogin=document.getElementById("formLogin");
 const formSenha=document.getElementById("formSenha");
@@ -309,23 +309,19 @@ const areaLogada=document.getElementById("areaLogada");
 const linkRecuperacao=document.getElementById("linkRecuperacao");
 const titulo=document.getElementById("titulo");
 const subtitulo=document.getElementById("subtitulo");
-
 let usuarioAtual=null;
 let colaboradorAtual=null;
 let relogioIntervalo=null;
 let processandoPonto=false;
 let processandoSolicitacao=false;
-
 function mostrarMensagem(texto,tipo){
 mensagem.textContent=texto;
 mensagem.className=tipo;
 }
-
 function limparMensagem(){
 mensagem.textContent="";
 mensagem.className="";
 }
-
 function esconderFormularios(){
 formLogin.classList.add("oculto");
 formSenha.classList.add("oculto");
@@ -333,7 +329,6 @@ formRecuperacao.classList.add("oculto");
 areaLogada.classList.add("oculto");
 linkRecuperacao.classList.add("oculto");
 }
-
 function mostrarLogin(){
 esconderFormularios();
 formLogin.classList.remove("oculto");
@@ -341,7 +336,6 @@ linkRecuperacao.classList.remove("oculto");
 titulo.textContent="Bem-vindo ao Meu Ponto";
 subtitulo.textContent="Acesse seu portal individual de colaborador.";
 }
-
 function mostrarFormularioSenha(tipo){
 esconderFormularios();
 formSenha.classList.remove("oculto");
@@ -349,78 +343,61 @@ titulo.textContent=tipo==="invite"?"Primeiro acesso":"Redefinir senha";
 subtitulo.textContent="Defina sua senha pessoal para acessar o Meu Ponto.";
 mostrarMensagem("Crie uma senha com pelo menos 8 caracteres.","sucesso");
 }
-
 function iniciarRelogio(){
 if(relogioIntervalo)clearInterval(relogioIntervalo);
-
 function atualizar(){
 document.getElementById("relogio").textContent=new Date().toLocaleString("pt-BR",{dateStyle:"full",timeStyle:"medium"});
 }
-
 atualizar();
 relogioIntervalo=setInterval(atualizar,1000);
 }
-
 async function buscarColaborador(user){
 const {data,error}=await supabaseClient.from("employees")
 .select("id,full_name,email,company_id,status,job_title,department_id,profile_photo_url,employment_type")
 .eq("user_id",user.id).eq("status","active").maybeSingle();
-
 if(error)throw new Error("Erro ao consultar colaborador: "+error.message);
 if(!data)throw new Error("Seu cadastro não está vinculado a um colaborador ativo. Procure o RH.");
-
 return data;
 }
-
 async function buscarUltimoRegistro(){
 const {data,error}=await supabaseClient.from("attendance_records")
 .select("id,event_type,recorded_at")
 .eq("user_id",usuarioAtual.id).eq("employee_id",colaboradorAtual.id)
 .order("recorded_at",{ascending:false}).limit(1).maybeSingle();
-
 if(error)throw new Error("Erro ao consultar ponto: "+error.message);
 return data;
 }
-
 const etapas={
 entrada:{proximo:"inicio_intervalo",botao:"Iniciar Intervalo",status:"Entrada registrada. Jornada em andamento."},
 inicio_intervalo:{proximo:"retorno_intervalo",botao:"Retornar do Intervalo",status:"Intervalo iniciado. Aguardando retorno."},
 retorno_intervalo:{proximo:"saida",botao:"Registrar Saída",status:"Retorno registrado. Jornada em andamento."},
 saida:{proximo:"entrada",botao:"Registrar Entrada",status:"Jornada encerrada. Você pode iniciar uma nova jornada."}
 };
-
 function configurarBotao(tipo){
 const botao=document.getElementById("botaoPonto");
 const status=document.getElementById("statusPonto");
-
 if(!tipo){
 botao.textContent="Registrar Entrada";
 status.textContent="Nenhuma jornada iniciada.";
 botao.disabled=false;
 return;
 }
-
 const etapa=etapas[tipo];
-
 if(!etapa){
 botao.textContent="Indisponível";
 status.textContent="Tipo de registro não reconhecido. Procure o RH.";
 botao.disabled=true;
 return;
 }
-
 botao.textContent=etapa.botao;
 status.textContent=etapa.status;
 botao.disabled=false;
 }
-
 async function atualizarEstadoPonto(){
 const botao=document.getElementById("botaoPonto");
 const status=document.getElementById("statusPonto");
-
 botao.disabled=true;
 status.textContent="Verificando registros...";
-
 try{
 const ultimo=await buscarUltimoRegistro();
 configurarBotao(ultimo?ultimo.event_type:null);
@@ -430,37 +407,29 @@ botao.textContent="Registro indisponível";
 botao.disabled=true;
 }
 }
-
 /* FUNÇÕES DE CÁLCULO */
-
 function nomeEvento(tipo){
 return {entrada:"Entrada",inicio_intervalo:"Início do intervalo",retorno_intervalo:"Retorno do intervalo",saida:"Saída"}[tipo]||tipo;
 }
-
 function dataChaveLocal(data){
 return [data.getFullYear(),String(data.getMonth()+1).padStart(2,"0"),String(data.getDate()).padStart(2,"0")].join("-");
 }
-
 function formatarDataEspelho(chave){
 const p=chave.split("-");
 return p[2]+"/"+p[1]+"/"+p[0];
 }
-
 function formatarDuracao(minutos){
 const valor=Math.max(0,Math.floor(Math.abs(minutos||0)));
 return Math.floor(valor/60)+"h "+String(valor%60).padStart(2,"0")+"min";
 }
-
 function minutosHora(hora){
 if(!hora)return null;
 const p=String(hora).slice(0,5).split(":");
 return Number(p[0])*60+Number(p[1]);
 }
-
 function diferencaMinutos(a,b){
 return Math.round((b-a)/60000);
 }
-
 function calcularHorasDoDia(eventos){
 let entrada=null;
 let inicioIntervalo=null;
@@ -473,14 +442,10 @@ let primeiraEntrada=null;
 let ultimaSaida=null;
 let inconsistente=false;
 let emIntervalo=false;
-
 eventos.forEach(registro=>{
 const instante=new Date(registro.recorded_at).getTime();
-
 if(!Number.isFinite(instante)){inconsistente=true;return;}
-
 switch(registro.event_type){
-
 case "entrada":
 if(entrada!==null){inconsistente=true;break;}
 entrada=instante;
@@ -490,13 +455,11 @@ minutosIntervalo=0;
 pendente=true;
 emIntervalo=false;
 break;
-
 case "inicio_intervalo":
 if(entrada===null||inicioIntervalo!==null){inconsistente=true;break;}
 inicioIntervalo=instante;
 emIntervalo=true;
 break;
-
 case "retorno_intervalo":
 if(entrada===null||inicioIntervalo===null){inconsistente=true;break;}
 minutosIntervalo+=(instante-inicioIntervalo)/60000;
@@ -504,13 +467,10 @@ minutosIntervaloTotal+=(instante-inicioIntervalo)/60000;
 inicioIntervalo=null;
 emIntervalo=false;
 break;
-
 case "saida":
 if(entrada===null){inconsistente=true;break;}
 if(inicioIntervalo!==null){inconsistente=true;break;}
-
 const total=(instante-entrada)/60000-minutosIntervalo;
-
 if(total>=0){
 minutosTrabalhados+=total;
 ciclosCompletos++;
@@ -518,19 +478,16 @@ ultimaSaida=instante;
 }else{
 inconsistente=true;
 }
-
 entrada=null;
 inicioIntervalo=null;
 minutosIntervalo=0;
 pendente=false;
 emIntervalo=false;
 break;
-
 default:
 inconsistente=true;
 }
 });
-
 return {
 minutos:Math.round(minutosTrabalhados),
 intervalo:Math.round(minutosIntervaloTotal),
@@ -542,54 +499,37 @@ ultimaSaida,
 inconsistente
 };
 }
-
 /* CONSULTA DAS ESCALAS PARA CÁLCULO */
-
 async function carregarJornadasPrevistas(ano,mes){
 const primeiroDia=ano+"-"+String(mes).padStart(2,"0")+"-01";
 const ultimoDia=dataChaveLocal(new Date(ano,mes,0));
-
 const {data:atribuicoes,error}=await supabaseClient.from("employee_work_schedules")
 .select("schedule_id,effective_from,effective_until")
 .eq("employee_id",colaboradorAtual.id).eq("company_id",colaboradorAtual.company_id)
 .lte("effective_from",ultimoDia)
 .or("effective_until.is.null,effective_until.gte."+primeiroDia)
 .order("effective_from",{ascending:true});
-
 if(error)throw error;
 if(!atribuicoes||!atribuicoes.length)return {};
-
 const ids=[...new Set(atribuicoes.map(a=>a.schedule_id))];
-
 const {data:modelos,error:erroModelos}=await supabaseClient.from("work_schedule_templates")
 .select("id,schedule_type,cycle_days").in("id",ids);
-
 if(erroModelos)throw erroModelos;
-
 const {data:dias,error:erroDias}=await supabaseClient.from("work_schedule_template_days")
 .select("schedule_id,day_number,is_working,start_time,end_time,break_minutes").in("schedule_id",ids);
-
 if(erroDias)throw erroDias;
-
 const resultado={};
 const hoje=dataChaveLocal(new Date());
-
 for(let numero=1;numero<=new Date(ano,mes,0).getDate();numero++){
 const data=new Date(ano,mes-1,numero,12,0,0);
 const chave=dataChaveLocal(data);
-
 if(chave>hoje)continue;
-
 const atribuicao=atribuicoes.filter(a=>a.effective_from<=chave&&(!a.effective_until||a.effective_until>=chave))
 .sort((a,b)=>b.effective_from.localeCompare(a.effective_from))[0];
-
 if(!atribuicao)continue;
-
 const modelo=modelos.find(m=>m.id===atribuicao.schedule_id);
 if(!modelo)continue;
-
 let numeroDia;
-
 if(modelo.schedule_type==="cyclic"){
 const ciclo=Number(modelo.cycle_days||0);
 if(ciclo<1)continue;
@@ -599,23 +539,18 @@ numeroDia=((diferenca%ciclo)+ciclo)%ciclo+1;
 }else{
 numeroDia=data.getDay()===0?7:data.getDay();
 }
-
 const dia=(dias||[]).find(d=>d.schedule_id===modelo.id&&Number(d.day_number)===numeroDia);
 if(!dia)continue;
-
 let previsto=0;
-
 if(dia.is_working){
 const inicio=minutosHora(dia.start_time);
 const fim=minutosHora(dia.end_time);
-
 if(inicio!==null&&fim!==null){
 let total=fim-inicio;
 if(total<=0)total+=1440;
 previsto=Math.max(0,total-Number(dia.break_minutes||0));
 }
 }
-
 resultado[chave]={
 minutos:previsto,
 trabalho:!!dia.is_working,
@@ -624,80 +559,59 @@ fim:minutosHora(dia.end_time),
 intervalo:Number(dia.break_minutes||0)
 };
 }
-
 return resultado;
 }
-
 /* CLASSIFICA ATRASOS, SAÍDAS ANTECIPADAS E EXTRAS */
-
 function calcularOcorrencias(calculo,jornada){
 if(!jornada)return {atraso:0,antecipada:0,extra:0,saldo:0};
-
 const saldo=calculo.minutos-jornada.minutos;
 let atraso=0;
 let antecipada=0;
 let extra=0;
-
 if(jornada.trabalho&&calculo.primeiraEntrada!==null&&jornada.inicio!==null){
 const entrada=new Date(calculo.primeiraEntrada);
 const entradaReal=entrada.getHours()*60+entrada.getMinutes();
 atraso=Math.max(0,entradaReal-jornada.inicio);
 }
-
 if(jornada.trabalho&&calculo.ultimaSaida!==null&&jornada.fim!==null){
 const saida=new Date(calculo.ultimaSaida);
 let saidaReal=saida.getHours()*60+saida.getMinutes();
 let fimPrevisto=jornada.fim;
-
 if(fimPrevisto<=jornada.inicio)fimPrevisto+=1440;
 if(saidaReal<jornada.inicio)saidaReal+=1440;
-
 antecipada=Math.max(0,fimPrevisto-saidaReal);
 }
-
 if(saldo>0)extra=saldo;
-
 return {atraso,antecipada,extra,saldo};
 }
-
 function criarResumoItem(valor,legenda){
 const caixa=document.createElement("div");
 caixa.className="resumo-item";
-
 const strong=document.createElement("strong");
 strong.textContent=valor;
-
 const span=document.createElement("span");
 span.textContent=legenda;
-
 caixa.append(strong,span);
 return caixa;
 }
-
 function renderizarCalendario(ano,mes,jornadas,dias){
 const area=document.getElementById("calendarioMensal");
 area.innerHTML="";
-
 const primeiro=new Date(ano,mes-1,1);
 const deslocamento=(primeiro.getDay()+6)%7;
-
 for(let i=0;i<deslocamento;i++){
 const vazio=document.createElement("div");
 vazio.className="cal-dia vazio";
 area.appendChild(vazio);
 }
-
 const total=new Date(ano,mes,0).getDate();
 const hoje=dataChaveLocal(new Date());
-
 for(let n=1;n<=total;n++){
 const chave=ano+"-"+String(mes).padStart(2,"0")+"-"+String(n).padStart(2,"0");
 const celula=document.createElement("div");
 celula.className="cal-dia";
-
 const jornada=jornadas[chave];
 const eventos=dias[chave]||[];
-
 if(eventos.length){
 const calc=calcularHorasDoDia(eventos);
 celula.classList.add(calc.inconsistente||calc.pendente?"ocorrencia":"trabalhado");
@@ -708,93 +622,68 @@ celula.classList.add("ocorrencia");
 }else{
 celula.classList.add("vazio");
 }
-
 const numero=document.createElement("strong");
 numero.textContent=n;
-
 const pequeno=document.createElement("small");
 pequeno.textContent=eventos.length?"●":(jornada?(jornada.trabalho?"—":"Folga"):"");
-
 celula.append(numero,pequeno);
 area.appendChild(celula);
 }
 }
-
 /* ESPELHO DE PONTO E RESUMO */
-
 async function carregarEspelhoPonto(){
 const campo=document.getElementById("mesEspelho");
 const lista=document.getElementById("listaEspelho");
 const resumo=document.getElementById("resumoEspelho");
-
 if(!campo||!lista||!resumo||!usuarioAtual||!colaboradorAtual)return;
-
 if(!campo.value){
 const agora=new Date();
 campo.value=agora.getFullYear()+"-"+String(agora.getMonth()+1).padStart(2,"0");
 }
-
 lista.innerHTML="<p>Consultando marcações...</p>";
-
 try{
 const partes=campo.value.split("-");
 const ano=Number(partes[0]),mes=Number(partes[1]);
-
 if(!ano||!mes||mes<1||mes>12)throw new Error("Selecione um mês válido.");
-
 const inicio=new Date(ano,mes-1,1,0,0,0,0);
 const fim=new Date(ano,mes,1,0,0,0,0);
-
 const {data,error}=await supabaseClient.from("attendance_records")
 .select("id,event_type,recorded_at")
 .eq("user_id",usuarioAtual.id).eq("employee_id",colaboradorAtual.id)
 .gte("recorded_at",inicio.toISOString()).lt("recorded_at",fim.toISOString())
 .order("recorded_at",{ascending:true});
-
 if(error)throw error;
-
 const registros=data||[];
 const dias={};
-
 registros.forEach(registro=>{
 const chave=dataChaveLocal(new Date(registro.recorded_at));
 if(!dias[chave])dias[chave]=[];
 dias[chave].push(registro);
 });
-
 const jornadas=await carregarJornadasPrevistas(ano,mes);
-
 let totalMes=0,previstoMes=0,atrasoMes=0,antecipadaMes=0,extraMes=0;
 let diasComRegistro=0;
 let diasComOcorrencia=0;
-
 Object.entries(jornadas).forEach(([chave,jornada])=>{
 if(chave<=dataChaveLocal(new Date()))previstoMes+=jornada.minutos;
 });
-
 Object.entries(dias).forEach(([chave,eventos])=>{
 const calc=calcularHorasDoDia(eventos);
 const jornada=jornadas[chave];
-
 totalMes+=calc.minutos;
-
 if(eventos.length)diasComRegistro++;
-
 if(jornada){
 const ocorrencias=calcularOcorrencias(calc,jornada);
 atrasoMes+=ocorrencias.atraso;
 antecipadaMes+=ocorrencias.antecipada;
 extraMes+=ocorrencias.extra;
-
 if(calc.inconsistente||calc.pendente||ocorrencias.atraso||ocorrencias.antecipada)diasComOcorrencia++;
 }else if(calc.inconsistente||calc.pendente){
 diasComOcorrencia++;
 }
 });
-
 const saldoMes=totalMes-previstoMes;
 resumo.innerHTML="";
-
 [
 [registros.length,"Marcações"],
 [diasComRegistro,"Dias com registro"],
@@ -806,66 +695,49 @@ resumo.innerHTML="";
 [formatarDuracao(extraMes),"Horas extras calculadas"],
 [String(diasComOcorrencia),"Dias com ocorrências"]
 ].forEach(item=>resumo.appendChild(criarResumoItem(item[0],item[1])));
-
 renderizarCalendario(ano,mes,jornadas,dias);
 lista.innerHTML="";
-
 const chaves=Object.keys(dias).sort();
-
 if(chaves.length===0){
 lista.innerHTML='<div class="sem-registros">Nenhuma marcação encontrada neste mês.</div>';
 return;
 }
-
 chaves.forEach(chave=>{
 const bloco=document.createElement("div");
 bloco.className="registro-dia";
-
 const cabecalho=document.createElement("h4");
 cabecalho.textContent=formatarDataEspelho(chave);
 bloco.appendChild(cabecalho);
-
 const eventos=dias[chave];
-
 eventos.forEach(registro=>{
 const linha=document.createElement("div");
 linha.className="linha-registro";
-
 const nome=document.createElement("span");
 nome.textContent=nomeEvento(registro.event_type);
-
 const hora=document.createElement("span");
 hora.textContent=new Date(registro.recorded_at).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
-
 linha.append(nome,hora);
 bloco.appendChild(linha);
 });
-
 const calc=calcularHorasDoDia(eventos);
 const jornada=jornadas[chave];
-
 const totalDia=document.createElement("div");
 totalDia.className="horas-dia";
 totalDia.textContent="Horas trabalhadas: "+formatarDuracao(calc.minutos)+" • Intervalos: "+formatarDuracao(calc.intervalo);
 bloco.appendChild(totalDia);
-
 if(jornada){
 const ocorrencias=calcularOcorrencias(calc,jornada);
-
 const comparacao=document.createElement("div");
 comparacao.className="horas-dia";
 comparacao.textContent="Jornada prevista: "+formatarDuracao(jornada.minutos)+
 " • Saldo diário: "+(ocorrencias.saldo>=0?"+":"-")+formatarDuracao(ocorrencias.saldo);
-
 if(ocorrencias.saldo<0)comparacao.classList.add("horas-negativas");
 bloco.appendChild(comparacao);
-
 const detalhes=document.createElement("div");
 detalhes.className="horas-dia";
 detalhes.textContent="Atraso: "+formatarDuracao(ocorrencias.atraso)+
 " • Saída antecipada: "+formatarDuracao(ocorrencias.antecipada)+
 " • Horas extras: "+formatarDuracao(ocorrencias.extra);
-
 bloco.appendChild(detalhes);
 }else{
 const avisoEscala=document.createElement("div");
@@ -873,266 +745,195 @@ avisoEscala.className="aviso-registro";
 avisoEscala.textContent="Não foi encontrada jornada prevista para esta data.";
 bloco.appendChild(avisoEscala);
 }
-
 const avisos=[];
-
 if(calc.pendente)avisos.push("Jornada incompleta: existe uma marcação sem encerramento.");
 if(calc.emIntervalo)avisos.push("Intervalo iniciado sem retorno registrado.");
 if(calc.inconsistente)avisos.push("Foram identificadas marcações fora de sequência ou inconsistentes.");
 if(jornada&&!jornada.trabalho)avisos.push("Há marcações registradas em um dia previsto como folga.");
-
 if(avisos.length){
 const aviso=document.createElement("div");
 aviso.className="aviso-registro";
 aviso.textContent=avisos.join(" ");
 bloco.appendChild(aviso);
 }
-
 lista.appendChild(bloco);
 });
-
 }catch(error){
 console.error("Erro no espelho de ponto:",error);
 lista.innerHTML="";
-
 const aviso=document.createElement("p");
 aviso.textContent="Não foi possível carregar o espelho: "+error.message;
 lista.appendChild(aviso);
 }
 }
-
 /* PERFIL */
-
 function iniciais(nome){
 return (nome||"K").trim().split(/\s+/).slice(0,2).map(p=>p.charAt(0).toUpperCase()).join("");
 }
-
 async function carregarFotoPerfil(){
 const avatar=document.getElementById("avatarIniciais");
 const foto=document.getElementById("fotoPerfil");
-
 avatar.textContent=iniciais(colaboradorAtual.full_name);
 avatar.classList.remove("oculto");
 foto.classList.add("oculto");
-
 const caminho=colaboradorAtual.profile_photo_url;
 if(!caminho)return;
-
 try{
 const {data,error}=await supabaseClient.storage.from("profile-photos").createSignedUrl(caminho,3600);
 if(error)throw error;
-
 foto.onload=function(){
 foto.classList.remove("oculto");
 avatar.classList.add("oculto");
 };
-
 foto.onerror=function(){
 foto.classList.add("oculto");
 avatar.classList.remove("oculto");
 };
-
 foto.src=data.signedUrl;
-
 }catch(error){
 console.error("Erro ao carregar foto:",error.message);
 }
 }
-
 async function carregarPerfil(){
 document.getElementById("nomePerfil").textContent=colaboradorAtual.full_name||"";
 document.getElementById("cargoPerfil").textContent=colaboradorAtual.job_title||"Cargo não informado";
 document.getElementById("emailPerfil").textContent=colaboradorAtual.email||usuarioAtual.email||"-";
 document.getElementById("cargoDado").textContent=colaboradorAtual.job_title||"Não informado";
-
 const campoDepartamento=document.getElementById("departamentoPerfil");
 campoDepartamento.textContent="Não informado";
-
 if(colaboradorAtual.department_id){
 try{
 const {data,error}=await supabaseClient.from("departamentos").select("nome")
 .eq("id",colaboradorAtual.department_id).eq("id_da_empresa",colaboradorAtual.company_id).maybeSingle();
-
 if(error)throw error;
 if(data&&data.nome)campoDepartamento.textContent=data.nome;
-
 }catch(error){
 console.error("Erro ao consultar departamento:",error);
 }
 }
-
 await carregarFotoPerfil();
 await carregarEscala();
 }
-
 function formatarHora(hora){
 return hora?hora.substring(0,5):"--:--";
 }
-
 function dataLocalISO(){
 return dataChaveLocal(new Date());
 }
-
 function formatarIntervalo(minutos){
 const valor=Number(minutos||0);
 if(valor<=0)return "Não informado";
-
 const horas=Math.floor(valor/60),resto=valor%60;
-
 if(horas>0&&resto>0)return horas+"h "+resto+"min";
 if(horas>0)return horas+"h";
 return resto+"min";
 }
-
 /* ESCALA */
-
 async function carregarEscala(){
 const lista=document.getElementById("listaEscala");
 lista.innerHTML="<p>Consultando escala...</p>";
-
 try{
 const hojeTexto=dataLocalISO();
-
 const {data:atribuicoes,error:erroAtribuicao}=await supabaseClient.from("employee_work_schedules")
 .select("id,schedule_id,effective_from,effective_until,created_at")
 .eq("employee_id",colaboradorAtual.id).eq("company_id",colaboradorAtual.company_id)
 .lte("effective_from",hojeTexto).or("effective_until.is.null,effective_until.gte."+hojeTexto)
 .order("effective_from",{ascending:false}).limit(1);
-
 if(erroAtribuicao)throw erroAtribuicao;
-
 if(!atribuicoes||!atribuicoes.length){
 lista.innerHTML="<p>Você ainda não possui uma escala vigente. Consulte o RH da sua empresa.</p>";
 return;
 }
-
 const atribuicao=atribuicoes[0];
-
 const {data:modelo,error:erroModelo}=await supabaseClient.from("work_schedule_templates")
 .select("id,name,schedule_type,cycle_days,weekly_hours,active")
 .eq("id",atribuicao.schedule_id).eq("company_id",colaboradorAtual.company_id).maybeSingle();
-
 if(erroModelo)throw erroModelo;
-
 if(!modelo){
 lista.innerHTML="<p>Não foi possível localizar o modelo da sua escala. Procure o RH.</p>";
 return;
 }
-
 const {data:dias,error:erroDias}=await supabaseClient.from("work_schedule_template_days")
 .select("id,schedule_id,day_number,is_working,start_time,end_time,break_minutes")
 .eq("schedule_id",modelo.id).order("day_number",{ascending:true});
-
 if(erroDias)throw erroDias;
-
 if(!dias||!dias.length){
 lista.innerHTML="<p>A escala foi encontrada, mas ainda não possui dias configurados. Consulte o RH.</p>";
 return;
 }
-
 const nomesDias=["Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado","Domingo"];
-
 lista.innerHTML="";
-
 const cabecalho=document.createElement("div");
 cabecalho.className="dia-escala";
-
 const nomeEscala=document.createElement("strong");
 nomeEscala.textContent=modelo.name||"Minha escala";
-
 const tipoEscala=document.createElement("span");
 tipoEscala.textContent=modelo.schedule_type==="cyclic"?"Escala cíclica • "+modelo.cycle_days+" dias de ciclo":"Escala fixa semanal";
-
 cabecalho.append(nomeEscala,tipoEscala);
 lista.appendChild(cabecalho);
-
 dias.forEach(item=>{
 const bloco=document.createElement("div");
 bloco.className="dia-escala";
-
 const tituloDia=document.createElement("strong");
 tituloDia.textContent=modelo.schedule_type==="cyclic"?"Dia "+item.day_number+" do ciclo":(nomesDias[Number(item.day_number)-1]||("Dia "+item.day_number));
-
 const horario=document.createElement("span");
 horario.textContent=item.is_working?
 "Trabalho • Entrada: "+formatarHora(item.start_time)+" • Saída: "+formatarHora(item.end_time)+" • Intervalo: "+formatarIntervalo(item.break_minutes):
 "Folga";
-
 bloco.append(tituloDia,horario);
 lista.appendChild(bloco);
 });
-
 const vigencia=document.createElement("div");
 vigencia.className="dia-escala";
-
 const tituloVigencia=document.createElement("strong");
 tituloVigencia.textContent="Vigência da escala";
-
 const textoVigencia=document.createElement("span");
 textoVigencia.textContent="Desde "+new Date(atribuicao.effective_from+"T12:00:00").toLocaleDateString("pt-BR")+
 (atribuicao.effective_until?" até "+new Date(atribuicao.effective_until+"T12:00:00").toLocaleDateString("pt-BR"):" • Sem data final");
-
 vigencia.append(tituloVigencia,textoVigencia);
 lista.appendChild(vigencia);
-
 }catch(error){
 console.error("Erro ao consultar escala:",error);
 lista.innerHTML="<p>Não foi possível carregar sua escala: "+(error.message||"erro desconhecido")+"</p>";
 }
 }
-
 /* FOTO DE PERFIL */
-
 async function enviarFoto(event){
 const arquivo=event.target.files[0];
 if(!arquivo)return;
-
 if(!["image/jpeg","image/png","image/webp"].includes(arquivo.type)){
 mostrarMensagem("Escolha uma imagem JPG, PNG ou WebP.","erro");
 event.target.value="";
 return;
 }
-
 if(arquivo.size>2*1024*1024){
 mostrarMensagem("A foto deve ter no máximo 2 MB.","erro");
 event.target.value="";
 return;
 }
-
 const extensoes={"image/jpeg":"jpg","image/png":"png","image/webp":"webp"};
 const caminho=usuarioAtual.id+"/"+colaboradorAtual.id+"."+extensoes[arquivo.type];
-
 const input=document.getElementById("arquivoFoto");
 input.disabled=true;
 limparMensagem();
-
 try{
 const {error:uploadError}=await supabaseClient.storage.from("profile-photos")
 .upload(caminho,arquivo,{upsert:true,contentType:arquivo.type});
-
 if(uploadError)throw uploadError;
-
 const {error:perfilError}=await supabaseClient.rpc("atualizar_minha_foto",{caminho_foto:caminho});
-
 if(perfilError)throw perfilError;
-
 colaboradorAtual.profile_photo_url=caminho;
 await carregarFotoPerfil();
-
 mostrarMensagem("Foto de perfil atualizada com sucesso!","sucesso");
-
 }catch(error){
 mostrarMensagem("Não foi possível atualizar a foto: "+error.message,"erro");
 console.error(error);
-
 }finally{
 input.disabled=false;
 input.value="";
 }
 }
-
 /* MÓDULO DE SOLICITAÇÕES */
-
 const tiposSolicitacao={
 time_correction:"Correção de ponto",
 day_off_change:"Troca de folga",
@@ -1142,141 +943,197 @@ attendance_declaration:"Declaração de horas / comparecimento",
 union_declaration:"Declaração sindical",
 other_declaration:"Outra declaração"
 };
-
 const statusSolicitacao={
 pending:"Pendente",
 approved:"Aprovada",
 rejected:"Recusada",
 cancelled:"Cancelada"
 };
-
 function formatarDataSolicitacao(data){
 if(!data)return "Não informada";
 const partes=String(data).split("-");
 if(partes.length!==3)return data;
 return partes[2]+"/"+partes[1]+"/"+partes[0];
 }
-
 function formatarDataHoraSolicitacao(data){
 if(!data)return "-";
 return new Date(data).toLocaleString("pt-BR");
 }
-
 function criarElemento(tag,classe,texto){
 const elemento=document.createElement(tag);
 if(classe)elemento.className=classe;
 if(texto!==undefined)elemento.textContent=texto;
 return elemento;
 }
-
+/* GERA NOME SEGURO PARA O ARQUIVO */
+function extensaoComprovante(arquivo){
+const extensao=arquivo.name.split(".").pop().toLowerCase();
+if(arquivo.type==="application/pdf"&&extensao==="pdf")return "pdf";
+if(arquivo.type==="image/jpeg"&&(extensao==="jpg"||extensao==="jpeg"))return extensao;
+if(arquivo.type==="image/png"&&extensao==="png")return "png";
+return null;
+}
+/* UPLOAD PRIVADO DO COMPROVANTE */
+async function enviarComprovante(arquivo){
+if(!arquivo)return null;
+const extensao=extensaoComprovante(arquivo);
+if(!extensao){
+throw new Error("O comprovante deve ser um arquivo PDF, JPG ou PNG válido.");
+}
+if(arquivo.size>TAMANHO_MAXIMO_COMPROVANTE){
+throw new Error("O comprovante ultrapassa o limite de 10 MB.");
+}
+const nomeArquivo=crypto.randomUUID()+"."+extensao;
+/*
+O caminho segue a estrutura exigida pela política
+do Storage:
+company_id/employee_id/nome-do-arquivo
+*/
+const caminho=
+String(colaboradorAtual.company_id)+"/"+
+String(colaboradorAtual.id)+"/"+
+nomeArquivo;
+const {error}=await supabaseClient.storage
+.from(BUCKET_COMPROVANTES)
+.upload(caminho,arquivo,{
+contentType:arquivo.type,
+upsert:false
+});
+if(error)throw error;
+return caminho;
+}
+/* LINK TEMPORÁRIO PARA ARQUIVO PRIVADO */
+async function criarLinkComprovante(caminho){
+const {data,error}=await supabaseClient.storage
+.from(BUCKET_COMPROVANTES)
+.createSignedUrl(caminho,300);
+if(error)throw error;
+return data.signedUrl;
+}
+/* CARREGA SOLICITAÇÕES E SEUS COMPROVANTES */
 async function carregarMinhasSolicitacoes(){
 const lista=document.getElementById("listaSolicitacoes");
-
 if(!usuarioAtual||!colaboradorAtual){
 lista.innerHTML="<p>Entre novamente para consultar suas solicitações.</p>";
 return;
 }
-
 lista.innerHTML="<p>Carregando suas solicitações...</p>";
-
 try{
 const {data,error}=await supabaseClient
 .from("employee_requests")
-.select("id,request_type,description,requested_date,requested_start_time,requested_end_time,status,decision_reason,created_at,decided_at")
+.select("id,request_type,description,requested_date,requested_start_time,requested_end_time,status,decision_reason,created_at,decided_at,document_path")
 .eq("employee_id",colaboradorAtual.id)
 .eq("user_id",usuarioAtual.id)
 .order("created_at",{ascending:false});
-
 if(error)throw error;
-
 lista.innerHTML="";
-
 if(!data||data.length===0){
 lista.innerHTML='<div class="solicitacao-vazia">Você ainda não enviou nenhuma solicitação.</div>';
 return;
 }
-
-data.forEach(item=>{
+for(const item of data){
 const card=criarElemento("div","solicitacao-card");
-
 const tituloCard=criarElemento("h4","",tiposSolicitacao[item.request_type]||"Solicitação");
 card.appendChild(tituloCard);
-
 const status=criarElemento("span","status-solicitacao status-"+item.status,statusSolicitacao[item.status]||item.status);
 card.appendChild(status);
-
 const dataPedido=criarElemento("p","detalhe","Data relacionada: "+formatarDataSolicitacao(item.requested_date));
 card.appendChild(dataPedido);
-
 if(item.requested_start_time){
 card.appendChild(criarElemento("p","detalhe","Horário inicial: "+String(item.requested_start_time).substring(0,5)));
 }
-
 if(item.requested_end_time){
 card.appendChild(criarElemento("p","detalhe","Horário final: "+String(item.requested_end_time).substring(0,5)));
 }
-
 card.appendChild(criarElemento("p","", "Justificativa: "+item.description));
 card.appendChild(criarElemento("p","detalhe","Enviada em: "+formatarDataHoraSolicitacao(item.created_at)));
-
 if(item.decided_at){
 card.appendChild(criarElemento("p","detalhe","Analisada em: "+formatarDataHoraSolicitacao(item.decided_at)));
 }
-
 if(item.decision_reason){
 const motivo=criarElemento("p","detalhe","Resposta do responsável: "+item.decision_reason);
 card.appendChild(motivo);
 }
-
+/* DOCUMENTO ANEXADO */
+if(item.document_path){
+const areaDocumento=criarElemento("div","","");
+areaDocumento.appendChild(criarElemento("p","detalhe","Comprovante anexado:"));
+try{
+const url=await criarLinkComprovante(item.document_path);
+const link=document.createElement("a");
+link.className="link-comprovante";
+link.href=url;
+link.target="_blank";
+link.rel="noopener noreferrer";
+link.textContent="Abrir comprovante";
+areaDocumento.appendChild(link);
+}catch(erroDocumento){
+console.error("Erro ao gerar link do comprovante:",erroDocumento);
+areaDocumento.appendChild(
+criarElemento("p","detalhe","Não foi possível abrir o comprovante. Atualize o histórico ou procure o RH.")
+);
+}
+card.appendChild(areaDocumento);
+}
 lista.appendChild(card);
-});
-
+}
 }catch(error){
 console.error("Erro ao carregar solicitações:",error);
 lista.innerHTML="";
 lista.appendChild(criarElemento("p","","Não foi possível carregar suas solicitações: "+error.message));
 }
 }
-
+/* ENVIA SOLICITAÇÃO E COMPROVANTE */
 async function enviarSolicitacao(event){
 event.preventDefault();
-
 if(processandoSolicitacao)return;
-
 if(!usuarioAtual||!colaboradorAtual){
 mostrarMensagem("Sua sessão não está válida. Entre novamente.","erro");
 return;
 }
-
 const tipo=document.getElementById("tipoSolicitacao").value;
 const data=document.getElementById("dataSolicitacao").value||null;
 const horaInicial=document.getElementById("horaInicial").value||null;
 const horaFinal=document.getElementById("horaFinal").value||null;
 const descricao=document.getElementById("descricaoSolicitacao").value.trim();
-
+const inputArquivo=document.getElementById("comprovanteSolicitacao");
+const arquivo=inputArquivo.files[0]||null;
 if(!tipo||!tiposSolicitacao[tipo]){
 mostrarMensagem("Selecione um tipo de solicitação válido.","erro");
 return;
 }
-
 if(!descricao){
 mostrarMensagem("Informe a justificativa da solicitação.","erro");
 return;
 }
-
 if(horaInicial&&horaFinal&&horaFinal<horaInicial){
 mostrarMensagem("O horário final não pode ser anterior ao horário inicial.","erro");
 return;
 }
-
+if(arquivo){
+if(!extensaoComprovante(arquivo)){
+mostrarMensagem("O comprovante deve ser PDF, JPG ou PNG.","erro");
+return;
+}
+if(arquivo.size>TAMANHO_MAXIMO_COMPROVANTE){
+mostrarMensagem("O comprovante deve ter no máximo 10 MB.","erro");
+return;
+}
+}
 processandoSolicitacao=true;
-
 const botao=document.getElementById("botaoEnviarSolicitacao");
 botao.disabled=true;
 botao.textContent="Enviando solicitação...";
 limparMensagem();
-
 try{
+let caminhoDocumento=null;
+/* PRIMEIRO ENVIA O ARQUIVO PARA O STORAGE */
+if(arquivo){
+botao.textContent="Enviando comprovante...";
+caminhoDocumento=await enviarComprovante(arquivo);
+}
+/* DEPOIS REGISTRA A SOLICITAÇÃO NO BANCO */
+botao.textContent="Salvando solicitação...";
 const dados={
 company_id:colaboradorAtual.company_id,
 employee_id:colaboradorAtual.id,
@@ -1285,37 +1142,58 @@ request_type:tipo,
 description:descricao,
 requested_date:data,
 requested_start_time:horaInicial,
-requested_end_time:horaFinal
+requested_end_time:horaFinal,
+document_path:caminhoDocumento
 };
-
 const {error}=await supabaseClient
 .from("employee_requests")
 .insert(dados);
-
 if(error)throw error;
-
 document.getElementById("formSolicitacao").reset();
 document.getElementById("camposHorario").classList.add("oculto");
-
-mostrarMensagem("Sua solicitação foi enviada com sucesso! Agora ela aguarda análise do responsável.","sucesso");
-
+document.getElementById("nomeComprovante").textContent="";
+mostrarMensagem(
+arquivo?
+"Sua solicitação e o comprovante foram enviados com sucesso! Agora aguardam análise do responsável.":
+"Sua solicitação foi enviada com sucesso! Agora ela aguarda análise do responsável.",
+"sucesso"
+);
 await carregarMinhasSolicitacoes();
-
 }catch(error){
 console.error("Erro ao enviar solicitação:",error);
-mostrarMensagem("Não foi possível enviar sua solicitação: "+error.message,"erro");
-
+mostrarMensagem(
+"Não foi possível enviar sua solicitação: "+error.message,
+"erro"
+);
 }finally{
 processandoSolicitacao=false;
 botao.disabled=false;
 botao.textContent="Enviar solicitação";
 }
 }
-
+/* MOSTRA O NOME DO ARQUIVO SELECIONADO */
+document.getElementById("comprovanteSolicitacao").addEventListener("change",function(){
+const arquivo=this.files[0];
+const area=document.getElementById("nomeComprovante");
+area.textContent="";
+if(!arquivo)return;
+if(!extensaoComprovante(arquivo)){
+mostrarMensagem("Escolha um arquivo PDF, JPG ou PNG.","erro");
+this.value="";
+return;
+}
+if(arquivo.size>TAMANHO_MAXIMO_COMPROVANTE){
+mostrarMensagem("O arquivo ultrapassa o limite de 10 MB.","erro");
+this.value="";
+return;
+}
+const tamanhoMB=(arquivo.size/1024/1024).toFixed(2);
+area.textContent="Arquivo selecionado: "+arquivo.name+" ("+tamanhoMB+" MB)";
+limparMensagem();
+});
 document.getElementById("tipoSolicitacao").addEventListener("change",function(){
 const tipo=this.value;
 const campos=document.getElementById("camposHorario");
-
 if(tipo==="time_correction"||tipo==="schedule_change"){
 campos.classList.remove("oculto");
 }else{
@@ -1324,9 +1202,7 @@ document.getElementById("horaInicial").value="";
 document.getElementById("horaFinal").value="";
 }
 });
-
 document.getElementById("formSolicitacao").addEventListener("submit",enviarSolicitacao);
-
 document.getElementById("botaoAtualizarSolicitacoes").addEventListener("click",async function(){
 this.disabled=true;
 this.textContent="Atualizando...";
@@ -1334,37 +1210,27 @@ await carregarMinhasSolicitacoes();
 this.disabled=false;
 this.textContent="Atualizar histórico";
 });
-
 /* ABERTURA DO PORTAL */
-
 async function abrirPortal(user){
 esconderFormularios();
 limparMensagem();
-
 try{
 usuarioAtual=user;
 colaboradorAtual=await buscarColaborador(user);
-
 document.getElementById("nomeColaborador").textContent=colaboradorAtual.full_name;
 document.getElementById("emailColaborador").textContent=colaboradorAtual.email||user.email;
-
 areaLogada.classList.remove("oculto");
-
 titulo.textContent="Meu Ponto";
 subtitulo.textContent="Bem-vindo ao seu portal de colaborador.";
-
 document.getElementById("conteudoPonto").classList.remove("oculto");
 document.getElementById("conteudoSolicitacoes").classList.add("oculto");
 document.getElementById("conteudoPerfil").classList.add("oculto");
-
 document.getElementById("abaPonto").classList.add("ativa");
 document.getElementById("abaSolicitacoes").classList.remove("ativa");
 document.getElementById("abaPerfil").classList.remove("ativa");
-
 iniciarRelogio();
 await atualizarEstadoPonto();
 await carregarEspelhoPonto();
-
 }catch(error){
 usuarioAtual=null;
 colaboradorAtual=null;
@@ -1372,39 +1238,27 @@ mostrarLogin();
 mostrarMensagem(error.message,"erro");
 }
 }
-
 /* REGISTRO DE PONTO */
-
 async function registrarPonto(){
 if(processandoPonto)return;
-
 if(!usuarioAtual||!colaboradorAtual){
 mostrarMensagem("Sua sessão não está válida. Entre novamente.","erro");
 return;
 }
-
 processandoPonto=true;
-
 const botao=document.getElementById("botaoPonto");
 botao.disabled=true;
 botao.textContent="Registrando...";
-
 limparMensagem();
-
 try{
 const ultimo=await buscarUltimoRegistro();
 let novoEvento="entrada";
-
 if(ultimo){
 const etapa=etapas[ultimo.event_type];
-
 if(!etapa)throw new Error("Não foi possível identificar a próxima marcação. Procure o RH.");
-
 novoEvento=etapa.proximo;
 }
-
 const agora=new Date().toISOString();
-
 const {error}=await supabaseClient.from("attendance_records").insert({
 id:crypto.randomUUID(),
 company_id:colaboradorAtual.company_id,
@@ -1414,254 +1268,189 @@ event_type:novoEvento,
 recorded_at:agora,
 created_at:agora
 });
-
 if(error)throw error;
-
 const nomes={entrada:"Entrada",inicio_intervalo:"Início do intervalo",retorno_intervalo:"Retorno do intervalo",saida:"Saída"};
-
 mostrarMensagem(nomes[novoEvento]+" registrado com sucesso! Seu horário foi salvo.","sucesso");
-
 await atualizarEstadoPonto();
 await carregarEspelhoPonto();
-
 }catch(error){
 mostrarMensagem("Não foi possível registrar: "+error.message,"erro");
 await atualizarEstadoPonto();
-
 }finally{
 processandoPonto=false;
 }
 }
-
 document.getElementById("botaoPonto").addEventListener("click",registrarPonto);
 document.getElementById("botaoConsultarEspelho").addEventListener("click",carregarEspelhoPonto);
 document.getElementById("mesEspelho").addEventListener("change",carregarEspelhoPonto);
-
 /* NAVEGAÇÃO ENTRE ABAS */
-
 function ativarAba(nome){
 const secoes={
 ponto:document.getElementById("conteudoPonto"),
 solicitacoes:document.getElementById("conteudoSolicitacoes"),
 perfil:document.getElementById("conteudoPerfil")
 };
-
 const botoes={
 ponto:document.getElementById("abaPonto"),
 solicitacoes:document.getElementById("abaSolicitacoes"),
 perfil:document.getElementById("abaPerfil")
 };
-
 Object.keys(secoes).forEach(chave=>{
 secoes[chave].classList.toggle("oculto",chave!==nome);
 botoes[chave].classList.toggle("ativa",chave===nome);
 });
-
 if(nome==="ponto"){
 titulo.textContent="Meu Ponto";
 subtitulo.textContent="Registre sua jornada de trabalho.";
 }
-
 if(nome==="solicitacoes"){
 titulo.textContent="Solicitações";
 subtitulo.textContent="Envie e acompanhe suas solicitações.";
 carregarMinhasSolicitacoes();
 }
-
 if(nome==="perfil"){
 titulo.textContent="Meu Perfil";
 subtitulo.textContent="Consulte seus dados e sua jornada.";
 carregarPerfil();
 }
 }
-
 document.getElementById("abaPonto").addEventListener("click",function(){
 ativarAba("ponto");
 });
-
 document.getElementById("abaSolicitacoes").addEventListener("click",function(){
 ativarAba("solicitacoes");
 });
-
 document.getElementById("abaPerfil").addEventListener("click",function(){
 ativarAba("perfil");
 });
-
 document.getElementById("arquivoFoto").addEventListener("change",enviarFoto);
-
 /* LOGIN, RECUPERAÇÃO E PRIMEIRO ACESSO */
-
 async function iniciar(){
 const hash=new URLSearchParams(window.location.hash.replace(/^#/,""));
 const query=new URLSearchParams(window.location.search);
 const tipo=hash.get("type");
 const erroLink=hash.get("error_description")||query.get("error_description");
-
 if(erroLink){
 mostrarLogin();
 mostrarMensagem("O link é inválido ou expirou. Solicite um novo link.","erro");
 return;
 }
-
 const {data,error}=await supabaseClient.auth.getSession();
-
 if(error){
 mostrarLogin();
 mostrarMensagem(error.message,"erro");
 return;
 }
-
 if(["invite","recovery","signup"].includes(tipo)){
 if(data.session){
 mostrarFormularioSenha(tipo);
 return;
 }
-
 mostrarLogin();
 mostrarMensagem("Não foi possível validar o link. Solicite um novo.","erro");
 return;
 }
-
 if(data.session){
 await abrirPortal(data.session.user);
 }else{
 mostrarLogin();
 }
 }
-
 linkRecuperacao.addEventListener("click",function(){
 esconderFormularios();
 formRecuperacao.classList.remove("oculto");
-
 titulo.textContent="Primeiro acesso ou recuperação";
 subtitulo.textContent="Informe seu e-mail cadastrado para receber um link.";
-
 limparMensagem();
 });
-
 document.getElementById("voltarLogin").addEventListener("click",function(){
 mostrarLogin();
 limparMensagem();
 });
-
 formRecuperacao.addEventListener("submit",async function(e){
 e.preventDefault();
 limparMensagem();
-
 const email=document.getElementById("emailRecuperacao").value.trim();
 const botao=formRecuperacao.querySelector("button");
-
 botao.disabled=true;
 botao.textContent="Enviando...";
-
 try{
 const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{
 redirectTo:window.location.origin+window.location.pathname
 });
-
 if(error)throw error;
-
 mostrarMensagem("Se o e-mail estiver cadastrado, você receberá um link. Confira também o spam.","sucesso");
-
 }catch(error){
 mostrarMensagem("Não foi possível enviar o e-mail: "+error.message,"erro");
-
 }finally{
 botao.disabled=false;
 botao.textContent="Enviar link para meu e-mail";
 }
 });
-
 formSenha.addEventListener("submit",async function(e){
 e.preventDefault();
 limparMensagem();
-
 const senha=document.getElementById("novaSenha").value;
 const confirmar=document.getElementById("confirmarSenha").value;
-
 if(senha.length<8){
 mostrarMensagem("A senha precisa ter pelo menos 8 caracteres.","erro");
 return;
 }
-
 if(senha!==confirmar){
 mostrarMensagem("As senhas não coincidem.","erro");
 return;
 }
-
 const botao=formSenha.querySelector("button");
 botao.disabled=true;
 botao.textContent="Salvando...";
-
 try{
 const {data,error}=await supabaseClient.auth.updateUser({password:senha});
-
 if(error)throw error;
-
 history.replaceState(null,"",window.location.pathname);
-
 mostrarMensagem("Senha criada com sucesso!","sucesso");
 await abrirPortal(data.user);
-
 }catch(error){
 mostrarMensagem("Erro ao salvar a senha: "+error.message,"erro");
-
 }finally{
 botao.disabled=false;
 botao.textContent="Salvar senha e continuar";
 }
 });
-
 formLogin.addEventListener("submit",async function(e){
 e.preventDefault();
 limparMensagem();
-
 const email=document.getElementById("email").value.trim();
 const senha=document.getElementById("senha").value;
 const botao=formLogin.querySelector("button");
-
 botao.disabled=true;
 botao.textContent="Entrando...";
-
 try{
 const {data,error}=await supabaseClient.auth.signInWithPassword({
 email,
 password:senha
 });
-
 if(error)throw error;
-
 await abrirPortal(data.user);
-
 }catch(error){
 mostrarLogin();
 mostrarMensagem("Não foi possível entrar: "+error.message,"erro");
-
 }finally{
 botao.disabled=false;
 botao.textContent="Entrar no Meu Ponto";
 }
 });
-
 /* SAIR */
-
 async function sair(){
 const {error}=await supabaseClient.auth.signOut();
-
 if(error){
 mostrarMensagem("Não foi possível sair da conta: "+error.message,"erro");
 return;
 }
-
 if(relogioIntervalo)clearInterval(relogioIntervalo);
-
 window.location.replace(window.location.pathname);
 }
-
 document.getElementById("botaoSair").addEventListener("click",sair);
-
 iniciar();
 </script>
-
 </body>
 </html>
