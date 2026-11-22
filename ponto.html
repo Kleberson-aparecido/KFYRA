@@ -127,7 +127,6 @@ header{padding:22px}
 <section id="conteudoPerfil" class="oculto">
 
 <div class="painel-ponto">
-
 <div class="perfil-topo">
 
 <div id="avatarIniciais" class="avatar-iniciais">N</div>
@@ -158,7 +157,6 @@ Adicionar ou trocar foto
 <span>Departamento</span>
 <strong id="departamentoPerfil">Não informado</strong>
 </div>
-
 </div>
 
 <div class="painel-ponto">
@@ -510,7 +508,6 @@ input.disabled=true;
 limparMensagem();
 
 try{
-
 const {error:uploadError}=await supabaseClient
 .storage
 .from("profile-photos")
@@ -810,7 +807,7 @@ if(error)throw error;
 await abrirPortal(data.user);
 
 }catch(error){
-mostrarMensagem("Não foi possível entrar. Confira seu e-mail e sua senha.","erro");
+mostrarMensagem("Não foi possível entrar: "+error.message,"erro");
 }finally{
 botao.disabled=false;
 botao.textContent="Entrar no Meu Ponto";
@@ -821,7 +818,7 @@ async function sair(){
 const {error}=await supabaseClient.auth.signOut();
 
 if(error){
-mostrarMensagem("Não foi possível sair da conta.","erro");
+mostrarMensagem("Não foi possível sair da conta: "+error.message,"erro");
 return;
 }
 
@@ -830,4 +827,9 @@ if(relogioIntervalo)clearInterval(relogioIntervalo);
 window.location.replace(window.location.pathname);
 }
 
-document.getElementById("bot
+document.getElementById("botaoSair").addEventListener("click",sair);
+
+iniciar();
+</script>
+</body>
+</html>
