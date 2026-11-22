@@ -43,7 +43,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .dado-perfil strong{text-align:right;overflow-wrap:anywhere}
 .dia-escala{background:white;border:1px solid #e1eae3;border-radius:9px;padding:13px;margin-top:9px}
 .dia-escala strong{display:block;margin-bottom:6px}
-.dia-escala span{font-size:14px;color:#52665d;line-height:1.7}
+.dia-escala span{font-size:14px;color:#52665d;line-height:1.7;display:block}
 .upload-label{display:block;background:#e9efeb;color:#123d32;text-align:center;padding:13px;border-radius:8px;margin:15px 0 0;cursor:pointer;font-weight:bold}
 .upload-label input{display:none}
 .historico-topo{display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin-top:10px}
@@ -64,35 +64,9 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .horas-dia{margin-top:10px;padding:10px;background:#eaf7ef;border-radius:8px;color:#216343;font-weight:bold;font-size:14px;line-height:1.6}
 .horas-alerta{background:#fff8e8;color:#93651c}
 .horas-negativas{background:#fff0ef;color:#a53d35}
-/* CALENDÁRIO MENSAL */
-.calendario{
-display:grid;
-grid-template-columns:repeat(7,minmax(0,1fr));
-gap:5px;
-margin-top:12px;
-}
-.cal-cabecalho{
-text-align:center;
-font-size:11px;
-font-weight:bold;
-color:#687c72;
-padding:7px 0;
-}
-.cal-dia{
-min-width:0;
-min-height:58px;
-border-radius:8px;
-background:#f1f4f2;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-font-size:12px;
-gap:4px;
-cursor:pointer;
-border:2px solid transparent;
-padding:4px 1px;
-}
+.calendario{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-top:12px}
+.cal-cabecalho{text-align:center;font-size:11px;font-weight:bold;color:#687c72;padding:7px 0}
+.cal-dia{min-width:0;min-height:58px;border-radius:8px;background:#f1f4f2;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;gap:4px;cursor:pointer;border:2px solid transparent;padding:4px 1px}
 .cal-dia strong{font-size:14px}
 .cal-dia small{font-size:9px;text-align:center;line-height:1.2}
 .cal-dia.trabalhado{background:#e0f3e7;color:#216343}
@@ -108,15 +82,7 @@ padding:4px 1px;
 .cor-folga{background:#b7d5f5}
 .cor-ocorrencia{background:#f2c58e}
 .cor-hoje{background:#123d32}
-.cal-detalhe{
-margin-top:14px;
-padding:14px;
-background:white;
-border:1px solid #dce6df;
-border-radius:10px;
-font-size:13px;
-line-height:1.7;
-}
+.cal-detalhe{margin-top:14px;padding:14px;background:white;border:1px solid #dce6df;border-radius:10px;font-size:13px;line-height:1.7}
 .cal-detalhe h4{margin:0 0 8px;color:#123d32;font-size:15px}
 .cal-detalhe p{margin:5px 0;color:#52665d;font-size:13px}
 .cal-detalhe strong{color:#18352d}
@@ -136,16 +102,7 @@ line-height:1.7;
 .arquivo-ajuda{font-size:12px;color:#687c72;margin-top:7px;line-height:1.5}
 .arquivo-selecionado{font-size:13px;color:#216343;margin-top:8px;overflow-wrap:anywhere}
 .link-comprovante{display:inline-block;margin-top:8px;padding:9px 12px;background:#e9efeb;color:#123d32;border-radius:7px;font-size:13px;font-weight:bold;text-decoration:none}
-.link-comprovante:hover{background:#dce9df}
-@media(max-width:500px){
-main{margin:15px auto;padding:12px}
-.card{padding:20px}
-header{padding:22px}
-.cal-dia{min-height:48px}
-.cal-dia small{font-size:8px}
-.abas{gap:5px}
-.aba{font-size:12px;padding:12px 4px}
-}
+@media(max-width:500px){main{margin:15px auto;padding:12px}.card{padding:20px}header{padding:22px}.cal-dia{min-height:48px}.cal-dia small{font-size:8px}.abas{gap:5px}.aba{font-size:12px;padding:12px 4px}}
 </style>
 </head>
 <body>
@@ -205,10 +162,7 @@ header{padding:22px}
 <p>Consulte suas marcações organizadas por dia.</p>
 <div class="historico-topo">
 <button type="button" id="mesAnterior" class="secundario navegar-mes" aria-label="Mês anterior">←</button>
-<div>
-<label for="mesEspelho">Mês de referência</label>
-<input type="month" id="mesEspelho">
-</div>
+<div><label for="mesEspelho">Mês de referência</label><input type="month" id="mesEspelho"></div>
 <button type="button" id="proximoMes" class="secundario navegar-mes" aria-label="Próximo mês">→</button>
 <button type="button" id="botaoConsultarEspelho">Consultar</button>
 </div>
@@ -222,13 +176,9 @@ header{padding:22px}
 <span><i class="cal-cor cor-ocorrencia"></i> Ocorrência</span>
 <span><i class="cal-cor cor-hoje"></i> Hoje</span>
 </div>
-<div id="calendarioDetalhe" class="cal-detalhe">
-Selecione um dia do calendário para consultar os detalhes.
+<div id="calendarioDetalhe" class="cal-detalhe">Selecione um dia do calendário para consultar os detalhes.</div>
 </div>
-</div>
-<div id="listaEspelho">
-<p>Carregando histórico...</p>
-</div>
+<div id="listaEspelho"><p>Carregando histórico...</p></div>
 </div>
 </section>
 <section id="conteudoSolicitacoes" class="oculto">
@@ -281,9 +231,7 @@ Selecione um dia do calendário para consultar os detalhes.
 <img id="fotoPerfil" class="foto-perfil oculto" alt="Foto de perfil">
 <h2 class="nome-perfil" id="nomePerfil"></h2>
 <p class="cargo-perfil" id="cargoPerfil"></p>
-<label class="upload-label" for="arquivoFoto">Adicionar ou trocar foto
-<input type="file" id="arquivoFoto" accept="image/jpeg,image/png,image/webp">
-</label>
+<label class="upload-label" for="arquivoFoto">Adicionar ou trocar foto<input type="file" id="arquivoFoto" accept="image/jpeg,image/png,image/webp"></label>
 </div>
 <div class="dado-perfil"><span>E-mail</span><strong id="emailPerfil">-</strong></div>
 <div class="dado-perfil"><span>Cargo</span><strong id="cargoDado">-</strong></div>
@@ -299,6 +247,7 @@ Selecione um dia do calendário para consultar os detalhes.
 </div>
 </div>
 </main>
+
 <script>
 const SUPABASE_URL="https://guiadodxikdvsfrhedls.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable_dhAqwNSfwGj8_nBnudx_Hw_gMZpnyEL";
@@ -313,50 +262,34 @@ const areaLogada=document.getElementById("areaLogada");
 const linkRecuperacao=document.getElementById("linkRecuperacao");
 const titulo=document.getElementById("titulo");
 const subtitulo=document.getElementById("subtitulo");
-let usuarioAtual=null;
-let colaboradorAtual=null;
-let relogioIntervalo=null;
-let processandoPonto=false;
-let processandoSolicitacao=false;
-let jornadasCalendario={};
-let diasCalendario={};
-let dataSelecionadaCalendario=null;
-function mostrarMensagem(texto,tipo){
-mensagem.textContent=texto;
-mensagem.className=tipo;
-}
-function limparMensagem(){
-mensagem.textContent="";
-mensagem.className="";
-}
+let usuarioAtual=null,colaboradorAtual=null,relogioIntervalo=null;
+let processandoPonto=false,processandoSolicitacao=false;
+let jornadasCalendario={},diasCalendario={},dataSelecionadaCalendario=null;
+let jornadaAtual=null;
+
+function mostrarMensagem(texto,tipo){mensagem.textContent=texto;mensagem.className=tipo}
+function limparMensagem(){mensagem.textContent="";mensagem.className=""}
 function esconderFormularios(){
-formLogin.classList.add("oculto");
-formSenha.classList.add("oculto");
-formRecuperacao.classList.add("oculto");
-areaLogada.classList.add("oculto");
+formLogin.classList.add("oculto");formSenha.classList.add("oculto");
+formRecuperacao.classList.add("oculto");areaLogada.classList.add("oculto");
 linkRecuperacao.classList.add("oculto");
 }
 function mostrarLogin(){
-esconderFormularios();
-formLogin.classList.remove("oculto");
+esconderFormularios();formLogin.classList.remove("oculto");
 linkRecuperacao.classList.remove("oculto");
 titulo.textContent="Bem-vindo ao Meu Ponto";
 subtitulo.textContent="Acesse seu portal individual de colaborador.";
 }
 function mostrarFormularioSenha(tipo){
-esconderFormularios();
-formSenha.classList.remove("oculto");
+esconderFormularios();formSenha.classList.remove("oculto");
 titulo.textContent=tipo==="invite"?"Primeiro acesso":"Redefinir senha";
 subtitulo.textContent="Defina sua senha pessoal para acessar o Meu Ponto.";
 mostrarMensagem("Crie uma senha com pelo menos 8 caracteres.","sucesso");
 }
 function iniciarRelogio(){
 if(relogioIntervalo)clearInterval(relogioIntervalo);
-function atualizar(){
-document.getElementById("relogio").textContent=new Date().toLocaleString("pt-BR",{dateStyle:"full",timeStyle:"medium"});
-}
-atualizar();
-relogioIntervalo=setInterval(atualizar,1000);
+function atualizar(){document.getElementById("relogio").textContent=new Date().toLocaleString("pt-BR",{dateStyle:"full",timeStyle:"medium"})}
+atualizar();relogioIntervalo=setInterval(atualizar,1000);
 }
 async function buscarColaborador(user){
 const {data,error}=await supabaseClient.from("employees")
@@ -366,64 +299,11 @@ if(error)throw new Error("Erro ao consultar colaborador: "+error.message);
 if(!data)throw new Error("Seu cadastro não está vinculado a um colaborador ativo. Procure o RH.");
 return data;
 }
-async function buscarUltimoRegistro(){
-const {data,error}=await supabaseClient.from("attendance_records")
-.select("id,event_type,recorded_at")
-.eq("user_id",usuarioAtual.id).eq("employee_id",colaboradorAtual.id)
-.order("recorded_at",{ascending:false}).limit(1).maybeSingle();
-if(error)throw new Error("Erro ao consultar ponto: "+error.message);
-return data;
-}
-const etapas={
-entrada:{proximo:"inicio_intervalo",botao:"Iniciar Intervalo",status:"Entrada registrada. Jornada em andamento."},
-inicio_intervalo:{proximo:"retorno_intervalo",botao:"Retornar do Intervalo",status:"Intervalo iniciado. Aguardando retorno."},
-retorno_intervalo:{proximo:"saida",botao:"Registrar Saída",status:"Retorno registrado. Jornada em andamento."},
-saida:{proximo:"entrada",botao:"Registrar Entrada",status:"Jornada encerrada. Você pode iniciar uma nova jornada."}
-};
-function configurarBotao(tipo){
-const botao=document.getElementById("botaoPonto");
-const status=document.getElementById("statusPonto");
-if(!tipo){
-botao.textContent="Registrar Entrada";
-status.textContent="Nenhuma jornada iniciada.";
-botao.disabled=false;
-return;
-}
-const etapa=etapas[tipo];
-if(!etapa){
-botao.textContent="Indisponível";
-status.textContent="Tipo de registro não reconhecido. Procure o RH.";
-botao.disabled=true;
-return;
-}
-botao.textContent=etapa.botao;
-status.textContent=etapa.status;
-botao.disabled=false;
-}
-async function atualizarEstadoPonto(){
-const botao=document.getElementById("botaoPonto");
-const status=document.getElementById("statusPonto");
-botao.disabled=true;
-status.textContent="Verificando registros...";
-try{
-const ultimo=await buscarUltimoRegistro();
-configurarBotao(ultimo?ultimo.event_type:null);
-}catch(error){
-status.textContent=error.message;
-botao.textContent="Registro indisponível";
-botao.disabled=true;
-}
-}
-/* FUNÇÕES DE CÁLCULO */
-function nomeEvento(tipo){
-return {entrada:"Entrada",inicio_intervalo:"Início do intervalo",retorno_intervalo:"Retorno do intervalo",saida:"Saída"}[tipo]||tipo;
-}
 function dataChaveLocal(data){
 return [data.getFullYear(),String(data.getMonth()+1).padStart(2,"0"),String(data.getDate()).padStart(2,"0")].join("-");
 }
 function formatarDataEspelho(chave){
-const p=chave.split("-");
-return p[2]+"/"+p[1]+"/"+p[0];
+const p=chave.split("-");return p[2]+"/"+p[1]+"/"+p[0];
 }
 function formatarDuracao(minutos){
 const valor=Math.max(0,Math.floor(Math.abs(minutos||0)));
@@ -434,79 +314,34 @@ if(!hora)return null;
 const p=String(hora).slice(0,5).split(":");
 return Number(p[0])*60+Number(p[1]);
 }
-function diferencaMinutos(a,b){
-return Math.round((b-a)/60000);
+function formatarHora(hora){return hora?String(hora).substring(0,5):"--:--"}
+function formatarIntervalo(minutos){
+const valor=Number(minutos||0);
+if(valor<=0)return "Não informado";
+const horas=Math.floor(valor/60),resto=valor%60;
+if(horas>0&&resto>0)return horas+"h "+resto+"min";
+if(horas>0)return horas+"h";
+return resto+"min";
 }
-function calcularHorasDoDia(eventos){
-let entrada=null;
-let inicioIntervalo=null;
-let minutosIntervalo=0;
-let minutosIntervaloTotal=0;
-let minutosTrabalhados=0;
-let ciclosCompletos=0;
-let pendente=false;
-let primeiraEntrada=null;
-let ultimaSaida=null;
-let inconsistente=false;
-let emIntervalo=false;
-eventos.forEach(registro=>{
-const instante=new Date(registro.recorded_at).getTime();
-if(!Number.isFinite(instante)){inconsistente=true;return;}
-switch(registro.event_type){
-case "entrada":
-if(entrada!==null){inconsistente=true;break;}
-entrada=instante;
-if(primeiraEntrada===null)primeiraEntrada=instante;
-inicioIntervalo=null;
-minutosIntervalo=0;
-pendente=true;
-emIntervalo=false;
-break;
-case "inicio_intervalo":
-if(entrada===null||inicioIntervalo!==null){inconsistente=true;break;}
-inicioIntervalo=instante;
-emIntervalo=true;
-break;
-case "retorno_intervalo":
-if(entrada===null||inicioIntervalo===null){inconsistente=true;break;}
-minutosIntervalo+=(instante-inicioIntervalo)/60000;
-minutosIntervaloTotal+=(instante-inicioIntervalo)/60000;
-inicioIntervalo=null;
-emIntervalo=false;
-break;
-case "saida":
-if(entrada===null){inconsistente=true;break;}
-if(inicioIntervalo!==null){inconsistente=true;break;}
-const total=(instante-entrada)/60000-minutosIntervalo;
-if(total>=0){
-minutosTrabalhados+=total;
-ciclosCompletos++;
-ultimaSaida=instante;
-}else{
-inconsistente=true;
+function dataLocalISO(){return dataChaveLocal(new Date())}
+function criarElemento(tag,classe,texto){
+const elemento=document.createElement(tag);
+if(classe)elemento.className=classe;
+if(texto!==undefined)elemento.textContent=texto;
+return elemento;
 }
-entrada=null;
-inicioIntervalo=null;
-minutosIntervalo=0;
-pendente=false;
-emIntervalo=false;
-break;
-default:
-inconsistente=true;
-}
-});
+function nomeEvento(tipo){
 return {
-minutos:Math.round(minutosTrabalhados),
-intervalo:Math.round(minutosIntervaloTotal),
-ciclos:ciclosCompletos,
-pendente:pendente||entrada!==null,
-emIntervalo,
-primeiraEntrada,
-ultimaSaida,
-inconsistente
-};
+entrada:"Entrada",
+inicio_intervalo:"Início do intervalo principal",
+retorno_intervalo:"Retorno do intervalo principal",
+inicio_pausa:"Início da pausa adicional",
+retorno_pausa:"Retorno da pausa adicional",
+saida:"Saída"
+}[tipo]||tipo;
 }
-/* CONSULTA DAS ESCALAS PARA TODO O MÊS */
+
+/* CONSULTA DA ESCALA E DAS PAUSAS CONFIGURADAS PELO RH */
 async function carregarJornadasPrevistas(ano,mes){
 const primeiroDia=ano+"-"+String(mes).padStart(2,"0")+"-01";
 const ultimoDia=dataChaveLocal(new Date(ano,mes,0));
@@ -523,16 +358,25 @@ const {data:modelos,error:erroModelos}=await supabaseClient.from("work_schedule_
 .select("id,schedule_type,cycle_days").in("id",ids);
 if(erroModelos)throw erroModelos;
 const {data:dias,error:erroDias}=await supabaseClient.from("work_schedule_template_days")
-.select("schedule_id,day_number,is_working,start_time,end_time,break_minutes").in("schedule_id",ids);
+.select("id,schedule_id,day_number,is_working,start_time,end_time,break_minutes,break_start_time,break_end_time")
+.in("schedule_id",ids);
 if(erroDias)throw erroDias;
+
+const idsDias=(dias||[]).map(d=>d.id);
+let pausas=[];
+if(idsDias.length){
+const {data:pausasData,error:erroPausas}=await supabaseClient.from("work_schedule_day_pauses")
+.select("id,schedule_day_id,pause_number,start_time,end_time,duration_minutes")
+.in("schedule_day_id",idsDias)
+.order("pause_number",{ascending:true});
+if(erroPausas)throw erroPausas;
+pausas=pausasData||[];
+}
 const resultado={};
 for(let numero=1;numero<=new Date(ano,mes,0).getDate();numero++){
 const data=new Date(ano,mes-1,numero,12,0,0);
 const chave=dataChaveLocal(data);
-/* Não ignora mais os dias futuros.
-   Assim, o calendário mostra a escala prevista do mês inteiro. */
-const atribuicao=atribuicoes
-.filter(a=>a.effective_from<=chave&&(!a.effective_until||a.effective_until>=chave))
+const atribuicao=atribuicoes.filter(a=>a.effective_from<=chave&&(!a.effective_until||a.effective_until>=chave))
 .sort((a,b)=>b.effective_from.localeCompare(a.effective_from))[0];
 if(!atribuicao)continue;
 const modelo=modelos.find(m=>m.id===atribuicao.schedule_id);
@@ -549,36 +393,207 @@ numeroDia=data.getDay()===0?7:data.getDay();
 }
 const dia=(dias||[]).find(d=>d.schedule_id===modelo.id&&Number(d.day_number)===numeroDia);
 if(!dia)continue;
+const pausasDia=pausas.filter(p=>p.schedule_day_id===dia.id)
+.sort((a,b)=>Number(a.pause_number)-Number(b.pause_number));
+const listaPausas=pausasDia.map(p=>({
+id:p.id,
+numero:Number(p.pause_number),
+inicio:p.start_time,
+fim:p.end_time,
+duracao:Number(p.duration_minutes||0)
+}));
 let previsto=0;
 if(dia.is_working){
-const inicio=minutosHora(dia.start_time);
-const fim=minutosHora(dia.end_time);
+const inicio=minutosHora(dia.start_time),fim=minutosHora(dia.end_time);
 if(inicio!==null&&fim!==null){
 let total=fim-inicio;
 if(total<=0)total+=1440;
-previsto=Math.max(0,total-Number(dia.break_minutes||0));
+previsto=Math.max(0,total-Number(dia.break_minutes||0)-listaPausas.reduce((s,p)=>s+p.duracao,0));
 }
 }
 resultado[chave]={
+scheduleDayId:dia.id,
 minutos:previsto,
 trabalho:!!dia.is_working,
 inicio:minutosHora(dia.start_time),
 fim:minutosHora(dia.end_time),
-intervalo:Number(dia.break_minutes||0)
+intervalo:Number(dia.break_minutes||0),
+intervaloInicio:dia.break_start_time,
+intervaloFim:dia.break_end_time,
+pausas:listaPausas
 };
 }
 return resultado;
 }
-/* CLASSIFICA ATRASOS, SAÍDAS ANTECIPADAS E EXTRAS */
+
+/* ESTADO DAS MARCAÇÕES */
+async function buscarRegistrosJornada(){
+const {data,error}=await supabaseClient.from("attendance_records")
+.select("id,event_type,recorded_at")
+.eq("user_id",usuarioAtual.id).eq("employee_id",colaboradorAtual.id)
+.order("recorded_at",{ascending:false}).limit(100);
+if(error)throw new Error("Erro ao consultar registros: "+error.message);
+const registros=(data||[]).reverse();
+let indice=-1;
+for(let i=registros.length-1;i>=0;i--){
+if(registros[i].event_type==="entrada"){indice=i;break}
+}
+return indice>=0?registros.slice(indice):[];
+}
+function criarSequenciaEsperada(jornada){
+const blocos=[];
+if(jornada&&jornada.intervalo>0){
+blocos.push({
+tipo:"intervalo",
+inicio:minutosHora(jornada.intervaloInicio),
+fim:minutosHora(jornada.intervaloFim),
+duracao:jornada.intervalo
+});
+}
+(jornada?.pausas||[]).forEach(p=>{
+blocos.push({
+tipo:"pausa",
+numero:p.numero,
+inicio:minutosHora(p.inicio),
+fim:minutosHora(p.fim),
+duracao:p.duracao
+});
+});
+blocos.sort((a,b)=>{
+if(a.inicio===null&&b.inicio===null)return 0;
+if(a.inicio===null)return 1;
+if(b.inicio===null)return -1;
+return a.inicio-b.inicio;
+});
+return blocos;
+}
+function proximaEtapa(registros,jornada){
+if(!registros.length)return {evento:"entrada",botao:"Registrar Entrada",status:"Nenhuma jornada iniciada."};
+const ultimo=registros[registros.length-1];
+if(ultimo.event_type==="saida")return {evento:"entrada",botao:"Registrar Entrada",status:"Jornada encerrada. Você pode iniciar uma nova jornada."};
+if(ultimo.event_type!=="entrada"&&ultimo.event_type!=="retorno_intervalo"&&ultimo.event_type!=="retorno_pausa"&&ultimo.event_type!=="inicio_intervalo"&&ultimo.event_type!=="inicio_pausa"){
+return {erro:true,botao:"Indisponível",status:"Tipo de registro não reconhecido. Procure o RH."};
+}
+let entradaEncontrada=false;
+let intervaloAberto=false;
+let pausaAberta=false;
+let blocos=criarSequenciaEsperada(jornada);
+let blocoAtual=0;
+for(const r of registros){
+if(r.event_type==="entrada"){entradaEncontrada=true;continue}
+if(!entradaEncontrada)continue;
+if(r.event_type==="inicio_intervalo"||r.event_type==="inicio_pausa"){
+if(intervaloAberto||pausaAberta)return {erro:true,botao:"Indisponível",status:"Existe uma pausa sem retorno registrado. Procure o RH."};
+intervaloAberto=true;
+pausaAberta=r.event_type==="inicio_pausa";
+}else if(r.event_type==="retorno_intervalo"||r.event_type==="retorno_pausa"){
+if(!intervaloAberto)return {erro:true,botao:"Indisponível",status:"Retorno de intervalo sem início correspondente. Procure o RH."};
+intervaloAberto=false;pausaAberta=false;blocoAtual++;
+}else if(r.event_type==="saida"){
+entradaEncontrada=false;
+}
+}
+if(intervaloAberto){
+return {erro:true,botao:"Indisponível",status:"Você precisa registrar o retorno da pausa antes de continuar."};
+}
+const blocosRealizados=registros.filter(r=>r.event_type==="retorno_intervalo"||r.event_type==="retorno_pausa").length;
+const proximo=blocos[blocosRealizados];
+if(proximo){
+if(proximo.tipo==="intervalo"){
+return {evento:"inicio_intervalo",botao:"Iniciar intervalo principal",status:"Jornada em andamento. Registre o intervalo principal conforme sua escala."};
+}
+return {evento:"inicio_pausa",botao:"Iniciar pausa "+proximo.numero,status:"Jornada em andamento. Próxima pausa programada: pausa "+proximo.numero+"."};
+}
+if(jornada&&jornada.pausas&&jornada.pausas.length===0&&jornada.intervalo===0){
+return {evento:"saida",botao:"Registrar Saída",status:"Jornada em andamento."};
+}
+return {evento:"saida",botao:"Registrar Saída",status:"Intervalos previstos concluídos. Você pode registrar sua saída."};
+}
+async function atualizarEstadoPonto(){
+const botao=document.getElementById("botaoPonto");
+const status=document.getElementById("statusPonto");
+botao.disabled=true;status.textContent="Verificando registros...";
+try{
+const agora=new Date();
+const chave=dataChaveLocal(agora);
+const jornada=jornadasCalendario[chave]||jornadaAtual;
+const registros=await buscarRegistrosJornada();
+const etapa=proximaEtapa(registros,jornada);
+botao.textContent=etapa.botao;
+status.textContent=etapa.status;
+botao.disabled=!!etapa.erro;
+if(etapa.evento)botao.dataset.evento=etapa.evento;
+else delete botao.dataset.evento;
+}catch(error){
+status.textContent=error.message;
+botao.textContent="Registro indisponível";
+botao.disabled=true;
+}
+}
+
+/* CÁLCULO DAS HORAS, INCLUINDO PAUSAS ADICIONAIS */
+function calcularHorasDoDia(eventos){
+let entrada=null,inicioIntervalo=null;
+let minutosIntervalo=0,minutosTrabalhados=0;
+let ciclosCompletos=0,pendente=false;
+let primeiraEntrada=null,ultimaSaida=null;
+let inconsistente=false,emIntervalo=false;
+let pausasAbertas=0;
+eventos.forEach(registro=>{
+const instante=new Date(registro.recorded_at).getTime();
+if(!Number.isFinite(instante)){inconsistente=true;return}
+switch(registro.event_type){
+case "entrada":
+if(entrada!==null){inconsistente=true;break}
+entrada=instante;
+if(primeiraEntrada===null)primeiraEntrada=instante;
+inicioIntervalo=null;minutosIntervalo=0;
+pendente=true;emIntervalo=false;pausasAbertas=0;
+break;
+case "inicio_intervalo":
+case "inicio_pausa":
+if(entrada===null||inicioIntervalo!==null){inconsistente=true;break}
+inicioIntervalo=instante;emIntervalo=true;pausasAbertas++;
+break;
+case "retorno_intervalo":
+case "retorno_pausa":
+if(entrada===null||inicioIntervalo===null){inconsistente=true;break}
+if(instante<inicioIntervalo){inconsistente=true;break}
+minutosIntervalo+=(instante-inicioIntervalo)/60000;
+inicioIntervalo=null;emIntervalo=false;
+pausasAbertas=Math.max(0,pausasAbertas-1);
+break;
+case "saida":
+if(entrada===null||inicioIntervalo!==null){inconsistente=true;break}
+const total=(instante-entrada)/60000-minutosIntervalo;
+if(total>=0){
+minutosTrabalhados+=total;ciclosCompletos++;ultimaSaida=instante;
+}else inconsistente=true;
+entrada=null;inicioIntervalo=null;minutosIntervalo=0;
+pendente=false;emIntervalo=false;pausasAbertas=0;
+break;
+default:inconsistente=true;
+}
+});
+return {
+minutos:Math.round(minutosTrabalhados),
+intervalo:Math.round(minutosIntervalo),
+ciclos:ciclosCompletos,
+pendente:pendente||entrada!==null,
+emIntervalo,
+primeiraEntrada,
+ultimaSaida,
+inconsistente
+};
+}
 function calcularOcorrencias(calculo,jornada){
 if(!jornada)return {atraso:0,antecipada:0,extra:0,saldo:0};
 const saldo=calculo.minutos-jornada.minutos;
-let atraso=0;
-let antecipada=0;
-let extra=0;
+let atraso=0,antecipada=0,extra=0;
 if(jornada.trabalho&&calculo.primeiraEntrada!==null&&jornada.inicio!==null){
 const entrada=new Date(calculo.primeiraEntrada);
-const entradaReal=entrada.getHours()*60+entrada.getMinutes();
+let entradaReal=entrada.getHours()*60+entrada.getMinutes();
+if(jornada.inicio>entradaReal+720)entradaReal+=1440;
 atraso=Math.max(0,entradaReal-jornada.inicio);
 }
 if(jornada.trabalho&&calculo.ultimaSaida!==null&&jornada.fim!==null){
@@ -595,37 +610,42 @@ return {atraso,antecipada,extra,saldo};
 function criarResumoItem(valor,legenda){
 const caixa=document.createElement("div");
 caixa.className="resumo-item";
-const strong=document.createElement("strong");
-strong.textContent=valor;
-const span=document.createElement("span");
-span.textContent=legenda;
-caixa.append(strong,span);
-return caixa;
+const strong=document.createElement("strong");strong.textContent=valor;
+const span=document.createElement("span");span.textContent=legenda;
+caixa.append(strong,span);return caixa;
 }
-/* DETALHES DO DIA SELECIONADO */
+function horaMinutoTexto(valor){
+if(valor===null||valor===undefined)return "--:--";
+return String(Math.floor(valor/60)).padStart(2,"0")+":"+String(valor%60).padStart(2,"0");
+}
+function formatarPausasJornada(jornada){
+const linhas=[];
+if(jornada.intervalo>0){
+linhas.push("Intervalo principal: "+formatarHora(jornada.intervaloInicio)+" até "+formatarHora(jornada.intervaloFim)+" ("+formatarIntervalo(jornada.intervalo)+")");
+}
+(jornada.pausas||[]).forEach(p=>{
+linhas.push("Pausa "+p.numero+": "+formatarHora(p.inicio)+" até "+formatarHora(p.fim)+" ("+formatarIntervalo(p.duracao)+")");
+});
+return linhas;
+}
+
+/* DETALHES DO CALENDÁRIO */
 function mostrarDetalheCalendario(chave){
 const detalhe=document.getElementById("calendarioDetalhe");
 detalhe.innerHTML="";
-const tituloDia=document.createElement("h4");
-tituloDia.textContent="Detalhes de "+formatarDataEspelho(chave);
-detalhe.appendChild(tituloDia);
-const jornada=jornadasCalendario[chave];
-const eventos=diasCalendario[chave]||[];
+detalhe.appendChild(criarElemento("h4","","Detalhes de "+formatarDataEspelho(chave)));
+const jornada=jornadasCalendario[chave],eventos=diasCalendario[chave]||[];
 const hoje=dataChaveLocal(new Date());
 let situacao="Sem escala cadastrada para esta data.";
 if(jornada)situacao=jornada.trabalho?"Dia previsto para trabalho.":"Dia previsto como folga.";
 detalhe.appendChild(criarElemento("p","",situacao));
 if(jornada&&jornada.trabalho){
-detalhe.appendChild(criarElemento("p","","Horário previsto: "+
-(jornada.inicio!==null?String(Math.floor(jornada.inicio/60)).padStart(2,"0")+":"+String(jornada.inicio%60).padStart(2,"0"):"--:--")+
-" até "+
-(jornada.fim!==null?String(Math.floor(jornada.fim/60)).padStart(2,"0")+":"+String(jornada.fim%60).padStart(2,"0"):"--:--")));
-detalhe.appendChild(criarElemento("p","","Intervalo previsto: "+formatarIntervalo(jornada.intervalo)));
+detalhe.appendChild(criarElemento("p","","Horário previsto: "+horaMinutoTexto(jornada.inicio)+" até "+horaMinutoTexto(jornada.fim)));
 detalhe.appendChild(criarElemento("p","","Carga prevista: "+formatarDuracao(jornada.minutos)));
+formatarPausasJornada(jornada).forEach(l=>detalhe.appendChild(criarElemento("p","",l)));
+if(!jornada.intervalo&&!jornada.pausas.length)detalhe.appendChild(criarElemento("p","","Não há intervalos ou pausas adicionais configurados."));
 }
-const tituloRegistros=document.createElement("p");
-tituloRegistros.innerHTML="<strong>Marcações realizadas:</strong>";
-detalhe.appendChild(tituloRegistros);
+detalhe.appendChild(criarElemento("p","","Marcações realizadas:"));
 if(eventos.length){
 eventos.forEach(registro=>{
 const hora=new Date(registro.recorded_at).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
@@ -633,38 +653,27 @@ detalhe.appendChild(criarElemento("p","","• "+nomeEvento(registro.event_type)+
 });
 const calculo=calcularHorasDoDia(eventos);
 detalhe.appendChild(criarElemento("p","","Total trabalhado: "+formatarDuracao(calculo.minutos)));
-detalhe.appendChild(criarElemento("p","","Intervalos registrados: "+formatarDuracao(calculo.intervalo)));
+detalhe.appendChild(criarElemento("p","","Total de intervalos e pausas registrados: "+formatarDuracao(calculo.intervalo)));
 if(calculo.pendente)detalhe.appendChild(criarElemento("p","","Atenção: existe uma jornada sem encerramento."));
 if(calculo.inconsistente)detalhe.appendChild(criarElemento("p","","Atenção: foram identificadas marcações inconsistentes."));
 }else{
 detalhe.appendChild(criarElemento("p","","Nenhuma marcação registrada neste dia."));
-if(chave>hoje&&jornada&&jornada.trabalho){
-detalhe.appendChild(criarElemento("p","","Este dia ainda é futuro. A jornada está prevista, aguardando as marcações."));
-}else if(chave<hoje&&jornada&&jornada.trabalho){
-detalhe.appendChild(criarElemento("p","","Não foram encontradas marcações para este dia de trabalho."));
+if(chave>hoje&&jornada&&jornada.trabalho)detalhe.appendChild(criarElemento("p","","Este dia ainda é futuro. A jornada está prevista, aguardando as marcações."));
+else if(chave<hoje&&jornada&&jornada.trabalho)detalhe.appendChild(criarElemento("p","","Não foram encontradas marcações para este dia de trabalho."));
 }
 }
-}
-/* RENDERIZAÇÃO DO CALENDÁRIO */
+
+/* CALENDÁRIO */
 function renderizarCalendario(ano,mes,jornadas,dias){
 const area=document.getElementById("calendarioMensal");
-area.innerHTML="";
-area.className="calendario";
+area.innerHTML="";area.className="calendario";
 const hoje=dataChaveLocal(new Date());
 const primeiro=new Date(ano,mes-1,1,12,0,0);
 const deslocamento=(primeiro.getDay()+6)%7;
-const nomesCurtos=["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"];
-nomesCurtos.forEach(nome=>{
-const cabecalho=document.createElement("div");
-cabecalho.className="cal-cabecalho";
-cabecalho.textContent=nome;
-area.appendChild(cabecalho);
+["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"].forEach(nome=>{
+area.appendChild(criarElemento("div","cal-cabecalho",nome));
 });
-for(let i=0;i<deslocamento;i++){
-const vazio=document.createElement("div");
-vazio.className="cal-dia vazio";
-area.appendChild(vazio);
-}
+for(let i=0;i<deslocamento;i++)area.appendChild(criarElemento("div","cal-dia vazio",""));
 const total=new Date(ano,mes,0).getDate();
 let primeiraData=null;
 for(let n=1;n<=total;n++){
@@ -674,120 +683,81 @@ celula.className="cal-dia";
 celula.setAttribute("role","button");
 celula.setAttribute("tabindex","0");
 celula.setAttribute("aria-label","Consultar dia "+formatarDataEspelho(chave));
-const jornada=jornadas[chave];
-const eventos=dias[chave]||[];
+const jornada=jornadas[chave],eventos=dias[chave]||[];
 if(eventos.length){
 const calc=calcularHorasDoDia(eventos);
 celula.classList.add(calc.inconsistente||calc.pendente?"ocorrencia":"trabalhado");
-}else if(jornada&&!jornada.trabalho){
-celula.classList.add("folga");
-}else if(jornada&&jornada.trabalho&&chave<hoje){
-celula.classList.add("ocorrencia");
-}else if(jornada&&jornada.trabalho){
-celula.classList.add("trabalhado");
-}else{
-celula.classList.add("vazio");
-}
+}else if(jornada&&!jornada.trabalho)celula.classList.add("folga");
+else if(jornada&&jornada.trabalho&&chave<hoje)celula.classList.add("ocorrencia");
+else if(jornada&&jornada.trabalho)celula.classList.add("trabalhado");
+else celula.classList.add("vazio");
 if(chave===hoje)celula.classList.add("hoje");
-const numero=document.createElement("strong");
-numero.textContent=n;
-const pequeno=document.createElement("small");
-if(eventos.length){
-pequeno.textContent="Registrado";
-}else if(jornada){
-pequeno.textContent=jornada.trabalho?"Trabalho":"Folga";
-}else{
-pequeno.textContent="—";
-}
-celula.append(numero,pequeno);
+celula.append(criarElemento("strong","",n),criarElemento("small","",eventos.length?"Registrado":jornada?(jornada.trabalho?"Trabalho":"Folga"):"—"));
 celula.addEventListener("click",()=>{
 dataSelecionadaCalendario=chave;
 area.querySelectorAll(".cal-dia").forEach(el=>el.classList.remove("selecionado"));
-celula.classList.add("selecionado");
-mostrarDetalheCalendario(chave);
+celula.classList.add("selecionado");mostrarDetalheCalendario(chave);
 });
-celula.addEventListener("keydown",event=>{
-if(event.key==="Enter"||event.key===" "){
-event.preventDefault();
-celula.click();
-}
+celula.addEventListener("keydown",e=>{
+if(e.key==="Enter"||e.key===" "){e.preventDefault();celula.click()}
 });
 area.appendChild(celula);
 if(chave===hoje)primeiraData=chave;
 }
-if(!primeiraData&&total>0){
-primeiraData=ano+"-"+String(mes).padStart(2,"0")+"-01";
-}
-if(dataSelecionadaCalendario&&dataSelecionadaCalendario.startsWith(ano+"-"+String(mes).padStart(2,"0"))){
-primeiraData=dataSelecionadaCalendario;
-}
+if(!primeiraData&&total>0)primeiraData=ano+"-"+String(mes).padStart(2,"0")+"-01";
+if(dataSelecionadaCalendario&&dataSelecionadaCalendario.startsWith(ano+"-"+String(mes).padStart(2,"0")))primeiraData=dataSelecionadaCalendario;
 if(primeiraData){
-const celulas=area.querySelectorAll(".cal-dia");
-celulas.forEach(celula=>{
-if(celula.getAttribute("aria-label")==="Consultar dia "+formatarDataEspelho(primeiraData)){
-celula.classList.add("selecionado");
-}
+area.querySelectorAll(".cal-dia").forEach(c=>{
+if(c.getAttribute("aria-label")==="Consultar dia "+formatarDataEspelho(primeiraData))c.classList.add("selecionado");
 });
-dataSelecionadaCalendario=primeiraData;
-mostrarDetalheCalendario(primeiraData);
-}else{
-document.getElementById("calendarioDetalhe").textContent="Nenhum dia disponível.";
+dataSelecionadaCalendario=primeiraData;mostrarDetalheCalendario(primeiraData);
+}else document.getElementById("calendarioDetalhe").textContent="Nenhum dia disponível.";
 }
-}
-/* ESPELHO DE PONTO E RESUMO */
+
+/* ESPELHO MENSAL */
 async function carregarEspelhoPonto(){
 const campo=document.getElementById("mesEspelho");
 const lista=document.getElementById("listaEspelho");
 const resumo=document.getElementById("resumoEspelho");
 if(!campo||!lista||!resumo||!usuarioAtual||!colaboradorAtual)return;
 if(!campo.value){
-const agora=new Date();
-campo.value=agora.getFullYear()+"-"+String(agora.getMonth()+1).padStart(2,"0");
+const agora=new Date();campo.value=agora.getFullYear()+"-"+String(agora.getMonth()+1).padStart(2,"0");
 }
 lista.innerHTML="<p>Consultando marcações...</p>";
 try{
 const partes=campo.value.split("-");
 const ano=Number(partes[0]),mes=Number(partes[1]);
 if(!ano||!mes||mes<1||mes>12)throw new Error("Selecione um mês válido.");
-const inicio=new Date(ano,mes-1,1,0,0,0,0);
-const fim=new Date(ano,mes,1,0,0,0,0);
+const inicio=new Date(ano,mes-1,1,0,0,0,0),fim=new Date(ano,mes,1,0,0,0,0);
 const {data,error}=await supabaseClient.from("attendance_records")
 .select("id,event_type,recorded_at")
 .eq("user_id",usuarioAtual.id).eq("employee_id",colaboradorAtual.id)
 .gte("recorded_at",inicio.toISOString()).lt("recorded_at",fim.toISOString())
 .order("recorded_at",{ascending:true});
 if(error)throw error;
-const registros=data||[];
-const dias={};
-registros.forEach(registro=>{
-const chave=dataChaveLocal(new Date(registro.recorded_at));
+const registros=data||[],dias={};
+registros.forEach(r=>{
+const chave=dataChaveLocal(new Date(r.recorded_at));
 if(!dias[chave])dias[chave]=[];
-dias[chave].push(registro);
+dias[chave].push(r);
 });
 const jornadas=await carregarJornadasPrevistas(ano,mes);
-jornadasCalendario=jornadas;
-diasCalendario=dias;
+jornadasCalendario=jornadas;diasCalendario=dias;
+const agora=new Date();
+const chaveHoje=dataChaveLocal(agora);
+jornadaAtual=jornadas[chaveHoje]||null;
 let totalMes=0,previstoMes=0,atrasoMes=0,antecipadaMes=0,extraMes=0;
-let diasComRegistro=0;
-let diasComOcorrencia=0;
-const hoje=dataChaveLocal(new Date());
-Object.entries(jornadas).forEach(([chave,jornada])=>{
-if(chave<=hoje)previstoMes+=jornada.minutos;
-});
+let diasComRegistro=0,diasComOcorrencia=0;
+Object.entries(jornadas).forEach(([chave,j])=>{if(chave<=chaveHoje)previstoMes+=j.minutos});
 Object.entries(dias).forEach(([chave,eventos])=>{
-const calc=calcularHorasDoDia(eventos);
-const jornada=jornadas[chave];
+const calc=calcularHorasDoDia(eventos),j=jornadas[chave];
 totalMes+=calc.minutos;
 if(eventos.length)diasComRegistro++;
-if(jornada){
-const ocorrencias=calcularOcorrencias(calc,jornada);
-atrasoMes+=ocorrencias.atraso;
-antecipadaMes+=ocorrencias.antecipada;
-extraMes+=ocorrencias.extra;
-if(calc.inconsistente||calc.pendente||ocorrencias.atraso||ocorrencias.antecipada)diasComOcorrencia++;
-}else if(calc.inconsistente||calc.pendente){
-diasComOcorrencia++;
-}
+if(j){
+const o=calcularOcorrencias(calc,j);
+atrasoMes+=o.atraso;antecipadaMes+=o.antecipada;extraMes+=o.extra;
+if(calc.inconsistente||calc.pendente||o.atraso||o.antecipada)diasComOcorrencia++;
+}else if(calc.inconsistente||calc.pendente)diasComOcorrencia++;
 });
 const saldoMes=totalMes-previstoMes;
 resumo.innerHTML="";
@@ -810,61 +780,35 @@ lista.innerHTML='<div class="sem-registros">Nenhuma marcação encontrada neste 
 return;
 }
 chaves.forEach(chave=>{
-const bloco=document.createElement("div");
-bloco.className="registro-dia";
-const cabecalho=document.createElement("h4");
-cabecalho.textContent=formatarDataEspelho(chave);
-bloco.appendChild(cabecalho);
+const bloco=criarElemento("div","registro-dia");
+bloco.appendChild(criarElemento("h4","",formatarDataEspelho(chave)));
 const eventos=dias[chave];
-eventos.forEach(registro=>{
-const linha=document.createElement("div");
-linha.className="linha-registro";
-const nome=document.createElement("span");
-nome.textContent=nomeEvento(registro.event_type);
-const hora=document.createElement("span");
-hora.textContent=new Date(registro.recorded_at).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
-linha.append(nome,hora);
+eventos.forEach(r=>{
+const linha=criarElemento("div","linha-registro");
+linha.append(
+criarElemento("span","",nomeEvento(r.event_type)),
+criarElemento("span","",new Date(r.recorded_at).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit",second:"2-digit"}))
+);
 bloco.appendChild(linha);
 });
-const calc=calcularHorasDoDia(eventos);
-const jornada=jornadas[chave];
-const totalDia=document.createElement("div");
-totalDia.className="horas-dia";
-totalDia.textContent="Horas trabalhadas: "+formatarDuracao(calc.minutos)+" • Intervalos: "+formatarDuracao(calc.intervalo);
-bloco.appendChild(totalDia);
-if(jornada){
-const ocorrencias=calcularOcorrencias(calc,jornada);
-const comparacao=document.createElement("div");
-comparacao.className="horas-dia";
-comparacao.textContent="Jornada prevista: "+formatarDuracao(jornada.minutos)+
-" • Saldo diário: "+(ocorrencias.saldo>=0?"+":"-")+formatarDuracao(ocorrencias.saldo);
-if(ocorrencias.saldo<0)comparacao.classList.add("horas-negativas");
+const calc=calcularHorasDoDia(eventos),j=jornadas[chave];
+bloco.appendChild(criarElemento("div","horas-dia","Horas trabalhadas: "+formatarDuracao(calc.minutos)+" • Intervalos e pausas: "+formatarDuracao(calc.intervalo)));
+if(j){
+const o=calcularOcorrencias(calc,j);
+const comparacao=criarElemento("div","horas-dia","Jornada prevista: "+formatarDuracao(j.minutos)+" • Saldo diário: "+(o.saldo>=0?"+":"-")+formatarDuracao(o.saldo));
+if(o.saldo<0)comparacao.classList.add("horas-negativas");
 bloco.appendChild(comparacao);
-const detalhes=document.createElement("div");
-detalhes.className="horas-dia";
-detalhes.textContent="Atraso: "+formatarDuracao(ocorrencias.atraso)+
-" • Saída antecipada: "+formatarDuracao(ocorrencias.antecipada)+
-" • Horas extras: "+formatarDuracao(ocorrencias.extra);
-bloco.appendChild(detalhes);
-}else{
-const avisoEscala=document.createElement("div");
-avisoEscala.className="aviso-registro";
-avisoEscala.textContent="Não foi encontrada jornada prevista para esta data.";
-bloco.appendChild(avisoEscala);
-}
+bloco.appendChild(criarElemento("div","horas-dia","Atraso: "+formatarDuracao(o.atraso)+" • Saída antecipada: "+formatarDuracao(o.antecipada)+" • Horas extras: "+formatarDuracao(o.extra)));
+}else bloco.appendChild(criarElemento("div","aviso-registro","Não foi encontrada jornada prevista para esta data."));
 const avisos=[];
 if(calc.pendente)avisos.push("Jornada incompleta: existe uma marcação sem encerramento.");
-if(calc.emIntervalo)avisos.push("Intervalo iniciado sem retorno registrado.");
+if(calc.emIntervalo)avisos.push("Intervalo ou pausa iniciado sem retorno registrado.");
 if(calc.inconsistente)avisos.push("Foram identificadas marcações fora de sequência ou inconsistentes.");
-if(jornada&&!jornada.trabalho)avisos.push("Há marcações registradas em um dia previsto como folga.");
-if(avisos.length){
-const aviso=document.createElement("div");
-aviso.className="aviso-registro";
-aviso.textContent=avisos.join(" ");
-bloco.appendChild(aviso);
-}
+if(j&&!j.trabalho)avisos.push("Há marcações registradas em um dia previsto como folga.");
+if(avisos.length)bloco.appendChild(criarElemento("div","aviso-registro",avisos.join(" ")));
 lista.appendChild(bloco);
 });
+await atualizarEstadoPonto();
 }catch(error){
 console.error("Erro ao carregar espelho de ponto:",error);
 lista.innerHTML="";
@@ -873,69 +817,83 @@ resumo.innerHTML="";
 document.getElementById("calendarioDetalhe").textContent="Não foi possível carregar os detalhes do calendário.";
 }
 }
+
+/* REGISTRO DE PONTO */
+async function registrarPonto(){
+if(processandoPonto)return;
+if(!usuarioAtual||!colaboradorAtual){
+mostrarMensagem("Sua sessão não está válida. Entre novamente.","erro");return;
+}
+processandoPonto=true;
+const botao=document.getElementById("botaoPonto");
+botao.disabled=true;botao.textContent="Registrando...";
+limparMensagem();
+try{
+const registros=await buscarRegistrosJornada();
+const jornada=jornadasCalendario[dataChaveLocal(new Date())]||jornadaAtual;
+const etapa=proximaEtapa(registros,jornada);
+if(etapa.erro)throw new Error(etapa.status);
+const novoEvento=etapa.evento;
+if(!novoEvento)throw new Error("Não foi possível identificar a próxima marcação.");
+const agora=new Date().toISOString();
+const {error}=await supabaseClient.from("attendance_records").insert({
+id:crypto.randomUUID(),
+company_id:colaboradorAtual.company_id,
+employee_id:colaboradorAtual.id,
+user_id:usuarioAtual.id,
+event_type:novoEvento,
+recorded_at:agora,
+created_at:agora
+});
+if(error)throw error;
+mostrarMensagem(nomeEvento(novoEvento)+" registrado com sucesso! Seu horário foi salvo.","sucesso");
+await carregarEspelhoPonto();
+}catch(error){
+mostrarMensagem("Não foi possível registrar: "+error.message,"erro");
+await atualizarEstadoPonto();
+}finally{
+processandoPonto=false;
+}
+}
+document.getElementById("botaoPonto").addEventListener("click",registrarPonto);
+
 /* PERFIL */
 function iniciais(nome){
 return (nome||"K").trim().split(/\s+/).slice(0,2).map(p=>p.charAt(0).toUpperCase()).join("");
 }
 async function carregarFotoPerfil(){
-const avatar=document.getElementById("avatarIniciais");
-const foto=document.getElementById("fotoPerfil");
+const avatar=document.getElementById("avatarIniciais"),foto=document.getElementById("fotoPerfil");
 avatar.textContent=iniciais(colaboradorAtual.full_name);
-avatar.classList.remove("oculto");
-foto.classList.add("oculto");
+avatar.classList.remove("oculto");foto.classList.add("oculto");
 const caminho=colaboradorAtual.profile_photo_url;
 if(!caminho)return;
 try{
 const {data,error}=await supabaseClient.storage.from("profile-photos").createSignedUrl(caminho,3600);
 if(error)throw error;
-foto.onload=function(){
-foto.classList.remove("oculto");
-avatar.classList.add("oculto");
-};
-foto.onerror=function(){
-foto.classList.add("oculto");
-avatar.classList.remove("oculto");
-};
+foto.onload=()=>{foto.classList.remove("oculto");avatar.classList.add("oculto")};
+foto.onerror=()=>{foto.classList.add("oculto");avatar.classList.remove("oculto")};
 foto.src=data.signedUrl;
-}catch(error){
-console.error("Erro ao carregar foto:",error.message);
-}
+}catch(error){console.error("Erro ao carregar foto:",error.message)}
 }
 async function carregarPerfil(){
 document.getElementById("nomePerfil").textContent=colaboradorAtual.full_name||"";
 document.getElementById("cargoPerfil").textContent=colaboradorAtual.job_title||"Cargo não informado";
 document.getElementById("emailPerfil").textContent=colaboradorAtual.email||usuarioAtual.email||"-";
 document.getElementById("cargoDado").textContent=colaboradorAtual.job_title||"Não informado";
-const campoDepartamento=document.getElementById("departamentoPerfil");
-campoDepartamento.textContent="Não informado";
+const campo=document.getElementById("departamentoPerfil");
+campo.textContent="Não informado";
 if(colaboradorAtual.department_id){
 try{
 const {data,error}=await supabaseClient.from("departamentos").select("nome")
 .eq("id",colaboradorAtual.department_id).eq("id_da_empresa",colaboradorAtual.company_id).maybeSingle();
 if(error)throw error;
-if(data&&data.nome)campoDepartamento.textContent=data.nome;
-}catch(error){
-console.error("Erro ao consultar departamento:",error);
+if(data&&data.nome)campo.textContent=data.nome;
+}catch(error){console.error("Erro ao consultar departamento:",error)}
 }
+await carregarFotoPerfil();await carregarEscala();
 }
-await carregarFotoPerfil();
-await carregarEscala();
-}
-function formatarHora(hora){
-return hora?hora.substring(0,5):"--:--";
-}
-function dataLocalISO(){
-return dataChaveLocal(new Date());
-}
-function formatarIntervalo(minutos){
-const valor=Number(minutos||0);
-if(valor<=0)return "Não informado";
-const horas=Math.floor(valor/60),resto=valor%60;
-if(horas>0&&resto>0)return horas+"h "+resto+"min";
-if(horas>0)return horas+"h";
-return resto+"min";
-}
-/* ESCALA */
+
+/* ESCALA NO PERFIL: INTERVALO PRINCIPAL E PAUSAS ADICIONAIS */
 async function carregarEscala(){
 const lista=document.getElementById("listaEscala");
 lista.innerHTML="<p>Consultando escala...</p>";
@@ -948,130 +906,108 @@ const {data:atribuicoes,error:erroAtribuicao}=await supabaseClient.from("employe
 .order("effective_from",{ascending:false}).limit(1);
 if(erroAtribuicao)throw erroAtribuicao;
 if(!atribuicoes||!atribuicoes.length){
-lista.innerHTML="<p>Você ainda não possui uma escala vigente. Consulte o RH da sua empresa.</p>";
-return;
+lista.innerHTML="<p>Você ainda não possui uma escala vigente. Consulte o RH.</p>";return;
 }
 const atribuicao=atribuicoes[0];
 const {data:modelo,error:erroModelo}=await supabaseClient.from("work_schedule_templates")
 .select("id,name,schedule_type,cycle_days,weekly_hours,active")
 .eq("id",atribuicao.schedule_id).eq("company_id",colaboradorAtual.company_id).maybeSingle();
 if(erroModelo)throw erroModelo;
-if(!modelo){
-lista.innerHTML="<p>Não foi possível localizar o modelo da sua escala. Procure o RH.</p>";
-return;
-}
+if(!modelo){lista.innerHTML="<p>Não foi possível localizar o modelo da sua escala. Procure o RH.</p>";return}
 const {data:dias,error:erroDias}=await supabaseClient.from("work_schedule_template_days")
-.select("id,schedule_id,day_number,is_working,start_time,end_time,break_minutes")
+.select("id,schedule_id,day_number,is_working,start_time,end_time,break_minutes,break_start_time,break_end_time")
 .eq("schedule_id",modelo.id).order("day_number",{ascending:true});
 if(erroDias)throw erroDias;
-if(!dias||!dias.length){
-lista.innerHTML="<p>A escala foi encontrada, mas ainda não possui dias configurados. Consulte o RH.</p>";
-return;
+if(!dias||!dias.length){lista.innerHTML="<p>A escala foi encontrada, mas ainda não possui dias configurados.</p>";return}
+const idsDias=dias.map(d=>d.id);
+let pausas=[];
+if(idsDias.length){
+const {data,error}=await supabaseClient.from("work_schedule_day_pauses")
+.select("id,schedule_day_id,pause_number,start_time,end_time,duration_minutes")
+.in("schedule_day_id",idsDias).order("pause_number",{ascending:true});
+if(error)throw error;
+pausas=data||[];
 }
 const nomesDias=["Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado","Domingo"];
 lista.innerHTML="";
-const cabecalho=document.createElement("div");
-cabecalho.className="dia-escala";
-const nomeEscala=document.createElement("strong");
-nomeEscala.textContent=modelo.name||"Minha escala";
-const tipoEscala=document.createElement("span");
-tipoEscala.textContent=modelo.schedule_type==="cyclic"?"Escala cíclica • "+modelo.cycle_days+" dias de ciclo":"Escala fixa semanal";
-cabecalho.append(nomeEscala,tipoEscala);
+const cabecalho=criarElemento("div","dia-escala");
+cabecalho.append(
+criarElemento("strong","",modelo.name||"Minha escala"),
+criarElemento("span","",modelo.schedule_type==="cyclic"?"Escala cíclica • "+modelo.cycle_days+" dias de ciclo":"Escala fixa semanal")
+);
 lista.appendChild(cabecalho);
 dias.forEach(item=>{
-const bloco=document.createElement("div");
-bloco.className="dia-escala";
-const tituloDia=document.createElement("strong");
-tituloDia.textContent=modelo.schedule_type==="cyclic"?"Dia "+item.day_number+" do ciclo":(nomesDias[Number(item.day_number)-1]||("Dia "+item.day_number));
-const horario=document.createElement("span");
-horario.textContent=item.is_working?
-"Trabalho • Entrada: "+formatarHora(item.start_time)+" • Saída: "+formatarHora(item.end_time)+" • Intervalo: "+formatarIntervalo(item.break_minutes):
-"Folga";
-bloco.append(tituloDia,horario);
+const bloco=criarElemento("div","dia-escala");
+bloco.appendChild(criarElemento("strong","",modelo.schedule_type==="cyclic"?"Dia "+item.day_number+" do ciclo":(nomesDias[Number(item.day_number)-1]||("Dia "+item.day_number))));
+if(!item.is_working){
+bloco.appendChild(criarElemento("span","","Folga"));
+}else{
+bloco.appendChild(criarElemento("span","","Trabalho • Entrada: "+formatarHora(item.start_time)+" • Saída: "+formatarHora(item.end_time)));
+if(Number(item.break_minutes||0)>0){
+bloco.appendChild(criarElemento("span","","Intervalo principal: "+formatarHora(item.break_start_time)+" até "+formatarHora(item.break_end_time)+" • Duração: "+formatarIntervalo(item.break_minutes)));
+}else bloco.appendChild(criarElemento("span","","Intervalo principal: Não configurado"));
+const pausasDia=pausas.filter(p=>p.schedule_day_id===item.id);
+if(pausasDia.length){
+pausasDia.forEach(p=>{
+bloco.appendChild(criarElemento("span","","Pausa adicional "+p.pause_number+": "+formatarHora(p.start_time)+" até "+formatarHora(p.end_time)+" • Duração: "+formatarIntervalo(p.duration_minutes)));
+});
+}else bloco.appendChild(criarElemento("span","","Pausas adicionais: Nenhuma configurada"));
+}
 lista.appendChild(bloco);
 });
-const vigencia=document.createElement("div");
-vigencia.className="dia-escala";
-const tituloVigencia=document.createElement("strong");
-tituloVigencia.textContent="Vigência da escala";
-const textoVigencia=document.createElement("span");
-textoVigencia.textContent="Desde "+new Date(atribuicao.effective_from+"T12:00:00").toLocaleDateString("pt-BR")+
-(atribuicao.effective_until?" até "+new Date(atribuicao.effective_until+"T12:00:00").toLocaleDateString("pt-BR"):" • Sem data final");
-vigencia.append(tituloVigencia,textoVigencia);
+const vigencia=criarElemento("div","dia-escala");
+vigencia.append(
+criarElemento("strong","","Vigência da escala"),
+criarElemento("span","","Desde "+new Date(atribuicao.effective_from+"T12:00:00").toLocaleDateString("pt-BR")+
+(atribuicao.effective_until?" até "+new Date(atribuicao.effective_until+"T12:00:00").toLocaleDateString("pt-BR"):" • Sem data final"))
+);
 lista.appendChild(vigencia);
 }catch(error){
 console.error("Erro ao consultar escala:",error);
 lista.innerHTML="<p>Não foi possível carregar sua escala: "+(error.message||"erro desconhecido")+"</p>";
 }
 }
+
 /* FOTO DE PERFIL */
 async function enviarFoto(event){
-const arquivo=event.target.files[0];
-if(!arquivo)return;
+const arquivo=event.target.files[0];if(!arquivo)return;
 if(!["image/jpeg","image/png","image/webp"].includes(arquivo.type)){
-mostrarMensagem("Escolha uma imagem JPG, PNG ou WebP.","erro");
-event.target.value="";
-return;
+mostrarMensagem("Escolha uma imagem JPG, PNG ou WebP.","erro");event.target.value="";return;
 }
 if(arquivo.size>2*1024*1024){
-mostrarMensagem("A foto deve ter no máximo 2 MB.","erro");
-event.target.value="";
-return;
+mostrarMensagem("A foto deve ter no máximo 2 MB.","erro");event.target.value="";return;
 }
 const extensoes={"image/jpeg":"jpg","image/png":"png","image/webp":"webp"};
 const caminho=usuarioAtual.id+"/"+colaboradorAtual.id+"."+extensoes[arquivo.type];
-const input=document.getElementById("arquivoFoto");
-input.disabled=true;
-limparMensagem();
+const input=document.getElementById("arquivoFoto");input.disabled=true;limparMensagem();
 try{
 const {error:uploadError}=await supabaseClient.storage.from("profile-photos")
 .upload(caminho,arquivo,{upsert:true,contentType:arquivo.type});
 if(uploadError)throw uploadError;
 const {error:perfilError}=await supabaseClient.rpc("atualizar_minha_foto",{caminho_foto:caminho});
 if(perfilError)throw perfilError;
-colaboradorAtual.profile_photo_url=caminho;
-await carregarFotoPerfil();
+colaboradorAtual.profile_photo_url=caminho;await carregarFotoPerfil();
 mostrarMensagem("Foto de perfil atualizada com sucesso!","sucesso");
 }catch(error){
-mostrarMensagem("Não foi possível atualizar a foto: "+error.message,"erro");
-console.error(error);
-}finally{
-input.disabled=false;
-input.value="";
+mostrarMensagem("Não foi possível atualizar a foto: "+error.message,"erro");console.error(error);
+}finally{input.disabled=false;input.value=""}
 }
-}
-/* MÓDULO DE SOLICITAÇÕES */
+
+/* SOLICITAÇÕES — MANTIDAS */
 const tiposSolicitacao={
-time_correction:"Correção de ponto",
-day_off_change:"Troca de folga",
-schedule_change:"Alteração de escala",
-medical_certificate:"Atestado médico",
+time_correction:"Correção de ponto",day_off_change:"Troca de folga",
+schedule_change:"Alteração de escala",medical_certificate:"Atestado médico",
 attendance_declaration:"Declaração de horas / comparecimento",
-union_declaration:"Declaração sindical",
-other_declaration:"Outra declaração"
+union_declaration:"Declaração sindical",other_declaration:"Outra declaração"
 };
-const statusSolicitacao={
-pending:"Pendente",
-approved:"Aprovada",
-rejected:"Recusada",
-cancelled:"Cancelada"
-};
+const statusSolicitacao={pending:"Pendente",approved:"Aprovada",rejected:"Recusada",cancelled:"Cancelada"};
 function formatarDataSolicitacao(data){
 if(!data)return "Não informada";
 const partes=String(data).split("-");
 if(partes.length!==3)return data;
 return partes[2]+"/"+partes[1]+"/"+partes[0];
 }
-function formatarDataHoraSolicitacao(data){
-if(!data)return "-";
-return new Date(data).toLocaleString("pt-BR");
-}
-function criarElemento(tag,classe,texto){
-const elemento=document.createElement(tag);
-if(classe)elemento.className=classe;
-if(texto!==undefined)elemento.textContent=texto;
-return elemento;
-}
+function formatarDataHoraSolicitacao(data){return data?new Date(data).toLocaleString("pt-BR"):"-"}
 function extensaoComprovante(arquivo){
 const extensao=arquivo.name.split(".").pop().toLowerCase();
 if(arquivo.type==="application/pdf"&&extensao==="pdf")return "pdf";
@@ -1088,20 +1024,15 @@ const nomeArquivo=crypto.randomUUID()+"."+extensao;
 const caminho=String(colaboradorAtual.company_id)+"/"+String(colaboradorAtual.id)+"/"+nomeArquivo;
 const {error}=await supabaseClient.storage.from(BUCKET_COMPROVANTES)
 .upload(caminho,arquivo,{contentType:arquivo.type,upsert:false});
-if(error)throw error;
-return caminho;
+if(error)throw error;return caminho;
 }
 async function criarLinkComprovante(caminho){
 const {data,error}=await supabaseClient.storage.from(BUCKET_COMPROVANTES).createSignedUrl(caminho,300);
-if(error)throw error;
-return data.signedUrl;
+if(error)throw error;return data.signedUrl;
 }
 async function carregarMinhasSolicitacoes(){
 const lista=document.getElementById("listaSolicitacoes");
-if(!usuarioAtual||!colaboradorAtual){
-lista.innerHTML="<p>Entre novamente para consultar suas solicitações.</p>";
-return;
-}
+if(!usuarioAtual||!colaboradorAtual){lista.innerHTML="<p>Entre novamente para consultar suas solicitações.</p>";return}
 lista.innerHTML="<p>Carregando suas solicitações...</p>";
 try{
 const {data,error}=await supabaseClient.from("employee_requests")
@@ -1110,10 +1041,7 @@ const {data,error}=await supabaseClient.from("employee_requests")
 .order("created_at",{ascending:false});
 if(error)throw error;
 lista.innerHTML="";
-if(!data||data.length===0){
-lista.innerHTML='<div class="solicitacao-vazia">Você ainda não enviou nenhuma solicitação.</div>';
-return;
-}
+if(!data||data.length===0){lista.innerHTML='<div class="solicitacao-vazia">Você ainda não enviou nenhuma solicitação.</div>';return}
 for(const item of data){
 const card=criarElemento("div","solicitacao-card");
 card.appendChild(criarElemento("h4","",tiposSolicitacao[item.request_type]||"Solicitação"));
@@ -1131,11 +1059,8 @@ areaDocumento.appendChild(criarElemento("p","detalhe","Comprovante anexado:"));
 try{
 const url=await criarLinkComprovante(item.document_path);
 const link=document.createElement("a");
-link.className="link-comprovante";
-link.href=url;
-link.target="_blank";
-link.rel="noopener noreferrer";
-link.textContent="Abrir comprovante";
+link.className="link-comprovante";link.href=url;link.target="_blank";
+link.rel="noopener noreferrer";link.textContent="Abrir comprovante";
 areaDocumento.appendChild(link);
 }catch(erroDocumento){
 console.error("Erro ao gerar link do comprovante:",erroDocumento);
@@ -1147,17 +1072,13 @@ lista.appendChild(card);
 }
 }catch(error){
 console.error("Erro ao carregar solicitações:",error);
-lista.innerHTML="";
-lista.appendChild(criarElemento("p","","Não foi possível carregar suas solicitações: "+error.message));
+lista.innerHTML="";lista.appendChild(criarElemento("p","","Não foi possível carregar suas solicitações: "+error.message));
 }
 }
 async function enviarSolicitacao(event){
 event.preventDefault();
 if(processandoSolicitacao)return;
-if(!usuarioAtual||!colaboradorAtual){
-mostrarMensagem("Sua sessão não está válida. Entre novamente.","erro");
-return;
-}
+if(!usuarioAtual||!colaboradorAtual){mostrarMensagem("Sua sessão não está válida. Entre novamente.","erro");return}
 const tipo=document.getElementById("tipoSolicitacao").value;
 const data=document.getElementById("dataSolicitacao").value||null;
 const horaInicial=document.getElementById("horaInicial").value||null;
@@ -1165,94 +1086,51 @@ const horaFinal=document.getElementById("horaFinal").value||null;
 const descricao=document.getElementById("descricaoSolicitacao").value.trim();
 const inputArquivo=document.getElementById("comprovanteSolicitacao");
 const arquivo=inputArquivo.files[0]||null;
-if(!tipo||!tiposSolicitacao[tipo]){
-mostrarMensagem("Selecione um tipo de solicitação válido.","erro");
-return;
-}
-if(!descricao){
-mostrarMensagem("Informe a justificativa da solicitação.","erro");
-return;
-}
-if(horaInicial&&horaFinal&&horaFinal<horaInicial){
-mostrarMensagem("O horário final não pode ser anterior ao horário inicial.","erro");
-return;
-}
-if(arquivo){
-if(!extensaoComprovante(arquivo)){
-mostrarMensagem("O comprovante deve ser PDF, JPG ou PNG.","erro");
-return;
-}
-if(arquivo.size>TAMANHO_MAXIMO_COMPROVANTE){
-mostrarMensagem("O comprovante deve ter no máximo 10 MB.","erro");
-return;
-}
+if(!tipo||!tiposSolicitacao[tipo]){mostrarMensagem("Selecione um tipo de solicitação válido.","erro");return}
+if(!descricao){mostrarMensagem("Informe a justificativa da solicitação.","erro");return}
+if(horaInicial&&horaFinal&&horaFinal<horaInicial){mostrarMensagem("O horário final não pode ser anterior ao horário inicial.","erro");return}
+if(arquivo&&(!extensaoComprovante(arquivo)||arquivo.size>TAMANHO_MAXIMO_COMPROVANTE)){
+mostrarMensagem("O comprovante deve ser PDF, JPG ou PNG e ter no máximo 10 MB.","erro");return;
 }
 processandoSolicitacao=true;
 const botao=document.getElementById("botaoEnviarSolicitacao");
-botao.disabled=true;
-botao.textContent="Enviando solicitação...";
-limparMensagem();
+botao.disabled=true;botao.textContent="Enviando solicitação...";limparMensagem();
 try{
 let caminhoDocumento=null;
-if(arquivo){
-botao.textContent="Enviando comprovante...";
-caminhoDocumento=await enviarComprovante(arquivo);
-}
+if(arquivo){botao.textContent="Enviando comprovante...";caminhoDocumento=await enviarComprovante(arquivo)}
 botao.textContent="Salvando solicitação...";
 const dados={
-company_id:colaboradorAtual.company_id,
-employee_id:colaboradorAtual.id,
-user_id:usuarioAtual.id,
-request_type:tipo,
-description:descricao,
-requested_date:data,
-requested_start_time:horaInicial,
-requested_end_time:horaFinal,
-document_path:caminhoDocumento
+company_id:colaboradorAtual.company_id,employee_id:colaboradorAtual.id,user_id:usuarioAtual.id,
+request_type:tipo,description:descricao,requested_date:data,
+requested_start_time:horaInicial,requested_end_time:horaFinal,document_path:caminhoDocumento
 };
 const {error}=await supabaseClient.from("employee_requests").insert(dados);
 if(error)throw error;
 document.getElementById("formSolicitacao").reset();
 document.getElementById("camposHorario").classList.add("oculto");
 document.getElementById("nomeComprovante").textContent="";
-mostrarMensagem(arquivo?
-"Sua solicitação e o comprovante foram enviados com sucesso! Agora aguardam análise do responsável.":
-"Sua solicitação foi enviada com sucesso! Agora ela aguarda análise do responsável.","sucesso");
+mostrarMensagem("Sua solicitação foi enviada com sucesso! Agora ela aguarda análise do responsável.","sucesso");
 await carregarMinhasSolicitacoes();
 }catch(error){
 console.error("Erro ao enviar solicitação:",error);
 mostrarMensagem("Não foi possível enviar sua solicitação: "+error.message,"erro");
 }finally{
-processandoSolicitacao=false;
-botao.disabled=false;
-botao.textContent="Enviar solicitação";
+processandoSolicitacao=false;botao.disabled=false;botao.textContent="Enviar solicitação";
 }
 }
 document.getElementById("comprovanteSolicitacao").addEventListener("change",function(){
-const arquivo=this.files[0];
-const area=document.getElementById("nomeComprovante");
-area.textContent="";
-if(!arquivo)return;
-if(!extensaoComprovante(arquivo)){
-mostrarMensagem("Escolha um arquivo PDF, JPG ou PNG.","erro");
-this.value="";
-return;
+const arquivo=this.files[0],area=document.getElementById("nomeComprovante");
+area.textContent="";if(!arquivo)return;
+if(!extensaoComprovante(arquivo)||arquivo.size>TAMANHO_MAXIMO_COMPROVANTE){
+mostrarMensagem("Escolha um PDF, JPG ou PNG de até 10 MB.","erro");this.value="";return;
 }
-if(arquivo.size>TAMANHO_MAXIMO_COMPROVANTE){
-mostrarMensagem("O arquivo ultrapassa o limite de 10 MB.","erro");
-this.value="";
-return;
-}
-const tamanhoMB=(arquivo.size/1024/1024).toFixed(2);
-area.textContent="Arquivo selecionado: "+arquivo.name+" ("+tamanhoMB+" MB)";
+area.textContent="Arquivo selecionado: "+arquivo.name+" ("+(arquivo.size/1024/1024).toFixed(2)+" MB)";
 limparMensagem();
 });
 document.getElementById("tipoSolicitacao").addEventListener("change",function(){
-const tipo=this.value;
 const campos=document.getElementById("camposHorario");
-if(tipo==="time_correction"||tipo==="schedule_change"){
-campos.classList.remove("oculto");
-}else{
+if(this.value==="time_correction"||this.value==="schedule_change")campos.classList.remove("oculto");
+else{
 campos.classList.add("oculto");
 document.getElementById("horaInicial").value="";
 document.getElementById("horaFinal").value="";
@@ -1260,24 +1138,21 @@ document.getElementById("horaFinal").value="";
 });
 document.getElementById("formSolicitacao").addEventListener("submit",enviarSolicitacao);
 document.getElementById("botaoAtualizarSolicitacoes").addEventListener("click",async function(){
-this.disabled=true;
-this.textContent="Atualizando...";
+this.disabled=true;this.textContent="Atualizando...";
 await carregarMinhasSolicitacoes();
-this.disabled=false;
-this.textContent="Atualizar histórico";
+this.disabled=false;this.textContent="Atualizar histórico";
 });
+
 /* ABERTURA DO PORTAL */
 async function abrirPortal(user){
-esconderFormularios();
-limparMensagem();
+esconderFormularios();limparMensagem();
 try{
 usuarioAtual=user;
 colaboradorAtual=await buscarColaborador(user);
 document.getElementById("nomeColaborador").textContent=colaboradorAtual.full_name;
 document.getElementById("emailColaborador").textContent=colaboradorAtual.email||user.email;
 areaLogada.classList.remove("oculto");
-titulo.textContent="Meu Ponto";
-subtitulo.textContent="Bem-vindo ao seu portal de colaborador.";
+titulo.textContent="Meu Ponto";subtitulo.textContent="Bem-vindo ao seu portal de colaborador.";
 document.getElementById("conteudoPonto").classList.remove("oculto");
 document.getElementById("conteudoSolicitacoes").classList.add("oculto");
 document.getElementById("conteudoPerfil").classList.add("oculto");
@@ -1285,93 +1160,30 @@ document.getElementById("abaPonto").classList.add("ativa");
 document.getElementById("abaSolicitacoes").classList.remove("ativa");
 document.getElementById("abaPerfil").classList.remove("ativa");
 iniciarRelogio();
-await atualizarEstadoPonto();
 await carregarEspelhoPonto();
-}catch(error){
-usuarioAtual=null;
-colaboradorAtual=null;
-mostrarLogin();
-mostrarMensagem(error.message,"erro");
-}
-}
-/* REGISTRO DE PONTO */
-async function registrarPonto(){
-if(processandoPonto)return;
-if(!usuarioAtual||!colaboradorAtual){
-mostrarMensagem("Sua sessão não está válida. Entre novamente.","erro");
-return;
-}
-processandoPonto=true;
-const botao=document.getElementById("botaoPonto");
-botao.disabled=true;
-botao.textContent="Registrando...";
-limparMensagem();
-try{
-const ultimo=await buscarUltimoRegistro();
-let novoEvento="entrada";
-if(ultimo){
-const etapa=etapas[ultimo.event_type];
-if(!etapa)throw new Error("Não foi possível identificar a próxima marcação. Procure o RH.");
-novoEvento=etapa.proximo;
-}
-const agora=new Date().toISOString();
-const {error}=await supabaseClient.from("attendance_records").insert({
-id:crypto.randomUUID(),
-company_id:colaboradorAtual.company_id,
-employee_id:colaboradorAtual.id,
-user_id:usuarioAtual.id,
-event_type:novoEvento,
-recorded_at:agora,
-created_at:agora
-});
-if(error)throw error;
-const nomes={entrada:"Entrada",inicio_intervalo:"Início do intervalo",retorno_intervalo:"Retorno do intervalo",saida:"Saída"};
-mostrarMensagem(nomes[novoEvento]+" registrado com sucesso! Seu horário foi salvo.","sucesso");
 await atualizarEstadoPonto();
-await carregarEspelhoPonto();
 }catch(error){
-mostrarMensagem("Não foi possível registrar: "+error.message,"erro");
-await atualizarEstadoPonto();
-}finally{
-processandoPonto=false;
+usuarioAtual=null;colaboradorAtual=null;mostrarLogin();mostrarMensagem(error.message,"erro");
 }
 }
-document.getElementById("botaoPonto").addEventListener("click",registrarPonto);
 
-/* NAVEGAÇÃO ENTRE OS MESES DO ESPELHO */
+/* NAVEGAÇÃO DOS MESES */
 function alterarMesEspelho(direcao){
 const campo=document.getElementById("mesEspelho");
-
 if(!campo.value){
-const agora=new Date();
-campo.value=agora.getFullYear()+"-"+String(agora.getMonth()+1).padStart(2,"0");
+const agora=new Date();campo.value=agora.getFullYear()+"-"+String(agora.getMonth()+1).padStart(2,"0");
 }
-
-const partes=campo.value.split("-");
-const ano=Number(partes[0]);
-const mes=Number(partes[1]);
-
+const partes=campo.value.split("-"),ano=Number(partes[0]),mes=Number(partes[1]);
 if(!ano||!mes||mes<1||mes>12)return;
-
 const novaData=new Date(ano,mes-1+direcao,1,12,0,0);
 campo.value=novaData.getFullYear()+"-"+String(novaData.getMonth()+1).padStart(2,"0");
-
-dataSelecionadaCalendario=null;
-carregarEspelhoPonto();
+dataSelecionadaCalendario=null;carregarEspelhoPonto();
 }
-
-document.getElementById("mesAnterior").addEventListener("click",function(){
-alterarMesEspelho(-1);
-});
-
-document.getElementById("proximoMes").addEventListener("click",function(){
-alterarMesEspelho(1);
-});
-
+document.getElementById("mesAnterior").addEventListener("click",()=>alterarMesEspelho(-1));
+document.getElementById("proximoMes").addEventListener("click",()=>alterarMesEspelho(1));
 document.getElementById("botaoConsultarEspelho").addEventListener("click",carregarEspelhoPonto);
 document.getElementById("mesEspelho").addEventListener("change",function(){
-dataSelecionadaCalendario=null;
-carregarEspelhoPonto();
+dataSelecionadaCalendario=null;carregarEspelhoPonto();
 });
 
 /* NAVEGAÇÃO ENTRE ABAS */
@@ -1391,143 +1203,97 @@ secoes[chave].classList.toggle("oculto",chave!==nome);
 botoes[chave].classList.toggle("ativa",chave===nome);
 });
 if(nome==="ponto"){
-titulo.textContent="Meu Ponto";
-subtitulo.textContent="Registre sua jornada de trabalho.";
+titulo.textContent="Meu Ponto";subtitulo.textContent="Registre sua jornada de trabalho.";
 }
 if(nome==="solicitacoes"){
-titulo.textContent="Solicitações";
-subtitulo.textContent="Envie e acompanhe suas solicitações.";
+titulo.textContent="Solicitações";subtitulo.textContent="Envie e acompanhe suas solicitações.";
 carregarMinhasSolicitacoes();
 }
 if(nome==="perfil"){
-titulo.textContent="Meu Perfil";
-subtitulo.textContent="Consulte seus dados e sua jornada.";
+titulo.textContent="Meu Perfil";subtitulo.textContent="Consulte seus dados e sua jornada.";
 carregarPerfil();
 }
 }
-document.getElementById("abaPonto").addEventListener("click",function(){ativarAba("ponto");});
-document.getElementById("abaSolicitacoes").addEventListener("click",function(){ativarAba("solicitacoes");});
-document.getElementById("abaPerfil").addEventListener("click",function(){ativarAba("perfil");});
+document.getElementById("abaPonto").addEventListener("click",()=>ativarAba("ponto"));
+document.getElementById("abaSolicitacoes").addEventListener("click",()=>ativarAba("solicitacoes"));
+document.getElementById("abaPerfil").addEventListener("click",()=>ativarAba("perfil"));
 document.getElementById("arquivoFoto").addEventListener("change",enviarFoto);
-/* LOGIN, RECUPERAÇÃO E PRIMEIRO ACESSO */
+
+/* LOGIN, PRIMEIRO ACESSO E RECUPERAÇÃO */
 async function iniciar(){
 const hash=new URLSearchParams(window.location.hash.replace(/^#/,""));
 const query=new URLSearchParams(window.location.search);
 const tipo=hash.get("type");
 const erroLink=hash.get("error_description")||query.get("error_description");
-if(erroLink){
-mostrarLogin();
-mostrarMensagem("O link é inválido ou expirou. Solicite um novo link.","erro");
-return;
-}
+if(erroLink){mostrarLogin();mostrarMensagem("O link é inválido ou expirou. Solicite um novo link.","erro");return}
 const {data,error}=await supabaseClient.auth.getSession();
-if(error){
-mostrarLogin();
-mostrarMensagem(error.message,"erro");
-return;
-}
+if(error){mostrarLogin();mostrarMensagem(error.message,"erro");return}
 if(["invite","recovery","signup"].includes(tipo)){
-if(data.session){
-mostrarFormularioSenha(tipo);
-return;
+if(data.session){mostrarFormularioSenha(tipo);return}
+mostrarLogin();mostrarMensagem("Não foi possível validar o link. Solicite um novo.","erro");return;
 }
-mostrarLogin();
-mostrarMensagem("Não foi possível validar o link. Solicite um novo.","erro");
-return;
-}
-if(data.session){
-await abrirPortal(data.session.user);
-}else{
-mostrarLogin();
-}
+if(data.session)await abrirPortal(data.session.user);
+else mostrarLogin();
 }
 linkRecuperacao.addEventListener("click",function(){
-esconderFormularios();
-formRecuperacao.classList.remove("oculto");
+esconderFormularios();formRecuperacao.classList.remove("oculto");
 titulo.textContent="Primeiro acesso ou recuperação";
 subtitulo.textContent="Informe seu e-mail cadastrado para receber um link.";
 limparMensagem();
 });
-document.getElementById("voltarLogin").addEventListener("click",function(){
-mostrarLogin();
-limparMensagem();
+document.getElementById("voltarLogin").addEventListener("click",()=>{
+mostrarLogin();limparMensagem();
 });
 formRecuperacao.addEventListener("submit",async function(e){
-e.preventDefault();
-limparMensagem();
+e.preventDefault();limparMensagem();
 const email=document.getElementById("emailRecuperacao").value.trim();
 const botao=formRecuperacao.querySelector("button");
-botao.disabled=true;
-botao.textContent="Enviando...";
+botao.disabled=true;botao.textContent="Enviando...";
 try{
 const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{
 redirectTo:window.location.origin+window.location.pathname
 });
 if(error)throw error;
 mostrarMensagem("Se o e-mail estiver cadastrado, você receberá um link. Confira também o spam.","sucesso");
-}catch(error){
-mostrarMensagem("Não foi possível enviar o e-mail: "+error.message,"erro");
-}finally{
-botao.disabled=false;
-botao.textContent="Enviar link para meu e-mail";
-}
+}catch(error){mostrarMensagem("Não foi possível enviar o e-mail: "+error.message,"erro")}
+finally{botao.disabled=false;botao.textContent="Enviar link para meu e-mail"}
 });
 formSenha.addEventListener("submit",async function(e){
-e.preventDefault();
-limparMensagem();
+e.preventDefault();limparMensagem();
 const senha=document.getElementById("novaSenha").value;
 const confirmar=document.getElementById("confirmarSenha").value;
-if(senha.length<8){
-mostrarMensagem("A senha precisa ter pelo menos 8 caracteres.","erro");
-return;
-}
-if(senha!==confirmar){
-mostrarMensagem("As senhas não coincidem.","erro");
-return;
-}
+if(senha.length<8){mostrarMensagem("A senha precisa ter pelo menos 8 caracteres.","erro");return}
+if(senha!==confirmar){mostrarMensagem("As senhas não coincidem.","erro");return}
 const botao=formSenha.querySelector("button");
-botao.disabled=true;
-botao.textContent="Salvando...";
+botao.disabled=true;botao.textContent="Salvando...";
 try{
 const {data,error}=await supabaseClient.auth.updateUser({password:senha});
 if(error)throw error;
 history.replaceState(null,"",window.location.pathname);
 mostrarMensagem("Senha criada com sucesso!","sucesso");
 await abrirPortal(data.user);
-}catch(error){
-mostrarMensagem("Erro ao salvar a senha: "+error.message,"erro");
-}finally{
-botao.disabled=false;
-botao.textContent="Salvar senha e continuar";
-}
+}catch(error){mostrarMensagem("Erro ao salvar a senha: "+error.message,"erro")}
+finally{botao.disabled=false;botao.textContent="Salvar senha e continuar"}
 });
 formLogin.addEventListener("submit",async function(e){
-e.preventDefault();
-limparMensagem();
+e.preventDefault();limparMensagem();
 const email=document.getElementById("email").value.trim();
 const senha=document.getElementById("senha").value;
 const botao=formLogin.querySelector("button");
-botao.disabled=true;
-botao.textContent="Entrando...";
+botao.disabled=true;botao.textContent="Entrando...";
 try{
 const {data,error}=await supabaseClient.auth.signInWithPassword({email,password:senha});
 if(error)throw error;
 await abrirPortal(data.user);
 }catch(error){
-mostrarLogin();
-mostrarMensagem("Não foi possível entrar: "+error.message,"erro");
-}finally{
-botao.disabled=false;
-botao.textContent="Entrar no Meu Ponto";
-}
+mostrarLogin();mostrarMensagem("Não foi possível entrar: "+error.message,"erro");
+}finally{botao.disabled=false;botao.textContent="Entrar no Meu Ponto"}
 });
+
 /* SAIR */
 async function sair(){
 const {error}=await supabaseClient.auth.signOut();
-if(error){
-mostrarMensagem("Não foi possível sair da conta: "+error.message,"erro");
-return;
-}
+if(error){mostrarMensagem("Não foi possível sair da conta: "+error.message,"erro");return}
 if(relogioIntervalo)clearInterval(relogioIntervalo);
 window.location.replace(window.location.pathname);
 }
