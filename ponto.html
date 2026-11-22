@@ -165,6 +165,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 <div><label for="mesEspelho">Mês de referência</label><input type="month" id="mesEspelho"></div>
 <button type="button" id="proximoMes" class="secundario navegar-mes" aria-label="Próximo mês">→</button>
 <button type="button" id="botaoConsultarEspelho">Consultar</button>
+<button type="button" id="botaoPdfEspelho" class="secundario">Gerar PDF</button>
 </div>
 <div id="resumoEspelho" class="resumo-historico"></div>
 <div class="painel-ponto">
@@ -820,6 +821,19 @@ document.getElementById("calendarioDetalhe").textContent="Não foi possível car
 }
 }
 
+/* EXPORTAÇÃO DO ESPELHO MENSAL EM PDF */
+function gerarPdfEspelho(){
+const mes=document.getElementById('mesEspelho').value;
+if(!mes){mostrarMensagem('Selecione o mês antes de gerar o PDF.','erro');return}
+const resumo=document.getElementById('resumoEspelho'),calendario=document.getElementById('calendarioMensal'),detalhe=document.getElementById('calendarioDetalhe'),lista=document.getElementById('listaEspelho');
+if(!resumo||!calendario||!lista||!resumo.children.length){mostrarMensagem('Primeiro toque em Consultar para carregar o espelho do mês.','erro');return}
+const janela=window.open('','_blank');if(!janela){mostrarMensagem('O navegador bloqueou a abertura do PDF. Permita pop-ups para este portal e tente novamente.','erro');return}
+const escapar=v=>String(v||'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
+const tituloMes=mes.split('-').reverse().join('/');let html="<!DOCTYPE html><html lang=\"pt-BR\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Espelho de Ponto - __MES__</title><style>\n*{box-sizing:border-box}body{font-family:Arial,sans-serif;color:#18352d;margin:28px;font-size:12px}h1{font-size:22px;color:#123d32;margin:0 0 5px}h2{font-size:16px;color:#123d32;margin:22px 0 9px}.cabecalho{border-bottom:3px solid #c5a45b;padding-bottom:14px;margin-bottom:16px}.meta{line-height:1.7;color:#52665d}.resumo{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.resumo-item{border:1px solid #dce6df;border-radius:7px;padding:9px}.resumo-item strong{display:block;font-size:16px;color:#123d32}.resumo-item span{font-size:10px;color:#687c72}.calendario{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.cal-cabecalho,.cal-dia{text-align:center;border:1px solid #dce6df;padding:7px 3px;border-radius:4px}.cal-cabecalho{font-weight:bold;background:#eef3ef}.cal-dia{min-height:35px}.cal-dia small{display:block;font-size:8px;margin-top:3px}.registro-dia,.cal-detalhe{border:1px solid #dce6df;border-radius:7px;padding:10px;margin:8px 0;break-inside:avoid}.registro-dia h4{margin:0 0 7px}.linha-registro{display:flex;justify-content:space-between;border-top:1px solid #edf1ee;padding:5px 0}.horas-dia{margin-top:6px;padding:7px;background:#eaf7ef;border-radius:5px}.aviso-registro{margin-top:6px;padding:7px;background:#fff8e8}.sem-registros{padding:12px}.rodape{margin-top:24px;border-top:1px solid #ccd8d0;padding-top:9px;color:#687c72;font-size:10px}@media print{body{margin:12mm}.registro-dia,.cal-detalhe{break-inside:avoid}}\n</style></head><body><div class=\"cabecalho\"><h1>KFYRA | Espelho de Ponto</h1><div class=\"meta\"><strong>Colaborador:</strong> __NOME__<br><strong>E-mail:</strong> __EMAIL__<br><strong>Mês de referência:</strong> __MES__<br><strong>Gerado em:</strong> __DATA__</div></div><h2>Resumo mensal</h2><div class=\"resumo\">__RESUMO__</div><h2>Calendário mensal</h2><div class=\"calendario\">__CALENDARIO__</div><h2>Detalhe do dia selecionado</h2><div class=\"cal-detalhe\">__DETALHE__</div><h2>Marcações e apuração diária</h2>__LISTA__<div class=\"rodape\">Documento informativo gerado pelo portal Meu Ponto KFYRA. A validação e o fechamento do período dependem da conferência do RH.</div><script>window.onload=function(){setTimeout(function(){window.print()},350)};</script></body></html>";
+const valores={'__MES__':tituloMes,'__NOME__':escapar(colaboradorAtual.full_name),'__EMAIL__':escapar(colaboradorAtual.email||usuarioAtual.email),'__DATA__':new Date().toLocaleString('pt-BR'),'__RESUMO__':resumo.innerHTML,'__CALENDARIO__':calendario.innerHTML,'__DETALHE__':detalhe.innerHTML,'__LISTA__':lista.innerHTML};
+Object.keys(valores).forEach(chave=>{html=html.split(chave).join(valores[chave])});janela.document.open();janela.document.write(html);janela.document.close();
+}
+
 /* REGISTRO DE PONTO */
 async function registrarPonto(){
 if(processandoPonto)return;
@@ -1183,7 +1197,8 @@ dataSelecionadaCalendario=null;carregarEspelhoPonto();
 }
 document.getElementById("mesAnterior").addEventListener("click",()=>alterarMesEspelho(-1));
 document.getElementById("proximoMes").addEventListener("click",()=>alterarMesEspelho(1));
-document.getElementById("botaoConsultarEspelho").addEventListener("click",carregarEspelhoPonto);
+document.getElementById("botaoConsultarEspelho").addEventListener("click",async()=>{await carregarEspelhoPonto();document.getElementById("calendarioDetalhe").scrollIntoView({behavior:"smooth",block:"center"});});
+document.getElementById("botaoPdfEspelho").addEventListener("click",gerarPdfEspelho);
 document.getElementById("mesEspelho").addEventListener("change",function(){
 dataSelecionadaCalendario=null;carregarEspelhoPonto();
 });
