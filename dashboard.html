@@ -1510,7 +1510,7 @@ async function loadEmployeePointHistory(){
  if(!tbody||!currentCompany)return;
  if(!selectedPointEmployeeId){tbody.innerHTML='<tr><td colspan="6" class="empty">Pesquise e selecione um colaborador.</td></tr>';return}
  const month=$('pointMonth')?.value||localDateInSaoPaulo(new Date()).slice(0,7);
- if(!/^\\d{4}-\\d{2}$/.test(month)){tbody.innerHTML='<tr><td colspan="6" class="empty">Selecione um mês válido.</td></tr>';return}
+ if(!/^\d{4}-\d{2}$/.test(month)){tbody.innerHTML='<tr><td colspan="6" class="empty">Selecione um mês válido.</td></tr>';return}
  const [year,mon]=month.split('-').map(Number);
  // Usa os mesmos limites locais do calendário Meu Ponto e converte para UTC.
  const start=new Date(year,mon-1,1,0,0,0,0),end=new Date(year,mon,1,0,0,0,0);
