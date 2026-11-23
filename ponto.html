@@ -156,6 +156,47 @@ button:active:not(:disabled){transform:translateY(0) scale(.985)}
 @media(max-width:700px){header{margin:12px 12px 0;padding:18px 19px;border-radius:18px}main{margin:18px auto 35px;padding:0 12px}.card{border-radius:20px}.painel-ponto{padding:16px}.abas{position:sticky;top:8px;z-index:5;backdrop-filter:blur(12px)}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
+
+/* KFYRA — camada visual 02: presença, movimento e hierarquia */
+#areaLogada{animation:kyReveal .7s cubic-bezier(.2,.8,.2,1) both}
+#areaLogada>.abas{position:sticky;top:10px;z-index:8;padding:7px;margin:24px 0 18px;border:1px solid rgba(16,75,54,.08);box-shadow:0 12px 28px rgba(12,53,39,.08);backdrop-filter:blur(16px)}
+#conteudoPonto>.painel-ponto:first-child{position:relative;isolation:isolate;overflow:hidden;min-height:150px;padding:26px 28px;border:1px solid rgba(216,183,107,.34);background:radial-gradient(circle at 88% 15%,rgba(216,183,107,.23),transparent 28%),linear-gradient(118deg,#082b24 0%,#10523e 62%,#0a352b 100%);box-shadow:0 18px 38px rgba(8,48,36,.2)}
+#conteudoPonto>.painel-ponto:first-child:before{content:"";position:absolute;z-index:-1;width:210px;height:210px;right:-50px;top:-115px;border:1px solid rgba(239,215,157,.42);border-radius:50%;box-shadow:0 0 0 18px rgba(239,215,157,.045),0 0 0 38px rgba(239,215,157,.035),0 0 55px rgba(239,215,157,.12)}
+#conteudoPonto>.painel-ponto:first-child:after{content:"";position:absolute;z-index:-1;right:18px;bottom:-90px;width:145px;height:145px;transform:rotate(45deg);border:1px solid rgba(255,255,255,.12);border-radius:28px}
+#conteudoPonto>.painel-ponto:first-child>p:first-child{color:#c8dfd2;letter-spacing:2.4px}
+#nomeColaborador{font-size:clamp(24px,4vw,34px);letter-spacing:-.8px;color:#fff;margin:7px 0 5px}
+#emailColaborador{color:#c2ddcf;margin:0;font-size:13px}
+#conteudoPonto>.painel-ponto:nth-child(2){display:flex;align-items:center;justify-content:space-between;gap:14px;position:relative;overflow:hidden;background:linear-gradient(120deg,#f8fbf8,#edf6ef)}
+#conteudoPonto>.painel-ponto:nth-child(2)>p{margin:0;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;font-weight:800;color:#71877b}
+#relogio{font-size:clamp(18px,3vw,24px);font-weight:800;color:#0b4a38;letter-spacing:-.5px;text-align:right;font-variant-numeric:tabular-nums}
+#conteudoPonto>.painel-ponto:nth-child(3){position:relative;overflow:hidden;border-color:rgba(25,112,78,.16)}
+#statusPonto{display:flex;align-items:center;gap:9px;margin:12px 0 5px}
+#statusPonto:before{content:"";width:9px;height:9px;flex:0 0 9px;border-radius:50%;background:#43a878;box-shadow:0 0 0 5px rgba(67,168,120,.12);animation:kyPulse 2.4s ease-in-out infinite}
+@keyframes kyPulse{0%,100%{box-shadow:0 0 0 4px rgba(67,168,120,.1)}50%{box-shadow:0 0 0 8px rgba(67,168,120,.04),0 0 18px rgba(67,168,120,.25)}}
+#botaoPonto{min-height:56px;margin-top:16px;font-size:16px;letter-spacing:.2px;border:1px solid rgba(255,255,255,.22);background:linear-gradient(110deg,#0b4938,#167d59,#0d5943);background-size:180% 100%;box-shadow:0 12px 25px rgba(12,91,62,.2);animation:kyGradient 7s ease infinite}
+@keyframes kyGradient{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+#painelEspelho{margin-top:20px;padding:clamp(16px,3vw,24px);background:linear-gradient(145deg,rgba(255,255,255,.99),rgba(243,249,245,.98))}
+#painelEspelho>h3{display:flex;align-items:center;gap:10px;font-size:20px}
+#painelEspelho>h3:before{content:"";width:4px;height:22px;border-radius:5px;background:linear-gradient(#d8b76b,#a88742)}
+#painelEspelho>.painel-ponto{background:#fbfdfb}
+#calendarioMensal{gap:7px}
+.cal-cabecalho{font-size:10px;letter-spacing:.8px;text-transform:uppercase}
+.cal-dia{position:relative;overflow:hidden;min-height:64px;border-radius:13px}
+.cal-dia.trabalhado{background:linear-gradient(145deg,#e5f7eb,#d7efdf)}
+.cal-dia.folga{background:linear-gradient(145deg,#edf4ff,#dfeafa)}
+.cal-dia.ocorrencia{background:linear-gradient(145deg,#fff7e9,#ffedd4)}
+.cal-dia.hoje:after{content:"";position:absolute;inset:4px;border:1px solid rgba(18,99,78,.22);border-radius:9px;pointer-events:none}
+.cal-legenda{gap:15px}
+.cal-legenda span{font-weight:600}
+#conteudoSolicitacoes>.painel-ponto:first-child,#conteudoPerfil>.painel-ponto:first-child{border-top:3px solid #d8b76b}
+#conteudoSolicitacoes h3,#conteudoPerfil h3{font-size:19px}
+.solicitacao-card{transition:transform .2s,box-shadow .2s}
+.solicitacao-card:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(14,55,42,.08)}
+#botaoSair{width:auto;min-width:150px;padding:12px 20px;border-color:#dce8df}
+#mensagem{animation:kyReveal .3s ease both}
+@media(min-width:900px){main{max-width:1040px}.card{padding:38px 42px}#conteudoPonto>.painel-ponto:first-child{padding:32px 36px}#calendarioMensal{gap:9px}.cal-dia{min-height:78px}}
+@media(max-width:500px){#conteudoPonto>.painel-ponto:first-child{min-height:135px;padding:22px 19px}#conteudoPonto>.painel-ponto:nth-child(2){align-items:flex-start;flex-direction:column;gap:7px}#relogio{text-align:left;font-size:20px}.cal-dia{min-height:52px;border-radius:10px}.cal-dia strong{font-size:13px}}
+
 </style>
 </head>
 <body>
