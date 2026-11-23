@@ -1675,7 +1675,7 @@ async function loadLatestOfficialTimesheetStatement(){
    }
   }
   box.className='message success';
-  box.innerHTML=`Espelho existente — versão ${Number(statement.version)||1}. Status: <strong>${escapeHTML(labels[statement.status]||statement.status)}</strong>. <a href="${escapeHTML(file.signedUrl)}" target="_blank" rel="noopener">Abrir PDF</a>${releaseButton}${responsibleSignButton}${finalizeSignedPdfButton}${finalSignedPdfLink}${signaturesHtml}`;
+  box.innerHTML=`Espelho existente — versão ${Number(statement.version)||1}. Status: <strong>${escapeHTML(labels[statement.status]||statement.status)}</strong>. <a href="${escapeHTML(file.signedUrl)}" target="_blank" rel="noopener">Abrir PDF</a>${releaseButton}${responsibleSignButton}${finalizeSignedPdfButton}${finalSignedPdfLink}`;
  }catch(err){showBox('officialStatementMessage',err.message||String(err),'error')}
 }
 async function generateFinalSignedTimesheetPdf(statementId){
