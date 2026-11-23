@@ -260,6 +260,17 @@ body:has(#areaLogada:not(.oculto)) .card{background:linear-gradient(145deg,#f5f8
 #areaLogada .dado-perfil{background:rgba(250,252,248,.78);border-color:#dce6dc}
 @media(prefers-reduced-motion:no-preference){#areaLogada .painel-ponto{transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}#areaLogada .painel-ponto:hover{transform:translateY(-2px);border-color:rgba(185,154,85,.45);box-shadow:0 15px 32px rgba(19,65,46,.09)}}
 
+
+/* KFYRA — navegação inferior Prisma Vivo */
+#areaLogada{padding-bottom:calc(104px + env(safe-area-inset-bottom))}
+.ky-bottom-nav{position:fixed;z-index:50;left:50%;bottom:calc(12px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(720px,calc(100% - 28px));display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;padding:9px 10px;border:1px solid rgba(216,183,107,.34);border-radius:22px;background:linear-gradient(145deg,rgba(7,39,32,.97),rgba(13,66,51,.97));box-shadow:0 18px 48px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.12);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.ky-nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-width:0;min-height:58px;margin:0;padding:7px 3px;border:1px solid transparent;border-radius:15px;background:transparent;color:#c6dbd0;box-shadow:none;font-size:10px;font-weight:700;white-space:nowrap;transition:background .2s,color .2s,transform .2s}
+.ky-nav-item:hover:not(:disabled){transform:translateY(-2px);background:rgba(255,255,255,.07);box-shadow:none}
+.ky-nav-item.ativa{color:#f6e3b4;border-color:rgba(216,183,107,.28);background:linear-gradient(145deg,rgba(216,183,107,.2),rgba(255,255,255,.07));box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 5px 16px rgba(0,0,0,.12)}
+.ky-nav-icon{display:grid;place-items:center;width:24px;height:24px;font-size:21px;line-height:1;color:#d8b76b}
+.ky-nav-item.ativa .ky-nav-icon{color:#f4dfaa}
+@media(min-width:760px){.ky-bottom-nav{bottom:18px}.ky-nav-item{font-size:11px;min-height:62px}.ky-nav-icon{font-size:22px}}
+@media(max-width:390px){.ky-bottom-nav{width:calc(100% - 16px);bottom:calc(8px + env(safe-area-inset-bottom));padding:7px 5px;gap:2px;border-radius:18px}.ky-nav-item{font-size:9px;min-height:55px}.ky-nav-icon{font-size:19px}}
 </style>
 </head>
 <body>
@@ -294,11 +305,13 @@ body:has(#areaLogada:not(.oculto)) .card{background:linear-gradient(145deg,#f5f8
 <button type="submit">Salvar senha e continuar</button>
 </form>
 <div id="areaLogada" class="oculto">
-<div class="abas">
-<button type="button" class="aba ativa" id="abaPonto">Meu Ponto</button>
-<button type="button" class="aba" id="abaSolicitacoes">Solicitações</button>
-<button type="button" class="aba" id="abaPerfil">Meu Perfil</button>
-</div>
+<nav class="ky-bottom-nav" id="navegacaoMeuPonto" aria-label="Navegação principal do Meu Ponto">
+<button type="button" class="ky-nav-item ativa" id="abaPonto" data-aba="ponto" aria-current="page"><span class="ky-nav-icon" aria-hidden="true">◉</span><span>Registro</span></button>
+<button type="button" class="ky-nav-item" id="abaCalendario" data-aba="calendario"><span class="ky-nav-icon" aria-hidden="true">▦</span><span>Calendário</span></button>
+<button type="button" class="ky-nav-item" id="abaEspelho" data-aba="espelho"><span class="ky-nav-icon" aria-hidden="true">▤</span><span>Espelho</span></button>
+<button type="button" class="ky-nav-item" id="abaSolicitacoes" data-aba="solicitacoes"><span class="ky-nav-icon" aria-hidden="true">⇄</span><span>Solicitações</span></button>
+<button type="button" class="ky-nav-item" id="abaPerfil" data-aba="perfil"><span class="ky-nav-icon" aria-hidden="true">◎</span><span>Perfil</span></button>
+</nav>
 <section id="conteudoPonto">
 <div class="painel-ponto">
 <p>Colaborador</p>
@@ -314,22 +327,8 @@ body:has(#areaLogada:not(.oculto)) .card{background:linear-gradient(145deg,#f5f8
 <div id="statusPonto" class="status-ponto">Verificando registros...</div>
 <button type="button" id="botaoPonto" disabled>Carregando...</button>
 </div>
-<div class="painel-ponto" id="painelEspelho">
-<h3>Espelho de Ponto</h3>
-<p>Consulte suas marcações organizadas por dia.</p>
-<div class="historico-topo">
-<button type="button" id="mesAnterior" class="secundario navegar-mes" aria-label="Mês anterior">←</button>
-<div><label for="mesEspelho">Mês de referência</label><input type="month" id="mesEspelho"></div>
-<button type="button" id="proximoMes" class="secundario navegar-mes" aria-label="Próximo mês">→</button>
-<button type="button" id="botaoConsultarEspelho">Consultar</button>
-<button type="button" id="botaoPdfEspelho" class="secundario">Gerar PDF</button>
-</div>
-<div id="resumoEspelho" class="resumo-historico"></div>
-<div class="painel-ponto" id="painelAssinaturaEspelho">
-<h3>Documentos aguardando sua assinatura</h3>
-<p>Confira o PDF oficial antes de confirmar sua assinatura eletrônica.</p>
-<div id="listaAssinaturasEspelho"><p>Consultando documentos...</p></div>
-</div>
+</section>
+<section id="conteudoCalendario" class="oculto">
 <div class="painel-ponto">
 <h3>Calendário mensal</h3>
 <div id="calendarioMensal" class="calendario"></div>
@@ -341,8 +340,30 @@ body:has(#areaLogada:not(.oculto)) .card{background:linear-gradient(145deg,#f5f8
 </div>
 <div id="calendarioDetalhe" class="cal-detalhe">Selecione um dia do calendário para consultar os detalhes.</div>
 </div>
-<div id="listaEspelho"><p>Carregando histórico...</p></div>
+</section>
+<section id="conteudoEspelho" class="oculto">
+<div class="painel-ponto" id="painelEspelho">
+<h3>Espelho de Ponto</h3>
+<p>Consulte suas marcações organizadas por dia.</p>
+<div class="historico-topo">
+<button type="button" id="mesAnterior" class="secundario navegar-mes" aria-label="Mês anterior">←</button>
+<div><label for="mesEspelho">Mês de referência</label><input type="month" id="mesEspelho"></div>
+<button type="button" id="proximoMes" class="secundario navegar-mes" aria-label="Próximo mês">→</button>
+<button type="button" id="botaoConsultarEspelho">Consultar</button>
+<button type="button" id="botaoPdfEspelho" class="secundario">Gerar PDF</button>
 </div>
+<div id="resumoEspelho" class="resumo-historico"></div>
+
+
+
+</div>
+
+<div class="painel-ponto" id="painelAssinaturaEspelho">
+<h3>Documentos aguardando sua assinatura</h3>
+<p>Confira o PDF oficial antes de confirmar sua assinatura eletrônica.</p>
+<div id="listaAssinaturasEspelho"><p>Consultando documentos...</p></div>
+</div>
+<div id="listaEspelho"><p>Carregando histórico...</p></div>
 </section>
 <section id="conteudoSolicitacoes" class="oculto">
 <div class="painel-ponto">
@@ -1414,12 +1435,7 @@ document.getElementById("nomeColaborador").textContent=colaboradorAtual.full_nam
 document.getElementById("emailColaborador").textContent=colaboradorAtual.email||user.email;
 areaLogada.classList.remove("oculto");
 titulo.textContent="Meu Ponto";subtitulo.textContent="Bem-vindo ao seu portal de colaborador.";
-document.getElementById("conteudoPonto").classList.remove("oculto");
-document.getElementById("conteudoSolicitacoes").classList.add("oculto");
-document.getElementById("conteudoPerfil").classList.add("oculto");
-document.getElementById("abaPonto").classList.add("ativa");
-document.getElementById("abaSolicitacoes").classList.remove("ativa");
-document.getElementById("abaPerfil").classList.remove("ativa");
+ativarAba("ponto");
 iniciarRelogio();
 await carregarEspelhoPonto();
 await carregarEspelhosParaAssinatura();
@@ -1449,37 +1465,17 @@ document.getElementById("mesEspelho").addEventListener("change",function(){
 dataSelecionadaCalendario=null;carregarEspelhoPonto();
 });
 
-/* NAVEGAÇÃO ENTRE ABAS */
+/* NAVEGAÇÃO PRINCIPAL — KFYRA MEU PONTO */
 function ativarAba(nome){
-const secoes={
-ponto:document.getElementById("conteudoPonto"),
-solicitacoes:document.getElementById("conteudoSolicitacoes"),
-perfil:document.getElementById("conteudoPerfil")
-};
-const botoes={
-ponto:document.getElementById("abaPonto"),
-solicitacoes:document.getElementById("abaSolicitacoes"),
-perfil:document.getElementById("abaPerfil")
-};
-Object.keys(secoes).forEach(chave=>{
-secoes[chave].classList.toggle("oculto",chave!==nome);
-botoes[chave].classList.toggle("ativa",chave===nome);
-});
-if(nome==="ponto"){
-titulo.textContent="Meu Ponto";subtitulo.textContent="Registre sua jornada de trabalho.";
+const secoes={ponto:document.getElementById("conteudoPonto"),calendario:document.getElementById("conteudoCalendario"),espelho:document.getElementById("conteudoEspelho"),solicitacoes:document.getElementById("conteudoSolicitacoes"),perfil:document.getElementById("conteudoPerfil")};
+const botoes={ponto:document.getElementById("abaPonto"),calendario:document.getElementById("abaCalendario"),espelho:document.getElementById("abaEspelho"),solicitacoes:document.getElementById("abaSolicitacoes"),perfil:document.getElementById("abaPerfil")};
+Object.keys(secoes).forEach(chave=>{secoes[chave].classList.toggle("oculto",chave!==nome);botoes[chave].classList.toggle("ativa",chave===nome);if(chave===nome)botoes[chave].setAttribute("aria-current","page");else botoes[chave].removeAttribute("aria-current");});
+const titulos={ponto:["Registro de Jornada","Acompanhe sua jornada e registre seus horários."],calendario:["Calendário","Consulte sua escala, jornadas previstas e folgas."],espelho:["Espelho de Ponto","Consulte suas marcações e o documento mensal."],solicitacoes:["Solicitações","Envie e acompanhe suas solicitações."],perfil:["Meu Perfil","Consulte seus dados e sua jornada."]};
+titulo.textContent=titulos[nome][0];subtitulo.textContent=titulos[nome][1];
+if(nome==="solicitacoes")carregarMinhasSolicitacoes();
+if(nome==="perfil")carregarPerfil();
 }
-if(nome==="solicitacoes"){
-titulo.textContent="Solicitações";subtitulo.textContent="Envie e acompanhe suas solicitações.";
-carregarMinhasSolicitacoes();
-}
-if(nome==="perfil"){
-titulo.textContent="Meu Perfil";subtitulo.textContent="Consulte seus dados e sua jornada.";
-carregarPerfil();
-}
-}
-document.getElementById("abaPonto").addEventListener("click",()=>ativarAba("ponto"));
-document.getElementById("abaSolicitacoes").addEventListener("click",()=>ativarAba("solicitacoes"));
-document.getElementById("abaPerfil").addEventListener("click",()=>ativarAba("perfil"));
+document.querySelectorAll("#navegacaoMeuPonto [data-aba]").forEach(botao=>botao.addEventListener("click",()=>ativarAba(botao.dataset.aba)));
 document.getElementById("arquivoFoto").addEventListener("change",enviarFoto);
 
 /* LOGIN, PRIMEIRO ACESSO E RECUPERAÇÃO */
