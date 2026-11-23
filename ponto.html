@@ -1630,8 +1630,9 @@ if(!t)return "Pode me contar o que você gostaria de saber? Estou aqui para ajud
 try{
 if(camillyEhSaudacao(t))return "Oiii! 😄💚 Estou aqui para ajudar! Posso consultar seus horários, escala, próxima folga, marcações, solicitações, espelhos, horas extras e banco de horas. Também explico como usar o Meu Ponto.";
 if(camillyEhAgradecimento(t))return "Imagina! 💚 Fico feliz em ajudar. Quando precisar, é só me chamar.";
-let intencao=camillyDetectarIntencao(t);
 const followup=camillyEhFollowup(t);
+const followupData=/^(e )?(amanha|depois de amanha|hoje|ontem)$/.test(t);
+let intencao=(followupData&&camillyContexto.intencao)?camillyContexto.intencao:camillyDetectarIntencao(t);
 if(!intencao&&followup&&camillyContexto.intencao){
 if(/intervalo|almoco|pausa|entrada prevista|saida prevista|meu horario|horario|escala|amanha|hoje|ontem|folga/.test(t))intencao="escala";
 else if(/marcacao|ponto|entrei|sai|trabalhei/.test(t))intencao="ponto";
@@ -1643,8 +1644,8 @@ if(!intencao&&/^(amanha|depois de amanha|hoje|ontem)$/.test(t)&&camillyContexto.
 if(!intencao){
 return "Quero te ajudar! 💚 Posso consultar:\n• Seus horários e sua escala;\n• Sua próxima folga;\n• Marcações de entrada, intervalo e saída;\n• Solicitações e documentos;\n• Espelho de ponto;\n• Horas extras e banco de horas.\n\nPode perguntar do seu jeito, por exemplo: “Que horas entro amanhã?” ou “Já analisaram minha solicitação?”.";
 }
-const usaDataAnterior=followup&&camillyContexto.data;
-const data=usaDataAnterior?new Date(camillyContexto.data+"T12:00:00"):camillyDataContextual(texto);
+const usaDataAnterior=followup&&!followupData&&camillyContexto.data;
+const data=followupData?camillyDataAlvo(t):(usaDataAnterior?new Date(camillyContexto.data+"T12:00:00"):camillyDataContextual(texto));
 if(intencao==="proxima_folga"){
 const r=await consultarProximaFolgaCamilly();
 camillyContexto={intencao,data:camillyUltimaFolgaData||dataChaveLocal(data),ultimaResposta:r};return r;
