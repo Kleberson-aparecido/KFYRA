@@ -1547,13 +1547,31 @@ if(!registros||!registros.length)return "Não encontrei marcações registradas 
 const linhas=registros.map(r=>nomeEvento(r.event_type)+": "+new Date(r.recorded_at).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"}));
 return "Estas são as marcações que encontrei em "+dia+":\n• "+linhas.join("\n• ")+"\n\nEstou apenas consultando os registros originais; não altero nem aprovo marcações.";
 }
-async function consultarSolicitacoesCamilly(){
+async function consultarSolicitacoesCamilly(texto=""){
 if(!usuarioAtual||!colaboradorAtual)throw new Error("Sua sessão não está ativa. Entre novamente no Meu Ponto.");
-const {data,error}=await supabaseClient.from("employee_requests").select("request_type,status,requested_date,created_at,decision_reason").eq("employee_id",colaboradorAtual.id).eq("user_id",usuarioAtual.id).order("created_at",{ascending:false}).limit(10);
+const {data,error}=await supabaseClient.from("employee_requests").select("request_type,status,requested_date,created_at,decision_reason,document_path").eq("employee_id",colaboradorAtual.id).eq("user_id",usuarioAtual.id).order("created_at",{ascending:false}).limit(10);
 if(error)throw error;
-if(!data||!data.length)return "Você ainda não tem solicitações registradas. Se precisar, posso explicar como enviar uma pela aba Solicitações. 💚";
+if(!data||!data.length)return "Você ainda não tem solicitações registradas. Quando enviar uma pela aba Solicitações, posso consultar o andamento para você. 💚";
 const status={pending:"aguardando análise",approved:"aprovada",rejected:"recusada",cancelled:"cancelada"};
-return "Encontrei suas solicitações mais recentes:\n"+data.map(x=>"• "+(tiposSolicitacao[x.request_type]||"Solicitação")+" — "+(status[x.status]||x.status)+(x.requested_date?" — data: "+formatarDataSolicitacao(x.requested_date):"")+(x.decision_reason?" — resposta: "+x.decision_reason:"")).join("\n")+"\n\nEu posso consultar e explicar o andamento, mas não aprovo nem recuso pedidos.";
+const t=camillyNormalizar(texto);
+let itens=data;
+if(/atestado|medic/.test(t))itens=data.filter(x=>x.request_type==="medical_certificate");
+else if(/declaracao|comparecimento|sindical/.test(t))itens=data.filter(x=>["attendance_declaration","union_declaration","other_declaration"].includes(x.request_type));
+if(!itens.length)return "Não encontrei uma solicitação desse tipo entre seus 10 pedidos mais recentes. Você pode conferir a lista completa na aba “Solicitações”. 💚";
+const resumo=itens.map(x=>"• "+(tiposSolicitacao[x.request_type]||"Solicitação")+" — "+(status[x.status]||x.status)+(x.requested_date?" — data: "+formatarDataSolicitacao(x.requested_date):"")+(x.document_path?" — documento anexado":"")+(x.decision_reason?" — resposta do responsável: "+x.decision_reason:"")).join("\n");
+if(/quanto tempo|demora|prazo|quando (vai|ser[aá]) (ser )?analisad|quando aprov/.test(t)){
+const pendentes=itens.filter(x=>x.status==="pending").length;
+return (pendentes?"Sua solicitação ainda está aguardando análise. ":"")+ "Não tenho acesso a um prazo de aprovação definido pela empresa, então não quero inventar uma previsão. 💚 Consulte o status em “Minhas solicitações” ou fale com o RH/responsável autorizado.\n"+resumo;
+}
+if(/recusad|rejeitad|negad/.test(t)){
+const recusadas=itens.filter(x=>x.status==="rejected");
+if(!recusadas.length)return "Não encontrei uma solicitação recusada desse tipo entre seus 10 pedidos mais recentes. Veja o histórico em “Minhas solicitações”. 💚\n"+resumo;
+return "Quando uma solicitação é recusada, a decisão e o motivo informado pelo responsável aparecem no histórico, quando registrados. A escala ou marcação original não é alterada por esse pedido. Se precisar, converse com o RH para entender a decisão e saber se cabe enviar uma nova solicitação. 💚\n"+resumo;
+}
+if(/atestado|medic/.test(t)){
+return "Consultei seus pedidos de atestado. 💚 O status mostra se ele está aguardando análise, foi aprovado ou recusado. Se houver motivo da decisão, ele aparece abaixo. O abono só considera o período aceito pelo RH; o envio sozinho não abona horas.\n"+resumo;
+}
+return "Consultei suas solicitações mais recentes. 💚\n"+resumo+"\n\nO status e a resposta do responsável são atualizados após a análise. Eu posso consultar e explicar o andamento, mas não aprovo nem recuso pedidos.";
 }
 async function consultarEspelhosCamilly(){
 if(!usuarioAtual||!colaboradorAtual)throw new Error("Sua sessão não está ativa. Entre novamente no Meu Ponto.");
@@ -1621,23 +1639,12 @@ return resposta+"\n\nA ausência de marcação, por si só, não confirma falta.
 }
 function camillyAjudaSolicitacoes(texto=""){
 const t=camillyNormalizar(texto);
-const inicio="Para enviar, abra a aba Solicitações no Meu Ponto e preencha a data relacionada e a justificativa. Depois toque em “Enviar solicitação” e acompanhe o resultado em “Minhas solicitações”.";
-if(/troca|trocar|mudar|alterar/.test(t)&&/folga|dia de descanso/.test(t)){
-return "Sim! 💚 Você pode pedir uma troca de folga. Na aba Solicitações, selecione “Troca de folga”, informe a data da folga que deseja alterar e explique qual mudança está solicitando. "+inicio+" A folga só será alterada depois da aprovação do RH ou responsável autorizado; enviar o pedido não muda sua escala automaticamente.";
-}
-if(/corrigir|correcao|esqueci|marcacao|horario/.test(t)&&/ponto|entrada|saida|bater|registro/.test(t)){
-return "Se uma marcação estiver faltando ou incorreta, você pode pedir uma correção. 💚 Na aba Solicitações, selecione “Correção de ponto”, informe o dia, preencha o horário correto quando solicitado e explique o que aconteceu. "+inicio+" A marcação original será preservada e a correção dependerá da análise do RH ou responsável autorizado.";
-}
-if(/escala|turno|jornada/.test(t)){
-return "Para pedir uma mudança de jornada, abra Solicitações e selecione “Alteração de escala”. 💚 Informe a data relacionada, preencha os horários inicial e final se forem pertinentes e explique a mudança desejada. "+inicio+" Sua escala só muda depois da aprovação do responsável autorizado.";
-}
-if(/atestado|medic|doente|consulta/.test(t)){
-return "Para enviar um atestado, abra Solicitações e selecione “Atestado médico”. 💚 Informe a data relacionada, descreva o período indicado e anexe o documento em PDF, JPG ou PNG (até 10 MB). "+inicio+" O RH analisará o documento e, se aceitar, abonará somente o período aprovado. O envio não gera abono automático.";
-}
-if(/declaracao|comparecimento|sindical/.test(t)){
-return "Para enviar uma declaração, abra Solicitações e escolha o tipo correto: “Declaração de horas / comparecimento”, “Declaração sindical” ou “Outra declaração”. 💚 Informe a data, explique o período que precisa justificar e anexe o documento em PDF, JPG ou PNG (até 10 MB). O RH analisará e decidirá quais horas serão justificadas.";
-}
-return "Você pode enviar uma solicitação pela aba Solicitações do Meu Ponto. Escolha o tipo correspondente, informe a data, explique o motivo e anexe um documento se necessário. Depois acompanhe em “Minhas solicitações”. O envio não significa aprovação: o RH ou responsável autorizado fará a análise. 💚";
+if(/troca|trocar|mudar|alterar/.test(t)&&/folga|dia de descanso/.test(t))return "Sim! 💚 Na aba Solicitações, selecione “Troca de folga”, informe a data da folga e explique qual mudança deseja. Envie o pedido e acompanhe em “Minhas solicitações”. A escala só muda depois da aprovação do RH ou responsável autorizado.";
+if(/corrigir|correcao|esqueci|marcacao|horario/.test(t)&&/ponto|entrada|saida|bater|registro/.test(t))return "Se uma marcação estiver faltando ou incorreta, selecione “Correção de ponto” na aba Solicitações. Informe o dia, o horário correto e o motivo. A marcação original será preservada; a correção depende da análise do RH ou responsável autorizado. 💚";
+if(/escala|turno|jornada/.test(t))return "Na aba Solicitações, escolha “Alteração de escala”, informe a data e explique a mudança desejada. Sua jornada só será alterada depois da aprovação do responsável autorizado. 💚";
+if(/atestado|medic|doente|consulta/.test(t))return "Na aba Solicitações, selecione “Atestado médico”, informe a data e o período indicado e anexe o arquivo em PDF, JPG ou PNG de até 10 MB. O RH analisará o documento e abonará somente o período aprovado. O envio não gera abono automático. 💚";
+if(/declaracao|comparecimento|sindical/.test(t))return "Na aba Solicitações, escolha o tipo correto de declaração, informe a data e o período a justificar e anexe o documento em PDF, JPG ou PNG de até 10 MB. O RH analisará quais horas podem ser justificadas. 💚";
+return "Na aba Solicitações, escolha o tipo correspondente, informe a data, explique o motivo e anexe um documento se necessário. Depois acompanhe em “Minhas solicitações”. O envio não significa aprovação; o RH ou responsável autorizado fará a análise. 💚";
 }
 function camillyAjudaPonto(){
 return "Na aba Registro de Jornada você registra entrada, intervalo, retorno, pausas e saída conforme sua rotina. Na aba Calendário você consulta a escala do mês; em Espelho, confere as marcações organizadas por competência. Se esqueceu ou registrou algo incorretamente, envie uma solicitação de correção pela aba Solicitações. Não altere uma marcação oficial por conta própria. 💚";
@@ -1649,6 +1656,7 @@ if(/proxim[oa]s? folgas?|quando (eu )?(vou )?folgar|quando folgo|qual (e|sera) (
 if(/como faco|como envio|como pedir|quero solicitar|posso solicitar|preciso solicitar|solicitar (uma )?(troca|mudanca)|preciso corrigir|esqueci de bater|esqueci o ponto|corrigir (meu )?ponto|pedir (uma )?folga|trocar (minha )?folga/.test(t))return "ajuda_solicitacao";
 if(/como funciona|onde encontro|como registro|como bato ponto|como usar|me ajuda a usar/.test(t))return "ajuda_ponto";
 if(/resumo do dia|como foi meu dia|meu dia hoje|situacao de hoje|status de hoje|trabalhei hoje|trabalhei ontem|quanto trabalhei|total de horas trabalhadas/.test(t))return "dia_completo";
+if(/quanto tempo|demora|prazo|quando (vai|sera) (ser )?analisad|quando aprov|como sei se|foi aceito|foi aprovado|foi recusad|foi rejeitad|o que acontece se|acompanhar|minha solicitacao|meu atestado/.test(t)&&/solicit|pedido|atestado|medic|documento|analis|aprov|recus|rejeit/.test(t))return "solicitacoes";
 if(/solicit|pedido|atestado|declaracao|documento|comprovante|justificativa|troca de escala/.test(t))return "solicitacoes";
 if(/espelho|assinatura|pdf|fechamento|documento mensal/.test(t))return "espelho";
 if(/hora extra|horas extras|banco de horas|saldo de horas|saldo de banco|meu saldo|credito de horas|debito de horas|compensacao/.test(t))return "horas";
@@ -1737,7 +1745,7 @@ if(intencao==="ponto"){
 const r=await consultarPontoCamilly(texto,usaDataAnterior?data:null);camillyContexto={intencao,data:dataChaveLocal(data),ultimaResposta:r};return r;
 }
 if(intencao==="solicitacoes"){
-const r=await consultarSolicitacoesCamilly();camillyContexto={intencao,data:dataChaveLocal(data),ultimaResposta:r};return r;
+const r=await consultarSolicitacoesCamilly(texto);camillyContexto={intencao,data:dataChaveLocal(data),ultimaResposta:r};return r;
 }
 if(intencao==="espelho"){
 const r=await consultarEspelhosCamilly();camillyContexto={intencao,data:dataChaveLocal(data),ultimaResposta:r};return r;
