@@ -1541,16 +1541,21 @@ function notificarCamillyNoChat(){
  const normalizarTexto=t=>String(t||"").replace(/other declaration/gi,"outra declaração").replace(/medical certificate/gi,"atestado médico").replace(/declaration hours/gi,"declaração de horas").replace(/union declaration/gi,"declaração sindical").replace(/\s+/g," ").trim();
  /* A exibição é controlada pelo DOM da conversa atual, não por um marcador persistente.
     Assim, ao reabrir o portal, os avisos recentes reaparecem se o histórico do chat foi reiniciado. */
- const jaExibidos=new Set([...camillyMessages.querySelectorAll("[data-notification-id]")].map(el=>el.dataset.notificationId));
- const pendentes=camillyAvisos.filter(a=>!jaExibidos.has(a.id)&&new Date(a.quando).getTime()>=limite);
+ const jaExibidosIds=new Set([...camillyMessages.querySelectorAll("[data-notification-id]")].map(el=>el.dataset.notificationId));
+ const jaExibidosTextos=new Set([...camillyMessages.querySelectorAll(".camilly-msg.bot")].map(el=>normalizarTexto(el.textContent).toLocaleLowerCase("pt-BR")));
+ const pendentes=camillyAvisos.filter(a=>!jaExibidosIds.has(a.id)&&new Date(a.quando).getTime()>=limite);
  const unicos=new Map();
  pendentes.forEach(a=>{
   const texto=normalizarTexto(a.texto);
-  const chave=(a.tipo||"")+"|"+texto.toLocaleLowerCase("pt-BR");
+  /* Deduplica pelo conteúdo, mesmo quando a mesma decisão chegou com IDs/tipos diferentes. */
+  const chave=texto.toLocaleLowerCase("pt-BR");
   const anterior=unicos.get(chave);
   if(!anterior||new Date(a.quando)>new Date(anterior.quando))unicos.set(chave,a);
  });
- const selecionados=[...unicos.values()].sort((a,b)=>new Date(a.quando)-new Date(b.quando)).slice(-5);
+ const selecionados=[...unicos.values()].filter(a=>{
+  const texto=("Oi! 💚 Tenho uma atualização para você. "+normalizarTexto(a.texto)+" Você pode consultar os detalhes na Central de Notificações.").toLocaleLowerCase("pt-BR");
+  return !jaExibidosTextos.has(texto);
+ }).sort((a,b)=>new Date(a.quando)-new Date(b.quando)).slice(-5);
  selecionados.forEach(a=>{
   const msg=adicionarMensagemCamilly("Oi! 💚 Tenho uma atualização para você. "+normalizarTexto(a.texto)+" Você pode consultar os detalhes na Central de Notificações.","bot");
   if(msg)msg.dataset.notificationId=a.id;
