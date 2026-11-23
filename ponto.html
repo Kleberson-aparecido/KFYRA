@@ -1502,9 +1502,9 @@ if(jornada.pausas&&jornada.pausas.length)jornada.pausas.forEach(p=>partes.push("
 else partes.push("sem pausas adicionais cadastradas");
 return partes.join(" • ")+".";
 }
-async function consultarEscalaCamilly(texto){
+async function consultarEscalaCamilly(texto,dataForcada=null){
 if(!usuarioAtual||!colaboradorAtual)throw new Error("Sua sessão não está ativa. Entre novamente no Meu Ponto.");
-const data=camillyDataAlvo(texto),chave=dataChaveLocal(data);
+const data=dataForcada||camillyDataAlvo(texto),chave=dataChaveLocal(data);
 const jornadas=await carregarJornadasPrevistas(data.getFullYear(),data.getMonth()+1);
 const jornada=jornadas[chave];
 const dataBonita=data.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"});
@@ -1611,17 +1611,13 @@ else if(/^(oi|ola|bom dia|boa tarde|boa noite|tudo bem|quem e voce)/.test(t))ret
 else if(followup&&camillyContexto.intencao)intencao=camillyContexto.intencao;
 else if(/^(sim|nao|não|pode|quero|isso|certo|entendi|e ai|e depois)$/.test(t)&&camillyContexto.intencao)return "Claro! 😊 Me diga só qual informação você quer ver: horário, intervalo, pausa, marcação ou status. Continuo considerando o mesmo dia da nossa consulta anterior.";
 else return "Quero te ajudar! 💚 Posso consultar sua escala e folgas, marcações, solicitações, espelhos e banco de horas. Também explico como registrar o ponto ou enviar uma solicitação. O que você gostaria de saber?";
-const data=camillyDataContextual(texto);
+const data=(followup&&camillyContexto.data)?new Date(camillyContexto.data+"T12:00:00"):camillyDataContextual(texto);
 if(intencao==="proxima_folga"){const r=await consultarProximaFolgaCamilly();camillyContexto={intencao,data:dataChaveLocal(data),ultimaResposta:r};return r}
 if(intencao==="ajuda_solicitacao")return camillyAjudaSolicitacoes();
 if(intencao==="ajuda_ponto")return camillyAjudaPonto();
 if(intencao==="dia_completo"){const r=await consultarDiaCompletoCamilly(data);camillyContexto={intencao,data:dataChaveLocal(data),ultimaResposta:r};return r}
 if(intencao==="escala"){
-const jornada=await consultarEscalaCamilly(texto);
-let r=jornada;
-if(/intervalo|pausa/.test(t)&&!(/amanha|ontem|hoje|\d{1,2}[\/.-]\d{1,2}/.test(t))&&camillyContexto.data){
-const d=new Date(camillyContexto.data+"T12:00:00");r=await consultarEscalaCamilly(d.toLocaleDateString("pt-BR"));
-}
+const r=await consultarEscalaCamilly(texto,followup&&camillyContexto.data?data:null);
 camillyContexto={intencao,data:dataChaveLocal(data),ultimaResposta:r};return r;
 }
 if(intencao==="ponto"){const r=await consultarPontoCamilly(texto);camillyContexto={intencao,data:dataChaveLocal(data),ultimaResposta:r};return r}
