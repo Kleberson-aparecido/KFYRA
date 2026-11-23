@@ -548,7 +548,7 @@ if(!hora)return null;
 const p=String(hora).slice(0,5).split(":");
 return Number(p[0])*60+Number(p[1]);
 }
-function formatarHora(hora){return hora?String(hora).substring(0,5):"--:--"}
+function formatarHora(hora){if(hora===null||hora===undefined||hora==="")return "--:--";if(typeof hora==="number"&&Number.isFinite(hora)){const total=((Math.round(hora)%1440)+1440)%1440;return String(Math.floor(total/60)).padStart(2,"0")+":"+String(total%60).padStart(2,"0");}return String(hora).substring(0,5)}
 function formatarIntervalo(minutos){
 const valor=Number(minutos||0);
 if(valor<=0)return "Não informado";
@@ -1634,7 +1634,7 @@ if(/resumo do dia|como foi meu dia|meu dia hoje|situacao de hoje|status de hoje|
 if(/solicit|pedido|atestado|declaracao|documento|comprovante|justificativa|troca de escala/.test(t))return "solicitacoes";
 if(/espelho|assinatura|pdf|fechamento|documento mensal/.test(t))return "espelho";
 if(/hora extra|horas extras|banco de horas|saldo de horas|saldo de banco|meu saldo|credito de horas|debito de horas|compensacao/.test(t))return "horas";
-if(/marcacao|marcacoes|registro de ponto|bati ponto|meu ponto|entrada real|saida real|registrei (minha )?(entrada|saida)|horario (em )?que (entrei|sai(?!o))|que horas (eu )?(entrei|sai(?!o))|minhas entradas|minhas saidas|atraso|atrasado|esqueci de registrar/.test(t))return "ponto";
+if(/marcacao|marcacoes|registro de ponto|bati (o )?ponto|meu ponto|entrada real|saida real|dei entrada|dei saida|qual (e )?(o )?horario (que )?(eu )?dei (entrada|saida)|que horas (eu )?dei (entrada|saida)|registrei (minha )?(entrada|saida)|horario (em )?que (entrei|sai(?!o))|que horas (eu )?(entrei|sai(?!o))|minhas entradas|minhas saidas|atraso|atrasado|esqueci de registrar/.test(t))return "ponto";
 if(/escala|horario|amanha|depois de amanha|ontem|hoje|folga|pausa|intervalo|almoco|entrada prevista|saida prevista|que horas (eu )?saio|que horas comeco|que horas termino|qual (e|sera) minha entrada|qual (e|sera) minha saida|meu turno|jornada|trabalho (neste|nesse|no) sabado|trabalho (neste|nesse|na) (domingo|segunda|terca|quarta|quinta|sexta)/.test(t))return "escala";
 return null;
 }
