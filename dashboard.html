@@ -148,6 +148,25 @@ th{color:var(--muted);font-weight:700}
 .live-hero-top{display:flex;justify-content:space-between;align-items:center;gap:15px}.live-kicker{font-size:10px;letter-spacing:2px;color:#e6d2a8;font-weight:800;margin-bottom:8px}.live-hero h2{font:800 24px Manrope,sans-serif;margin-bottom:7px}.live-hero p{font-size:12px;color:#d1e4da}.live-pulse{border:1px solid #ffffff35;background:#ffffff12;border-radius:30px;padding:9px 13px;font-size:11px}.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#75e0a8;margin-right:7px;animation:livePulse 1.8s infinite}@keyframes livePulse{50%{opacity:.55}}
 .live-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:15px}.live-updated{font-size:11px;color:var(--muted)}.live-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-bottom:20px}.live-kpi{background:linear-gradient(145deg,#fff,#f5faf6);border:1px solid #e3ece5;border-radius:14px;padding:17px}.live-kpi-label{font-size:11px;color:#788980;font-weight:700}.live-kpi-value{font:800 27px Manrope,sans-serif;color:#174b3b;margin:9px 0 4px}.live-kpi-note{font-size:10px;color:#91a098}
 .live-grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(240px,1fr);gap:16px}.live-panel{background:#fff;border:1px solid #e5ece7;border-radius:14px;padding:18px;margin-bottom:16px;min-width:0}.live-panel h3{font:800 14px Manrope,sans-serif;color:#1b4538;margin-bottom:14px}.live-table{width:100%;border-collapse:collapse;min-width:550px}.live-table th,.live-table td{padding:12px 9px;border-bottom:1px solid #edf1ed;text-align:left;font-size:11px}.live-table th{font-size:10px;color:#8b9991}.live-person{display:flex;align-items:center;gap:8px;min-width:150px}.live-avatar{width:30px;height:30px;border-radius:10px;background:#e3f1e7;color:#1d6049;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800}.live-person strong{display:block}.live-person small{display:block;color:#9aa69f;font-size:9px}.live-state{display:inline-block;border-radius:20px;padding:6px 9px;font-size:9px;font-weight:800;background:#eef3ef;color:#64766c;white-space:nowrap}.live-state.present{background:#e5f5eb;color:#24714d}.live-state.break{background:#fff3df;color:#9a7026}.live-state.pause{background:#f1eafa;color:#7650a2}.live-state.finished{background:#edf0ef;color:#65736c}.live-state.pending{background:#fff6e8;color:#a27732}.live-state.late{background:#fff0ed;color:#a43e30}.live-dept-row{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #edf1ed;font-size:11px}.live-bar{height:6px;background:#edf2ee;border-radius:10px;overflow:hidden;margin-top:7px}.live-bar span{display:block;height:100%;background:linear-gradient(90deg,#1b654c,#c9a96e)}.live-empty{padding:24px 10px;text-align:center;color:#89978f;font-size:11px}
+
+.live-charts{display:grid;grid-template-columns:minmax(240px,.85fr) minmax(0,1.4fr);gap:16px;margin:0 0 18px}
+.live-chart-panel{background:#fff;border:1px solid #e5ece7;border-radius:14px;padding:18px;min-width:0;box-shadow:0 8px 25px rgba(20,55,43,.04)}
+.live-chart-panel h3{font:800 14px Manrope,sans-serif;color:#1b4538;margin-bottom:5px}
+.live-chart-sub{font-size:10px;color:#8b9991;margin-bottom:14px}
+.live-donut-wrap{display:flex;align-items:center;justify-content:center;gap:18px;min-height:190px;flex-wrap:wrap}
+.live-donut{width:170px;height:170px;max-width:100%}
+.live-legend{display:grid;gap:9px;min-width:125px}
+.live-legend-item{display:flex;align-items:center;gap:8px;font-size:10px;color:#64766c}
+.live-legend-dot{width:9px;height:9px;border-radius:50%;flex:0 0 9px}
+.live-legend-item strong{margin-left:auto;color:#1b4538}
+.live-dept-chart{display:grid;gap:14px;padding:8px 0}
+.live-dept-chart-row{display:grid;grid-template-columns:minmax(90px,1fr) minmax(80px,2fr) 42px;align-items:center;gap:10px;font-size:10px;color:#64766c}
+.live-dept-chart-track{height:11px;border-radius:20px;background:#edf2ee;overflow:hidden;display:flex}
+.live-dept-chart-total{height:100%;background:#dce9df}
+.live-dept-chart-present{height:100%;background:linear-gradient(90deg,#1b654c,#c9a96e)}
+.live-dept-chart-value{text-align:right;font-weight:800;color:#1b4538}
+@media(max-width:850px){.live-charts{grid-template-columns:1fr}}
+
 @media(max-width:850px){.live-grid{grid-template-columns:1fr}.live-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.live-hero-top{align-items:flex-start;flex-direction:column}.live-kpis{gap:9px}.live-kpi{padding:14px}}
 
 </style>
@@ -210,6 +229,10 @@ th{color:var(--muted);font-weight:700}
   <div class="live-kpi"><div class="live-kpi-label">Em pausa adicional</div><div class="live-kpi-value" id="livePause">—</div><div class="live-kpi-note">Pausa em andamento</div></div>
   <div class="live-kpi"><div class="live-kpi-label">Jornada encerrada</div><div class="live-kpi-value" id="liveFinished">—</div><div class="live-kpi-note">Saída registrada hoje</div></div>
   <div class="live-kpi"><div class="live-kpi-label">Entradas após horário</div><div class="live-kpi-value" id="liveLate">—</div><div class="live-kpi-note">Comparação com o horário da escala</div></div>
+ </div>
+ <div class="live-charts">
+  <div class="live-chart-panel"><h3>Distribuição da equipe</h3><div class="live-chart-sub">Situação atual dos colaboradores ativos</div><div class="live-donut-wrap"><canvas id="liveStatusChart" class="live-donut" aria-label="Gráfico da situação atual da equipe"></canvas><div id="liveStatusLegend" class="live-legend"></div></div></div>
+  <div class="live-chart-panel"><h3>Presença por departamento</h3><div class="live-chart-sub">Colaboradores com marcação hoje em relação ao total ativo</div><div id="liveDepartmentChart" class="live-dept-chart"><div class="live-empty">Aguardando dados...</div></div></div>
  </div>
  <div class="live-grid"><div class="live-panel"><h3>Equipe em tempo real</h3><div class="table-wrap"><table class="live-table"><thead><tr><th>Colaborador</th><th>Departamento</th><th>Jornada</th><th>Última marcação</th><th>Situação</th></tr></thead><tbody id="liveRoster"><tr><td colspan="5" class="live-empty">Carregando equipe...</td></tr></tbody></table></div></div>
  <div><div class="live-panel"><h3>Visão por departamento</h3><div id="liveDepartments" class="live-empty">Carregando departamentos...</div></div><div class="live-panel"><h3>Indicadores de atenção</h3><div class="live-dept-row"><span>Sem entrada após início previsto</span><strong id="liveNoEntry">—</strong></div><div class="live-dept-row"><span>Ausências aguardando RH</span><strong id="liveAbsences">—</strong></div><div class="live-dept-row"><span>Horas excedentes pendentes</span><strong id="liveOvertime">—</strong></div><p class="hint">Sem registro é um alerta operacional, não uma falta confirmada. Nenhum desconto é automático.</p></div></div></div>
@@ -1970,7 +1993,29 @@ function liveState(employee,events,date,nowMinutes){
  }else if(shift&&start!==null){state='pending';label=nowMinutes>start+15?'Sem entrada':'Aguardando entrada';noEntry=nowMinutes>start+15}
  return {employee,latest,shiftLabel:shift?(String(shift.start_time).slice(0,5)+'–'+String(shift.end_time).slice(0,5)):'Sem escala',state,label,late,noEntry,department:departmentsData.find(x=>x.id===employee.department_id)?.nome||'Sem departamento'};
 }
+function renderLiveCharts(rows){
+ const colors={present:'#1b654c',break:'#d6a64e',pause:'#9472b8',finished:'#7e9288',pending:'#d9e2dc',off:'#cbd5cf'};
+ const labels={present:'Trabalhando',break:'Em intervalo',pause:'Em pausa',finished:'Jornada encerrada',pending:'Aguardando entrada',off:'Sem jornada'};
+ const order=['present','break','pause','finished','pending','off'];
+ const totals={};order.forEach(k=>totals[k]=rows.filter(r=>r.state===k).length);
+ const canvas=$('liveStatusChart'),legend=$('liveStatusLegend');
+ if(canvas){
+  const rect=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1,size=Math.max(140,Math.min(180,rect.width||170));
+  canvas.width=size*dpr;canvas.height=size*dpr;canvas.style.width=size+'px';canvas.style.height=size+'px';
+  const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);const center=size/2,radius=size*.39,line=size*.17,total=rows.length;
+  ctx.clearRect(0,0,size,size);
+  if(!total){ctx.beginPath();ctx.arc(center,center,radius,0,Math.PI*2);ctx.strokeStyle='#edf2ee';ctx.lineWidth=line;ctx.stroke()}
+  else{let angle=-Math.PI/2;order.forEach(k=>{const value=totals[k];if(!value)return;const next=angle+(value/total)*Math.PI*2;ctx.beginPath();ctx.arc(center,center,radius,angle,next);ctx.strokeStyle=colors[k];ctx.lineWidth=line;ctx.lineCap='butt';ctx.stroke();angle=next})}
+  ctx.fillStyle='#174b3b';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='800 25px Manrope, sans-serif';ctx.fillText(String(total),center,center-5);
+  ctx.fillStyle='#82918a';ctx.font='10px DM Sans, sans-serif';ctx.fillText('ativos',center,center+16);
+ }
+ if(legend)legend.innerHTML=order.filter(k=>totals[k]>0).map(k=>'<div class="live-legend-item"><span class="live-legend-dot" style="background:'+colors[k]+'"></span><span>'+labels[k]+'</span><strong>'+totals[k]+'</strong></div>').join('')||'<div class="live-empty">Sem colaboradores ativos.</div>';
+ const groups={};rows.forEach(r=>{const key=r.department||'Sem departamento';if(!groups[key])groups[key]={total:0,present:0};groups[key].total++;if(['present','break','pause','finished'].includes(r.state))groups[key].present++});
+ const host=$('liveDepartmentChart'),names=Object.keys(groups).sort((a,b)=>a.localeCompare(b,'pt-BR'));
+ if(host)host.innerHTML=names.length?names.map(name=>{const g=groups[name],pct=g.total?g.present/g.total*100:0;return '<div class="live-dept-chart-row"><strong>'+escapeHTML(name)+'</strong><div class="live-dept-chart-track"><span class="live-dept-chart-present" style="width:'+pct+'%"></span><span class="live-dept-chart-total" style="width:'+(100-pct)+'%"></span></div><span class="live-dept-chart-value">'+g.present+'/'+g.total+'</span></div>'}).join(''):'<div class="live-empty">Sem departamentos com colaboradores ativos.</div>';
+}
 function renderKfyraLive(rows,counts,absences,overtime){
+ renderLiveCharts(rows);
  $('liveActive').textContent=rows.length;$('livePresent').textContent=counts.present;$('liveBreak').textContent=counts.break;$('livePause').textContent=counts.pause;$('liveFinished').textContent=counts.finished;$('liveLate').textContent=counts.late;$('liveNoEntry').textContent=counts.noEntry;$('liveAbsences').textContent=absences===null?'Restrito':absences;$('liveOvertime').textContent=overtime===null?'Restrito':overtime;
  const classes={present:'present',break:'break',pause:'pause',finished:'finished',pending:'pending',off:''};
  $('liveRoster').innerHTML=rows.length?rows.map(row=>{
