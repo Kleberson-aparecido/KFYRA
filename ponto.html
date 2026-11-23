@@ -1486,11 +1486,16 @@ function ocultarCamilly(){if(camillyLauncher)camillyLauncher.classList.remove("v
 function abrirCamilly(){camillyChat.classList.add("open");camillyChat.setAttribute("aria-hidden","false");camillyLauncher.setAttribute("aria-expanded","true");document.getElementById("camillyInput").focus()}
 function fecharCamilly(){camillyChat.classList.remove("open");camillyChat.setAttribute("aria-hidden","true");if(camillyLauncher)camillyLauncher.setAttribute("aria-expanded","false")}
 function camillyDataAlvo(texto){
-const t=texto.toLowerCase(),agora=new Date();
-if(/amanh[ãa]/.test(t)){agora.setDate(agora.getDate()+1);return agora}
-if(/ontem/.test(t)){agora.setDate(agora.getDate()-1);return agora}
+const t=camillyNormalizar(texto),agora=new Date();
+if(/depois de amanha/.test(t)){agora.setDate(agora.getDate()+2);return agora}
+if(/\bamanha\b/.test(t)){agora.setDate(agora.getDate()+1);return agora}
+if(/\bontem\b/.test(t)){agora.setDate(agora.getDate()-1);return agora}
+if(/\bhoje\b/.test(t))return agora;
 const br=t.match(/\b(\d{1,2})[\/.-](\d{1,2})(?:[\/.-](\d{4}))?\b/);
 if(br){const ano=Number(br[3]||agora.getFullYear()),mes=Number(br[2]),dia=Number(br[1]);const d=new Date(ano,mes-1,dia,12);if(d.getFullYear()===ano&&d.getMonth()===mes-1&&d.getDate()===dia)return d}
+const dias={domingo:0,segunda:1,terca:2,quarta:3,quinta:4,sexta:5,sabado:6};
+const diaTexto=t.match(/\b(domingo|segunda|terca|quarta|quinta|sexta|sabado)(?: feira)?\b/);
+if(diaTexto){const alvo=dias[diaTexto[1]],hoje=new Date(agora.getFullYear(),agora.getMonth(),agora.getDate(),12);let diferenca=(alvo-hoje.getDay()+7)%7;if(diferenca===0||/proxima|que vem/.test(t))diferenca+=7;hoje.setDate(hoje.getDate()+diferenca);return hoje}
 return agora;
 }
 function camillyDetalhesJornada(jornada){
@@ -1512,9 +1517,9 @@ if(!jornada)return "Não encontrei uma escala atribuída para "+dataBonita+". Is
 if(!jornada.trabalho)return "Consultei sua escala: "+dataBonita+" é dia de folga. 😊";
 return "Consultei sua escala para "+dataBonita+": "+camillyDetalhesJornada(jornada)+"\n\nEsses são os horários planejados pela empresa; se houver uma alteração ainda não publicada, confirme com o RH. 💚";
 }
-async function consultarPontoCamilly(texto){
+async function consultarPontoCamilly(texto,dataForcada=null){
 if(!usuarioAtual||!colaboradorAtual)throw new Error("Sua sessão não está ativa. Entre novamente no Meu Ponto.");
-const data=camillyDataAlvo(texto),inicio=new Date(data.getFullYear(),data.getMonth(),data.getDate()),fim=new Date(data.getFullYear(),data.getMonth(),data.getDate()+1);
+const data=dataForcada||camillyDataAlvo(texto),inicio=new Date(data.getFullYear(),data.getMonth(),data.getDate()),fim=new Date(data.getFullYear(),data.getMonth(),data.getDate()+1);
 const {data:registros,error}=await supabaseClient.from("attendance_records").select("event_type,recorded_at").eq("user_id",usuarioAtual.id).eq("employee_id",colaboradorAtual.id).gte("recorded_at",inicio.toISOString()).lt("recorded_at",fim.toISOString()).order("recorded_at",{ascending:true});
 if(error)throw error;
 const dia=data.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long"});
@@ -1558,8 +1563,10 @@ if(/\b(amanha|depois de amanha|ontem|hoje)\b/.test(t)||/\b\d{1,2}[\/.-]\d{1,2}/.
 if(camillyContexto.data)return new Date(camillyContexto.data+"T12:00:00");
 return new Date();
 }
+let camillyUltimaFolgaData=null;
 async function consultarProximaFolgaCamilly(){
 if(!usuarioAtual||!colaboradorAtual)throw new Error("Sua sessão não está ativa. Entre novamente no Meu Ponto.");
+camillyUltimaFolgaData=null;
 const inicio=new Date();
 inicio.setHours(12,0,0,0);
 inicio.setDate(inicio.getDate()+1);
@@ -1573,6 +1580,7 @@ cacheMes[chaveMes]=await carregarJornadasPrevistas(ano,mes);
 }
 const jornada=cacheMes[chaveMes][dataChaveLocal(data)];
 if(jornada&&jornada.trabalho===false){
+camillyUltimaFolgaData=dataChaveLocal(data);
 return "Encontrei sua próxima folga na escala cadastrada: "+data.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"})+". 💚";
 }
 }
@@ -1602,31 +1610,28 @@ const t=camillyNormalizar(texto);
 if(!usuarioAtual||!colaboradorAtual)return "Sua sessão não está ativa. Entre novamente no Meu Ponto para eu consultar seus dados. 💚";
 try{
 let intencao=null;
-const followup=/^(e (o|a|os|as) )?(intervalo|pausa|saida|entrada|folga|horario|escala|marcacoes|marcações|status|situacao|situacao dela|mais detalhes|e depois|e antes|qual deles|e o banco|e as horas)(\s+(de hoje|de amanha|amanha|ontem))?$/i.test(t);
+const followup=/^(e (o|a|os|as) )?(intervalo|almoco|pausa|saida|entrada|folga|horario|escala|marcacoes|status|situacao|mais detalhes|e depois|e antes|qual deles|e o banco|e as horas)(\s+(de hoje|de amanha|amanha|ontem))?$/i.test(t);
 if(/proxim[oa]s? folgas?|quando (eu )?(vou )?folgar|quando folgo|qual (e|sera) (a )?minha (proxima )?folga|dia de descanso|proximo descanso/.test(t))intencao="proxima_folga";
 else if(/como faco|como envio|como pedir|quero solicitar|preciso corrigir|esqueci de bater|esqueci o ponto/.test(t))intencao="ajuda_solicitacao";
 else if(/como funciona|onde encontro|como registro|como bato ponto/.test(t))intencao="ajuda_ponto";
 else if(/resumo do dia|como foi meu dia|meu dia hoje|situacao de hoje|status de hoje|trabalhei hoje|trabalhei ontem/.test(t))intencao="dia_completo";
-else if(/escala|horario|amanha|ontem|hoje|folga|pausa|intervalo|entrada prevista|saida prevista/.test(t))intencao="escala";
-else if(/marcacao|marcacoes|registro de ponto|bati ponto|meu ponto|entrada real|saida real/.test(t))intencao="ponto";
 else if(/solicit|pedido|atestado|declaracao|documento|comprovante/.test(t))intencao="solicitacoes";
 else if(/espelho|assinatura|pdf|fechamento/.test(t))intencao="espelho";
 else if(/hora extra|horas extras|banco de horas|saldo de horas|saldo de banco/.test(t))intencao="horas";
+else if(/marcacao|marcacoes|registro de ponto|bati ponto|meu ponto|entrada real|saida real|que horas (eu )?(entrei|sai)|horario que (entrei|sai)|minhas entradas|minhas saidas/.test(t))intencao="ponto";
+else if(/escala|horario|amanha|depois de amanha|ontem|hoje|folga|pausa|intervalo|almoco|entrada prevista|saida prevista|qual (e|sera) minha entrada|qual (e|sera) minha saida/.test(t))intencao="escala";
 else if(/obrigad|valeu|brigad/.test(t))return "Imagina! 💚 Pode contar comigo para entender suas informações do Meu Ponto.";
 else if(/^(oi|ola|bom dia|boa tarde|boa noite|tudo bem|quem e voce)/.test(t))return "Oiii! 😄💚 Estou bem e pronta para ajudar! Posso consultar sua escala, folgas, marcações, solicitações, espelhos, horas extras e banco de horas. Também posso explicar como usar o Meu Ponto.";
 else if(followup&&camillyContexto.intencao)intencao=camillyContexto.intencao;
-else if(/^(sim|nao|não|pode|quero|isso|certo|entendi|e ai|e depois)$/.test(t)&&camillyContexto.intencao)return "Claro! 😊 Me diga só qual informação você quer ver: horário, intervalo, pausa, marcação ou status. Continuo considerando o mesmo dia da nossa consulta anterior.";
+else if(/^(sim|nao|pode|quero|isso|certo|entendi|e ai|e depois)$/.test(t)&&camillyContexto.intencao)return "Claro! 😊 Me diga só qual informação você quer ver: horário, intervalo, pausa, marcação ou status. Continuo considerando o mesmo dia da nossa consulta anterior.";
 else return "Quero te ajudar! 💚 Posso consultar sua escala e folgas, marcações, solicitações, espelhos e banco de horas. Também explico como registrar o ponto ou enviar uma solicitação. O que você gostaria de saber?";
 const data=(followup&&camillyContexto.data)?new Date(camillyContexto.data+"T12:00:00"):camillyDataContextual(texto);
-if(intencao==="proxima_folga"){const r=await consultarProximaFolgaCamilly();camillyContexto={intencao,data:dataChaveLocal(data),ultimaResposta:r};return r}
+if(intencao==="proxima_folga"){const r=await consultarProximaFolgaCamilly();camillyContexto={intencao,data:camillyUltimaFolgaData||dataChaveLocal(data),ultimaResposta:r};return r}
 if(intencao==="ajuda_solicitacao")return camillyAjudaSolicitacoes();
 if(intencao==="ajuda_ponto")return camillyAjudaPonto();
 if(intencao==="dia_completo"){const r=await consultarDiaCompletoCamilly(data);camillyContexto={intencao,data:dataChaveLocal(data),ultimaResposta:r};return r}
-if(intencao==="escala"){
-const r=await consultarEscalaCamilly(texto,followup&&camillyContexto.data?data:null);
-camillyContexto={intencao,data:dataChaveLocal(data),ultimaResposta:r};return r;
-}
-if(intencao==="ponto"){const r=await consultarPontoCamilly(texto);camillyContexto={intencao,data:dataChaveLocal(data),ultimaResposta:r};return r}
+if(intencao==="escala"){const r=await consultarEscalaCamilly(texto,followup&&camillyContexto.data?data:null);camillyContexto={intencao,data:dataChaveLocal(data),ultimaResposta:r};return r}
+if(intencao==="ponto"){const r=await consultarPontoCamilly(texto,followup&&camillyContexto.data?data:null);camillyContexto={intencao,data:dataChaveLocal(data),ultimaResposta:r};return r}
 if(intencao==="solicitacoes"){const r=await consultarSolicitacoesCamilly();camillyContexto={intencao,data:dataChaveLocal(data),ultimaResposta:r};return r}
 if(intencao==="espelho"){const r=await consultarEspelhosCamilly();camillyContexto={intencao,data:dataChaveLocal(data),ultimaResposta:r};return r}
 if(intencao==="horas"){const r=await consultarHorasCamilly();camillyContexto={intencao,data:dataChaveLocal(data),ultimaResposta:r};return r}
