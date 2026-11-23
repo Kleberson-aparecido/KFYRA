@@ -283,13 +283,13 @@ body:has(#areaLogada:not(.oculto)) .card{background:linear-gradient(145deg,#f5f8
 #camillyLauncher.visible{display:flex;animation:kyCamillyIn .45s ease both}
 @keyframes kyCamillyIn{from{opacity:0;transform:translateY(12px) scale(.94)}to{opacity:1;transform:translateY(0) scale(1)}}
 .camilly-avatar{width:48px;height:48px;flex:0 0 48px;border:2px solid #e3c77f;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 25%,#fff2cf,#e7bd83 44%,#8d554e 100%);overflow:hidden}
-.camilly-avatar svg{width:43px;height:43px}
+.camilly-avatar img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
 .camilly-label{text-align:left;line-height:1.25}.camilly-label strong{display:block;font-size:13px}.camilly-label small{color:#d9eadf;font-size:11px}
 #camillyLauncher .camilly-dot{width:8px;height:8px;border-radius:50%;background:#8be0a9;box-shadow:0 0 0 4px #8be0a922}
 #camillyChat{position:fixed;right:18px;bottom:calc(158px + env(safe-area-inset-bottom));z-index:41;width:min(360px,calc(100vw - 28px));height:min(490px,calc(100dvh - 190px));display:none;flex-direction:column;overflow:hidden;border:1px solid rgba(216,183,107,.45);border-radius:22px;background:#f8fbf8;box-shadow:0 24px 70px rgba(0,0,0,.3)}
 #camillyChat.open{display:flex;animation:kyCamillyIn .25s ease both}
 .camilly-head{display:flex;align-items:center;gap:10px;padding:13px 15px;background:linear-gradient(115deg,#082d25,#17654d);color:white}
-.camilly-head .camilly-avatar{width:42px;height:42px;flex-basis:42px}.camilly-head .camilly-avatar svg{width:38px;height:38px}
+.camilly-head .camilly-avatar{width:42px;height:42px;flex-basis:42px}.camilly-head .camilly-avatar img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
 .camilly-head div:nth-child(2){flex:1}.camilly-head strong{display:block;font-size:14px}.camilly-head small{color:#d5e9dc;font-size:11px}
 #camillyClose{width:34px;height:34px;margin:0;padding:0;background:#ffffff18;color:white;border:1px solid #ffffff35;border-radius:50%;font-size:20px;box-shadow:none}
 #camillyMessages{flex:1;overflow:auto;padding:15px;display:flex;flex-direction:column;gap:10px}
@@ -470,11 +470,11 @@ body:has(#areaLogada:not(.oculto)) .card{background:linear-gradient(145deg,#f5f8
 </div>
 
 <button type="button" id="camillyLauncher" aria-label="Conversar com Camilly" aria-expanded="false">
-<span class="camilly-avatar" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M12 28c0-16 9-24 21-24 13 0 21 10 20 25l-3 18H15z" fill="#54352f"/><path d="M17 29c0-12 6-19 16-19s16 7 16 19v12c0 12-8 19-17 19S17 53 17 41z" fill="#f2c49a"/><path d="M15 29C13 12 23 5 34 5c12 0 19 9 17 23-5-2-9-7-11-12-5 7-14 11-25 13z" fill="#4a302d"/><path d="M23 34q4-4 8 0M37 34q4-4 8 0" fill="none" stroke="#56382f" stroke-width="2" stroke-linecap="round"/><path d="M27 45q5 5 11 0" fill="none" stroke="#a94f55" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="39" r="2" fill="#49332d"/><circle cx="41" cy="39" r="2" fill="#49332d"/></svg></span>
+<span class="camilly-avatar" aria-hidden="true"><img id="camillyAvatarLauncher" alt="" loading="eager"></span>
 <span class="camilly-label"><strong>Camilly 💚</strong><small>Oi! Estou aqui para ajudar</small></span><span class="camilly-dot"></span>
 </button>
 <aside id="camillyChat" aria-label="Conversa com Camilly" aria-hidden="true">
-<div class="camilly-head"><span class="camilly-avatar" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M12 28c0-16 9-24 21-24 13 0 21 10 20 25l-3 18H15z" fill="#54352f"/><path d="M17 29c0-12 6-19 16-19s16 7 16 19v12c0 12-8 19-17 19S17 53 17 41z" fill="#f2c49a"/><path d="M15 29C13 12 23 5 34 5c12 0 19 9 17 23-5-2-9-7-11-12-5 7-14 11-25 13z" fill="#4a302d"/><path d="M23 34q4-4 8 0M37 34q4-4 8 0" fill="none" stroke="#56382f" stroke-width="2" stroke-linecap="round"/><path d="M27 45q5 5 11 0" fill="none" stroke="#a94f55" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="39" r="2" fill="#49332d"/><circle cx="41" cy="39" r="2" fill="#49332d"/></svg></span><div><strong>Camilly</strong><small>Sua assistente do Meu Ponto</small></div><button type="button" id="camillyClose" aria-label="Fechar conversa">×</button></div>
+<div class="camilly-head"><span class="camilly-avatar" aria-hidden="true"><img id="camillyAvatarChat" alt="" loading="eager"></span><div><strong>Camilly</strong><small>Sua assistente do Meu Ponto</small></div><button type="button" id="camillyClose" aria-label="Fechar conversa">×</button></div>
 <div id="camillyMessages" aria-live="polite"><div class="camilly-msg bot">Oii! 💚 Que bom ter você por aqui! Ainda estou aprendendo a consultar seus dados, mas já posso conversar com você e explicar como funciona o Meu Ponto. 😊</div></div>
 <form class="camilly-compose" id="camillyForm"><input id="camillyInput" type="text" maxlength="500" placeholder="Escreva sua mensagem..." autocomplete="off" aria-label="Mensagem para Camilly"><button id="camillySend" type="submit" aria-label="Enviar mensagem">➤</button></form>
 <p class="camilly-note">Versão inicial • respostas demonstrativas, sem acesso aos seus dados ainda.</p>
@@ -1480,6 +1480,7 @@ this.disabled=false;this.textContent="Atualizar histórico";
 const camillyLauncher=document.getElementById("camillyLauncher");
 const camillyChat=document.getElementById("camillyChat");
 const camillyMessages=document.getElementById("camillyMessages");
+fetch("assets/camilly-avatar.webp.b64").then(r=>{if(!r.ok)throw new Error("Imagem da Camilly indisponível");return r.text()}).then(b64=>{const src="data:image/webp;base64,"+b64.trim();document.querySelectorAll("#camillyAvatarLauncher,#camillyAvatarChat").forEach(img=>img.src=src)}).catch(error=>console.error("Não foi possível carregar a foto da Camilly:",error));
 function mostrarCamilly(){if(camillyLauncher)camillyLauncher.classList.add("visible")}
 function ocultarCamilly(){if(camillyLauncher)camillyLauncher.classList.remove("visible");fecharCamilly()}
 function abrirCamilly(){camillyChat.classList.add("open");camillyChat.setAttribute("aria-hidden","false");camillyLauncher.setAttribute("aria-expanded","true");document.getElementById("camillyInput").focus()}
