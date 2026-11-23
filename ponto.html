@@ -735,30 +735,32 @@ function proximaEtapa(registros,jornada){
 if(!registros.length)return {evento:"entrada",botao:"Registrar Entrada",status:"Nenhuma jornada iniciada."};
 const ultimo=registros[registros.length-1];
 if(ultimo.event_type==="saida")return {evento:"entrada",botao:"Registrar Entrada",status:"Jornada encerrada. Você pode iniciar uma nova jornada."};
-if(ultimo.event_type!=="entrada"&&ultimo.event_type!=="retorno_intervalo"&&ultimo.event_type!=="retorno_pausa"&&ultimo.event_type!=="inicio_intervalo"&&ultimo.event_type!=="inicio_pausa"){
+if(!["entrada","retorno_intervalo","retorno_pausa","inicio_intervalo","inicio_pausa"].includes(ultimo.event_type)){
 return {erro:true,botao:"Indisponível",status:"Tipo de registro não reconhecido. Procure o RH."};
 }
 let entradaEncontrada=false;
-let intervaloAberto=false;
-let pausaAberta=false;
-let blocos=criarSequenciaEsperada(jornada);
-let blocoAtual=0;
+let tipoPausaAberta=null;
+const blocos=criarSequenciaEsperada(jornada);
 for(const r of registros){
-if(r.event_type==="entrada"){entradaEncontrada=true;continue}
+if(r.event_type==="entrada"){entradaEncontrada=true;tipoPausaAberta=null;continue}
 if(!entradaEncontrada)continue;
 if(r.event_type==="inicio_intervalo"||r.event_type==="inicio_pausa"){
-if(intervaloAberto||pausaAberta)return {erro:true,botao:"Indisponível",status:"Existe uma pausa sem retorno registrado. Procure o RH."};
-intervaloAberto=true;
-pausaAberta=r.event_type==="inicio_pausa";
+if(tipoPausaAberta)return {erro:true,botao:"Indisponível",status:"Existe uma pausa sem retorno registrado. Procure o RH."};
+tipoPausaAberta=r.event_type;
 }else if(r.event_type==="retorno_intervalo"||r.event_type==="retorno_pausa"){
-if(!intervaloAberto)return {erro:true,botao:"Indisponível",status:"Retorno de intervalo sem início correspondente. Procure o RH."};
-intervaloAberto=false;pausaAberta=false;blocoAtual++;
+if(!tipoPausaAberta)return {erro:true,botao:"Indisponível",status:"Retorno de intervalo sem início correspondente. Procure o RH."};
+const retornoEsperado=tipoPausaAberta==="inicio_intervalo"?"retorno_intervalo":"retorno_pausa";
+if(r.event_type!==retornoEsperado)return {erro:true,botao:"Indisponível",status:"O tipo de retorno não corresponde à pausa iniciada. Procure o RH."};
+tipoPausaAberta=null;
 }else if(r.event_type==="saida"){
+if(tipoPausaAberta)return {erro:true,botao:"Indisponível",status:"Existe uma pausa sem retorno registrado. Procure o RH."};
 entradaEncontrada=false;
 }
 }
-if(intervaloAberto){
-return {erro:true,botao:"Indisponível",status:"Você precisa registrar o retorno da pausa antes de continuar."};
+if(tipoPausaAberta){
+const retorno=tipoPausaAberta==="inicio_intervalo"?"retorno_intervalo":"retorno_pausa";
+const nome=tipoPausaAberta==="inicio_intervalo"?"intervalo principal":"pausa adicional";
+return {evento:retorno,botao:tipoPausaAberta==="inicio_intervalo"?"Registrar retorno do intervalo":"Registrar retorno da pausa",status:"Você está em "+nome+". Registre o retorno para continuar sua jornada."};
 }
 const blocosRealizados=registros.filter(r=>r.event_type==="retorno_intervalo"||r.event_type==="retorno_pausa").length;
 const proximo=blocos[blocosRealizados];
@@ -768,10 +770,7 @@ return {evento:"inicio_intervalo",botao:"Iniciar intervalo principal",status:"Jo
 }
 return {evento:"inicio_pausa",botao:"Iniciar pausa "+proximo.numero,status:"Jornada em andamento. Próxima pausa programada: pausa "+proximo.numero+"."};
 }
-if(jornada&&jornada.pausas&&jornada.pausas.length===0&&jornada.intervalo===0){
-return {evento:"saida",botao:"Registrar Saída",status:"Jornada em andamento."};
-}
-return {evento:"saida",botao:"Registrar Saída",status:"Intervalos previstos concluídos. Você pode registrar sua saída."};
+return {evento:"saida",botao:"Registrar Saída",status:"Intervalos e pausas previstos concluídos. Você pode registrar sua saída."};
 }
 async function atualizarEstadoPonto(){
 const botao=document.getElementById("botaoPonto");
