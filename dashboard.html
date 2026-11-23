@@ -367,6 +367,7 @@ th{color:var(--muted);font-weight:700}
 </div>
 <div class="actions" style="margin:12px 0"><button type="button" class="btn" id="generateStatementButton" onclick="generateOfficialTimesheetStatement()">Gerar espelho oficial (PDF)</button><button type="button" class="btn btn-secondary" onclick="loadLatestOfficialTimesheetStatement()">Consultar espelho já gerado</button><span class="muted">Consulte o documento existente sem criar uma nova versão.</span></div>
 <div id="officialStatementMessage" class="message"></div>
+<div id="officialStatementSignatures" class="panel" style="display:none;margin-top:14px"></div>
 <div id="employeePointMessage" class="message"></div>
 <div id="employeePointSummary" class="inline-note">Pesquise e selecione um colaborador para visualizar o histórico de ponto.</div>
 <div class="table-wrap"><table><thead><tr><th>Data</th><th>Entrada</th><th>Início intervalo</th><th>Retorno</th><th>Saída</th><th>Marcações</th></tr></thead><tbody id="employeePointTable"><tr><td colspan="6" class="empty">Nenhum colaborador selecionado.</td></tr></tbody></table></div>
@@ -1612,7 +1613,7 @@ async function loadLatestOfficialTimesheetStatement(){
  try{
   box.className='message';box.textContent='Consultando espelho existente...';
   const {data:statement,error}=await supabaseClient.from('timesheet_statements')
-   .select('id,employee_id,period_start,period_end,version,status,pdf_storage_path')
+   .select('id,employee_id,period_start,period_end,version,status,pdf_storage_path,document_hash')
    .eq('company_id',currentCompany.id).eq('employee_id',selectedPointEmployeeId)
    .eq('period_start',periodStart).eq('period_end',periodEnd)
    .order('version',{ascending:false}).limit(1).maybeSingle();
@@ -1625,31 +1626,42 @@ async function loadLatestOfficialTimesheetStatement(){
   const releaseButton=statement.status==='draft'? ` <button type="button" class="btn btn-approve" style="margin:10px 0 0 8px" onclick="releaseOfficialTimesheetStatement('${statement.id}')">Liberar para assinatura do colaborador</button>`:'';
   const responsibleSignButton=statement.status==='awaiting_responsible'? ` <button type="button" class="btn btn-approve" style="margin:10px 0 0 8px" onclick="signOfficialTimesheetAsResponsible('${statement.id}')">Confirmar assinatura do responsável</button>`:'';
 
-  let signaturesHtml='<div class="inline-note" style="margin-top:14px">Nenhuma assinatura registrada para este documento.</div>';
+  const signaturesBox=$('officialStatementSignatures');
+  if(signaturesBox){signaturesBox.style.display='none';signaturesBox.innerHTML='';}
   const {data:signatures,error:signaturesError}=await supabaseClient
    .from('timesheet_statement_signatures')
-   .select('signer_user_id,signer_type,signer_role,document_hash,acceptance_text,signed_at')
+   .select('signer_user_id,signer_type,signer_role,document_hash,signed_at')
    .eq('statement_id',statement.id)
    .order('signed_at',{ascending:true});
-  if(signaturesError){
-   signaturesHtml='<div class="inline-note" style="margin-top:14px;color:#b45309">Não foi possível consultar as assinaturas: '+escapeHTML(signaturesError.message)+'</div>';
-  }else if(signatures?.length){
-   const signerIds=[...new Set(signatures.map(x=>x.signer_user_id).filter(Boolean))];
-   let profileNames={};
-   if(signerIds.length){
-    const {data:profiles}=await supabaseClient.from('profiles').select('id,full_name').in('id',signerIds);
-    (profiles||[]).forEach(p=>{profileNames[p.id]=p.full_name});
+  if(signaturesBox){
+   if(signaturesError){
+    signaturesBox.style.display='block';
+    signaturesBox.innerHTML='<h4>Assinaturas</h4><div class="inline-note" style="color:#a43e30">Erro ao consultar assinaturas: '+escapeHTML(signaturesError.message)+'</div>';
+   }else if(signatures&&signatures.length){
+    const signerIds=[...new Set(signatures.map(x=>x.signer_user_id).filter(Boolean))];
+    let profileNames={};
+    if(signerIds.length){
+     try{
+      const {data:profiles}=await supabaseClient.from('profiles').select('id,full_name').in('id',signerIds);
+      (profiles||[]).forEach(p=>{profileNames[p.id]=p.full_name});
+     }catch(profileError){console.warn('Não foi possível carregar nomes dos assinantes:',profileError);}
+    }
+    const employee=employeesData.find(e=>e.id===statement.employee_id);
+    const signerLabels={employee:'Colaborador',responsible:'Responsável',rh:'RH',admin:'Administrador'};
+    signaturesBox.style.display='block';
+    signaturesBox.innerHTML='<h4 style="margin:0 0 12px">Assinaturas eletrônicas registradas</h4>'+
+     signatures.map(sig=>{
+      const type=String(sig.signer_type||'').toLowerCase();
+      const signerName=(type==='employee'?(employee?.full_name||profileNames[sig.signer_user_id]):profileNames[sig.signer_user_id])||'Usuário identificado pelo sistema';
+      const signerType=signerLabels[type]||sig.signer_role||'Responsável autorizado';
+      const signedAt=sig.signed_at?new Date(sig.signed_at).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'medium',timeZone:'America/Sao_Paulo'}):'Data não informada';
+      const hashMatches=!!(statement.document_hash&&sig.document_hash===statement.document_hash);
+      return '<div style="padding:12px 0;border-top:1px solid var(--border)"><strong>'+escapeHTML(signerType)+'</strong><div>'+escapeHTML(signerName)+'</div><div class="muted">Assinado em: '+escapeHTML(signedAt)+'</div><div style="font-size:12px;color:'+(hashMatches?'#216b43':'#a43e30')+';font-weight:700">'+(hashMatches?'Hash confere com o documento':'Atenção: hash diferente do documento')+'</div><div class="muted" style="font-size:11px;word-break:break-all">Hash: '+escapeHTML(sig.document_hash||'Não informado')+'</div></div>';
+     }).join('');
+   }else{
+    signaturesBox.style.display='block';
+    signaturesBox.innerHTML='<h4>Assinaturas</h4><div class="inline-note">Nenhuma assinatura foi retornada pela consulta.</div>';
    }
-   const employee=employeesData.find(e=>e.id===statement.employee_id);
-   const signerLabels={employee:'Colaborador',responsible:'Responsável',rh:'RH',admin:'Administrador'};
-   signaturesHtml='<div style="margin-top:16px;padding:14px;border:1px solid var(--border,#dbe2e8);border-radius:10px;background:#fff"><h4 style="margin:0 0 12px">Assinaturas registradas</h4>'+
-    signatures.map(sig=>{
-     const isEmployee=employee?.user_id&&sig.signer_user_id===employee.user_id;
-     const signerName=isEmployee?(employee.full_name||'Colaborador'):(profileNames[sig.signer_user_id]||'Usuário');
-     const signerType=signerLabels[String(sig.signer_type||'').toLowerCase()]||sig.signer_role||'Responsável';
-     const signedAt=sig.signed_at?new Date(sig.signed_at).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'medium'}):'Data não informada';
-     return '<div style="padding:10px 0;border-top:1px solid #e5e7eb"><strong>'+escapeHTML(signerType)+'</strong><div>'+escapeHTML(signerName)+'</div><div class="muted">Assinado em: '+escapeHTML(signedAt)+'</div><div class="muted" style="font-size:11px;word-break:break-all">Hash registrado: '+escapeHTML(sig.document_hash||'Não informado')+'</div></div>';
-    }).join('')+'</div>';
   }
   box.className='message success';
   box.innerHTML=`Espelho existente — versão ${Number(statement.version)||1}. Status: <strong>${escapeHTML(labels[statement.status]||statement.status)}</strong>. <a href="${escapeHTML(file.signedUrl)}" target="_blank" rel="noopener">Abrir PDF</a>${releaseButton}${responsibleSignButton}${signaturesHtml}`;
