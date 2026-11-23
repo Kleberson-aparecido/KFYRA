@@ -115,7 +115,7 @@ body:has(.layout) .empty{color:#83958a}
 @media(max-width:650px){
  body:has(.layout) .sidebar{border-radius:0 0 18px 18px;box-shadow:0 12px 30px rgba(6,27,23,.14)}
  body:has(.layout) .menu{display:flex;gap:6px;overflow-x:auto;padding:4px 0 9px;scrollbar-width:thin}
- body:has(.layout) .menu-title{flex:0 0 100%;padding:9px 7px 3px}
+ body:has(.layout) .menu-title{display:none}
  body:has(.layout) .menu button{flex:0 0 auto;width:auto;white-space:nowrap;padding:11px 13px;font-size:12px}
  body:has(.layout) .menu button.active{border-left:1px solid rgba(216,182,92,.28);border-bottom:2px solid var(--ky-gold)}
  body:has(.layout) .sidebar-bottom{border-top:1px solid rgba(255,255,255,.13);padding-top:10px}
