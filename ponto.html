@@ -1480,7 +1480,7 @@ this.disabled=false;this.textContent="Atualizar histórico";
 const camillyLauncher=document.getElementById("camillyLauncher");
 const camillyChat=document.getElementById("camillyChat");
 const camillyMessages=document.getElementById("camillyMessages");
-fetch("assets/camilly-avatar.webp.b64").then(r=>{if(!r.ok)throw new Error("Imagem da Camilly indisponível");return r.text()}).then(b64=>{const src="data:image/webp;base64,"+b64.trim();document.querySelectorAll("#camillyAvatarLauncher,#camillyAvatarChat").forEach(img=>img.src=src)}).catch(error=>console.error("Não foi possível carregar a foto da Camilly:",error));
+fetch("assets/camilly-avatar.webp.b64?v=2").then(r=>{if(!r.ok)throw new Error("Imagem da Camilly indisponível");return r.text()}).then(b64=>{const src="data:image/webp;base64,"+b64.trim();document.querySelectorAll("#camillyAvatarLauncher,#camillyAvatarChat").forEach(img=>img.src=src)}).catch(error=>console.error("Não foi possível carregar a foto da Camilly:",error));
 function mostrarCamilly(){if(camillyLauncher)camillyLauncher.classList.add("visible")}
 function ocultarCamilly(){if(camillyLauncher)camillyLauncher.classList.remove("visible");fecharCamilly()}
 function abrirCamilly(){camillyChat.classList.add("open");camillyChat.setAttribute("aria-hidden","false");camillyLauncher.setAttribute("aria-expanded","true");document.getElementById("camillyInput").focus()}
