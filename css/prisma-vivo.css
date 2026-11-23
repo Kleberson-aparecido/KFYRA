@@ -131,3 +131,24 @@ body:has(.layout) .empty{color:#83958a}
 @media(prefers-reduced-motion:reduce){
  *,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+/* KFYRA — PRISMA VIVO / camada 02: superfícies com profundidade */
+:root{--ky-sage:#e7f0e9;--ky-mist:#f0f6f1;--ky-cream:#faf8f0;--ky-edge:rgba(25,82,61,.13)}
+body:has(.layout){
+ background:radial-gradient(ellipse at 12% 18%,rgba(216,182,92,.09),transparent 24%),radial-gradient(ellipse at 88% 52%,rgba(109,181,139,.13),transparent 29%),repeating-linear-gradient(135deg,rgba(28,91,66,.018) 0,rgba(28,91,66,.018) 1px,transparent 1px,transparent 13px),linear-gradient(145deg,#eaf2ec 0%,#f5f8f4 48%,#e9f1eb 100%);
+}
+body:has(.layout) .main:before{content:"";position:fixed;z-index:-1;pointer-events:none;width:460px;height:460px;right:-210px;top:24%;border:1px solid rgba(201,169,110,.13);border-radius:50%;box-shadow:0 0 0 34px rgba(23,99,78,.018),0 0 0 70px rgba(23,99,78,.014)}
+body:has(.layout) .panel{background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(241,248,242,.94));border:1px solid rgba(255,255,255,.95);box-shadow:0 16px 42px rgba(14,57,41,.075),inset 0 1px 0 #fff,0 0 0 1px rgba(23,99,78,.045)}
+body:has(.layout) .panel-header{padding-bottom:14px;margin-bottom:18px;border-bottom:1px solid rgba(23,99,78,.11)}
+body:has(.layout) .panel-header h3:before{content:"";display:inline-block;width:7px;height:19px;margin-right:10px;vertical-align:-4px;border-radius:8px;background:linear-gradient(180deg,#e5ca7d,#9bcdb0);box-shadow:0 2px 8px rgba(201,169,110,.22)}
+body:has(.layout) .card{background:linear-gradient(145deg,#fff 0%,#f6faf6 72%,#edf5ef 100%);border:1px solid rgba(255,255,255,.95);box-shadow:0 13px 32px rgba(14,57,41,.065),inset 0 1px 0 #fff,0 0 0 1px rgba(23,99,78,.045)}
+body:has(.layout) .card:after{content:"";position:absolute;width:94px;height:94px;right:-48px;top:-49px;border:1px solid rgba(201,169,110,.22);border-radius:50%;box-shadow:0 0 0 13px rgba(201,169,110,.035);pointer-events:none}
+body:has(.layout) .private-section,body:has(.layout) .request-detail,body:has(.layout) .overtime-detail{background:linear-gradient(135deg,#f5faf5,#eaf3ec);border:1px solid rgba(23,99,78,.12);box-shadow:inset 0 1px rgba(255,255,255,.95),0 7px 20px rgba(14,57,41,.035)}
+body:has(.layout) th{background:linear-gradient(180deg,#e7f1e9,#dcebe0);color:#315b48;border-bottom:1px solid rgba(201,169,110,.35)}
+body:has(.layout) tbody tr{transition:background .18s,box-shadow .18s}
+body:has(.layout) tbody tr:hover{background:linear-gradient(90deg,#edf6ef,#f8faf6);box-shadow:inset 3px 0 #c9a96e}
+body:has(.layout) input,body:has(.layout) select,body:has(.layout) textarea{background:linear-gradient(145deg,#fff,#f5f9f5);border-color:#d7e5da;box-shadow:inset 0 1px 2px rgba(16,61,50,.025)}
+body:has(.layout) .inline-note{background:linear-gradient(110deg,#e7f3e9,#f8f6ec);border-color:rgba(201,169,110,.24);box-shadow:inset 0 1px rgba(255,255,255,.9)}
+body:has(.layout) .section-title{position:relative}
+body:has(.layout) .section-title:after{content:"";display:block;width:54px;height:3px;margin-top:9px;border-radius:4px;background:linear-gradient(90deg,#c9a96e,#8fc6a5)}
+@media(max-width:650px){body:has(.layout) .main:before{width:260px;height:260px;right:-150px;top:35%}}
