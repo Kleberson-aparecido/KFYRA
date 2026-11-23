@@ -1628,12 +1628,19 @@ async function loadLatestOfficialTimesheetStatement(){
 
   const {data:finalPdf,error:finalPdfError}=await supabaseClient.from('timesheet_statement_final_pdfs').select('storage_path,file_hash').eq('statement_id',statement.id).maybeSingle();
   if(finalPdfError)throw finalPdfError;
-  const finalizeSignedPdfButton=statement.status==='completed'&&!finalPdf? ` <button type="button" class="btn btn-approve" style="margin:10px 0 0 8px" onclick="generateFinalSignedTimesheetPdf('${statement.id}')">Gerar PDF final com assinaturas</button>`:'';
+  const {data:finalPdfV2,error:finalPdfV2Error}=await supabaseClient.from('timesheet_statement_final_pdf_versions').select('storage_path,file_hash,generation').eq('statement_id',statement.id).order('generation',{ascending:false}).limit(1).maybeSingle();
+  if(finalPdfV2Error)throw finalPdfV2Error;
+  const finalizeSignedPdfButton=statement.status==='completed'&&!finalPdfV2? ` <button type="button" class="btn btn-approve" style="margin:10px 0 0 8px" onclick="generateFinalSignedTimesheetPdf('${statement.id}')">Gerar PDF final corrigido</button>`:'';
   let finalSignedPdfLink='';
   if(finalPdf?.storage_path){
    const {data:finalFile,error:finalFileError}=await supabaseClient.storage.from('timesheet-statements').createSignedUrl(finalPdf.storage_path,3600);
-   if(finalFileError||!finalFile?.signedUrl)throw new Error('PDF final registrado, mas não foi possível abrir: '+(finalFileError?.message||'link indisponível'));
-   finalSignedPdfLink=` <a href="${escapeHTML(finalFile.signedUrl)}" target="_blank" rel="noopener">Abrir PDF final assinado</a>`;
+   if(finalFileError||!finalFile?.signedUrl)throw new Error('PDF final anterior registrado, mas não foi possível abrir: '+(finalFileError?.message||'link indisponível'));
+   finalSignedPdfLink+=` <a href="${escapeHTML(finalFile.signedUrl)}" target="_blank" rel="noopener">Abrir PDF complementar anterior (histórico)</a>`;
+  }
+  if(finalPdfV2?.storage_path){
+   const {data:finalFileV2,error:finalFileV2Error}=await supabaseClient.storage.from('timesheet-statements').createSignedUrl(finalPdfV2.storage_path,3600);
+   if(finalFileV2Error||!finalFileV2?.signedUrl)throw new Error('PDF final corrigido registrado, mas não foi possível abrir: '+(finalFileV2Error?.message||'link indisponível'));
+   finalSignedPdfLink+=` <a href="${escapeHTML(finalFileV2.signedUrl)}" target="_blank" rel="noopener" style="margin-left:8px">Abrir PDF final corrigido</a>`;
   }
 
   const signaturesBox=$('officialStatementSignatures');
@@ -1682,14 +1689,14 @@ async function loadLatestOfficialTimesheetStatement(){
 async function generateFinalSignedTimesheetPdf(statementId){
  if(!canManage()){showBox('officialStatementMessage','Somente RH ou administrador pode gerar o PDF final.','error');return}
  if(!statementId)return;
- if(!confirm('Gerar o PDF final complementar com as duas assinaturas? O PDF original e o hash do espelho serão preservados.'))return;
+ if(!confirm('Gerar o PDF final corrigido a partir do espelho original e das assinaturas já registradas? Nenhuma assinatura será refeita e os PDFs anteriores serão preservados.'))return;
  const box=$('officialStatementMessage');
  try{
-  box.className='message';box.textContent='Gerando PDF final com as duas assinaturas...';
+  box.className='message';box.textContent='Reconstruindo o PDF final organizado com as assinaturas já registradas...';
   const {data,error}=await supabaseClient.functions.invoke('finalize-timesheet-statement-pdf',{body:{statement_id:statementId}});
   if(error)throw error;
   if(data?.error)throw new Error(data.error);
-  box.className='message success';box.textContent='PDF final assinado gerado e registrado na auditoria.';
+  box.className='message success';box.textContent='PDF final corrigido gerado e registrado. O original e o PDF complementar anterior foram preservados.';
   await loadLatestOfficialTimesheetStatement();
  }catch(err){showBox('officialStatementMessage','Não foi possível gerar o PDF final: '+(err.message||String(err)),'error')}
 }
