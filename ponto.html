@@ -1556,7 +1556,7 @@ const status={pending:"aguardando análise",approved:"aprovada",rejected:"recusa
 const t=camillyNormalizar(texto);
 let itens=data;
 if(/atestado|medic/.test(t))itens=data.filter(x=>x.request_type==="medical_certificate");
-else if(/declaracao|comparecimento|sindical|documento/.test(t))itens=data.filter(x=>["attendance_declaration","union_declaration","other_declaration"].includes(x.request_type));
+else if(/declaracao|comparecimento|sindical/.test(t))itens=data.filter(x=>["attendance_declaration","union_declaration","other_declaration"].includes(x.request_type));
 if(!itens.length)return "Não encontrei uma solicitação desse tipo entre seus 10 pedidos mais recentes. Você pode conferir a lista completa na aba “Solicitações”. 💚";
 const resumo=itens.map(x=>"• "+(tiposSolicitacao[x.request_type]||"Solicitação")+" — "+(status[x.status]||x.status)+(x.requested_date?" — data: "+formatarDataSolicitacao(x.requested_date):"")+(x.decision_reason?" — resposta do responsável: "+x.decision_reason:"")).join("\n");
 if(/quanto tempo|demora|prazo|quando (vai|sera) (ser )?analisad|quando aprov/.test(t)){
