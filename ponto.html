@@ -475,9 +475,9 @@ body:has(#areaLogada:not(.oculto)) .card{background:linear-gradient(145deg,#f5f8
 </button>
 <aside id="camillyChat" aria-label="Conversa com Camilly" aria-hidden="true">
 <div class="camilly-head"><span class="camilly-avatar" aria-hidden="true"><img id="camillyAvatarChat" alt="" loading="eager"></span><div><strong>Camilly</strong><small>Sua assistente do Meu Ponto</small></div><button type="button" id="camillyClose" aria-label="Fechar conversa">×</button></div>
-<div id="camillyMessages" aria-live="polite"><div class="camilly-msg bot">Oii! 💚 Que bom ter você por aqui! Ainda estou aprendendo a consultar seus dados, mas já posso conversar com você e explicar como funciona o Meu Ponto. 😊</div></div>
+<div id="camillyMessages" aria-live="polite"><div class="camilly-msg bot">Oii! 💚 Eu sou a Camilly! Posso consultar suas informações do Meu Ponto e ajudar você a entender sua jornada. 😊</div></div>
 <form class="camilly-compose" id="camillyForm"><input id="camillyInput" type="text" maxlength="500" placeholder="Escreva sua mensagem..." autocomplete="off" aria-label="Mensagem para Camilly"><button id="camillySend" type="submit" aria-label="Enviar mensagem">➤</button></form>
-<p class="camilly-note">Versão inicial • respostas demonstrativas, sem acesso aos seus dados ainda.</p>
+<p class="camilly-note">Consultas pessoais do Meu Ponto • não realizo aprovações nem alterações.</p>
 </aside>
 
 </main>
@@ -1476,7 +1476,7 @@ this.disabled=false;this.textContent="Atualizar histórico";
 });
 
 
-/* CAMILLY — interface inicial de conversa (sem integração de IA/dados nesta etapa) */
+/* CAMILLY — assistente do Meu Ponto, consultas pessoais somente leitura */
 const camillyLauncher=document.getElementById("camillyLauncher");
 const camillyChat=document.getElementById("camillyChat");
 const camillyMessages=document.getElementById("camillyMessages");
@@ -1485,20 +1485,89 @@ function mostrarCamilly(){if(camillyLauncher)camillyLauncher.classList.add("visi
 function ocultarCamilly(){if(camillyLauncher)camillyLauncher.classList.remove("visible");fecharCamilly()}
 function abrirCamilly(){camillyChat.classList.add("open");camillyChat.setAttribute("aria-hidden","false");camillyLauncher.setAttribute("aria-expanded","true");document.getElementById("camillyInput").focus()}
 function fecharCamilly(){camillyChat.classList.remove("open");camillyChat.setAttribute("aria-hidden","true");if(camillyLauncher)camillyLauncher.setAttribute("aria-expanded","false")}
-function responderCamilly(texto){
+function camillyDataAlvo(texto){
+const t=texto.toLowerCase(),agora=new Date();
+if(/amanh[ãa]/.test(t)){agora.setDate(agora.getDate()+1);return agora}
+if(/ontem/.test(t)){agora.setDate(agora.getDate()-1);return agora}
+const br=t.match(/\b(\d{1,2})[\/.-](\d{1,2})(?:[\/.-](\d{4}))?\b/);
+if(br){const ano=Number(br[3]||agora.getFullYear()),mes=Number(br[2]),dia=Number(br[1]);const d=new Date(ano,mes-1,dia,12);if(d.getFullYear()===ano&&d.getMonth()===mes-1&&d.getDate()===dia)return d}
+return agora;
+}
+function camillyDetalhesJornada(jornada){
+if(!jornada.trabalho)return "É dia de folga na escala. 💚";
+const hora=(m)=>m===null||m===undefined?"--:--":String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0");
+const partes=["Entrada prevista: "+hora(jornada.inicio),"saída prevista: "+hora(jornada.fim)];
+if(jornada.intervalo>0)partes.push("intervalo principal: "+formatarHora(jornada.intervaloInicio)+" às "+formatarHora(jornada.intervaloFim)+" ("+formatarIntervalo(jornada.intervalo)+")");
+if(jornada.pausas&&jornada.pausas.length)jornada.pausas.forEach(p=>partes.push("pausa "+p.numero+": "+formatarHora(p.inicio)+" às "+formatarHora(p.fim)+" ("+formatarIntervalo(p.duracao)+")"));
+else partes.push("sem pausas adicionais cadastradas");
+return partes.join(" • ")+".";
+}
+async function consultarEscalaCamilly(texto){
+if(!usuarioAtual||!colaboradorAtual)throw new Error("Sua sessão não está ativa. Entre novamente no Meu Ponto.");
+const data=camillyDataAlvo(texto),chave=dataChaveLocal(data);
+const jornadas=await carregarJornadasPrevistas(data.getFullYear(),data.getMonth()+1);
+const jornada=jornadas[chave];
+const dataBonita=data.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"});
+if(!jornada)return "Não encontrei uma escala atribuída para "+dataBonita+". Isso pode significar que ainda não há escala publicada para esse dia. Confirme com o RH. 💚";
+if(!jornada.trabalho)return "Consultei sua escala: "+dataBonita+" é dia de folga. 😊";
+return "Consultei sua escala para "+dataBonita+": "+camillyDetalhesJornada(jornada)+"\n\nEsses são os horários planejados pela empresa; se houver uma alteração ainda não publicada, confirme com o RH. 💚";
+}
+async function consultarPontoCamilly(texto){
+if(!usuarioAtual||!colaboradorAtual)throw new Error("Sua sessão não está ativa. Entre novamente no Meu Ponto.");
+const data=camillyDataAlvo(texto),inicio=new Date(data.getFullYear(),data.getMonth(),data.getDate()),fim=new Date(data.getFullYear(),data.getMonth(),data.getDate()+1);
+const {data:registros,error}=await supabaseClient.from("attendance_records").select("event_type,recorded_at").eq("user_id",usuarioAtual.id).eq("employee_id",colaboradorAtual.id).gte("recorded_at",inicio.toISOString()).lt("recorded_at",fim.toISOString()).order("recorded_at",{ascending:true});
+if(error)throw error;
+const dia=data.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long"});
+if(!registros||!registros.length)return "Não encontrei marcações registradas em "+dia+". Isso não confirma falta; apenas indica que não há registros de ponto nesse dia. 💚";
+const linhas=registros.map(r=>nomeEvento(r.event_type)+": "+new Date(r.recorded_at).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"}));
+return "Estas são as marcações que encontrei em "+dia+":\n• "+linhas.join("\n• ")+"\n\nEstou apenas consultando os registros originais; não altero nem aprovo marcações.";
+}
+async function consultarSolicitacoesCamilly(){
+if(!usuarioAtual||!colaboradorAtual)throw new Error("Sua sessão não está ativa. Entre novamente no Meu Ponto.");
+const {data,error}=await supabaseClient.from("employee_requests").select("request_type,status,requested_date,created_at,decision_reason").eq("employee_id",colaboradorAtual.id).eq("user_id",usuarioAtual.id).order("created_at",{ascending:false}).limit(10);
+if(error)throw error;
+if(!data||!data.length)return "Você ainda não tem solicitações registradas. Se precisar, posso explicar como enviar uma pela aba Solicitações. 💚";
+const status={pending:"aguardando análise",approved:"aprovada",rejected:"recusada",cancelled:"cancelada"};
+return "Encontrei suas solicitações mais recentes:\n"+data.map(x=>"• "+(tiposSolicitacao[x.request_type]||"Solicitação")+" — "+(status[x.status]||x.status)+(x.requested_date?" — data: "+formatarDataSolicitacao(x.requested_date):"")+(x.decision_reason?" — resposta: "+x.decision_reason:"")).join("\n")+"\n\nEu posso consultar e explicar o andamento, mas não aprovo nem recuso pedidos.";
+}
+async function consultarEspelhosCamilly(){
+if(!usuarioAtual||!colaboradorAtual)throw new Error("Sua sessão não está ativa. Entre novamente no Meu Ponto.");
+const {data,error}=await supabaseClient.from("timesheet_statements").select("period_start,period_end,version,status,finalized_at,pdf_storage_path").eq("company_id",colaboradorAtual.company_id).eq("employee_id",colaboradorAtual.id).order("created_at",{ascending:false}).limit(8);
+if(error)throw error;
+if(!data||!data.length)return "Ainda não encontrei espelhos oficiais disponibilizados para sua conta. Você pode conferir novamente pela aba Espelho. 💚";
+const rotulos={draft:"em preparação",awaiting_employee:"aguardando sua assinatura",awaiting_responsible:"aguardando assinatura do responsável",completed:"finalizado e assinado",cancelled:"cancelado"};
+return "Seus espelhos oficiais mais recentes:\n"+data.map(x=>"• "+formatarDataSolicitacao(x.period_start)+" a "+formatarDataSolicitacao(x.period_end)+" — versão "+x.version+" — "+(rotulos[x.status]||x.status)+(x.pdf_storage_path?" — PDF disponível":"")).join("\n");
+}
+async function consultarHorasCamilly(){
+if(!usuarioAtual||!colaboradorAtual)throw new Error("Sua sessão não está ativa. Entre novamente no Meu Ponto.");
+const {data:extras,error:erroExtras}=await supabaseClient.from("overtime_records").select("work_date,minutes_worked,status,approval_type,decision_reason").eq("employee_id",colaboradorAtual.id).eq("company_id",colaboradorAtual.company_id).order("work_date",{ascending:false}).limit(12);
+if(erroExtras)throw erroExtras;
+const {data:movimentos,error:erroMov}=await supabaseClient.from("time_bank_entries").select("movement_type,minutes,status,reference_date,description").eq("employee_id",colaboradorAtual.id).eq("company_id",colaboradorAtual.company_id).order("reference_date",{ascending:false}).limit(30);
+if(erroMov)throw erroMov;
+const pendentes=(extras||[]).filter(x=>x.status==="pending");
+const aprovadas=(extras||[]).filter(x=>x.status==="approved");
+const minutosAprovados=aprovadas.reduce((s,x)=>s+Number(x.minutes_worked||0),0);
+const saldoMov=(movimentos||[]).filter(x=>x.status==="approved").reduce((s,x)=>s+(x.movement_type==="credit"?1:-1)*Number(x.minutes||0),0);
+return "Consultei seus registros de horas. 💚\n• Horas extras aguardando análise: "+formatarDuracao(pendentes.reduce((s,x)=>s+Number(x.minutes_worked||0),0))+" ("+pendentes.length+" registro(s)).\n• Horas extras aprovadas no histórico consultado: "+formatarDuracao(minutosAprovados)+".\n• Movimentações aprovadas do banco de horas: saldo líquido de "+(saldoMov<0?"-":"+")+formatarDuracao(Math.abs(saldoMov))+".\n\nA aprovação e a definição de pagamento ou compensação são responsabilidade do RH. O saldo acima considera os lançamentos aprovados retornados pelo histórico consultado.";
+}
+async function responderCamilly(texto){
 const t=texto.toLowerCase();
-if(/escala|horário|horario|amanh|folga/.test(t))return "Posso te ajudar com sua escala! 💚 Nesta primeira versão, ainda não consulto sua escala automaticamente. Em breve vou buscar os horários autorizados diretamente no Meu Ponto.";
-if(/ponto|marcação|marcacao|entrada|saída|saida|intervalo/.test(t))return "Vamos cuidar das suas marcações! 😊 Por enquanto, ainda não tenho conexão com seus registros. Você pode consultar tudo na aba Registro e no Calendário do Meu Ponto.";
-if(/hora extra|banco de horas|saldo/.test(t))return "Boa pergunta! 💚 A consulta de banco de horas e horas extras será conectada numa próxima etapa, sempre mostrando os dados liberados para você.";
-if(/atestado|documento|solicita|pedido/.test(t))return "Eu te ajudo! Você pode enviar e acompanhar seus documentos e solicitações pela aba Solicitações. A análise continua sendo feita pelo responsável da empresa.";
-if(/obrigad|valeu/.test(t))return "Imagina! 💚 Sempre que precisar, pode me chamar.";
-if(/oi|olá|ola|bom dia|boa tarde|boa noite/.test(t))return "Oiii! 😄💚 Como posso deixar seu dia de trabalho mais fácil?";
-return "Adorei sua mensagem! 💚 Ainda estou na minha primeira versão e não tenho acesso aos dados do seu ponto. Mas posso orientar você sobre Registro, Calendário, Espelho e Solicitações.";
+try{
+if(/escala|hor[aá]rio|amanh[ãa]|folga|pausa|intervalo/.test(t)&&!/marcaç|marcac|registro de ponto/.test(t))return await consultarEscalaCamilly(texto);
+if(/marcaç|marcac|registro de ponto|meu ponto|entrada|saída|saida/.test(t))return await consultarPontoCamilly(texto);
+if(/solicita|pedido|atestado|declaração|declaracao|documento/.test(t))return await consultarSolicitacoesCamilly();
+if(/espelho|assinatura|pdf/.test(t))return await consultarEspelhosCamilly();
+if(/hora extra|banco de horas|saldo de horas|horas extras/.test(t))return await consultarHorasCamilly();
+if(/obrigad|valeu/.test(t))return "Imagina! 💚 Estou aqui para ajudar.";
+if(/oi|olá|ola|bom dia|boa tarde|boa noite/.test(t))return "Oiii! 😄💚 Posso consultar sua escala, marcações, solicitações, espelhos e informações de horas. O que você quer saber?";
+return "Posso consultar as informações do seu próprio Meu Ponto: escala e folgas, marcações, solicitações, espelhos e horas. Não aprovo pedidos nem altero seus registros. Me diga o que deseja consultar. 💚";
+}catch(error){console.error("Erro na consulta da Camilly:",error);return "Não consegui consultar essa informação agora. "+(error.message||"Tente novamente em instantes.")+" Se persistir, confira a aba correspondente do Meu Ponto ou fale com o RH."}
 }
 function adicionarMensagemCamilly(texto,tipo){const el=document.createElement("div");el.className="camilly-msg "+tipo;el.textContent=texto;camillyMessages.appendChild(el);camillyMessages.scrollTop=camillyMessages.scrollHeight}
 document.getElementById("camillyLauncher").addEventListener("click",()=>camillyChat.classList.contains("open")?fecharCamilly():abrirCamilly());
 document.getElementById("camillyClose").addEventListener("click",fecharCamilly);
-document.getElementById("camillyForm").addEventListener("submit",function(e){e.preventDefault();const input=document.getElementById("camillyInput"),texto=input.value.trim();if(!texto)return;adicionarMensagemCamilly(texto,"user");input.value="";window.setTimeout(()=>adicionarMensagemCamilly(responderCamilly(texto),"bot"),350)});
+document.getElementById("camillyForm").addEventListener("submit",async function(e){e.preventDefault();const input=document.getElementById("camillyInput"),texto=input.value.trim();if(!texto)return;adicionarMensagemCamilly(texto,"user");input.value="";const botao=document.getElementById("camillySend");botao.disabled=true;try{const resposta=await responderCamilly(texto);adicionarMensagemCamilly(resposta,"bot")}finally{botao.disabled=false}});
+
 
 /* ABERTURA DO PORTAL */
 async function abrirPortal(user){
