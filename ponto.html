@@ -181,6 +181,11 @@ button:active:not(:disabled){transform:translateY(0) scale(.985)}
 #painelEspelho>h3:before{content:"";width:4px;height:22px;border-radius:5px;background:linear-gradient(#d8b76b,#a88742)}
 #painelEspelho>.painel-ponto{background:#fbfdfb}
 #calendarioMensal{gap:7px}
+.ky-calendario-controles{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 18px;padding:10px 12px;border:1px solid rgba(20,105,75,.12);border-radius:16px;background:linear-gradient(120deg,#f5faf6,#fffaf0)}
+.ky-calendario-controles>div{display:flex;flex:1;flex-direction:column;gap:5px;min-width:0;text-align:center}
+.ky-calendario-controles label{font-size:11px;font-weight:800;color:#547365}
+.ky-calendario-controles input{width:100%;max-width:190px;min-height:40px;margin:auto;border:1px solid #d9e6dc;border-radius:10px;padding:7px 9px;background:#fff;color:#174b38;font-weight:700}
+.ky-calendario-controles button{min-width:42px;min-height:42px;padding:8px 12px}
 .cal-cabecalho{font-size:10px;letter-spacing:.8px;text-transform:uppercase}
 .cal-dia{position:relative;overflow:hidden;min-height:64px;border-radius:13px}
 .cal-dia.trabalhado{background:linear-gradient(145deg,#e5f7eb,#d7efdf)}
@@ -331,6 +336,11 @@ body:has(#areaLogada:not(.oculto)) .card{background:linear-gradient(145deg,#f5f8
 </section>
 <section id="conteudoCalendario" class="oculto" hidden aria-hidden="true">
 <div class="painel-ponto">
+<div class="historico-topo ky-calendario-controles">
+<button type="button" id="calendarioMesAnterior" class="secundario navegar-mes" aria-label="Mês anterior">←</button>
+<div><label for="mesCalendario">Mês do calendário</label><input type="month" id="mesCalendario"></div>
+<button type="button" id="calendarioProximoMes" class="secundario navegar-mes" aria-label="Próximo mês">→</button>
+</div>
 <h3>Calendário mensal</h3>
 <div id="calendarioMensal" class="calendario"></div>
 <div class="cal-legenda">
@@ -1437,6 +1447,7 @@ document.getElementById("nomeColaborador").textContent=colaboradorAtual.full_nam
 document.getElementById("emailColaborador").textContent=colaboradorAtual.email||user.email;
 areaLogada.classList.remove("oculto");
 titulo.textContent="Meu Ponto";subtitulo.textContent="Bem-vindo ao seu portal de colaborador.";
+const mesInicial=new Date();document.getElementById("mesCalendario").value=mesInicial.getFullYear()+"-"+String(mesInicial.getMonth()+1).padStart(2,"0");
 ativarAba("ponto");
 iniciarRelogio();
 await carregarEspelhoPonto();
@@ -1466,6 +1477,24 @@ document.getElementById("botaoPdfEspelho").addEventListener("click",gerarPdfEspe
 document.getElementById("mesEspelho").addEventListener("change",function(){
 dataSelecionadaCalendario=null;carregarEspelhoPonto();
 });
+function sincronizarMesCalendario(origem){
+const calendario=document.getElementById("mesCalendario"),espelho=document.getElementById("mesEspelho");
+if(origem==="calendario"&&calendario.value){espelho.value=calendario.value;dataSelecionadaCalendario=null;carregarEspelhoPonto();}
+else if(origem==="espelho"&&espelho.value){calendario.value=espelho.value;}
+}
+function alterarMesCalendario(direcao){
+const campo=document.getElementById("mesCalendario");
+if(!campo.value){const agora=new Date();campo.value=agora.getFullYear()+"-"+String(agora.getMonth()+1).padStart(2,"0");}
+const partes=campo.value.split("-"),ano=Number(partes[0]),mes=Number(partes[1]);
+if(!ano||!mes||mes<1||mes>12)return;
+const novaData=new Date(ano,mes-1+direcao,1,12,0,0);
+campo.value=novaData.getFullYear()+"-"+String(novaData.getMonth()+1).padStart(2,"0");
+sincronizarMesCalendario("calendario");
+}
+document.getElementById("calendarioMesAnterior").addEventListener("click",()=>alterarMesCalendario(-1));
+document.getElementById("calendarioProximoMes").addEventListener("click",()=>alterarMesCalendario(1));
+document.getElementById("mesCalendario").addEventListener("change",()=>sincronizarMesCalendario("calendario"));
+
 
 /* NAVEGAÇÃO PRINCIPAL — KFYRA MEU PONTO */
 function ativarAba(nome){
