@@ -1626,6 +1626,16 @@ async function loadLatestOfficialTimesheetStatement(){
   const releaseButton=statement.status==='draft'? ` <button type="button" class="btn btn-approve" style="margin:10px 0 0 8px" onclick="releaseOfficialTimesheetStatement('${statement.id}')">Liberar para assinatura do colaborador</button>`:'';
   const responsibleSignButton=statement.status==='awaiting_responsible'? ` <button type="button" class="btn btn-approve" style="margin:10px 0 0 8px" onclick="signOfficialTimesheetAsResponsible('${statement.id}')">Confirmar assinatura do responsável</button>`:'';
 
+  const {data:finalPdf,error:finalPdfError}=await supabaseClient.from('timesheet_statement_final_pdfs').select('storage_path,file_hash').eq('statement_id',statement.id).maybeSingle();
+  if(finalPdfError)throw finalPdfError;
+  const finalizeSignedPdfButton=statement.status==='completed'&&!finalPdf? ` <button type="button" class="btn btn-approve" style="margin:10px 0 0 8px" onclick="generateFinalSignedTimesheetPdf('${statement.id}')">Gerar PDF final com assinaturas</button>`:'';
+  let finalSignedPdfLink='';
+  if(finalPdf?.storage_path){
+   const {data:finalFile,error:finalFileError}=await supabaseClient.storage.from('timesheet-statements').createSignedUrl(finalPdf.storage_path,3600);
+   if(finalFileError||!finalFile?.signedUrl)throw new Error('PDF final registrado, mas não foi possível abrir: '+(finalFileError?.message||'link indisponível'));
+   finalSignedPdfLink=` <a href="${escapeHTML(finalFile.signedUrl)}" target="_blank" rel="noopener">Abrir PDF final assinado</a>`;
+  }
+
   const signaturesBox=$('officialStatementSignatures');
   if(signaturesBox){signaturesBox.style.display='none';signaturesBox.innerHTML='';}
   const {data:signatures,error:signaturesError}=await supabaseClient
@@ -1664,9 +1674,24 @@ async function loadLatestOfficialTimesheetStatement(){
    }
   }
   box.className='message success';
-  box.innerHTML=`Espelho existente — versão ${Number(statement.version)||1}. Status: <strong>${escapeHTML(labels[statement.status]||statement.status)}</strong>. <a href="${escapeHTML(file.signedUrl)}" target="_blank" rel="noopener">Abrir PDF</a>${releaseButton}${responsibleSignButton}${signaturesHtml}`;
+  box.innerHTML=`Espelho existente — versão ${Number(statement.version)||1}. Status: <strong>${escapeHTML(labels[statement.status]||statement.status)}</strong>. <a href="${escapeHTML(file.signedUrl)}" target="_blank" rel="noopener">Abrir PDF</a>${releaseButton}${responsibleSignButton}${finalizeSignedPdfButton}${finalSignedPdfLink}${signaturesHtml}`;
  }catch(err){showBox('officialStatementMessage',err.message||String(err),'error')}
 }
+async function generateFinalSignedTimesheetPdf(statementId){
+ if(!canManage()){showBox('officialStatementMessage','Somente RH ou administrador pode gerar o PDF final.','error');return}
+ if(!statementId)return;
+ if(!confirm('Gerar o PDF final complementar com as duas assinaturas? O PDF original e o hash do espelho serão preservados.'))return;
+ const box=$('officialStatementMessage');
+ try{
+  box.className='message';box.textContent='Gerando PDF final com as duas assinaturas...';
+  const {data,error}=await supabaseClient.functions.invoke('finalize-timesheet-statement-pdf',{body:{statement_id:statementId}});
+  if(error)throw error;
+  if(data?.error)throw new Error(data.error);
+  box.className='message success';box.textContent='PDF final assinado gerado e registrado na auditoria.';
+  await loadLatestOfficialTimesheetStatement();
+ }catch(err){showBox('officialStatementMessage','Não foi possível gerar o PDF final: '+(err.message||String(err)),'error')}
+}
+
 async function signOfficialTimesheetAsResponsible(statementId){
   if(!canManage()){showBox('officialStatementMessage','Somente RH ou administrador pode assinar como responsável.','error');return}
   if(!statementId)return;
