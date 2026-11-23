@@ -160,6 +160,7 @@ th{color:var(--muted);font-weight:700}
 <button onclick="showPage('solicitacoes',this)">▣ Solicitações</button>
 <div class="menu-title">GESTÃO</div>
 <button onclick="showPage('relatorios',this)">▥ Relatórios</button>
+<button onclick="showPage('fechamento',this)">▣ Fechamento mensal</button>
 <button onclick="showPage('disciplinar',this)">⚖ Disciplinar</button>
 <button onclick="showPage('configuracoes',this)">⚙ Configurações</button>
 <button onclick="showPage('ajuda',this)">✧ KFYRA AI</button>
@@ -387,6 +388,33 @@ th{color:var(--muted);font-weight:700}
 </section>
 
 <section id="page-relatorios" class="hidden"><div class="panel"><h3>Relatórios</h3><div class="empty">Módulo de relatórios em desenvolvimento.</div></div></section>
+
+<section id="page-fechamento" class="hidden">
+ <div class="panel">
+  <div class="panel-header"><div><h3>Pré-fechamento da competência</h3><p class="page-description">Confira documentos, aprovações e pendências antes de encerrar o mês.</p></div><button type="button" class="btn btn-secondary" onclick="loadMonthlyClosingReview()">Atualizar conferência</button></div>
+  <div class="overtime-toolbar">
+   <div class="field" style="max-width:260px"><label for="closingMonth">Competência</label><input id="closingMonth" type="month"></div>
+   <div class="field" style="flex:2"><p class="hint">Esta etapa é somente uma conferência. Nenhum ponto, documento ou assinatura será alterado e o mês ainda não será fechado.</p></div>
+   <div><button type="button" class="btn" id="closingReviewButton" onclick="loadMonthlyClosingReview()">Conferir competência</button></div>
+  </div>
+  <div id="closingMessage" class="message"></div>
+  <div class="cards" style="margin-bottom:20px">
+   <div class="card"><div class="card-label">Colaboradores ativos</div><div class="card-number" id="closingEmployees">—</div><div class="card-note">Incluídos na conferência</div></div>
+   <div class="card"><div class="card-label">Espelhos prontos</div><div class="card-number" id="closingStatementsReady">—</div><div class="card-note">Duas assinaturas e PDF final</div></div>
+   <div class="card"><div class="card-label">Aprovações pendentes</div><div class="card-number" id="closingPendingApprovals">—</div><div class="card-note">Horas, solicitações e ausências</div></div>
+   <div class="card"><div class="card-label">Pendências totais</div><div class="card-number" id="closingBlockers">—</div><div class="card-note">Itens que impedem o fechamento</div></div>
+  </div>
+  <div id="closingResult" class="inline-note">Selecione uma competência e clique em “Conferir competência”.</div>
+ </div>
+ <div class="panel">
+  <div class="panel-header"><div><h3>Conferência por colaborador</h3><p class="page-description">O espelho mais recente de cada colaborador ativo precisa estar finalizado, assinado pelas duas partes e possuir PDF final.</p></div></div>
+  <div class="table-wrap"><table><thead><tr><th>Colaborador</th><th>Espelho mais recente</th><th>Assinaturas</th><th>PDF final</th><th>Situação</th></tr></thead><tbody id="closingEmployeesTable"><tr><td colspan="5" class="empty">Aguardando conferência.</td></tr></tbody></table></div>
+ </div>
+ <div class="panel">
+  <h3 style="font-size:15px;margin-bottom:12px">Pendências que impedem o fechamento</h3>
+  <div id="closingPendingDetails" class="inline-note">A conferência ainda não foi executada.</div>
+ </div>
+</section>
 <section id="page-disciplinar" class="hidden"><div class="panel"><h3>KFYRA Disciplinar</h3><div class="empty">Módulo disciplinar em desenvolvimento.</div></div></section>
 <section id="page-configuracoes" class="hidden"><div class="panel"><h3>Configurações da empresa</h3><div class="empty">Configurações em desenvolvimento.</div></div></section>
 <section id="page-ajuda" class="hidden"><div class="panel"><h3>KFYRA AI</h3><div class="empty">Assistente inteligente em desenvolvimento.</div></div></section>
@@ -1809,6 +1837,96 @@ function renderTimeBank(){
  }).join('');
 }
 
+// PRÉ-FECHAMENTO MENSAL — SOMENTE LEITURA
+function closingMonthDates(value){
+ if(!/^\\d{4}-\\d{2}$/.test(value||''))throw new Error('Selecione uma competência válida.');
+ const [year,month]=value.split('-').map(Number);
+ const last=new Date(year,month,0).getDate();
+ return {start:value+'-01',end:`${year}-${String(month).padStart(2,'0')}-${String(last).padStart(2,'0')}`};
+}
+function closingStatusLabel(status){
+ return ({draft:'Rascunho',awaiting_employee:'Aguardando colaborador',awaiting_responsible:'Aguardando responsável',completed:'Finalizado',cancelled:'Cancelado'})[status]||status||'Não gerado';
+}
+async function loadMonthlyClosingReview(){
+ const button=$('closingReviewButton'),message=$('closingMessage');
+ if(!currentCompany||!canManage()){showBox('closingMessage','Somente RH ou administrador pode conferir o fechamento mensal.','error');return}
+ const month=$('closingMonth')?.value;
+ let range;
+ try{range=closingMonthDates(month)}catch(err){showBox('closingMessage',err.message,'error');return}
+ const oldText=button?.textContent;if(button){button.disabled=true;button.textContent='Conferindo...'}
+ message.className='message';message.textContent='';
+ $('closingResult').textContent='Consultando dados da competência...';
+ $('closingEmployeesTable').innerHTML='<tr><td colspan="5" class="empty">Conferindo espelhos...</td></tr>';
+ try{
+  const queries=await Promise.all([
+   supabaseClient.from('employees').select('id,full_name,employee_code').eq('company_id',currentCompany.id).eq('status','active').order('full_name'),
+   supabaseClient.from('timesheet_statements').select('id,employee_id,version,status,period_start,period_end,finalized_at').eq('company_id',currentCompany.id).eq('period_start',range.start).eq('period_end',range.end).order('version',{ascending:false}),
+   supabaseClient.from('overtime_records').select('id,employee_id,work_date,minutes_worked').eq('company_id',currentCompany.id).eq('status','pending').gte('work_date',range.start).lte('work_date',range.end),
+   supabaseClient.from('employee_requests').select('id,employee_id,request_type,requested_date').eq('company_id',currentCompany.id).eq('status','pending').gte('created_at',range.start+'T00:00:00').lte('created_at',range.end+'T23:59:59'),
+   supabaseClient.from('employee_absences').select('id,employee_id,absence_type,start_date,end_date').eq('company_id',currentCompany.id).eq('status','pending').lte('start_date',range.end).gte('end_date',range.start),
+   supabaseClient.from('time_bank_entries').select('id,employee_id,reference_date,movement_type,minutes').eq('company_id',currentCompany.id).eq('status','pending').gte('reference_date',range.start).lte('reference_date',range.end)
+  ]);
+  const names=['colaboradores','espelhos','horas excedentes','solicitações','ausências','movimentos do banco de horas'];
+  queries.forEach((q,i)=>{if(q.error)throw new Error('Falha ao consultar '+names[i]+': '+q.error.message)});
+  const [employees,statements,overtime,requests,absences,bank]=queries.map(q=>q.data||[]);
+  const statementIds=statements.map(s=>s.id);
+  let signatures=[],finalPdfs=[];
+  if(statementIds.length){
+   const [sigResult,pdfResult]=await Promise.all([
+    supabaseClient.from('timesheet_statement_signatures').select('id,statement_id,signer_type').in('statement_id',statementIds),
+    supabaseClient.from('timesheet_statement_final_pdf_versions').select('id,statement_id,generation,storage_path').in('statement_id',statementIds)
+   ]);
+   if(sigResult.error)throw new Error('Falha ao conferir assinaturas: '+sigResult.error.message);
+   if(pdfResult.error)throw new Error('Falha ao conferir PDFs finais: '+pdfResult.error.message);
+   signatures=sigResult.data||[];finalPdfs=pdfResult.data||[];
+  }
+  const latestByEmployee=new Map();
+  statements.forEach(s=>{if(!latestByEmployee.has(s.employee_id))latestByEmployee.set(s.employee_id,s)});
+  let ready=0;
+  const rows=employees.map(emp=>{
+   const st=latestByEmployee.get(emp.id);
+   const signedTypes=new Set(signatures.filter(x=>x.statement_id===st?.id).map(x=>x.signer_type));
+   const hasEmployee=signedTypes.has('employee'),hasResponsible=signedTypes.has('responsible');
+   const hasPdf=finalPdfs.some(x=>x.statement_id===st?.id&&x.storage_path);
+   const isReady=!!st&&st.status==='completed'&&hasEmployee&&hasResponsible&&hasPdf;
+   if(isReady)ready++;
+   let issue='Espelho não gerado';
+   if(st){issue=closingStatusLabel(st.status);if(st.status==='completed'&&(!hasEmployee||!hasResponsible))issue='Assinaturas incompletas';else if(st.status==='completed'&&!hasPdf)issue='PDF final ausente';else if(isReady)issue='Pronto';}
+   return {emp,st,hasEmployee,hasResponsible,hasPdf,isReady,issue};
+  });
+  const approvalCount=overtime.length+requests.length+absences.length+bank.length;
+  const missingStatements=rows.filter(x=>!x.isReady).length;
+  const today=localDateInSaoPaulo(new Date());
+  const isPeriodComplete=range.end<today;
+  const blockers=missingStatements+approvalCount+(isPeriodComplete?0:1);
+  $('closingEmployees').textContent=employees.length;
+  $('closingStatementsReady').textContent=ready;
+  $('closingPendingApprovals').textContent=approvalCount;
+  $('closingBlockers').textContent=blockers;
+  $('closingEmployeesTable').innerHTML=rows.length?rows.map(x=>`<tr><td><strong>${escapeHTML(x.emp.full_name)}</strong><br><span class="hint">${escapeHTML(x.emp.employee_code||'')}</span></td><td>${x.st?'Versão '+Number(x.st.version)+' — '+escapeHTML(closingStatusLabel(x.st.status)):'Não gerado'}</td><td>${x.hasEmployee?'Colaborador ✓':'Colaborador —'}<br>${x.hasResponsible?'Responsável ✓':'Responsável —'}</td><td>${x.hasPdf?'PDF final ✓':'PDF final —'}</td><td><span class="badge ${x.isReady?'approved':'pending'}">${escapeHTML(x.issue)}</span></td></tr>`).join(''):'<tr><td colspan="5" class="empty">Nenhum colaborador ativo nesta empresa.</td></tr>';
+  const details=[];
+  if(!isPeriodComplete)details.push('A competência ainda está em andamento. O fechamento só poderá ocorrer depois do último dia do mês.');
+  rows.filter(x=>!x.isReady).forEach(x=>details.push(x.emp.full_name+': '+x.issue+'.'));
+  if(overtime.length)details.push(overtime.length+' ocorrência(s) de horas excedentes aguardando análise.');
+  if(requests.length)details.push(requests.length+' solicitação(ões) aguardando decisão.');
+  if(absences.length)details.push(absences.length+' ausência(s)/justificativa(s) aguardando análise.');
+  if(bank.length)details.push(bank.length+' movimento(s) do banco de horas aguardando análise.');
+  if(!details.length)details.push('Nenhuma pendência encontrada. A competência está apta para a etapa de fechamento.');
+  $('closingPendingDetails').innerHTML=details.map(x=>'<p style="margin:7px 0">• '+escapeHTML(x)+'</p>').join('');
+  if(blockers===0){
+   $('closingResult').textContent='Conferência aprovada: todos os colaboradores possuem espelho final assinado, não há aprovações pendentes e a competência está encerrada. A etapa de fechamento definitivo ainda será implementada.';
+   showBox('closingMessage','Conferência concluída sem bloqueios. Nenhum dado foi alterado.','success');
+  }else{
+   $('closingResult').textContent='Fechamento bloqueado: '+blockers+' pendência(s) identificada(s). Resolva os itens listados antes de encerrar a competência.';
+   showBox('closingMessage','Conferência concluída. Existem pendências que impedem o fechamento.','error');
+  }
+ }catch(err){
+  $('closingResult').textContent='Não foi possível concluir a conferência.';
+  $('closingEmployeesTable').innerHTML='<tr><td colspan="5" class="empty">Erro ao consultar os dados.</td></tr>';
+  showBox('closingMessage',err.message||String(err),'error');
+ }finally{if(button){button.disabled=false;button.textContent=oldText||'Conferir competência'}}
+}
+
 // NAVEGAÇÃO / SESSÃO
 async function showPage(page,button){
  document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));$('page-'+page)?.classList.remove('hidden');
@@ -1821,12 +1939,18 @@ async function showPage(page,button){
   escalas:['Escalas','Modelos fixos e cíclicos e atribuição aos colaboradores.'],
   solicitacoes:['Solicitações','Análise e acompanhamento das solicitações dos colaboradores.'],
   relatorios:['Relatórios','Indicadores e informações gerenciais.'],
+   fechamento:['Fechamento mensal','Conferência e preparação do fechamento da competência.'],
   disciplinar:['KFYRA Disciplinar','Gestão disciplinar empresarial.'],
   configuracoes:['Configurações','Configurações da empresa.'],
   ajuda:['KFYRA AI','Inteligência para sua gestão.']
  };
  $('pageTitle').textContent=titles[page][0];$('pageSubtitle').textContent=titles[page][1];$('companyBanner').classList.toggle('hidden',page!=='inicio');
- if(page==='departamentos')await loadDepartments();
+ if(page==='fechamento'){
+   if(!canManage()){showBox('closingMessage','Somente RH ou administrador pode acessar o fechamento mensal.','error');return}
+   if($('closingMonth')&&!$('closingMonth').value)$('closingMonth').value=localDateInSaoPaulo(new Date()).slice(0,7);
+   await loadMonthlyClosingReview();
+  }
+  if(page==='departamentos')await loadDepartments();
  if(page==='colaboradores'){updateDepartmentOptions();updateScheduleOptions()}
  if(page==='escalas'){await loadSchedules();await loadEmployees()}
  if(page==='solicitacoes'){
