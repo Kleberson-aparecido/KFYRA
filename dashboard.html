@@ -365,6 +365,8 @@ th{color:var(--muted);font-weight:700}
 <div class="field" style="flex:2"><label for="pointEmployeeSearch">Pesquisar colaborador</label><input id="pointEmployeeSearch" type="search" placeholder="Digite o nome do colaborador..." oninput="renderPointEmployeeSearch()" autocomplete="off"><div id="pointEmployeeResults" class="point-employee-results"></div></div>
 <div class="field"><label for="pointMonth">Mês de consulta</label><input id="pointMonth" type="month" onchange="loadEmployeePointHistory()"></div>
 </div>
+<div class="actions" style="margin:12px 0"><button type="button" class="btn" id="generateStatementButton" onclick="generateOfficialTimesheetStatement()">Gerar espelho oficial (PDF)</button><span class="muted">Gera e salva o documento oficial do mês selecionado.</span></div>
+<div id="officialStatementMessage" class="message"></div>
 <div id="employeePointMessage" class="message"></div>
 <div id="employeePointSummary" class="inline-note">Pesquise e selecione um colaborador para visualizar o histórico de ponto.</div>
 <div class="table-wrap"><table><thead><tr><th>Data</th><th>Entrada</th><th>Início intervalo</th><th>Retorno</th><th>Saída</th><th>Marcações</th></tr></thead><tbody id="employeePointTable"><tr><td colspan="6" class="empty">Nenhum colaborador selecionado.</td></tr></tbody></table></div>
@@ -1551,6 +1553,47 @@ async function loadEmployeePointHistory(){
   tbody.innerHTML=`<tr><td colspan="6" class="empty">Não foi possível consultar as marcações: ${escapeHTML(err.message||String(err))}</td></tr>`;
   summary.textContent='Falha na consulta. O erro foi exibido na tabela para facilitar a correção.';
   if(message){message.className='message error';message.textContent='Erro ao consultar ponto: '+(err.message||String(err));}
+ }
+}
+async function generateOfficialTimesheetStatement(){
+ const button=$('generateStatementButton'),box=$('officialStatementMessage');
+ if(!canManage()){showBox('officialStatementMessage','Somente RH ou administrador da empresa pode gerar o espelho oficial.','error');return}
+ if(!selectedPointEmployeeId){showBox('officialStatementMessage','Pesquise e selecione um colaborador antes de gerar o espelho.','error');return}
+ const month=$('pointMonth')?.value||localDateInSaoPaulo(new Date()).slice(0,7);
+ if(!/^\\d{4}-\\d{2}$/.test(month)){showBox('officialStatementMessage','Selecione um mês válido.','error');return}
+ const [year,mon]=month.split('-').map(Number);
+ const periodStart=`${month}-01`;
+ const periodEnd=`${year}-${String(mon).padStart(2,'0')}-${String(new Date(year,mon,0).getDate()).padStart(2,'0')}`;
+ const employee=employeesData.find(e=>String(e.id)===String(selectedPointEmployeeId));
+ if(button){button.disabled=true;button.textContent='Gerando PDF...'}
+ if(box){box.className='message';box.textContent=''}
+ try{
+  const {data:{session},error:sessionError}=await supabaseClient.auth.getSession();
+  if(sessionError||!session?.access_token)throw new Error('Sua sessão expirou. Entre novamente no painel.');
+  const response=await fetch(`${SUPABASE_URL}/functions/v1/generate-timesheet-statement`,{
+   method:'POST',
+   headers:{'Content-Type':'application/json','Authorization':`Bearer ${session.access_token}`,'apikey':SUPABASE_KEY},
+   body:JSON.stringify({employee_id:selectedPointEmployeeId,period_start:periodStart,period_end:periodEnd})
+  });
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok)throw new Error(result.error||result.message||`A função respondeu com HTTP ${response.status}.`);
+  const statementId=result.statement_id||result.statement?.id||result.id||null;
+  let statementQuery=supabaseClient.from('timesheet_statements').select('id,employee_id,period_start,period_end,version,status,pdf_storage_path,pdf_generated_at');
+  if(statementId)statementQuery=statementQuery.eq('id',statementId);
+  else statementQuery=statementQuery.eq('employee_id',selectedPointEmployeeId).eq('period_start',periodStart).eq('period_end',periodEnd).order('version',{ascending:false}).limit(1);
+  const {data:statement,error:statementError}=await statementQuery.maybeSingle();
+  if(statementError)throw new Error('O PDF foi solicitado, mas não foi possível localizar o registro do espelho: '+statementError.message);
+  if(!statement?.pdf_storage_path)throw new Error('A função respondeu, mas o registro ainda não apresenta o caminho do PDF. Confira o status no Supabase antes de tentar novamente.');
+  const {data:file,error:fileError}=await supabaseClient.storage.from('timesheet-statements').createSignedUrl(statement.pdf_storage_path,3600);
+  if(fileError||!file?.signedUrl)throw new Error('O espelho foi gerado, mas não foi possível abrir o arquivo: '+(fileError?.message||'link temporário indisponível'));
+  const status=statement.status==='draft'?'Rascunho aguardando liberação para assinatura':statement.status;
+  box.className='message success';
+  box.innerHTML=`Espelho oficial gerado para <strong>${escapeHTML(employee?.full_name||'colaborador')}</strong> — versão ${Number(statement.version)||1}. Status: ${escapeHTML(status)}. <a href="${escapeHTML(file.signedUrl)}" target="_blank" rel="noopener">Abrir PDF</a>`;
+ }catch(err){
+  console.error('Erro ao gerar espelho oficial:',err);
+  showBox('officialStatementMessage',err.message||String(err),'error');
+ }finally{
+  if(button){button.disabled=false;button.textContent='Gerar espelho oficial (PDF)'}
  }
 }
 async function loadOvertime(){
