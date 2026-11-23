@@ -1551,7 +1551,7 @@ const movimentosBasicos=(movimentos||[]).filter(x=>x.status==="approved"&&(x.mov
 return "Consultei seus registros de horas. 💚\n• Horas extras aguardando análise: "+formatarDuracao(pendentes.reduce((s,x)=>s+Number(x.minutes_worked||0),0))+" ("+pendentes.length+" registro(s)).\n• Horas extras aprovadas no histórico consultado: "+formatarDuracao(minutosAprovados)+".\n• Créditos e débitos aprovados consultados: saldo parcial de "+(saldoMov<0?"-":"+")+formatarDuracao(Math.abs(saldoMov))+".\n• Ajustes/compensações aprovados identificados separadamente: "+especiais+".\n\nEste é um resumo dos lançamentos retornados, não substitui o saldo oficial exibido no Meu Ponto. A aprovação e a definição de pagamento ou compensação são responsabilidade do RH.";
 }
 let camillyContexto={intencao:null,data:null,ultimaResposta:null};
-function camillyNormalizar(texto){return String(texto||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[!?.,;:]/g," ").replace(/\s+/g," ").trim()}
+function camillyNormalizar(texto){return String(texto||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[!?.,;:]/g," ").replace(/^\s*\d+[.)-]\s*/,"").replace(/\s+/g," ").trim()}
 function camillyDataContextual(texto){
 const t=camillyNormalizar(texto);
 if(/\b(amanha|depois de amanha|ontem|hoje)\b/.test(t)||/\b\d{1,2}[\/.-]\d{1,2}/.test(t))return camillyDataAlvo(texto);
@@ -1560,17 +1560,23 @@ return new Date();
 }
 async function consultarProximaFolgaCamilly(){
 if(!usuarioAtual||!colaboradorAtual)throw new Error("Sua sessão não está ativa. Entre novamente no Meu Ponto.");
-const hoje=new Date();
-for(let deslocamento=0;deslocamento<3;deslocamento++){
-const mes=new Date(hoje.getFullYear(),hoje.getMonth()+deslocamento,1);
-const jornadas=await carregarJornadasPrevistas(mes.getFullYear(),mes.getMonth()+1);
-const primeiro=deslocamento===0?hoje.getDate()+1:1;
-for(let dia=primeiro;dia<=new Date(mes.getFullYear(),mes.getMonth()+1,0).getDate();dia++){
-const data=new Date(mes.getFullYear(),mes.getMonth(),dia,12),j=jornadas[dataChaveLocal(data)];
-if(j&&!j.trabalho)return "Encontrei sua próxima folga cadastrada: "+data.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long"})+". 💚";
+const inicio=new Date();
+inicio.setHours(12,0,0,0);
+inicio.setDate(inicio.getDate()+1);
+const cacheMes={};
+for(let deslocamento=0;deslocamento<366;deslocamento++){
+const data=new Date(inicio);
+data.setDate(inicio.getDate()+deslocamento);
+const ano=data.getFullYear(),mes=data.getMonth()+1,chaveMes=ano+"-"+String(mes).padStart(2,"0");
+if(!Object.prototype.hasOwnProperty.call(cacheMes,chaveMes)){
+cacheMes[chaveMes]=await carregarJornadasPrevistas(ano,mes);
+}
+const jornada=cacheMes[chaveMes][dataChaveLocal(data)];
+if(jornada&&jornada.trabalho===false){
+return "Encontrei sua próxima folga na escala cadastrada: "+data.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"})+". 💚";
 }
 }
-return "Não encontrei uma próxima folga na escala publicada para os próximos meses. Vale confirmar sua programação com o RH.";
+return "Consultei sua escala dos próximos 12 meses, mas não encontrei um dia marcado como folga. Isso não significa que você não terá folga: pode haver períodos sem escala publicada. Confirme a programação com o RH. 💚";
 }
 async function consultarDiaCompletoCamilly(data){
 const chave=dataChaveLocal(data),meses=await carregarJornadasPrevistas(data.getFullYear(),data.getMonth()+1),j=meses[chave];
@@ -1597,7 +1603,7 @@ if(!usuarioAtual||!colaboradorAtual)return "Sua sessão não está ativa. Entre 
 try{
 let intencao=null;
 const followup=/^(e (o|a|os|as) )?(intervalo|pausa|saida|entrada|folga|horario|escala|marcacoes|marcações|status|situacao|situacao dela|mais detalhes|e depois|e antes|qual deles|e o banco|e as horas)(\s+(de hoje|de amanha|amanha|ontem))?$/i.test(t);
-if(/proxima folga|quando folgo|quando e minha folga|proximo dia de folga/.test(t))intencao="proxima_folga";
+if(/proxim[oa]s? folgas?|quando (eu )?(vou )?folgar|quando folgo|qual (e|sera) (a )?minha (proxima )?folga|dia de descanso|proximo descanso/.test(t))intencao="proxima_folga";
 else if(/como faco|como envio|como pedir|quero solicitar|preciso corrigir|esqueci de bater|esqueci o ponto/.test(t))intencao="ajuda_solicitacao";
 else if(/como funciona|onde encontro|como registro|como bato ponto/.test(t))intencao="ajuda_ponto";
 else if(/resumo do dia|como foi meu dia|meu dia hoje|situacao de hoje|status de hoje|trabalhei hoje|trabalhei ontem/.test(t))intencao="dia_completo";
