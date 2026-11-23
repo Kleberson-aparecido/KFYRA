@@ -1623,10 +1623,27 @@ async function loadLatestOfficialTimesheetStatement(){
   if(fileError||!file?.signedUrl)throw new Error('Não foi possível abrir o PDF: '+(fileError?.message||'link temporário indisponível'));
   const labels={draft:'Rascunho — aguardando liberação do RH',awaiting_employee:'Aguardando assinatura do colaborador',awaiting_responsible:'Aguardando assinatura do responsável',completed:'Finalizado',cancelled:'Cancelado'};
   const releaseButton=statement.status==='draft'? ` <button type="button" class="btn btn-approve" style="margin:10px 0 0 8px" onclick="releaseOfficialTimesheetStatement('${statement.id}')">Liberar para assinatura do colaborador</button>`:'';
+   const responsibleSignButton=statement.status==='awaiting_responsible'? ` <button type="button" class="btn btn-approve" style="margin:10px 0 0 8px" onclick="signOfficialTimesheetAsResponsible('${statement.id}')">Confirmar assinatura do responsável</button>`:'';
   box.className='message success';
-  box.innerHTML=`Espelho existente — versão ${Number(statement.version)||1}. Status: <strong>${escapeHTML(labels[statement.status]||statement.status)}</strong>. <a href="${escapeHTML(file.signedUrl)}" target="_blank" rel="noopener">Abrir PDF</a>${releaseButton}`;
+  box.innerHTML=`Espelho existente — versão ${Number(statement.version)||1}. Status: <strong>${escapeHTML(labels[statement.status]||statement.status)}</strong>. <a href="${escapeHTML(file.signedUrl)}" target="_blank" rel="noopener">Abrir PDF</a>${releaseButton}${responsibleSignButton}`;
  }catch(err){showBox('officialStatementMessage',err.message||String(err),'error')}
 }
+async function signOfficialTimesheetAsResponsible(statementId){
+  if(!canManage()){showBox('officialStatementMessage','Somente RH ou administrador pode assinar como responsável.','error');return}
+  if(!statementId)return;
+  if(!confirm('Confirma sua assinatura eletrônica como responsável por este espelho? A assinatura será registrada com seu usuário, data, horário e versão do documento.'))return;
+  const box=$('officialStatementMessage');
+  try{
+   box.className='message';box.textContent='Registrando assinatura do responsável...';
+   const {data,error}=await supabaseClient.rpc('kfyra_sign_timesheet_statement',{p_statement_id:statementId,p_user_agent:navigator.userAgent});
+   if(error)throw error;
+   const result=Array.isArray(data)?data[0]:data;
+   if(!result||result.new_status!=='completed')throw new Error('A assinatura não foi confirmada pelo banco de dados.');
+   box.className='message success';box.textContent='Assinatura do responsável registrada com sucesso. Espelho finalizado.';
+   await loadLatestOfficialTimesheetStatement();
+  }catch(err){showBox('officialStatementMessage','Não foi possível registrar a assinatura do responsável: '+(err.message||String(err)),'error')}
+ }
+
 async function releaseOfficialTimesheetStatement(statementId){
  if(!canManage()){showBox('officialStatementMessage','Somente RH ou administrador pode liberar o espelho.','error');return}
  if(!statementId)return;
