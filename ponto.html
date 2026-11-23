@@ -241,6 +241,25 @@ body:has(#formRecuperacao:not(.oculto)) header:after,
 body:has(#formSenha:not(.oculto)) header:after{opacity:.75}
 @media(max-width:560px){body:has(#formLogin:not(.oculto)) main,body:has(#formRecuperacao:not(.oculto)) main,body:has(#formSenha:not(.oculto)) main{margin:28px auto 40px;padding:0 13px}body:has(#formLogin:not(.oculto)) header,body:has(#formRecuperacao:not(.oculto)) header,body:has(#formSenha:not(.oculto)) header{margin:12px 13px 0;padding:18px 19px}}
 
+
+/* KFYRA — Prisma Vivo: superfícies pérola e verde-sálvia */
+#areaLogada{color:#183c30}
+body:has(#areaLogada:not(.oculto)) .card{background:linear-gradient(145deg,#f5f8f4 0%,#eaf1eb 52%,#f7f8f1 100%);border:1px solid rgba(210,190,139,.48);box-shadow:0 26px 78px rgba(4,35,25,.25),inset 0 1px 0 rgba(255,255,255,.95)}
+#areaLogada .painel-ponto{background:linear-gradient(145deg,rgba(250,252,248,.96),rgba(233,241,234,.94));border:1px solid rgba(183,202,188,.72);box-shadow:0 10px 28px rgba(19,65,46,.065),inset 0 1px 0 rgba(255,255,255,.95);backdrop-filter:blur(12px)}
+#areaLogada .painel-ponto h3{color:#174b38;letter-spacing:.15px}
+#areaLogada .painel-ponto:not(:first-child){position:relative}
+#areaLogada .painel-ponto:not(:first-child):after{content:"";position:absolute;top:0;left:20px;width:42px;height:2px;border-radius:4px;background:linear-gradient(90deg,#b99a55,rgba(185,154,85,0))}
+#areaLogada .abas{background:linear-gradient(120deg,rgba(229,238,231,.96),rgba(246,247,239,.96));border:1px solid rgba(190,172,119,.3)}
+#areaLogada .aba{color:#527164}
+#areaLogada .aba.ativa{background:linear-gradient(125deg,#0a3a2c,#176348);color:#fff;box-shadow:0 7px 18px rgba(10,58,44,.2)}
+#areaLogada input:not([type="file"]),#areaLogada select,#areaLogada textarea{background:rgba(255,255,255,.78);border-color:#d5e1d7;box-shadow:inset 0 1px 2px rgba(21,62,44,.025)}
+#areaLogada .registro-dia,#areaLogada .solicitacao-card,#areaLogada .cal-detalhe,#areaLogada .dia-escala{background:linear-gradient(145deg,#fbfcf9,#f0f5ef);border-color:#dce6dc;box-shadow:0 5px 16px rgba(20,65,46,.04)}
+#areaLogada .cal-dia{background:linear-gradient(145deg,#fbfcf9,#edf3ed);border-color:#dce6dc}
+#areaLogada .cal-dia.trabalho{background:linear-gradient(145deg,#e4f2e8,#d5e9dc)}
+#areaLogada .cal-dia.folga{background:linear-gradient(145deg,#f8f3e5,#f0e8d2)}
+#areaLogada .dado-perfil{background:rgba(250,252,248,.78);border-color:#dce6dc}
+@media(prefers-reduced-motion:no-preference){#areaLogada .painel-ponto{transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}#areaLogada .painel-ponto:hover{transform:translateY(-2px);border-color:rgba(185,154,85,.45);box-shadow:0 15px 32px rgba(19,65,46,.09)}}
+
 </style>
 </head>
 <body>
