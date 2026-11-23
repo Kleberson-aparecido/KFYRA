@@ -1652,8 +1652,9 @@ async function loadLatestOfficialTimesheetStatement(){
     let profileNames={};
     if(signerIds.length){
      try{
-      const {data:profiles}=await supabaseClient.from('profiles').select('id,full_name').in('id',signerIds);
-      (profiles||[]).forEach(p=>{profileNames[p.id]=p.full_name});
+      const {data:profiles,error:profilesError}=await supabaseClient.rpc('kfyra_get_statement_signer_names',{p_statement_id:statement.id});
+      if(profilesError)throw profilesError;
+      (profiles||[]).forEach(p=>{profileNames[p.signer_user_id]=p.full_name});
      }catch(profileError){console.warn('Não foi possível carregar nomes dos assinantes:',profileError);}
     }
     const employee=employeesData.find(e=>e.id===statement.employee_id);
