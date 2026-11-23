@@ -197,6 +197,50 @@ button:active:not(:disabled){transform:translateY(0) scale(.985)}
 @media(min-width:900px){main{max-width:1040px}.card{padding:38px 42px}#conteudoPonto>.painel-ponto:first-child{padding:32px 36px}#calendarioMensal{gap:9px}.cal-dia{min-height:78px}}
 @media(max-width:500px){#conteudoPonto>.painel-ponto:first-child{min-height:135px;padding:22px 19px}#conteudoPonto>.painel-ponto:nth-child(2){align-items:flex-start;flex-direction:column;gap:7px}#relogio{text-align:left;font-size:20px}.cal-dia{min-height:52px;border-radius:10px}.cal-dia strong{font-size:13px}}
 
+
+/* KFYRA — acesso Prisma: login integrado à identidade visual */
+body:has(#formLogin:not(.oculto)) main,
+body:has(#formRecuperacao:not(.oculto)) main,
+body:has(#formSenha:not(.oculto)) main{max-width:520px;margin:clamp(28px,8vh,88px) auto 55px}
+body:has(#formLogin:not(.oculto)) header,
+body:has(#formRecuperacao:not(.oculto)) header,
+body:has(#formSenha:not(.oculto)) header{max-width:520px;margin-top:24px}
+body:has(#formLogin:not(.oculto)) .card,
+body:has(#formRecuperacao:not(.oculto)) .card,
+body:has(#formSenha:not(.oculto)) .card{position:relative;overflow:hidden;padding:clamp(26px,6vw,42px);border:1px solid rgba(216,183,107,.35);background:linear-gradient(145deg,rgba(255,255,255,.985),rgba(242,249,244,.96));box-shadow:0 28px 90px rgba(0,0,0,.28),0 0 0 7px rgba(255,255,255,.035),inset 0 1px 0 #fff}
+body:has(#formLogin:not(.oculto)) .card:before,
+body:has(#formRecuperacao:not(.oculto)) .card:before,
+body:has(#formSenha:not(.oculto)) .card:before{content:"";position:absolute;right:-88px;top:-115px;width:230px;height:230px;border:1px solid rgba(190,151,70,.34);border-radius:50%;box-shadow:0 0 0 17px rgba(190,151,70,.045),0 0 0 37px rgba(190,151,70,.03);pointer-events:none}
+body:has(#formLogin:not(.oculto)) .card:after,
+body:has(#formRecuperacao:not(.oculto)) .card:after,
+body:has(#formSenha:not(.oculto)) .card:after{content:"";position:absolute;left:-70px;bottom:-105px;width:170px;height:170px;border:1px solid rgba(22,112,78,.12);border-radius:38px;transform:rotate(35deg);pointer-events:none}
+body:has(#formLogin:not(.oculto)) h1,
+body:has(#formRecuperacao:not(.oculto)) h1,
+body:has(#formSenha:not(.oculto)) h1{position:relative;z-index:1;font-size:clamp(28px,6vw,36px);margin:0 0 12px}
+body:has(#formLogin:not(.oculto)) #subtitulo,
+body:has(#formRecuperacao:not(.oculto)) #subtitulo,
+body:has(#formSenha:not(.oculto)) #subtitulo{position:relative;z-index:1;color:#6e8378;font-size:14px;margin:0 0 27px;max-width:370px}
+body:has(#formLogin:not(.oculto)) #formLogin,
+body:has(#formRecuperacao:not(.oculto)) #formRecuperacao,
+body:has(#formSenha:not(.oculto)) #formSenha{position:relative;z-index:1}
+body:has(#formLogin:not(.oculto)) label,
+body:has(#formRecuperacao:not(.oculto)) label,
+body:has(#formSenha:not(.oculto)) label{font-size:12px;letter-spacing:.7px;text-transform:uppercase;color:#48685a}
+body:has(#formLogin:not(.oculto)) input,
+body:has(#formRecuperacao:not(.oculto)) input,
+body:has(#formSenha:not(.oculto)) input{min-height:52px;padding:15px 16px;border-radius:13px;background:rgba(255,255,255,.88)}
+body:has(#formLogin:not(.oculto)) #formLogin button,
+body:has(#formRecuperacao:not(.oculto)) #formRecuperacao button,
+body:has(#formSenha:not(.oculto)) #formSenha button{min-height:54px;margin-top:25px;border:1px solid rgba(216,183,107,.36);background:linear-gradient(110deg,#082e25,#105b43 60%,#0b4435);box-shadow:0 12px 26px rgba(8,65,46,.2);letter-spacing:.25px}
+body:has(#formLogin:not(.oculto)) #linkRecuperacao,
+body:has(#formRecuperacao:not(.oculto)) .link,
+body:has(#formSenha:not(.oculto)) .link{position:relative;z-index:1;margin-top:22px;font-size:13px}
+body:has(#formLogin:not(.oculto)) #formLogin:before{content:"ACESSO SEGURO • PORTAL DO COLABORADOR";display:block;margin:0 0 18px;color:#9a7a3d;font-size:9px;font-weight:800;letter-spacing:1.8px}
+body:has(#formLogin:not(.oculto)) header:after,
+body:has(#formRecuperacao:not(.oculto)) header:after,
+body:has(#formSenha:not(.oculto)) header:after{opacity:.75}
+@media(max-width:560px){body:has(#formLogin:not(.oculto)) main,body:has(#formRecuperacao:not(.oculto)) main,body:has(#formSenha:not(.oculto)) main{margin:28px auto 40px;padding:0 13px}body:has(#formLogin:not(.oculto)) header,body:has(#formRecuperacao:not(.oculto)) header,body:has(#formSenha:not(.oculto)) header{margin:12px 13px 0;padding:18px 19px}}
+
 </style>
 </head>
 <body>
