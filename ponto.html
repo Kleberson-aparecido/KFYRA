@@ -1663,8 +1663,9 @@ return "Claro! 💚 Quero explicar direitinho. Você quer entender melhor sua es
 }
 const followup=camillyEhFollowup(t);
 const followupDiaSeguinte=/^(e )?no dia seguinte$/.test(t);
-const followupData=/^(e )?(amanha|depois de amanha|hoje|ontem)$/.test(t);
-let intencao=(followupData&&camillyContexto.intencao)?camillyContexto.intencao:camillyDetectarIntencao(t);
+const followupData=/(^| )(e )?(amanha|depois de amanha|hoje|ontem)( |$)/.test(t);
+const intencaoDetectada=camillyDetectarIntencao(t);
+let intencao=intencaoDetectada||(followupData?camillyContexto.intencao:null);
 if(followupDiaSeguinte){
 if(["escala","ponto","dia_completo"].includes(camillyContexto.intencao)&&camillyContexto.data){
 intencao=camillyContexto.intencao;
