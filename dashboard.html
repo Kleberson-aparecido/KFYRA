@@ -365,7 +365,7 @@ th{color:var(--muted);font-weight:700}
 <div class="field" style="flex:2"><label for="pointEmployeeSearch">Pesquisar colaborador</label><input id="pointEmployeeSearch" type="search" placeholder="Digite o nome do colaborador..." oninput="renderPointEmployeeSearch()" autocomplete="off"><div id="pointEmployeeResults" class="point-employee-results"></div></div>
 <div class="field"><label for="pointMonth">Mês de consulta</label><input id="pointMonth" type="month" onchange="loadEmployeePointHistory()"></div>
 </div>
-<div class="actions" style="margin:12px 0"><button type="button" class="btn" id="generateStatementButton" onclick="generateOfficialTimesheetStatement()">Gerar espelho oficial (PDF)</button><span class="muted">Gera e salva o documento oficial do mês selecionado.</span></div>
+<div class="actions" style="margin:12px 0"><button type="button" class="btn" id="generateStatementButton" onclick="generateOfficialTimesheetStatement()">Gerar espelho oficial (PDF)</button><button type="button" class="btn btn-secondary" onclick="loadLatestOfficialTimesheetStatement()">Consultar espelho já gerado</button><span class="muted">Consulte o documento existente sem criar uma nova versão.</span></div>
 <div id="officialStatementMessage" class="message"></div>
 <div id="employeePointMessage" class="message"></div>
 <div id="employeePointSummary" class="inline-note">Pesquise e selecione um colaborador para visualizar o histórico de ponto.</div>
@@ -1597,6 +1597,33 @@ async function generateOfficialTimesheetStatement(){
  }finally{
   if(button){button.disabled=false;button.textContent='Gerar espelho oficial (PDF)'}
  }
+}
+async function loadLatestOfficialTimesheetStatement(){
+ const box=$('officialStatementMessage');
+ if(!canManage()){showBox('officialStatementMessage','Somente RH ou administrador pode consultar o espelho.','error');return}
+ if(!selectedPointEmployeeId){showBox('officialStatementMessage','Pesquise e selecione um colaborador primeiro.','error');return}
+ const month=$('pointMonth')?.value||localDateInSaoPaulo(new Date()).slice(0,7);
+ if(!/^\\d{4}-\\d{2}$/.test(month)){showBox('officialStatementMessage','Selecione um mês válido.','error');return}
+ const [year,mon]=month.split('-').map(Number);
+ const periodStart=month+'-01';
+ const periodEnd=year+'-'+String(mon).padStart(2,'0')+'-'+String(new Date(year,mon,0).getDate()).padStart(2,'0');
+ try{
+  box.className='message';box.textContent='Consultando espelho existente...';
+  const {data:statement,error}=await supabaseClient.from('timesheet_statements')
+   .select('id,employee_id,period_start,period_end,version,status,pdf_storage_path')
+   .eq('company_id',currentCompany.id).eq('employee_id',selectedPointEmployeeId)
+   .eq('period_start',periodStart).eq('period_end',periodEnd)
+   .order('version',{ascending:false}).limit(1).maybeSingle();
+  if(error)throw error;
+  if(!statement)throw new Error('Não existe espelho gerado para este colaborador e mês.');
+  if(!statement.pdf_storage_path)throw new Error('O espelho mais recente ainda não possui PDF armazenado.');
+  const {data:file,error:fileError}=await supabaseClient.storage.from('timesheet-statements').createSignedUrl(statement.pdf_storage_path,3600);
+  if(fileError||!file?.signedUrl)throw new Error('Não foi possível abrir o PDF: '+(fileError?.message||'link temporário indisponível'));
+  const labels={draft:'Rascunho — aguardando liberação do RH',awaiting_employee:'Aguardando assinatura do colaborador',awaiting_responsible:'Aguardando assinatura do responsável',completed:'Finalizado',cancelled:'Cancelado'};
+  const releaseButton=statement.status==='draft'? ` <button type="button" class="btn btn-approve" style="margin:10px 0 0 8px" onclick="releaseOfficialTimesheetStatement('${statement.id}')">Liberar para assinatura do colaborador</button>`:'';
+  box.className='message success';
+  box.innerHTML=`Espelho existente — versão ${Number(statement.version)||1}. Status: <strong>${escapeHTML(labels[statement.status]||statement.status)}</strong>. <a href="${escapeHTML(file.signedUrl)}" target="_blank" rel="noopener">Abrir PDF</a>${releaseButton}`;
+ }catch(err){showBox('officialStatementMessage',err.message||String(err),'error')}
 }
 async function releaseOfficialTimesheetStatement(statementId){
  if(!canManage()){showBox('officialStatementMessage','Somente RH ou administrador pode liberar o espelho.','error');return}
