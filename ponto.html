@@ -1644,7 +1644,7 @@ return "Na aba Registro de Jornada você registra entrada, intervalo, retorno, p
 }
 function camillyDetectarIntencao(texto){
 const t=camillyNormalizar(texto);
-if(/(quero|gostaria|preciso|posso|como faco|como pedir).*(troca|trocar|mudar|alterar).*(folga|descanso)|(troca|trocar|mudar|alterar).*(minha )?(folga|dia de descanso)|troca de folga/.test(t))return "ajuda_solicitacao";
+if(/(quero|gostaria|preciso|posso|como faco|como pedir).*(troca|trocar|mudar|alterar).*(folga|descanso|escala|turno|jornada|horario)|(troca|trocar|mudar|alterar).*(minha )?(folga|dia de descanso|escala|turno|jornada)|troca de folga/.test(t))return "ajuda_solicitacao";
 if(/proxim[oa]s? folgas?|quando (eu )?(vou )?folgar|quando folgo|qual (e|sera) (a )?minha (proxima )?folga|dia de descanso|proximo descanso|minha folga/.test(t))return "proxima_folga";
 if(/como faco|como envio|como pedir|quero solicitar|posso solicitar|preciso solicitar|solicitar (uma )?(troca|mudanca)|preciso corrigir|esqueci de bater|esqueci o ponto|corrigir (meu )?ponto|pedir (uma )?folga|trocar (minha )?folga/.test(t))return "ajuda_solicitacao";
 if(/como funciona|onde encontro|como registro|como bato ponto|como usar|me ajuda a usar/.test(t))return "ajuda_ponto";
