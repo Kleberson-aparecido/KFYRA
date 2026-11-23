@@ -1531,7 +1531,7 @@ return "Seu intervalo principal em "+dataBonita+" está previsto para "+formatar
 }
 if(/pausa/.test(t)){
 if(!jornada.pausas||!jornada.pausas.length)return "Não encontrei pausas adicionais cadastradas na escala de "+dataBonita+". 💚";
-return "Suas pausas adicionais em "+dataBonita+":\\n"+jornada.pausas.map(p=>"• Pausa "+p.numero+": "+formatarHora(p.inicio)+" às "+formatarHora(p.fim)+" ("+formatarIntervalo(p.duracao)+")").join("\\n")+" 💚";
+return "Suas pausas adicionais em "+dataBonita+":\n"+jornada.pausas.map(p=>"• Pausa "+p.numero+": "+formatarHora(p.inicio)+" às "+formatarHora(p.fim)+" ("+formatarIntervalo(p.duracao)+")").join("\n")+" 💚";
 }
 if(/entrada|comeco|inicio/.test(t))return "Sua entrada prevista em "+dataBonita+" é às "+formatarHora(jornada.inicio)+". 💚";
 if(/saida|termino|fim/.test(t))return "Sua saída prevista em "+dataBonita+" é às "+formatarHora(jornada.fim)+". 💚";
@@ -1628,20 +1628,20 @@ return "Na aba Registro de Jornada você registra entrada, intervalo, retorno, p
 function camillyDetectarIntencao(texto){
 const t=camillyNormalizar(texto);
 if(/proxim[oa]s? folgas?|quando (eu )?(vou )?folgar|quando folgo|qual (e|sera) (a )?minha (proxima )?folga|dia de descanso|proximo descanso|minha folga/.test(t))return "proxima_folga";
-if(/como faco|como envio|como pedir|quero solicitar|preciso corrigir|esqueci de bater|esqueci o ponto|corrigir (meu )?ponto|pedir (uma )?folga|trocar (minha )?folga/.test(t))return "ajuda_solicitacao";
+if(/como faco|como envio|como pedir|quero solicitar|posso solicitar|preciso solicitar|solicitar (uma )?(troca|mudanca)|preciso corrigir|esqueci de bater|esqueci o ponto|corrigir (meu )?ponto|pedir (uma )?folga|trocar (minha )?folga/.test(t))return "ajuda_solicitacao";
 if(/como funciona|onde encontro|como registro|como bato ponto|como usar|me ajuda a usar/.test(t))return "ajuda_ponto";
 if(/resumo do dia|como foi meu dia|meu dia hoje|situacao de hoje|status de hoje|trabalhei hoje|trabalhei ontem|quanto trabalhei|total de horas trabalhadas/.test(t))return "dia_completo";
 if(/solicit|pedido|atestado|declaracao|documento|comprovante|justificativa|troca de escala/.test(t))return "solicitacoes";
 if(/espelho|assinatura|pdf|fechamento|documento mensal/.test(t))return "espelho";
 if(/hora extra|horas extras|banco de horas|saldo de horas|saldo de banco|meu saldo|credito de horas|debito de horas|compensacao/.test(t))return "horas";
-if(/marcacao|marcacoes|registro de ponto|bati ponto|meu ponto|entrada real|saida real|que horas (eu )?(entrei|sai)|horario que (entrei|sai)|minhas entradas|minhas saidas|atraso|atrasado|esqueci de registrar/.test(t))return "ponto";
-if(/escala|horario|amanha|depois de amanha|ontem|hoje|folga|pausa|intervalo|almoco|entrada prevista|saida prevista|que horas comeco|que horas termino|qual (e|sera) minha entrada|qual (e|sera) minha saida|meu turno|jornada/.test(t))return "escala";
+if(/marcacao|marcacoes|registro de ponto|bati ponto|meu ponto|entrada real|saida real|registrei (minha )?(entrada|saida)|horario (em )?que (entrei|sai(?!o))|que horas (eu )?(entrei|sai(?!o))|minhas entradas|minhas saidas|atraso|atrasado|esqueci de registrar/.test(t))return "ponto";
+if(/escala|horario|amanha|depois de amanha|ontem|hoje|folga|pausa|intervalo|almoco|entrada prevista|saida prevista|que horas (eu )?saio|que horas comeco|que horas termino|qual (e|sera) minha entrada|qual (e|sera) minha saida|meu turno|jornada|trabalho (neste|nesse|no) sabado|trabalho (neste|nesse|na) (domingo|segunda|terca|quarta|quinta|sexta)/.test(t))return "escala";
 return null;
 }
 function camillyEhSaudacao(t){return /^(oi+|ola+|bom dia|boa tarde|boa noite|tudo bem|quem e voce|como voce esta)$/.test(t)}
 function camillyEhAgradecimento(t){return /^(obrigad[oa]+|valeu|brigad[oa]+|muito obrigado|muito obrigada)$/.test(t)}
 function camillyEhFollowup(t){
-return /^(e |e o |e a |e os |e as |tambem |e amanha|e hoje|e ontem|mais detalhes|me explica|explica melhor|pode detalhar|qual horario|qual o horario|e depois|e antes|sim|nao|pode|quero|isso|certo|entendi|e ai)/.test(t);
+return /^(e |e o |e a |e os |e as |tambem |e amanha|e hoje|e ontem|e no dia seguinte|no dia seguinte|mais detalhes|me explica|explica melhor|pode detalhar|qual horario|qual o horario|e depois|e antes|sim|nao|pode|quero|isso|certo|entendi|e ai)/.test(t);
 }
 async function responderCamilly(texto){
 const t=camillyNormalizar(texto);
