@@ -1551,7 +1551,7 @@ const movimentosBasicos=(movimentos||[]).filter(x=>x.status==="approved"&&(x.mov
 return "Consultei seus registros de horas. 💚\n• Horas extras aguardando análise: "+formatarDuracao(pendentes.reduce((s,x)=>s+Number(x.minutes_worked||0),0))+" ("+pendentes.length+" registro(s)).\n• Horas extras aprovadas no histórico consultado: "+formatarDuracao(minutosAprovados)+".\n• Créditos e débitos aprovados consultados: saldo parcial de "+(saldoMov<0?"-":"+")+formatarDuracao(Math.abs(saldoMov))+".\n• Ajustes/compensações aprovados identificados separadamente: "+especiais+".\n\nEste é um resumo dos lançamentos retornados, não substitui o saldo oficial exibido no Meu Ponto. A aprovação e a definição de pagamento ou compensação são responsabilidade do RH.";
 }
 let camillyContexto={intencao:null,data:null,ultimaResposta:null};
-function camillyNormalizar(texto){return String(texto||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[!?.,;:]/g," ").replace(/^\s*\d+[.)-]\s*/,"").replace(/\s+/g," ").trim()}
+function camillyNormalizar(texto){return String(texto||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[!?.,;:]/g," ").replace(/^\s*\d+\s*/,"").replace(/\s+/g," ").trim()}
 function camillyDataContextual(texto){
 const t=camillyNormalizar(texto);
 if(/\b(amanha|depois de amanha|ontem|hoje)\b/.test(t)||/\b\d{1,2}[\/.-]\d{1,2}/.test(t))return camillyDataAlvo(texto);
