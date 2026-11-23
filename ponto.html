@@ -1495,7 +1495,7 @@ const br=t.match(/\b(\d{1,2})[\/.-](\d{1,2})(?:[\/.-](\d{4}))?\b/);
 if(br){const ano=Number(br[3]||agora.getFullYear()),mes=Number(br[2]),dia=Number(br[1]);const d=new Date(ano,mes-1,dia,12);if(d.getFullYear()===ano&&d.getMonth()===mes-1&&d.getDate()===dia)return d}
 const dias={domingo:0,segunda:1,terca:2,quarta:3,quinta:4,sexta:5,sabado:6};
 const diaTexto=t.match(/\b(domingo|segunda|terca|quarta|quinta|sexta|sabado)(?: feira)?\b/);
-if(diaTexto){const alvo=dias[diaTexto[1]],hoje=new Date(agora.getFullYear(),agora.getMonth(),agora.getDate(),12);let diferenca=(alvo-hoje.getDay()+7)%7;if(diferenca===0||/proxima|que vem/.test(t))diferenca+=7;hoje.setDate(hoje.getDate()+diferenca);return hoje}
+if(diaTexto){const alvo=dias[diaTexto[1]],hoje=new Date(agora.getFullYear(),agora.getMonth(),agora.getDate(),12);let diferenca=(alvo-hoje.getDay()+7)%7;if(diferenca===0)diferenca+=7;hoje.setDate(hoje.getDate()+diferenca);return hoje}
 return agora;
 }
 function camillyDetalhesJornada(jornada){
@@ -1553,7 +1553,7 @@ const pendentes=(extras||[]).filter(x=>x.status==="pending");
 const aprovadas=(extras||[]).filter(x=>x.status==="approved");
 const minutosAprovados=aprovadas.reduce((s,x)=>s+Number(x.minutes_worked||0),0);
 const movimentosBasicos=(movimentos||[]).filter(x=>x.status==="approved"&&(x.movement_type==="credit"||x.movement_type==="debit"));const saldoMov=movimentosBasicos.reduce((s,x)=>s+(x.movement_type==="credit"?1:-1)*Number(x.minutes||0),0);const especiais=(movimentos||[]).filter(x=>x.status==="approved"&&(x.movement_type==="adjustment"||x.movement_type==="compensation")).length;
-return "Consultei seus registros de horas. 💚\n• Horas extras aguardando análise: "+formatarDuracao(pendentes.reduce((s,x)=>s+Number(x.minutes_worked||0),0))+" ("+pendentes.length+" registro(s)).\n• Horas extras aprovadas no histórico consultado: "+formatarDuracao(minutosAprovados)+".\n• Créditos e débitos aprovados consultados: saldo parcial de "+(saldoMov<0?"-":"+")+formatarDuracao(Math.abs(saldoMov))+".\n• Ajustes/compensações aprovados identificados separadamente: "+especiais+".\n\nEste é um resumo dos lançamentos retornados, não substitui o saldo oficial exibido no Meu Ponto. A aprovação e a definição de pagamento ou compensação são responsabilidade do RH.";
+return "Consultei seus registros de horas. 💚\n• Horas extras aguardando análise: "+formatarDuracao(pendentes.reduce((s,x)=>s+Number(x.minutes_worked||0),0))+" ("+pendentes.length+" registro(s)).\n• Horas extras aprovadas no histórico consultado: "+formatarDuracao(minutosAprovados)+".\n• Créditos e débitos aprovados consultados: saldo parcial de "+(saldoMov<0?"-":"+")+formatarDuracao(Math.abs(saldoMov))+".\n• Ajustes/compensações aprovados identificados separadamente: "+especiais+".\n\nConsultei até 12 registros recentes de horas extras e até 30 movimentos do banco de horas. Este resumo é parcial e não substitui o saldo oficial exibido no Meu Ponto. A aprovação e a definição de pagamento ou compensação são responsabilidade do RH.";
 }
 let camillyContexto={intencao:null,data:null,ultimaResposta:null};
 function camillyNormalizar(texto){return String(texto||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[!?.,;:]/g," ").replace(/^\s*\d+\s*/,"").replace(/\s+/g," ").trim()}
@@ -1617,7 +1617,7 @@ else if(/como funciona|onde encontro|como registro|como bato ponto/.test(t))inte
 else if(/resumo do dia|como foi meu dia|meu dia hoje|situacao de hoje|status de hoje|trabalhei hoje|trabalhei ontem/.test(t))intencao="dia_completo";
 else if(/solicit|pedido|atestado|declaracao|documento|comprovante/.test(t))intencao="solicitacoes";
 else if(/espelho|assinatura|pdf|fechamento/.test(t))intencao="espelho";
-else if(/hora extra|horas extras|banco de horas|saldo de horas|saldo de banco/.test(t))intencao="horas";
+else if(/hora extra|horas extras|banco|saldo de horas|saldo de banco|e as horas/.test(t))intencao="horas";
 else if(/marcacao|marcacoes|registro de ponto|bati ponto|meu ponto|entrada real|saida real|que horas (eu )?(entrei|sai)|horario que (entrei|sai)|minhas entradas|minhas saidas/.test(t))intencao="ponto";
 else if(/escala|horario|amanha|depois de amanha|ontem|hoje|folga|pausa|intervalo|almoco|entrada prevista|saida prevista|qual (e|sera) minha entrada|qual (e|sera) minha saida/.test(t))intencao="escala";
 else if(/obrigad|valeu|brigad/.test(t))return "Imagina! 💚 Pode contar comigo para entender suas informações do Meu Ponto.";
