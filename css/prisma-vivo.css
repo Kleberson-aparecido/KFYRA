@@ -152,3 +152,38 @@ body:has(.layout) .inline-note{background:linear-gradient(110deg,#e7f3e9,#f8f6ec
 body:has(.layout) .section-title{position:relative}
 body:has(.layout) .section-title:after{content:"";display:block;width:54px;height:3px;margin-top:9px;border-radius:4px;background:linear-gradient(90deg,#c9a96e,#8fc6a5)}
 @media(max-width:650px){body:has(.layout) .main:before{width:260px;height:260px;right:-150px;top:35%}}
+
+
+/* KFYRA — PLANOS: vitrine Prisma Vivo */
+body:has(#planos) #planos{position:relative;isolation:isolate;overflow:hidden;background:radial-gradient(ellipse at 12% 20%,rgba(184,242,213,.12),transparent 28%),radial-gradient(ellipse at 88% 80%,rgba(216,182,92,.13),transparent 25%),linear-gradient(145deg,#071f19,#103d32 58%,#09251f)}
+body:has(#planos) #planos:before,body:has(#planos) #planos:after{content:"";position:absolute;z-index:-1;border:1px solid rgba(216,182,92,.16);border-radius:50%;pointer-events:none}
+body:has(#planos) #planos:before{width:540px;height:540px;right:-220px;top:-240px;box-shadow:0 0 0 42px rgba(184,242,213,.025),0 0 0 88px rgba(184,242,213,.018)}
+body:has(#planos) #planos:after{width:390px;height:390px;left:-220px;bottom:-220px;box-shadow:0 0 0 35px rgba(216,182,92,.025)}
+body:has(#planos) #planos .section-head .kicker{color:#e5cc88;letter-spacing:3px}
+body:has(#planos) #planos .section-head h2{color:#fff;font-size:clamp(30px,4vw,43px);letter-spacing:-1.6px}
+body:has(#planos) #planos .section-head p{color:#bfd2c7}
+body:has(#planos) #planos .plans{align-items:stretch;gap:22px;margin-top:42px}
+body:has(#planos) #planos .plan{position:relative;overflow:hidden;display:flex;flex-direction:column;padding:30px 27px 27px;border-radius:22px;border:1px solid rgba(255,255,255,.72);background:linear-gradient(145deg,rgba(255,255,255,.97),rgba(232,244,235,.96));box-shadow:0 22px 55px rgba(0,0,0,.18),inset 0 1px #fff;transition:transform .28s,box-shadow .28s,border-color .28s}
+body:has(#planos) #planos .plan:before{content:"";position:absolute;inset:0 0 auto;height:4px;background:linear-gradient(90deg,#a5d9b9,#d8b65c,#a5d9b9)}
+body:has(#planos) #planos .plan:after{content:"";position:absolute;width:150px;height:150px;right:-90px;top:65px;border:1px solid rgba(201,169,110,.2);border-radius:50%;box-shadow:0 0 0 18px rgba(201,169,110,.035);pointer-events:none}
+body:has(#planos) #planos .plan:hover{transform:translateY(-8px);box-shadow:0 30px 65px rgba(0,0,0,.25),0 0 0 1px rgba(216,182,92,.35)}
+body:has(#planos) #planos .plan-tag{color:#477b60;font-size:10px;letter-spacing:1.5px}
+body:has(#planos) #planos .plan h3{font-family:Manrope,sans-serif;font-size:24px;letter-spacing:-.8px;color:#103d32}
+body:has(#planos) #planos .price{font-size:clamp(29px,3vw,38px);color:#103d32;letter-spacing:-1.7px}
+body:has(#planos) #planos .price small{color:#74877d;font-size:12px}
+body:has(#planos) #planos .plan-desc{color:#71847b;line-height:1.7}
+body:has(#planos) #planos .plan ul{flex:1;margin:22px 0 26px}
+body:has(#planos) #planos .plan li{color:#486557;border-bottom-color:rgba(16,61,50,.09);line-height:1.45;padding:11px 0}
+body:has(#planos) #planos .plan li:before{color:#2b9868}
+body:has(#planos) #planos .plan .btn{min-height:48px;border-radius:12px}
+body:has(#planos) #planos .plan.popular{transform:translateY(-12px);border:1px solid rgba(232,205,130,.8);background:radial-gradient(circle at 90% 8%,rgba(216,182,92,.2),transparent 28%),linear-gradient(145deg,#174b3d,#09251f 78%);box-shadow:0 28px 70px rgba(0,0,0,.3),0 0 0 5px rgba(216,182,92,.09)}
+body:has(#planos) #planos .plan.popular:before{height:5px;background:linear-gradient(90deg,#f4dfa0,#c39c45,#f4dfa0)}
+body:has(#planos) #planos .plan.popular .plan-tag{color:#f0d88e}
+body:has(#planos) #planos .plan.popular h3,body:has(#planos) #planos .plan.popular .price{color:#fff}
+body:has(#planos) #planos .plan.popular .price small,body:has(#planos) #planos .plan.popular .plan-desc{color:#c1d7ca}
+body:has(#planos) #planos .plan.popular li{color:#e1eee5;border-bottom-color:rgba(255,255,255,.11)}
+body:has(#planos) #planos .plan.popular li:before{color:#e7cb7e}
+body:has(#planos) #planos .plan.popular .btn-gold{color:#18372c;box-shadow:0 12px 30px rgba(216,182,92,.25)}
+body:has(#planos) #planos> .container > p{color:#b9cfc2!important}
+@media(max-width:900px){body:has(#planos) #planos .plan.popular{transform:none}}
+@media(max-width:650px){body:has(#planos) #planos .plans{gap:17px}body:has(#planos) #planos .plan{padding:26px 22px;border-radius:18px}}
