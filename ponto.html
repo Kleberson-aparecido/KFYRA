@@ -1669,7 +1669,7 @@ if(followupDiaSeguinte){
 if(["escala","ponto","dia_completo"].includes(camillyContexto.intencao)&&camillyContexto.data){
 intencao=camillyContexto.intencao;
 }else{
-return "Você quer consultar sua escala ou suas marcações do dia seguinte? Me diga qual informação deseja ver. 💚";
+camillyContexto={intencao:"clarificar",data:camillyContexto.data,ultimaResposta:null};return "Você quer consultar sua escala ou suas marcações do dia seguinte? Me diga qual informação deseja ver. 💚";
 }
 }
 if(!intencao&&followup&&camillyContexto.intencao){
@@ -1692,7 +1692,7 @@ data=new Date(camillyContexto.data+"T12:00:00");
 }else{
 data=camillyDataContextual(texto);
 }
-const usaDataAnterior=(followup&&!followupData)||followupDiaSeguinte;
+const usaDataAnterior=(followup&&!followupData)||followupDiaSeguinte||(!followupData&&!!camillyContexto.data&&camillyContexto.intencao!=="clarificar");
 if(intencao==="escala"&&/(intervalo|almoco|pausa|entrada|saida|comeco|termino|saio)/.test(t)){
 const r=await consultarCampoEscalaCamilly(texto,usaDataAnterior?data:null);
 camillyContexto={intencao,data:dataChaveLocal(data),ultimaResposta:r};return r;
