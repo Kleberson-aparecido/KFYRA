@@ -149,24 +149,30 @@ th{color:var(--muted);font-weight:700}
 .live-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:15px}.live-updated{font-size:11px;color:var(--muted)}.live-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-bottom:20px}.live-kpi{background:linear-gradient(145deg,#fff,#f5faf6);border:1px solid #e3ece5;border-radius:14px;padding:17px}.live-kpi-label{font-size:11px;color:#788980;font-weight:700}.live-kpi-value{font:800 27px Manrope,sans-serif;color:#174b3b;margin:9px 0 4px}.live-kpi-note{font-size:10px;color:#91a098}
 .live-grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(240px,1fr);gap:16px}.live-panel{background:#fff;border:1px solid #e5ece7;border-radius:14px;padding:18px;margin-bottom:16px;min-width:0}.live-panel h3{font:800 14px Manrope,sans-serif;color:#1b4538;margin-bottom:14px}.live-table{width:100%;border-collapse:collapse;min-width:550px}.live-table th,.live-table td{padding:12px 9px;border-bottom:1px solid #edf1ed;text-align:left;font-size:11px}.live-table th{font-size:10px;color:#8b9991}.live-person{display:flex;align-items:center;gap:8px;min-width:150px}.live-avatar{width:30px;height:30px;border-radius:10px;background:#e3f1e7;color:#1d6049;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800}.live-person strong{display:block}.live-person small{display:block;color:#9aa69f;font-size:9px}.live-state{display:inline-block;border-radius:20px;padding:6px 9px;font-size:9px;font-weight:800;background:#eef3ef;color:#64766c;white-space:nowrap}.live-state.present{background:#e5f5eb;color:#24714d}.live-state.break{background:#fff3df;color:#9a7026}.live-state.pause{background:#f1eafa;color:#7650a2}.live-state.finished{background:#edf0ef;color:#65736c}.live-state.pending{background:#fff6e8;color:#a27732}.live-state.late{background:#fff0ed;color:#a43e30}.live-dept-row{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #edf1ed;font-size:11px}.live-bar{height:6px;background:#edf2ee;border-radius:10px;overflow:hidden;margin-top:7px}.live-bar span{display:block;height:100%;background:linear-gradient(90deg,#1b654c,#c9a96e)}.live-empty{padding:24px 10px;text-align:center;color:#89978f;font-size:11px}
 
-.live-charts{display:grid;grid-template-columns:minmax(240px,.85fr) minmax(0,1.4fr);gap:16px;margin:0 0 18px}
-.live-chart-panel{background:#fff;border:1px solid #e5ece7;border-radius:14px;padding:18px;min-width:0;box-shadow:0 8px 25px rgba(20,55,43,.04)}
-.live-chart-panel h3{font:800 14px Manrope,sans-serif;color:#1b4538;margin-bottom:5px}
-.live-chart-sub{font-size:10px;color:#8b9991;margin-bottom:14px}
-.live-donut-wrap{display:flex;align-items:center;justify-content:center;gap:18px;min-height:190px;flex-wrap:wrap}
-.live-donut{width:170px;height:170px;max-width:100%}
-.live-legend{display:grid;gap:9px;min-width:125px}
-.live-legend-item{display:flex;align-items:center;gap:8px;font-size:10px;color:#64766c}
-.live-legend-dot{width:9px;height:9px;border-radius:50%;flex:0 0 9px}
-.live-legend-item strong{margin-left:auto;color:#1b4538}
-.live-dept-chart{display:grid;gap:14px;padding:8px 0}
-.live-dept-chart-row{display:grid;grid-template-columns:minmax(90px,1fr) minmax(80px,2fr) 42px;align-items:center;gap:10px;font-size:10px;color:#64766c}
-.live-dept-chart-track{height:11px;border-radius:20px;background:#edf2ee;overflow:hidden;display:flex}
-.live-dept-chart-total{height:100%;background:#dce9df}
-.live-dept-chart-present{height:100%;background:linear-gradient(90deg,#1b654c,#c9a96e)}
-.live-dept-chart-value{text-align:right;font-weight:800;color:#1b4538}
+.live-charts{display:grid;grid-template-columns:minmax(280px,.9fr) minmax(0,1.45fr);gap:18px;margin:0 0 20px}
+.live-chart-panel{position:relative;overflow:hidden;background:linear-gradient(145deg,#fff 0%,#f7fbf8 100%);border:1px solid #dfeae2;border-radius:20px;padding:21px;min-width:0;box-shadow:0 12px 32px rgba(20,55,43,.07)}
+.live-chart-panel:before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,#176448,#b99a60,#e7d8b5)}
+.live-chart-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}
+.live-chart-panel h3{font:800 14px Manrope,sans-serif;color:#174b3b;margin:0 0 5px}
+.live-chart-sub{font-size:10px;color:#87978e;line-height:1.5}
+.live-chart-badge{white-space:nowrap;border:1px solid #dce9df;background:#f0f7f1;color:#23654b;border-radius:30px;padding:6px 9px;font-size:9px;font-weight:800}
+.live-donut-wrap{display:grid;grid-template-columns:170px minmax(0,1fr);align-items:center;justify-content:center;gap:18px;min-height:190px}
+.live-donut{width:170px;height:170px;max-width:100%;filter:drop-shadow(0 7px 10px rgba(24,74,55,.10))}
+.live-legend{display:grid;gap:9px;min-width:0}
+.live-legend-item{display:grid;grid-template-columns:9px minmax(0,1fr) auto;align-items:center;gap:8px;font-size:10px;color:#65776d;padding:7px 9px;border-radius:10px;background:rgba(239,246,241,.78)}
+.live-legend-dot{width:8px;height:8px;border-radius:50%;flex:0 0 8px;box-shadow:0 0 0 3px rgba(27,101,76,.08)}
+.live-legend-item strong{color:#174b3b;font-size:12px}
+.live-dept-chart{display:grid;gap:16px;padding:5px 0 2px}
+.live-dept-chart-row{display:grid;gap:7px;font-size:10px;color:#64766c}
+.live-dept-chart-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.live-dept-chart-head strong{font-size:11px;color:#244d3e;overflow-wrap:anywhere}
+.live-dept-chart-value{font-size:10px;font-weight:800;color:#174b3b;white-space:nowrap}
+.live-dept-chart-track{height:12px;border-radius:20px;background:#eaf0eb;overflow:hidden;display:flex;box-shadow:inset 0 1px 2px rgba(20,55,43,.06)}
+.live-dept-chart-present{height:100%;border-radius:20px;background:linear-gradient(90deg,#176448 0%,#3d9870 65%,#c5a66b 100%);box-shadow:0 2px 7px rgba(27,101,76,.2);transition:width .7s cubic-bezier(.2,.8,.2,1)}
+.live-dept-chart-foot{display:flex;justify-content:space-between;color:#91a097;font-size:9px}
+.live-chart-empty{padding:28px 12px;text-align:center;color:#89978f;font-size:11px;background:#f5f9f6;border:1px dashed #dce8df;border-radius:12px}
 @media(max-width:850px){.live-charts{grid-template-columns:1fr}}
-
+@media(max-width:520px){.live-chart-panel{padding:16px}.live-donut-wrap{grid-template-columns:145px minmax(0,1fr);gap:10px}.live-donut{width:145px;height:145px}.live-legend-item{padding:6px;font-size:9px}.live-chart-badge{font-size:8px}}
 @media(max-width:850px){.live-grid{grid-template-columns:1fr}.live-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.live-hero-top{align-items:flex-start;flex-direction:column}.live-kpis{gap:9px}.live-kpi{padding:14px}}
 
 </style>
@@ -1994,25 +2000,25 @@ function liveState(employee,events,date,nowMinutes){
  return {employee,latest,shiftLabel:shift?(String(shift.start_time).slice(0,5)+'–'+String(shift.end_time).slice(0,5)):'Sem escala',state,label,late,noEntry,department:departmentsData.find(x=>x.id===employee.department_id)?.nome||'Sem departamento'};
 }
 function renderLiveCharts(rows){
- const colors={present:'#1b654c',break:'#d6a64e',pause:'#9472b8',finished:'#7e9288',pending:'#d9e2dc',off:'#cbd5cf'};
+ const colors={present:'#176448',break:'#d7a94f',pause:'#9270b5',finished:'#789084',pending:'#d9e4dc',off:'#c8d4cc'};
  const labels={present:'Trabalhando',break:'Em intervalo',pause:'Em pausa',finished:'Jornada encerrada',pending:'Aguardando entrada',off:'Sem jornada'};
  const order=['present','break','pause','finished','pending','off'];
  const totals={};order.forEach(k=>totals[k]=rows.filter(r=>r.state===k).length);
+ const total=rows.length,activeNow=totals.present+totals.break+totals.pause;
  const canvas=$('liveStatusChart'),legend=$('liveStatusLegend');
  if(canvas){
-  const rect=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1,size=Math.max(140,Math.min(180,rect.width||170));
-  canvas.width=size*dpr;canvas.height=size*dpr;canvas.style.width=size+'px';canvas.style.height=size+'px';
-  const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);const center=size/2,radius=size*.39,line=size*.17,total=rows.length;
-  ctx.clearRect(0,0,size,size);
-  if(!total){ctx.beginPath();ctx.arc(center,center,radius,0,Math.PI*2);ctx.strokeStyle='#edf2ee';ctx.lineWidth=line;ctx.stroke()}
-  else{let angle=-Math.PI/2;order.forEach(k=>{const value=totals[k];if(!value)return;const next=angle+(value/total)*Math.PI*2;ctx.beginPath();ctx.arc(center,center,radius,angle,next);ctx.strokeStyle=colors[k];ctx.lineWidth=line;ctx.lineCap='butt';ctx.stroke();angle=next})}
-  ctx.fillStyle='#174b3b';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='800 25px Manrope, sans-serif';ctx.fillText(String(total),center,center-5);
-  ctx.fillStyle='#82918a';ctx.font='10px DM Sans, sans-serif';ctx.fillText('ativos',center,center+16);
+  const size=170,dpr=Math.min(window.devicePixelRatio||1,2);canvas.width=size*dpr;canvas.height=size*dpr;canvas.style.width=size+'px';canvas.style.height=size+'px';
+  const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);const center=size/2,radius=61,line=15;
+  ctx.clearRect(0,0,size,size);ctx.beginPath();ctx.arc(center,center,radius,0,Math.PI*2);ctx.strokeStyle='#edf3ee';ctx.lineWidth=line;ctx.stroke();
+  if(total){let angle=-Math.PI/2;order.forEach(k=>{const value=totals[k];if(!value)return;const next=angle+(value/total)*Math.PI*2;ctx.beginPath();ctx.arc(center,center,radius,angle,next);ctx.strokeStyle=colors[k];ctx.lineWidth=line;ctx.lineCap='round';ctx.stroke();angle=next})}
+  const pct=total?Math.round(activeNow/total*100):0;
+  ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#174b3b';ctx.font='800 28px Manrope, sans-serif';ctx.fillText(pct+'%',center,center-5);
+  ctx.fillStyle='#87978e';ctx.font='10px DM Sans, sans-serif';ctx.fillText('em atividade',center,center+17);
  }
- if(legend)legend.innerHTML=order.filter(k=>totals[k]>0).map(k=>'<div class="live-legend-item"><span class="live-legend-dot" style="background:'+colors[k]+'"></span><span>'+labels[k]+'</span><strong>'+totals[k]+'</strong></div>').join('')||'<div class="live-empty">Sem colaboradores ativos.</div>';
- const groups={};rows.forEach(r=>{const key=r.department||'Sem departamento';if(!groups[key])groups[key]={total:0,present:0};groups[key].total++;if(['present','break','pause','finished'].includes(r.state))groups[key].present++});
- const host=$('liveDepartmentChart'),names=Object.keys(groups).sort((a,b)=>a.localeCompare(b,'pt-BR'));
- if(host)host.innerHTML=names.length?names.map(name=>{const g=groups[name],pct=g.total?g.present/g.total*100:0;return '<div class="live-dept-chart-row"><strong>'+escapeHTML(name)+'</strong><div class="live-dept-chart-track"><span class="live-dept-chart-present" style="width:'+pct+'%"></span><span class="live-dept-chart-total" style="width:'+(100-pct)+'%"></span></div><span class="live-dept-chart-value">'+g.present+'/'+g.total+'</span></div>'}).join(''):'<div class="live-empty">Sem departamentos com colaboradores ativos.</div>';
+ if(legend)legend.innerHTML=order.filter(k=>totals[k]>0).map(k=>'<div class="live-legend-item"><span class="live-legend-dot" style="background:'+colors[k]+'"></span><span>'+labels[k]+'</span><strong>'+totals[k]+'</strong></div>').join('')||'<div class="live-chart-empty">Nenhum colaborador ativo cadastrado.</div>';
+ const groups={};rows.forEach(r=>{const key=r.department||'Sem departamento';if(!groups[key])groups[key]={total:0,present:0};groups[key].total++;if(['present','break','pause'].includes(r.state))groups[key].present++});
+ const host=$('liveDepartmentChart'),names=Object.keys(groups).sort((a,b)=>{const ga=groups[a],gb=groups[b];return (gb.present/gb.total)-(ga.present/ga.total)||a.localeCompare(b,'pt-BR')});
+ if(host)host.innerHTML=names.length?names.map(name=>{const g=groups[name],pct=g.total?Math.round(g.present/g.total*100):0;return '<div class="live-dept-chart-row"><div class="live-dept-chart-head"><strong>'+escapeHTML(name)+'</strong><span class="live-dept-chart-value">'+g.present+' de '+g.total+' • '+pct+'%</span></div><div class="live-dept-chart-track"><span class="live-dept-chart-present" style="width:'+pct+'%"></span></div><div class="live-dept-chart-foot"><span>Em atividade agora</span><span>'+Math.max(0,g.total-g.present)+' aguardando / encerrados</span></div></div>'}).join(''):'<div class="live-chart-empty">Sem departamentos com colaboradores ativos.</div>';
 }
 function renderKfyraLive(rows,counts,absences,overtime){
  renderLiveCharts(rows);
