@@ -1668,7 +1668,8 @@ async function loadLatestOfficialTimesheetStatement(){
       const signedAt=sig.signed_at?new Date(sig.signed_at).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'medium',timeZone:'America/Sao_Paulo'}):'Data não informada';
       const hashMatches=!!(statement.document_hash&&sig.document_hash===statement.document_hash);
       return '<div style="padding:12px 0;border-top:1px solid var(--border)"><strong>'+escapeHTML(signerType)+'</strong><div>'+escapeHTML(signerName)+'</div><div class="muted">Assinado em: '+escapeHTML(signedAt)+'</div><div style="font-size:12px;color:'+(hashMatches?'#216b43':'#a43e30')+';font-weight:700">'+(hashMatches?'Hash confere com o documento':'Atenção: hash diferente do documento')+'</div><div class="muted" style="font-size:11px;word-break:break-all">Hash: '+escapeHTML(sig.document_hash||'Não informado')+'</div></div>';
-     }).join('');
+     }).join('')+
+     (statement.status==='completed'&&!finalPdf?'<div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--border)"><button type="button" class="btn btn-approve" style="display:inline-block;padding:12px 18px;font-weight:700" onclick="generateFinalSignedTimesheetPdf(\''+statement.id+'\')">GERAR PDF FINAL COM ASSINATURAS</button></div>':'');
    }else{
     signaturesBox.style.display='block';
     signaturesBox.innerHTML='<h4>Assinaturas</h4><div class="inline-note">Nenhuma assinatura foi retornada pela consulta.</div>';
