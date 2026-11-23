@@ -103,6 +103,59 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .arquivo-selecionado{font-size:13px;color:#216343;margin-top:8px;overflow-wrap:anywhere}
 .link-comprovante{display:inline-block;margin-top:8px;padding:9px 12px;background:#e9efeb;color:#123d32;border-radius:7px;font-size:13px;font-weight:bold;text-decoration:none}
 @media(max-width:500px){main{margin:15px auto;padding:12px}.card{padding:20px}header{padding:22px}.cal-dia{min-height:48px}.cal-dia small{font-size:8px}.abas{gap:5px}.aba{font-size:12px;padding:12px 4px}}
+
+/* KFYRA — identidade visual original: Prisma Vivo */
+:root{--ky-forest:#092b25;--ky-deep:#061d1a;--ky-green:#12634e;--ky-mint:#dff4e9;--ky-gold:#d8b76b;--ky-ink:#163b32;--ky-muted:#71857c;--ky-line:#e4ece7;--ky-surface:rgba(255,255,255,.94)}
+html{scroll-behavior:smooth}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(ellipse at 8% 8%,rgba(36,125,94,.24),transparent 34%),radial-gradient(ellipse at 92% 75%,rgba(216,183,107,.14),transparent 32%),linear-gradient(145deg,#071f1b 0%,#103c31 48%,#071f1b 100%);background-attachment:fixed;color:var(--ky-ink);min-height:100vh;position:relative;overflow-x:hidden}
+body:before,body:after{content:"";position:fixed;pointer-events:none;z-index:0;border-radius:50%;filter:blur(2px);opacity:.5}
+body:before{width:340px;height:340px;top:16%;right:-190px;border:1px solid rgba(216,183,107,.25);box-shadow:0 0 80px rgba(216,183,107,.08),inset 0 0 70px rgba(216,183,107,.05);animation:kyFloat 16s ease-in-out infinite}
+body:after{width:260px;height:260px;bottom:4%;left:-170px;border:1px solid rgba(130,216,181,.2);box-shadow:0 0 90px rgba(71,178,135,.12);animation:kyFloat 20s ease-in-out infinite reverse}
+@keyframes kyFloat{0%,100%{transform:translate3d(0,0,0) rotate(0)}50%{transform:translate3d(0,-18px,0) rotate(8deg)}}
+header{position:relative;z-index:1;max-width:1100px;margin:22px auto 0;padding:22px 26px;border:1px solid rgba(255,255,255,.14);border-radius:22px;background:linear-gradient(110deg,rgba(5,29,25,.94),rgba(16,72,56,.88));box-shadow:0 18px 55px rgba(0,0,0,.22);overflow:hidden}
+header:after{content:"";position:absolute;width:240px;height:240px;right:-95px;top:-150px;border:1px solid rgba(216,183,107,.32);border-radius:50%;box-shadow:0 0 0 18px rgba(216,183,107,.035),0 0 0 38px rgba(216,183,107,.025)}
+header h2{font-size:25px;letter-spacing:5px;font-weight:800;display:flex;align-items:center;gap:12px}
+header h2:before{content:"K";display:grid;place-items:center;width:38px;height:38px;border:1px solid rgba(216,183,107,.8);border-radius:12px 4px 12px 4px;color:#f4dfaa;font-size:20px;letter-spacing:-2px;background:linear-gradient(145deg,rgba(216,183,107,.18),rgba(255,255,255,.04));box-shadow:inset 0 0 18px rgba(216,183,107,.12),0 0 24px rgba(216,183,107,.12)}
+header span{color:var(--ky-gold)}
+header p{font-size:10px;letter-spacing:3px;font-weight:700;color:#b9d7c9;margin:7px 0 0 50px}
+main{position:relative;z-index:1;max-width:1000px;margin:28px auto 55px;padding:0 18px}
+.card{padding:clamp(20px,4vw,38px);border:1px solid rgba(255,255,255,.7);border-radius:25px;background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(246,250,247,.94));box-shadow:0 24px 80px rgba(0,0,0,.2),inset 0 1px 0 white;backdrop-filter:blur(18px);animation:kyReveal .65s cubic-bezier(.2,.75,.25,1) both}
+@keyframes kyReveal{from{opacity:0;transform:translateY(14px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
+h1{font-size:clamp(25px,4vw,34px);letter-spacing:-1.1px;color:#103b30}
+h1:after{content:"";display:block;width:48px;height:3px;margin-top:13px;border-radius:5px;background:linear-gradient(90deg,var(--ky-green),var(--ky-gold))}
+h3{letter-spacing:-.35px}
+p{line-height:1.65}
+label{color:#35564b}
+input,select,textarea{border:1px solid #d9e6de;border-radius:12px;background:#fbfdfb;transition:border-color .2s,box-shadow .2s,transform .2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#4b9b79;box-shadow:0 0 0 4px rgba(52,145,105,.12)}
+button{border-radius:12px;background:linear-gradient(115deg,#0c4939,#167456);box-shadow:0 8px 18px rgba(12,73,57,.16);transition:transform .2s,box-shadow .2s,filter .2s}
+button:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 24px rgba(12,73,57,.22);filter:brightness(1.06)}
+button:active:not(:disabled){transform:translateY(0) scale(.985)}
+.secundario,.aba{background:#edf4ef;color:#174737;box-shadow:none;border:1px solid #e0ebe3}
+.aba.ativa{background:linear-gradient(115deg,#0b3b30,#176b50);color:white;border-color:transparent;box-shadow:0 7px 18px rgba(12,73,57,.18)}
+.abas{padding:6px;border-radius:16px;background:#edf3ef;gap:7px}
+.aba{border-radius:11px}
+.painel-ponto{background:linear-gradient(145deg,#fff,#f6faf7);border:1px solid #e3ece6;border-radius:17px;padding:20px;margin-top:16px;box-shadow:0 7px 22px rgba(14,55,42,.045);transition:transform .22s,box-shadow .22s}
+.painel-ponto:hover{box-shadow:0 12px 28px rgba(14,55,42,.08)}
+.painel-ponto>p:first-child{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:800;color:#7a9287}
+.relogio{font-size:clamp(23px,4vw,30px);letter-spacing:-.8px;color:#0d4b39;font-variant-numeric:tabular-nums}
+.status-ponto{padding:10px 13px;border-radius:10px;background:#eaf6ef;color:#176344}
+.cal-dia{border-radius:12px;transition:transform .18s,box-shadow .18s}
+.cal-dia:not(.vazio):hover{transform:translateY(-3px);box-shadow:0 7px 15px rgba(10,54,39,.1)}
+.cal-dia.hoje{border-color:#146447;box-shadow:0 0 0 2px rgba(20,100,71,.1)}
+.cal-dia.selecionado{box-shadow:0 0 0 2px var(--ky-gold),0 6px 18px rgba(216,183,107,.18)}
+.registro-dia,.solicitacao-card,.dia-escala{border-radius:14px;border-color:#e1ebe4;box-shadow:0 5px 18px rgba(14,55,42,.035)}
+.resumo-item{border-radius:13px;background:linear-gradient(145deg,#f5faf6,#eaf4ed);border-color:#e1ebe4}
+.resumo-item strong{color:#10513d}
+.cal-detalhe{border-radius:14px;background:linear-gradient(145deg,#fff,#f7faf8)}
+#botaoSair{margin-top:22px}
+.link{color:#176b50;text-decoration:none;font-weight:700}
+.link:hover{text-decoration:underline}
+#mensagem{border-radius:12px}
+.upload-label{border-radius:11px}
+@media(max-width:700px){header{margin:12px 12px 0;padding:18px 19px;border-radius:18px}main{margin:18px auto 35px;padding:0 12px}.card{border-radius:20px}.painel-ponto{padding:16px}.abas{position:sticky;top:8px;z-index:5;backdrop-filter:blur(12px)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
 </style>
 </head>
 <body>
