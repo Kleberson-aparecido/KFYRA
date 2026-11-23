@@ -1517,6 +1517,26 @@ if(!jornada)return "Não encontrei uma escala atribuída para "+dataBonita+". Is
 if(!jornada.trabalho)return "Consultei sua escala: "+dataBonita+" é dia de folga. 😊";
 return "Consultei sua escala para "+dataBonita+": "+camillyDetalhesJornada(jornada)+"\n\nEsses são os horários planejados pela empresa; se houver uma alteração ainda não publicada, confirme com o RH. 💚";
 }
+async function consultarCampoEscalaCamilly(texto,dataForcada=null){
+if(!usuarioAtual||!colaboradorAtual)throw new Error("Sua sessão não está ativa. Entre novamente no Meu Ponto.");
+const data=dataForcada||camillyDataAlvo(texto),chave=dataChaveLocal(data);
+const jornadas=await carregarJornadasPrevistas(data.getFullYear(),data.getMonth()+1),jornada=jornadas[chave];
+const dataBonita=data.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long"});
+if(!jornada)return "Não encontrei uma escala publicada para "+dataBonita+". Confirme com o RH. 💚";
+if(!jornada.trabalho)return dataBonita+" é dia de folga na escala; não há intervalo ou pausas planejadas. 😊";
+const t=camillyNormalizar(texto);
+if(/intervalo|almoco/.test(t)){
+if(!(jornada.intervalo>0))return "Não há intervalo principal cadastrado na escala de "+dataBonita+". Se isso estiver diferente do combinado, confirme com o RH. 💚";
+return "Seu intervalo principal em "+dataBonita+" está previsto para "+formatarHora(jornada.intervaloInicio)+" às "+formatarHora(jornada.intervaloFim)+" ("+formatarIntervalo(jornada.intervalo)+"). 💚";
+}
+if(/pausa/.test(t)){
+if(!jornada.pausas||!jornada.pausas.length)return "Não encontrei pausas adicionais cadastradas na escala de "+dataBonita+". 💚";
+return "Suas pausas adicionais em "+dataBonita+":\\n"+jornada.pausas.map(p=>"• Pausa "+p.numero+": "+formatarHora(p.inicio)+" às "+formatarHora(p.fim)+" ("+formatarIntervalo(p.duracao)+")").join("\\n")+" 💚";
+}
+if(/entrada|comeco|inicio/.test(t))return "Sua entrada prevista em "+dataBonita+" é às "+formatarHora(jornada.inicio)+". 💚";
+if(/saida|termino|fim/.test(t))return "Sua saída prevista em "+dataBonita+" é às "+formatarHora(jornada.fim)+". 💚";
+return "Consultei sua escala para "+dataBonita+": "+camillyDetalhesJornada(jornada)+" 💚";
+}
 async function consultarPontoCamilly(texto,dataForcada=null){
 if(!usuarioAtual||!colaboradorAtual)throw new Error("Sua sessão não está ativa. Entre novamente no Meu Ponto.");
 const data=dataForcada||camillyDataAlvo(texto),inicio=new Date(data.getFullYear(),data.getMonth(),data.getDate()),fim=new Date(data.getFullYear(),data.getMonth(),data.getDate()+1);
@@ -1646,6 +1666,10 @@ return "Quero te ajudar! 💚 Posso consultar:\n• Seus horários e sua escala;
 }
 const usaDataAnterior=followup&&!followupData&&camillyContexto.data;
 const data=followupData?camillyDataAlvo(t):(usaDataAnterior?new Date(camillyContexto.data+"T12:00:00"):camillyDataContextual(texto));
+if(intencao==="escala"&&/(intervalo|almoco|pausa|entrada|saida|comeco|termino)/.test(t)){
+const r=await consultarCampoEscalaCamilly(texto,usaDataAnterior?data:null);
+camillyContexto={intencao,data:dataChaveLocal(data),ultimaResposta:r};return r;
+}
 if(intencao==="proxima_folga"){
 const r=await consultarProximaFolgaCamilly();
 camillyContexto={intencao,data:camillyUltimaFolgaData||dataChaveLocal(data),ultimaResposta:r};return r;
