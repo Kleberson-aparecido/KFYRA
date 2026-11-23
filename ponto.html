@@ -1556,23 +1556,38 @@ const status={pending:"aguardando análise",approved:"aprovada",rejected:"recusa
 const t=camillyNormalizar(texto);
 let itens=data;
 if(/atestado|medic/.test(t))itens=data.filter(x=>x.request_type==="medical_certificate");
-else if(/declaracao|comparecimento|sindical/.test(t))itens=data.filter(x=>["attendance_declaration","union_declaration","other_declaration"].includes(x.request_type));
+else if(/declaracao|comparecimento|sindical|documento/.test(t))itens=data.filter(x=>["attendance_declaration","union_declaration","other_declaration"].includes(x.request_type));
 if(!itens.length)return "Não encontrei uma solicitação desse tipo entre seus 10 pedidos mais recentes. Você pode conferir a lista completa na aba “Solicitações”. 💚";
 const resumo=itens.map(x=>"• "+(tiposSolicitacao[x.request_type]||"Solicitação")+" — "+(status[x.status]||x.status)+(x.requested_date?" — data: "+formatarDataSolicitacao(x.requested_date):"")+(x.decision_reason?" — resposta do responsável: "+x.decision_reason:"")).join("\n");
-if(/quanto tempo|demora|prazo|quando (vai|ser[aá]) (ser )?analisad|quando aprov/.test(t)){
+if(/quanto tempo|demora|prazo|quando (vai|sera) (ser )?analisad|quando aprov/.test(t)){
 const pendentes=itens.filter(x=>x.status==="pending").length;
 return (pendentes?"Sua solicitação ainda está aguardando análise. ":"")+ "Não tenho acesso a um prazo de aprovação definido pela empresa, então não quero inventar uma previsão. 💚 Consulte o status em “Minhas solicitações” ou fale com o RH/responsável autorizado.\n"+resumo;
 }
-if(/recusad|rejeitad|negad/.test(t)){
+if(/posso enviar|enviar outro|novo documento|outro documento/.test(t)&&/recusad|rejeitad|negad/.test(t)){
+return "Sim. Se um documento for recusado, você pode conversar com o RH para entender o motivo e, se necessário, enviar uma nova solicitação com o documento correto ou complementar. 💚 O novo envio também passará pela análise do responsável; não substitui nem altera automaticamente o pedido anterior.\n"+resumo;
+}
+if(/o que acontece se|caso .*recusad|se .*for recusad|quando .*recusad/.test(t)){
+return "Se uma solicitação for recusada, ela continuará registrada no histórico com o status de recusada. Quando o responsável informa um motivo, ele aparece nos detalhes do pedido. A recusa não altera automaticamente sua escala nem apaga marcações. Você pode consultar o motivo com o RH e verificar se cabe enviar um novo pedido. 💚\n"+resumo;
+}
+if(/por que|qual motivo|motivo da/.test(t)&&/recusad|rejeitad|negad/.test(t)){
 const recusadas=itens.filter(x=>x.status==="rejected");
-if(!recusadas.length)return "Não encontrei uma solicitação recusada desse tipo entre seus 10 pedidos mais recentes. Veja o histórico em “Minhas solicitações”. 💚\n"+resumo;
-return "Quando uma solicitação é recusada, a decisão e o motivo informado pelo responsável aparecem no histórico, quando registrados. A escala ou marcação original não é alterada por esse pedido. Se precisar, converse com o RH para entender a decisão e saber se cabe enviar uma nova solicitação. 💚\n"+resumo;
+if(!recusadas.length)return "Não encontrei uma solicitação recusada desse tipo entre seus 10 pedidos mais recentes. Se você viu uma recusa, abra o pedido em “Minhas solicitações” ou fale com o RH para confirmar o motivo. 💚\n"+resumo;
+return "Encontrei solicitação(ões) recusada(s). O motivo registrado pelo responsável aparece após o status, quando foi informado. Se não houver motivo exibido, consulte o RH para entender a decisão. 💚\n"+resumo;
+}
+if(/atestado|medic/.test(t)&&/abon|horas|credito|descont/.test(t)){
+const aprovados=itens.filter(x=>x.status==="approved");
+return (aprovados.length?"Seu pedido de atestado consta como aprovado. ":"")+ "Isso confirma a aprovação do documento, mas esta consulta não confirma por si só que as horas já foram lançadas como abonadas. O RH deve considerar somente o período aceito; confira o espelho de ponto atualizado ou peça ao RH que confirme o lançamento. 💚\n"+resumo;
 }
 if(/atestado|medic/.test(t)){
-return "Consultei seus pedidos de atestado. 💚 O status mostra se ele está aguardando análise, foi aprovado ou recusado. Se houver motivo da decisão, ele aparece abaixo. O abono só considera o período aceito pelo RH; o envio sozinho não abona horas.\n"+resumo;
+return "Consultei seus pedidos de atestado. 💚 O status mostra se cada documento está aguardando análise, foi aprovado ou recusado. Se houver motivo da decisão, ele aparece nos detalhes. O abono considera somente o período aceito pelo RH; o simples envio não abona horas.\n"+resumo;
+}
+if(/ja foi analisad|foi analisad|ja analisaram|analisaram minha|status|andamento/.test(t)){
+const pendentes=itens.filter(x=>x.status==="pending").length;
+const concluidas=itens.filter(x=>["approved","rejected","cancelled"].includes(x.status)).length;
+return "Consultei seus pedidos mais recentes. 💚 "+(pendentes&&concluidas?"Há solicitações já analisadas e outras aguardando análise.":pendentes?"Ainda há solicitações aguardando análise.":concluidas?"Os pedidos listados já receberam uma decisão ou foram cancelados.":"Não consegui identificar uma decisão nos registros consultados.")+" “Aprovada” significa aceita; “recusada”, não aceita; “aguardando análise”, ainda pendente.\n"+resumo;
 }
 if(/acompanhar|minha solicitacao|meu pedido/.test(t)){
-return "Sim! 💚 Você pode acompanhar seus pedidos pela aba Solicitações, em “Minhas solicitações”. Consultei aqui os registros mais recentes da sua conta; cada um mostra o status atual e, quando disponível, a resposta do responsável.\\n"+resumo;
+return "Sim! 💚 Você pode acompanhar seus pedidos pela aba Solicitações, em “Minhas solicitações”. Consultei os registros mais recentes da sua conta; cada um mostra o status atual e, quando disponível, a resposta do responsável.\n"+resumo;
 }
 return "Consultei suas solicitações mais recentes. 💚\n"+resumo+"\n\nO status e a resposta do responsável são atualizados após a análise. Eu posso consultar e explicar o andamento, mas não aprovo nem recuso pedidos.";
 }
