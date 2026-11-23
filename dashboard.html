@@ -1603,7 +1603,7 @@ async function loadLatestOfficialTimesheetStatement(){
  if(!canManage()){showBox('officialStatementMessage','Somente RH ou administrador pode consultar o espelho.','error');return}
  if(!selectedPointEmployeeId){showBox('officialStatementMessage','Pesquise e selecione um colaborador primeiro.','error');return}
  const month=$('pointMonth')?.value||localDateInSaoPaulo(new Date()).slice(0,7);
- if(!/^\\d{4}-\\d{2}$/.test(month)){showBox('officialStatementMessage','Selecione um mês válido.','error');return}
+ if(!/^\d{4}-\d{2}$/.test(month)){showBox('officialStatementMessage','Selecione um mês válido.','error');return}
  const [year,mon]=month.split('-').map(Number);
  const periodStart=month+'-01';
  const periodEnd=year+'-'+String(mon).padStart(2,'0')+'-'+String(new Date(year,mon,0).getDate()).padStart(2,'0');
