@@ -1623,9 +1623,36 @@ async function loadLatestOfficialTimesheetStatement(){
   if(fileError||!file?.signedUrl)throw new Error('Não foi possível abrir o PDF: '+(fileError?.message||'link temporário indisponível'));
   const labels={draft:'Rascunho — aguardando liberação do RH',awaiting_employee:'Aguardando assinatura do colaborador',awaiting_responsible:'Aguardando assinatura do responsável',completed:'Finalizado',cancelled:'Cancelado'};
   const releaseButton=statement.status==='draft'? ` <button type="button" class="btn btn-approve" style="margin:10px 0 0 8px" onclick="releaseOfficialTimesheetStatement('${statement.id}')">Liberar para assinatura do colaborador</button>`:'';
-   const responsibleSignButton=statement.status==='awaiting_responsible'? ` <button type="button" class="btn btn-approve" style="margin:10px 0 0 8px" onclick="signOfficialTimesheetAsResponsible('${statement.id}')">Confirmar assinatura do responsável</button>`:'';
+  const responsibleSignButton=statement.status==='awaiting_responsible'? ` <button type="button" class="btn btn-approve" style="margin:10px 0 0 8px" onclick="signOfficialTimesheetAsResponsible('${statement.id}')">Confirmar assinatura do responsável</button>`:'';
+
+  let signaturesHtml='<div class="inline-note" style="margin-top:14px">Nenhuma assinatura registrada para este documento.</div>';
+  const {data:signatures,error:signaturesError}=await supabaseClient
+   .from('timesheet_statement_signatures')
+   .select('signer_user_id,signer_type,signer_role,document_hash,acceptance_text,signed_at')
+   .eq('statement_id',statement.id)
+   .order('signed_at',{ascending:true});
+  if(signaturesError){
+   signaturesHtml='<div class="inline-note" style="margin-top:14px;color:#b45309">Não foi possível consultar as assinaturas: '+escapeHTML(signaturesError.message)+'</div>';
+  }else if(signatures?.length){
+   const signerIds=[...new Set(signatures.map(x=>x.signer_user_id).filter(Boolean))];
+   let profileNames={};
+   if(signerIds.length){
+    const {data:profiles}=await supabaseClient.from('profiles').select('id,full_name').in('id',signerIds);
+    (profiles||[]).forEach(p=>{profileNames[p.id]=p.full_name});
+   }
+   const employee=employeesData.find(e=>e.id===statement.employee_id);
+   const signerLabels={employee:'Colaborador',responsible:'Responsável',rh:'RH',admin:'Administrador'};
+   signaturesHtml='<div style="margin-top:16px;padding:14px;border:1px solid var(--border,#dbe2e8);border-radius:10px;background:#fff"><h4 style="margin:0 0 12px">Assinaturas registradas</h4>'+
+    signatures.map(sig=>{
+     const isEmployee=employee?.user_id&&sig.signer_user_id===employee.user_id;
+     const signerName=isEmployee?(employee.full_name||'Colaborador'):(profileNames[sig.signer_user_id]||'Usuário');
+     const signerType=signerLabels[String(sig.signer_type||'').toLowerCase()]||sig.signer_role||'Responsável';
+     const signedAt=sig.signed_at?new Date(sig.signed_at).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'medium'}):'Data não informada';
+     return '<div style="padding:10px 0;border-top:1px solid #e5e7eb"><strong>'+escapeHTML(signerType)+'</strong><div>'+escapeHTML(signerName)+'</div><div class="muted">Assinado em: '+escapeHTML(signedAt)+'</div><div class="muted" style="font-size:11px;word-break:break-all">Hash registrado: '+escapeHTML(sig.document_hash||'Não informado')+'</div></div>';
+    }).join('')+'</div>';
+  }
   box.className='message success';
-  box.innerHTML=`Espelho existente — versão ${Number(statement.version)||1}. Status: <strong>${escapeHTML(labels[statement.status]||statement.status)}</strong>. <a href="${escapeHTML(file.signedUrl)}" target="_blank" rel="noopener">Abrir PDF</a>${releaseButton}${responsibleSignButton}`;
+  box.innerHTML=`Espelho existente — versão ${Number(statement.version)||1}. Status: <strong>${escapeHTML(labels[statement.status]||statement.status)}</strong>. <a href="${escapeHTML(file.signedUrl)}" target="_blank" rel="noopener">Abrir PDF</a>${releaseButton}${responsibleSignButton}${signaturesHtml}`;
  }catch(err){showBox('officialStatementMessage',err.message||String(err),'error')}
 }
 async function signOfficialTimesheetAsResponsible(statementId){
