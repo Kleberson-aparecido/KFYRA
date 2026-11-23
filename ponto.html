@@ -168,6 +168,11 @@ button:disabled{opacity:.55;cursor:not-allowed}
 <button type="button" id="botaoPdfEspelho" class="secundario">Gerar PDF</button>
 </div>
 <div id="resumoEspelho" class="resumo-historico"></div>
+<div class="painel-ponto" id="painelAssinaturaEspelho">
+<h3>Documentos aguardando sua assinatura</h3>
+<p>Confira o PDF oficial antes de confirmar sua assinatura eletrônica.</p>
+<div id="listaAssinaturasEspelho"><p>Consultando documentos...</p></div>
+</div>
 <div class="painel-ponto">
 <h3>Calendário mensal</h3>
 <div id="calendarioMensal" class="calendario"></div>
@@ -821,6 +826,89 @@ document.getElementById("calendarioDetalhe").textContent="Não foi possível car
 }
 }
 
+/* ESPELHOS OFICIAIS E ASSINATURA ELETRÔNICA */
+async function carregarEspelhosParaAssinatura(){
+const area=document.getElementById("listaAssinaturasEspelho");
+if(!area||!usuarioAtual||!colaboradorAtual)return;
+area.textContent="Consultando documentos aguardando assinatura...";
+try{
+const {data,error}=await supabaseClient.from("timesheet_statements")
+.select("id,period_start,period_end,version,status,pdf_storage_path,document_hash,created_at")
+.eq("company_id",colaboradorAtual.company_id)
+.eq("employee_id",colaboradorAtual.id)
+.in("status",["awaiting_employee","awaiting_responsible","completed"])
+.order("created_at",{ascending:false})
+.limit(30);
+if(error)throw error;
+const pendentes=(data||[]).filter(item=>item.status==="awaiting_employee");
+const historico=(data||[]).filter(item=>item.status!=="awaiting_employee");
+area.innerHTML="";
+if(!pendentes.length&& !historico.length){
+area.appendChild(criarElemento("p","","Nenhum espelho oficial disponível para assinatura ou consulta."));
+return;
+}
+pendentes.forEach(statement=>{
+const card=criarElemento("div","registro-dia");
+card.appendChild(criarElemento("h4","","Espelho de "+formatarDataEspelho(statement.period_start)+" a "+formatarDataEspelho(statement.period_end)));
+card.appendChild(criarElemento("p","","Versão "+statement.version+" · Aguardando sua assinatura."));
+const abrir=document.createElement("button");
+abrir.type="button";abrir.className="secundario";abrir.textContent="Abrir PDF para conferir";
+abrir.addEventListener("click",()=>abrirPdfEspelhoOficial(statement));
+card.appendChild(abrir);
+const assinar=document.createElement("button");
+assinar.type="button";assinar.textContent="Confirmar e assinar espelho";
+assinar.addEventListener("click",()=>assinarEspelhoComoColaborador(statement,assinar));
+card.appendChild(assinar);
+area.appendChild(card);
+});
+if(historico.length){
+const titulo=criarElemento("h4","","Histórico de documentos");
+area.appendChild(titulo);
+historico.forEach(statement=>{
+const status=statement.status==="awaiting_responsible"?"Assinado por você — aguardando assinatura do responsável":statement.status==="completed"?"Finalizado — assinaturas concluídas":"Documento";
+const linha=criarElemento("div","registro-dia");
+linha.appendChild(criarElemento("p","","Período "+formatarDataEspelho(statement.period_start)+" a "+formatarDataEspelho(statement.period_end)+" · Versão "+statement.version+" · "+status));
+if(statement.pdf_storage_path){
+const abrir=document.createElement("button");abrir.type="button";abrir.className="secundario";abrir.textContent="Abrir PDF";
+abrir.addEventListener("click",()=>abrirPdfEspelhoOficial(statement));linha.appendChild(abrir);
+}
+area.appendChild(linha);
+});
+}
+}catch(error){
+console.error("Erro ao carregar espelhos oficiais:",error);
+area.textContent="Não foi possível consultar os documentos: "+error.message;
+}
+}
+async function abrirPdfEspelhoOficial(statement){
+try{
+if(!statement.pdf_storage_path)throw new Error("O PDF ainda não está disponível.");
+const {data,error}=await supabaseClient.storage.from("timesheet-statements").createSignedUrl(statement.pdf_storage_path,3600);
+if(error||!data?.signedUrl)throw new Error(error?.message||"Não foi possível gerar o link temporário do PDF.");
+window.open(data.signedUrl,"_blank","noopener");
+}catch(error){mostrarMensagem("Não foi possível abrir o espelho: "+error.message,"erro");}
+}
+async function assinarEspelhoComoColaborador(statement,botao){
+if(statement.status!=="awaiting_employee"){mostrarMensagem("Este documento não está aguardando sua assinatura.","erro");return}
+const aceite="Confirmo que tive acesso ao espelho de ponto deste período e registro minha assinatura eletrônica.";
+const confirmou=window.confirm("ATENÇÃO: sua assinatura eletrônica será registrada com data, horário, usuário e versão do documento.\n\nLeia o PDF antes de continuar. Deseja confirmar a assinatura?");
+if(!confirmou)return;
+botao.disabled=true;botao.textContent="Registrando assinatura...";
+try{
+const {data,error}=await supabaseClient.rpc("kfyra_sign_timesheet_statement",{
+p_statement_id:statement.id,
+p_user_agent:navigator.userAgent
+});
+if(error)throw error;
+mostrarMensagem("Assinatura registrada com sucesso. O espelho agora aguarda a assinatura do responsável.","sucesso");
+await carregarEspelhosParaAssinatura();
+}catch(error){
+console.error("Erro ao assinar espelho:",error);
+mostrarMensagem("Não foi possível registrar a assinatura: "+error.message,"erro");
+botao.disabled=false;botao.textContent="Confirmar e assinar espelho";
+}
+}
+
 /* EXPORTAÇÃO DO ESPELHO MENSAL EM PDF */
 function gerarPdfEspelho(){
 const mes=document.getElementById('mesEspelho').value;
@@ -1177,6 +1265,7 @@ document.getElementById("abaSolicitacoes").classList.remove("ativa");
 document.getElementById("abaPerfil").classList.remove("ativa");
 iniciarRelogio();
 await carregarEspelhoPonto();
+await carregarEspelhosParaAssinatura();
 await atualizarEstadoPonto();
 }catch(error){
 usuarioAtual=null;colaboradorAtual=null;mostrarLogin();mostrarMensagem(error.message,"erro");
