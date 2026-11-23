@@ -300,6 +300,10 @@ body:has(#areaLogada:not(.oculto)) .card{background:linear-gradient(145deg,#f5f8
 .camilly-note{padding:0 13px 11px;margin:0;background:white;color:#829188;font-size:10px;text-align:center}
 @media(max-width:500px){.camilly-page{min-height:calc(100dvh - 235px)}.camilly-page-messages{max-height:calc(100dvh - 390px);padding:12px}.ky-bottom-nav{width:calc(100% - 12px);padding:6px 4px;gap:2px}.ky-nav-item{font-size:9px;min-height:54px;padding:6px 1px}.ky-nav-icon{font-size:18px}}
 @media(prefers-reduced-motion:reduce){.camilly-page,.camilly-typing span{animation:none!important}}
+
+/* Ajuste mobile: navegação inferior encostada à base do portal, sem cobrir os controles de ponto */
+@media(max-width:500px){.ky-bottom-nav{bottom:0!important}}
+
 </style>
 </head>
 <body>
