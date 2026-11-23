@@ -285,7 +285,8 @@ body:has(#areaLogada:not(.oculto)) .card{background:linear-gradient(145deg,#f5f8
 .camilly-page-head .camilly-avatar img{width:100%;height:100%;display:block;object-fit:cover;object-position:50% 24%;transform:scale(1.12);transform-origin:50% 24%}
 .camilly-page-head h3{margin:0;color:#fff;font-size:17px}
 /* Garante contraste do nome da Camilly contra o cabeçalho verde, mesmo com regras globais do portal */
-#areaLogada .camilly-page-head h3{color:#fff!important;opacity:1!important;visibility:visible!important;text-shadow:0 1px 2px rgba(0,0,0,.18)}
+#areaLogada .camilly-page-head h3{color:#e4c477!important;opacity:1!important;visibility:visible!important;text-shadow:0 1px 2px rgba(0,0,0,.22)}
+#areaLogada .camilly-page-head p{color:#e4c477!important}
 .camilly-page-head p{margin:3px 0 0;color:#d5e9dc;font-size:11px}
 .camilly-online{margin-left:auto;color:#a8efbf;font-size:11px;white-space:nowrap}
 .camilly-page-messages{flex:1;min-height:280px;max-height:calc(100dvh - 390px);overflow:auto;padding:16px;display:flex;flex-direction:column;gap:11px;background:linear-gradient(180deg,#f8fbf8,#eef5ef)}
@@ -1876,6 +1877,7 @@ botoes[chave].classList.toggle("ativa",ativa);
 if(ativa)botoes[chave].setAttribute("aria-current","page");else botoes[chave].removeAttribute("aria-current");
 });
 titulo.textContent=titulos[nome][0];subtitulo.textContent=titulos[nome][1];
+titulo.hidden=nome==="camilly";subtitulo.hidden=nome==="camilly";
 if(nome==="solicitacoes")carregarMinhasSolicitacoes();
 if(nome==="perfil")carregarPerfil();
 window.scrollTo({top:0,behavior:"smooth"});
