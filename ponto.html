@@ -1547,8 +1547,8 @@ if(erroMov)throw erroMov;
 const pendentes=(extras||[]).filter(x=>x.status==="pending");
 const aprovadas=(extras||[]).filter(x=>x.status==="approved");
 const minutosAprovados=aprovadas.reduce((s,x)=>s+Number(x.minutes_worked||0),0);
-const saldoMov=(movimentos||[]).filter(x=>x.status==="approved").reduce((s,x)=>s+(x.movement_type==="credit"?1:-1)*Number(x.minutes||0),0);
-return "Consultei seus registros de horas. 💚\n• Horas extras aguardando análise: "+formatarDuracao(pendentes.reduce((s,x)=>s+Number(x.minutes_worked||0),0))+" ("+pendentes.length+" registro(s)).\n• Horas extras aprovadas no histórico consultado: "+formatarDuracao(minutosAprovados)+".\n• Movimentações aprovadas do banco de horas: saldo líquido de "+(saldoMov<0?"-":"+")+formatarDuracao(Math.abs(saldoMov))+".\n\nA aprovação e a definição de pagamento ou compensação são responsabilidade do RH. O saldo acima considera os lançamentos aprovados retornados pelo histórico consultado.";
+const movimentosBasicos=(movimentos||[]).filter(x=>x.status==="approved"&&(x.movement_type==="credit"||x.movement_type==="debit"));const saldoMov=movimentosBasicos.reduce((s,x)=>s+(x.movement_type==="credit"?1:-1)*Number(x.minutes||0),0);const especiais=(movimentos||[]).filter(x=>x.status==="approved"&&(x.movement_type==="adjustment"||x.movement_type==="compensation")).length;
+return "Consultei seus registros de horas. 💚\n• Horas extras aguardando análise: "+formatarDuracao(pendentes.reduce((s,x)=>s+Number(x.minutes_worked||0),0))+" ("+pendentes.length+" registro(s)).\n• Horas extras aprovadas no histórico consultado: "+formatarDuracao(minutosAprovados)+".\n• Créditos e débitos aprovados consultados: saldo parcial de "+(saldoMov<0?"-":"+")+formatarDuracao(Math.abs(saldoMov))+".\n• Ajustes/compensações aprovados identificados separadamente: "+especiais+".\n\nEste é um resumo dos lançamentos retornados, não substitui o saldo oficial exibido no Meu Ponto. A aprovação e a definição de pagamento ou compensação são responsabilidade do RH.";
 }
 async function responderCamilly(texto){
 const t=texto.toLowerCase();
