@@ -1586,14 +1586,34 @@ async function generateOfficialTimesheetStatement(){
   if(!statement?.pdf_storage_path)throw new Error('A função respondeu, mas o registro ainda não apresenta o caminho do PDF. Confira o status no Supabase antes de tentar novamente.');
   const {data:file,error:fileError}=await supabaseClient.storage.from('timesheet-statements').createSignedUrl(statement.pdf_storage_path,3600);
   if(fileError||!file?.signedUrl)throw new Error('O espelho foi gerado, mas não foi possível abrir o arquivo: '+(fileError?.message||'link temporário indisponível'));
-  const status=statement.status==='draft'?'Rascunho aguardando liberação para assinatura':statement.status;
+  const statusLabels={draft:'Rascunho — aguardando liberação do RH',awaiting_employee:'Aguardando assinatura do colaborador',awaiting_responsible:'Aguardando assinatura do responsável',completed:'Finalizado',cancelled:'Cancelado'};
+  const status=statusLabels[statement.status]||statement.status;
+  const releaseButton=statement.status==='draft'? ` <button type="button" class="btn btn-approve" style="margin:10px 0 0 8px" onclick="releaseOfficialTimesheetStatement('${statement.id}')">Liberar para assinatura do colaborador</button>`:'';
   box.className='message success';
-  box.innerHTML=`Espelho oficial gerado para <strong>${escapeHTML(employee?.full_name||'colaborador')}</strong> — versão ${Number(statement.version)||1}. Status: ${escapeHTML(status)}. <a href="${escapeHTML(file.signedUrl)}" target="_blank" rel="noopener">Abrir PDF</a>`;
+  box.innerHTML=`Espelho oficial gerado para <strong>${escapeHTML(employee?.full_name||'colaborador')}</strong> — versão ${Number(statement.version)||1}. Status: <strong>${escapeHTML(status)}</strong>. <a href="${escapeHTML(file.signedUrl)}" target="_blank" rel="noopener">Abrir PDF</a>${releaseButton}`;
  }catch(err){
   console.error('Erro ao gerar espelho oficial:',err);
   showBox('officialStatementMessage',err.message||String(err),'error');
  }finally{
   if(button){button.disabled=false;button.textContent='Gerar espelho oficial (PDF)'}
+ }
+}
+async function releaseOfficialTimesheetStatement(statementId){
+ if(!canManage()){showBox('officialStatementMessage','Somente RH ou administrador pode liberar o espelho.','error');return}
+ if(!statementId)return;
+ if(!confirm('Confirma que o espelho foi conferido e deseja liberá-lo para assinatura do colaborador?'))return;
+ const box=$('officialStatementMessage');
+ try{
+  const {data,error}=await supabaseClient.rpc('kfyra_release_timesheet_statement',{p_statement_id:statementId});
+  if(error)throw error;
+  const result=Array.isArray(data)?data[0]:data;
+  if(!result||result.new_status!=='awaiting_employee')throw new Error('A liberação não foi confirmada pelo banco de dados.');
+  const {data:statement,error:statementError}=await supabaseClient.from('timesheet_statements').select('id,version,status').eq('id',statementId).single();
+  if(statementError)throw statementError;
+  box.className='message success';
+  box.textContent='Espelho versão '+Number(statement.version)+' liberado com sucesso. Status: aguardando assinatura do colaborador. A próxima etapa será a assinatura pelo portal Meu Ponto.';
+ }catch(err){
+  showBox('officialStatementMessage','Não foi possível liberar o espelho: '+(err.message||String(err)),'error');
  }
 }
 async function loadOvertime(){
