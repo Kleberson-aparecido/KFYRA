@@ -1649,24 +1649,51 @@ if(!usuarioAtual||!colaboradorAtual)return "Sua sessão não está ativa. Entre 
 if(!t)return "Pode me contar o que você gostaria de saber? Estou aqui para ajudar. 💚";
 try{
 if(camillyEhSaudacao(t))return "Oiii! 😄💚 Estou aqui para ajudar! Posso consultar seus horários, escala, próxima folga, marcações, solicitações, espelhos, horas extras e banco de horas. Também explico como usar o Meu Ponto.";
-if(camillyEhAgradecimento(t))return "Imagina! 💚 Fico feliz em ajudar. Quando precisar, é só me chamar.";
+if(/^(obrigad[oa]+|valeu|brigad[oa]+|muito obrigado|muito obrigada)( camilly)?$/.test(t))return "Imagina! 💚 Fico feliz em ajudar. Quando precisar, é só me chamar.";
+if(/o que voce consegue fazer|o que voce faz|como voce pode me ajudar|quais (sao )?suas funcoes|no que voce pode ajudar/.test(t)){
+const r="Posso ajudar você a consultar:\n• Escala, horários de entrada, saída, intervalo e pausas;\n• Próxima folga e jornada de outros dias;\n• Marcações de ponto já registradas;\n• Solicitações, documentos e respectivos status;\n• Espelhos de ponto, horas extras e banco de horas.\n\nTambém explico como registrar o ponto e como enviar solicitações. Não aprovo pedidos nem altero marcações ou escalas. 💚";
+camillyContexto={intencao:"capacidades",data:camillyContexto.data,ultimaResposta:r};return r;
+}
+if(/pode me explicar melhor|me explica melhor|pode explicar melhor|nao entendi|nao compreendi|pode me ajudar/.test(t)){
+if(camillyContexto.intencao==="ajuda_solicitacao")return "Claro! 💚 Para pedir uma troca de folga, abra a aba Solicitações no Meu Ponto, escolha a opção de troca/alteração de folga, informe a data e explique o motivo. Envie o pedido e acompanhe em “Minhas solicitações”. A troca só acontece depois da aprovação do responsável autorizado.";
+if(camillyContexto.intencao==="solicitacoes")return "Claro! 💚 “Aprovada” significa que o responsável analisou e aceitou aquela solicitação. “Aguardando análise” significa que ainda está pendente. “Recusada” significa que não foi aceita; se houver uma justificativa registrada, ela aparece junto ao pedido.";
+if(camillyContexto.intencao==="escala")return "Claro! 💚 A escala mostra os horários planejados pela empresa: entrada, saída, intervalo e pausas. Esses horários são a programação prevista, não são marcações efetivamente registradas.";
+if(camillyContexto.intencao==="ponto")return "Claro! 💚 As marcações são os registros efetivamente gravados quando você bate o ponto. Elas são diferentes dos horários planejados na escala. Se alguma estiver incorreta ou faltando, envie uma solicitação para análise do RH.";
+return "Claro! 💚 Quero explicar direitinho. Você quer entender melhor sua escala, suas marcações de ponto ou uma solicitação?";
+}
 const followup=camillyEhFollowup(t);
+const followupDiaSeguinte=/^(e )?no dia seguinte$/.test(t);
 const followupData=/^(e )?(amanha|depois de amanha|hoje|ontem)$/.test(t);
 let intencao=(followupData&&camillyContexto.intencao)?camillyContexto.intencao:camillyDetectarIntencao(t);
+if(followupDiaSeguinte){
+if(["escala","ponto","dia_completo"].includes(camillyContexto.intencao)&&camillyContexto.data){
+intencao=camillyContexto.intencao;
+}else{
+return "Você quer consultar sua escala ou suas marcações do dia seguinte? Me diga qual informação deseja ver. 💚";
+}
+}
 if(!intencao&&followup&&camillyContexto.intencao){
-if(/intervalo|almoco|pausa|entrada prevista|saida prevista|meu horario|horario|escala|amanha|hoje|ontem|folga/.test(t))intencao="escala";
-else if(/marcacao|ponto|entrei|sai|trabalhei/.test(t))intencao="ponto";
+if(/intervalo|almoco|pausa|entrada prevista|saida prevista|meu horario|horario|escala|amanha|hoje|ontem|folga|trabalho/.test(t))intencao="escala";
+else if(/marcacao|ponto|entrei|registrei|trabalhei/.test(t))intencao="ponto";
 else if(/saldo|banco|extra|horas/.test(t))intencao="horas";
 else if(/solicit|pedido|atestado|documento/.test(t))intencao="solicitacoes";
-else intencao=camillyContexto.intencao;
 }
 if(!intencao&&/^(amanha|depois de amanha|hoje|ontem)$/.test(t)&&camillyContexto.intencao)intencao=camillyContexto.intencao;
 if(!intencao){
 return "Quero te ajudar! 💚 Posso consultar:\n• Seus horários e sua escala;\n• Sua próxima folga;\n• Marcações de entrada, intervalo e saída;\n• Solicitações e documentos;\n• Espelho de ponto;\n• Horas extras e banco de horas.\n\nPode perguntar do seu jeito, por exemplo: “Que horas entro amanhã?” ou “Já analisaram minha solicitação?”.";
 }
-const usaDataAnterior=followup&&!followupData&&camillyContexto.data;
-const data=followupData?camillyDataAlvo(t):(usaDataAnterior?new Date(camillyContexto.data+"T12:00:00"):camillyDataContextual(texto));
-if(intencao==="escala"&&/(intervalo|almoco|pausa|entrada|saida|comeco|termino)/.test(t)){
+let data;
+if(followupDiaSeguinte){
+data=new Date(camillyContexto.data+"T12:00:00");data.setDate(data.getDate()+1);
+}else if(followupData){
+data=camillyDataAlvo(t);
+}else if(followup&&camillyContexto.data){
+data=new Date(camillyContexto.data+"T12:00:00");
+}else{
+data=camillyDataContextual(texto);
+}
+const usaDataAnterior=(followup&&!followupData)||followupDiaSeguinte;
+if(intencao==="escala"&&/(intervalo|almoco|pausa|entrada|saida|comeco|termino|saio)/.test(t)){
 const r=await consultarCampoEscalaCamilly(texto,usaDataAnterior?data:null);
 camillyContexto={intencao,data:dataChaveLocal(data),ultimaResposta:r};return r;
 }
