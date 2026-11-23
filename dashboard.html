@@ -143,6 +143,13 @@ th{color:var(--muted);font-weight:700}
 .request-toolbar{align-items:stretch;flex-direction:column}
 .request-toolbar select{max-width:none}
 }
+
+.live-hero{background:linear-gradient(120deg,#0d342b,#1c5948,#2c725b);color:#fff;border-radius:18px;padding:25px;margin-bottom:20px}
+.live-hero-top{display:flex;justify-content:space-between;align-items:center;gap:15px}.live-kicker{font-size:10px;letter-spacing:2px;color:#e6d2a8;font-weight:800;margin-bottom:8px}.live-hero h2{font:800 24px Manrope,sans-serif;margin-bottom:7px}.live-hero p{font-size:12px;color:#d1e4da}.live-pulse{border:1px solid #ffffff35;background:#ffffff12;border-radius:30px;padding:9px 13px;font-size:11px}.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#75e0a8;margin-right:7px;animation:livePulse 1.8s infinite}@keyframes livePulse{50%{opacity:.55}}
+.live-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:15px}.live-updated{font-size:11px;color:var(--muted)}.live-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-bottom:20px}.live-kpi{background:linear-gradient(145deg,#fff,#f5faf6);border:1px solid #e3ece5;border-radius:14px;padding:17px}.live-kpi-label{font-size:11px;color:#788980;font-weight:700}.live-kpi-value{font:800 27px Manrope,sans-serif;color:#174b3b;margin:9px 0 4px}.live-kpi-note{font-size:10px;color:#91a098}
+.live-grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(240px,1fr);gap:16px}.live-panel{background:#fff;border:1px solid #e5ece7;border-radius:14px;padding:18px;margin-bottom:16px;min-width:0}.live-panel h3{font:800 14px Manrope,sans-serif;color:#1b4538;margin-bottom:14px}.live-table{width:100%;border-collapse:collapse;min-width:550px}.live-table th,.live-table td{padding:12px 9px;border-bottom:1px solid #edf1ed;text-align:left;font-size:11px}.live-table th{font-size:10px;color:#8b9991}.live-person{display:flex;align-items:center;gap:8px;min-width:150px}.live-avatar{width:30px;height:30px;border-radius:10px;background:#e3f1e7;color:#1d6049;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800}.live-person strong{display:block}.live-person small{display:block;color:#9aa69f;font-size:9px}.live-state{display:inline-block;border-radius:20px;padding:6px 9px;font-size:9px;font-weight:800;background:#eef3ef;color:#64766c;white-space:nowrap}.live-state.present{background:#e5f5eb;color:#24714d}.live-state.break{background:#fff3df;color:#9a7026}.live-state.pause{background:#f1eafa;color:#7650a2}.live-state.finished{background:#edf0ef;color:#65736c}.live-state.pending{background:#fff6e8;color:#a27732}.live-state.late{background:#fff0ed;color:#a43e30}.live-dept-row{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #edf1ed;font-size:11px}.live-bar{height:6px;background:#edf2ee;border-radius:10px;overflow:hidden;margin-top:7px}.live-bar span{display:block;height:100%;background:linear-gradient(90deg,#1b654c,#c9a96e)}.live-empty{padding:24px 10px;text-align:center;color:#89978f;font-size:11px}
+@media(max-width:850px){.live-grid{grid-template-columns:1fr}.live-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.live-hero-top{align-items:flex-start;flex-direction:column}.live-kpis{gap:9px}.live-kpi{padding:14px}}
+
 </style>
 <link rel="stylesheet" href="css/prisma-vivo.css?v=2">
 </head>
@@ -154,6 +161,7 @@ th{color:var(--muted);font-weight:700}
 <div class="menu">
 <div class="menu-title">PRINCIPAL</div>
 <button class="active" onclick="showPage('inicio',this)">▦ Visão geral</button>
+<button onclick="showPage('live',this)">◉ KFYRA LIVE</button>
 <button onclick="showPage('colaboradores',this)">♙ Colaboradores</button>
 <button onclick="showPage('departamentos',this)">▤ Departamentos</button>
 <button onclick="showPage('ponto',this)">◷ Controle de ponto</button>
@@ -189,6 +197,22 @@ th{color:var(--muted);font-weight:700}
 <div class="card"><div class="card-label">Plano</div><div class="card-number" style="font-size:19px" id="planIndicator">—</div><div class="card-note">Plano da empresa</div></div>
 </div>
 <div class="panel"><div class="panel-header"><h3>Bem-vindo à KFYRA</h3></div><p style="font-size:13px;color:#82918a;line-height:1.8">Sua empresa está conectada ao ambiente KFYRA. Utilize o menu lateral para acessar os módulos de gestão, acompanhar colaboradores e organizar as operações da sua empresa.</p></div>
+</section>
+
+
+<section id="page-live" class="hidden">
+ <div class="live-hero"><div class="live-hero-top"><div><div class="live-kicker">KFYRA • CENTRAL DE OPERAÇÕES</div><h2>O pulso da sua empresa.</h2><p>Acompanhe a jornada das equipes com base nas marcações e escalas cadastradas.</p></div><div class="live-pulse"><span class="live-dot"></span> Monitoramento ativo</div></div></div>
+ <div class="live-toolbar"><div class="live-updated" id="liveUpdated">Preparando indicadores...</div><button class="btn" id="liveRefreshButton" onclick="loadKfyraLive(true)">↻ Atualizar agora</button></div><div id="liveMessage" class="message"></div>
+ <div class="live-kpis">
+  <div class="live-kpi"><div class="live-kpi-label">Colaboradores ativos</div><div class="live-kpi-value" id="liveActive">—</div><div class="live-kpi-note">Cadastros ativos</div></div>
+  <div class="live-kpi"><div class="live-kpi-label">Presentes / trabalhando</div><div class="live-kpi-value" id="livePresent">—</div><div class="live-kpi-note">Entrada ou retorno registrado</div></div>
+  <div class="live-kpi"><div class="live-kpi-label">Em intervalo</div><div class="live-kpi-value" id="liveBreak">—</div><div class="live-kpi-note">Intervalo principal em andamento</div></div>
+  <div class="live-kpi"><div class="live-kpi-label">Em pausa adicional</div><div class="live-kpi-value" id="livePause">—</div><div class="live-kpi-note">Pausa em andamento</div></div>
+  <div class="live-kpi"><div class="live-kpi-label">Jornada encerrada</div><div class="live-kpi-value" id="liveFinished">—</div><div class="live-kpi-note">Saída registrada hoje</div></div>
+  <div class="live-kpi"><div class="live-kpi-label">Atrasos registrados</div><div class="live-kpi-value" id="liveLate">—</div><div class="live-kpi-note">Entrada após 15 minutos da escala</div></div>
+ </div>
+ <div class="live-grid"><div class="live-panel"><h3>Equipe em tempo real</h3><div class="table-wrap"><table class="live-table"><thead><tr><th>Colaborador</th><th>Departamento</th><th>Jornada</th><th>Última marcação</th><th>Situação</th></tr></thead><tbody id="liveRoster"><tr><td colspan="5" class="live-empty">Carregando equipe...</td></tr></tbody></table></div></div>
+ <div><div class="live-panel"><h3>Visão por departamento</h3><div id="liveDepartments" class="live-empty">Carregando departamentos...</div></div><div class="live-panel"><h3>Indicadores de atenção</h3><div class="live-dept-row"><span>Sem entrada após início previsto</span><strong id="liveNoEntry">—</strong></div><div class="live-dept-row"><span>Ausências aguardando RH</span><strong id="liveAbsences">—</strong></div><div class="live-dept-row"><span>Horas excedentes pendentes</span><strong id="liveOvertime">—</strong></div><p class="hint">Sem registro é um alerta operacional, não uma falta confirmada. Nenhum desconto é automático.</p></div></div></div>
 </section>
 
 <section id="page-colaboradores" class="hidden">
@@ -433,6 +457,7 @@ const MAX_PHOTO_SIZE=2*1024*1024;
 const ALLOWED_PHOTO_TYPES=['image/jpeg','image/png','image/webp'];
 
 let currentUser=null,currentCompany=null,currentRole=null;
+let liveRefreshTimer=null,liveLoading=false;
 let employeesData=[],departmentsData=[],schedulesData=[],scheduleDaysData=[],assignmentsData=[];
 let requestsData=[],selectedRequest=null;
 let overtimeData=[],timeBankData=[];
@@ -1928,12 +1953,66 @@ async function loadMonthlyClosingReview(){
  }finally{if(button){button.disabled=false;button.textContent=oldText||'Conferir competência'}}
 }
 
+
+function liveInitials(name){return String(name||'K').trim().split(/\\s+/).slice(0,2).map(x=>x.charAt(0).toUpperCase()).join('')}
+function liveClock(value){return value?new Date(value).toLocaleTimeString('pt-BR',{timeZone:'America/Sao_Paulo',hour:'2-digit',minute:'2-digit'}):'—'}
+function liveState(employee,events,date,nowMinutes){
+ const latest=events.length?events[events.length-1]:null,plan=scheduleForEmployeeDate(employee.id,date),shift=plan&&plan.day.is_working?plan.day:null,start=timeToMinutes(shift&&shift.start_time);
+ let state='off',label='Sem jornada hoje',late=false,noEntry=false;
+ if(latest){
+  if(['entrada','retorno_intervalo','retorno_pausa'].includes(latest.event_type)){state='present';label='Trabalhando'}
+  else if(latest.event_type==='inicio_intervalo'){state='break';label='Em intervalo'}
+  else if(latest.event_type==='inicio_pausa'){state='pause';label='Em pausa'}
+  else if(latest.event_type==='saida'){state='finished';label='Jornada encerrada'}
+  else{state='pending';label='Marcação em análise'}
+  const first=events.find(x=>x.event_type==='entrada');
+  if(first&&start!==null){const ps=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date(first.recorded_at)),pm={};ps.forEach(x=>pm[x.type]=x.value);late=(Number(pm.hour)*60+Number(pm.minute))>start+15}
+ }else if(shift&&start!==null){state='pending';label=nowMinutes>start+15?'Sem entrada':'Aguardando entrada';noEntry=nowMinutes>start+15}
+ return {employee,latest,shiftLabel:shift?(String(shift.start_time).slice(0,5)+'–'+String(shift.end_time).slice(0,5)):'Sem escala',state,label,late,noEntry,department:departmentsData.find(x=>x.id===employee.department_id)?.nome||'Sem departamento'};
+}
+function renderKfyraLive(rows,counts,absences,overtime){
+ $('liveActive').textContent=rows.length;$('livePresent').textContent=counts.present;$('liveBreak').textContent=counts.break;$('livePause').textContent=counts.pause;$('liveFinished').textContent=counts.finished;$('liveLate').textContent=counts.late;$('liveNoEntry').textContent=counts.noEntry;$('liveAbsences').textContent=absences;$('liveOvertime').textContent=overtime;
+ const classes={present:'present',break:'break',pause:'pause',finished:'finished',pending:'pending',off:''};
+ $('liveRoster').innerHTML=rows.length?rows.map(row=>{
+  const names={entrada:'Entrada',inicio_intervalo:'Início intervalo',retorno_intervalo:'Retorno intervalo',inicio_pausa:'Início pausa',retorno_pausa:'Retorno pausa',saida:'Saída'};
+  const last=row.latest?liveClock(row.latest.recorded_at)+' • '+(names[row.latest.event_type]||row.latest.event_type):'Sem marcação',cls=row.late&&row.state==='present'?'late':(classes[row.state]||''),label=row.late&&row.state==='present'?'Trabalhando • atrasado':row.label;
+  return '<tr><td><div class="live-person"><div class="live-avatar">'+escapeHTML(liveInitials(row.employee.full_name))+'</div><div><strong>'+escapeHTML(row.employee.full_name)+'</strong><small>'+escapeHTML(row.employee.job_title||'Colaborador')+'</small></div></div></td><td>'+escapeHTML(row.department)+'</td><td>'+escapeHTML(row.shiftLabel)+'</td><td>'+escapeHTML(last)+'</td><td><span class="live-state '+cls+'">'+escapeHTML(label)+'</span></td></tr>';
+ }).join(''):'<tr><td colspan="5" class="live-empty">Nenhum colaborador ativo cadastrado.</td></tr>';
+ const groups={};rows.forEach(row=>{const key=row.department;if(!groups[key])groups[key]={total:0,on:0};groups[key].total++;if(['present','break','pause','finished'].includes(row.state))groups[key].on++});
+ const names=Object.keys(groups).sort((a,b)=>a.localeCompare(b,'pt-BR'));
+ $('liveDepartments').innerHTML=names.length?names.map(name=>{const g=groups[name],pct=Math.round(g.on/g.total*100);return '<div class="live-dept-row"><div style="flex:1"><strong>'+escapeHTML(name)+'</strong><div class="live-bar"><span style="width:'+pct+'%"></span></div></div><span>'+g.on+'/'+g.total+'</span></div>'}).join(''):'<div class="live-empty">Sem departamentos com colaboradores ativos.</div>';
+}
+async function loadKfyraLive(manual=false){
+ if(!currentCompany||liveLoading)return;liveLoading=true;const button=$('liveRefreshButton');if(manual&&button){button.disabled=true;button.textContent='Atualizando...'}
+ try{
+  const now=new Date(),date=localDateInSaoPaulo(now),tomorrow=new Date(now);tomorrow.setDate(tomorrow.getDate()+1);
+  const start=date+'T00:00:00-03:00',end=localDateInSaoPaulo(tomorrow)+'T00:00:00-03:00';
+  const results=await Promise.all([
+   supabaseClient.from('attendance_records').select('id,employee_id,event_type,recorded_at').eq('company_id',currentCompany.id).gte('recorded_at',start).lt('recorded_at',end).order('recorded_at',{ascending:true}),
+   supabaseClient.from('employee_absences').select('id').eq('company_id',currentCompany.id).eq('status','pending').lte('start_date',date).gte('end_date',date),
+   supabaseClient.from('overtime_records').select('id').eq('company_id',currentCompany.id).eq('status','pending').eq('work_date',date)
+  ]);
+  if(results[0].error)throw new Error('Falha ao consultar marcações: '+results[0].error.message);if(results[1].error)throw new Error('Falha ao consultar ausências: '+results[1].error.message);if(results[2].error)throw new Error('Falha ao consultar horas excedentes: '+results[2].error.message);
+  const grouped={};(results[0].data||[]).forEach(mark=>{if(!grouped[mark.employee_id])grouped[mark.employee_id]=[];grouped[mark.employee_id].push(mark)});
+  const ps=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(now),pm={};ps.forEach(x=>pm[x.type]=x.value);
+  const nowMinutes=Number(pm.hour)*60+Number(pm.minute),active=employeesData.filter(x=>x.status==='active'),rows=active.map(e=>liveState(e,grouped[e.id]||[],date,nowMinutes));
+  const counts={present:0,break:0,pause:0,finished:0,late:0,noEntry:0};
+  rows.forEach(row=>{if(row.state==='present')counts.present++;if(row.state==='break')counts.break++;if(row.state==='pause')counts.pause++;if(row.state==='finished')counts.finished++;if(row.late)counts.late++;if(row.noEntry)counts.noEntry++});
+  renderKfyraLive(rows,counts,(results[1].data||[]).length,(results[2].data||[]).length);
+  $('liveUpdated').textContent='Atualizado às '+now.toLocaleTimeString('pt-BR',{timeZone:'America/Sao_Paulo',hour:'2-digit',minute:'2-digit',second:'2-digit'})+' • atualização automática a cada 30 segundos';$('liveMessage').className='message';
+ }catch(error){$('liveMessage').className='message error';$('liveMessage').textContent=error.message||String(error);$('liveUpdated').textContent='Não foi possível atualizar os indicadores.'}
+ finally{liveLoading=false;if(manual&&button){button.disabled=false;button.textContent='↻ Atualizar agora'}}
+}
+function startKfyraLiveRefresh(){if(liveRefreshTimer)clearInterval(liveRefreshTimer);loadKfyraLive();liveRefreshTimer=setInterval(()=>{if(!$('page-live').classList.contains('hidden'))loadKfyraLive()},30000)}
+function stopKfyraLiveRefresh(){if(liveRefreshTimer){clearInterval(liveRefreshTimer);liveRefreshTimer=null}}
+
 // NAVEGAÇÃO / SESSÃO
 async function showPage(page,button){
  document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));$('page-'+page)?.classList.remove('hidden');
  document.querySelectorAll('.menu button').forEach(b=>b.classList.remove('active'));if(button)button.classList.add('active');
  const titles={
   inicio:['Visão geral','Acompanhe os indicadores da sua empresa.'],
+  live:['KFYRA LIVE','O pulso da sua empresa, atualizado com as marcações reais.'],
   colaboradores:['Colaboradores','Gestão e cadastro de colaboradores.'],
   departamentos:['Departamentos','Organização da estrutura empresarial.'],
   ponto:['Controle de ponto','Registro e acompanhamento de jornada e horas excedentes.'],
@@ -1946,6 +2025,7 @@ async function showPage(page,button){
   ajuda:['KFYRA AI','Inteligência para sua gestão.']
  };
  $('pageTitle').textContent=titles[page][0];$('pageSubtitle').textContent=titles[page][1];$('companyBanner').classList.toggle('hidden',page!=='inicio');
+ if(page==='live')startKfyraLiveRefresh();else stopKfyraLiveRefresh();
  if(page==='fechamento'){
    if(!canManage()){showBox('closingMessage','Somente RH ou administrador pode acessar o fechamento mensal.','error');return}
    if($('closingMonth')&&!$('closingMonth').value)$('closingMonth').value=localDateInSaoPaulo(new Date()).slice(0,7);
