@@ -1537,11 +1537,12 @@ function camillyChatAvisosKey(){return camillyAvisosKey()+"_chat_seen";}
 function notificarCamillyNoChat(){
  const secao=document.getElementById("conteudoCamilly");
  if(!secao||secao.hidden||!camillyMessages||!colaboradorAtual)return;
- let vistos=[];try{vistos=JSON.parse(localStorage.getItem(camillyChatAvisosKey())||"[]");}catch(e){vistos=[];}
  const limite=Date.now()-24*60*60*1000;
- const pendentes=camillyAvisos.filter(a=>!vistos.includes(a.id)&&new Date(a.quando).getTime()>=limite);
  const normalizarTexto=t=>String(t||"").replace(/other declaration/gi,"outra declaração").replace(/medical certificate/gi,"atestado médico").replace(/declaration hours/gi,"declaração de horas").replace(/union declaration/gi,"declaração sindical").replace(/\s+/g," ").trim();
- /* Agrupa eventos equivalentes para não repetir no chat quando a mesma decisão gerou mais de um registro. */
+ /* A exibição é controlada pelo DOM da conversa atual, não por um marcador persistente.
+    Assim, ao reabrir o portal, os avisos recentes reaparecem se o histórico do chat foi reiniciado. */
+ const jaExibidos=new Set([...camillyMessages.querySelectorAll("[data-notification-id]")].map(el=>el.dataset.notificationId));
+ const pendentes=camillyAvisos.filter(a=>!jaExibidos.has(a.id)&&new Date(a.quando).getTime()>=limite);
  const unicos=new Map();
  pendentes.forEach(a=>{
   const texto=normalizarTexto(a.texto);
@@ -1551,11 +1552,9 @@ function notificarCamillyNoChat(){
  });
  const selecionados=[...unicos.values()].sort((a,b)=>new Date(a.quando)-new Date(b.quando)).slice(-5);
  selecionados.forEach(a=>{
-  adicionarMensagemCamilly("Oi! 💚 Tenho uma atualização para você. "+normalizarTexto(a.texto)+" Você pode consultar os detalhes na Central de Notificações.","bot");
+  const msg=adicionarMensagemCamilly("Oi! 💚 Tenho uma atualização para você. "+normalizarTexto(a.texto)+" Você pode consultar os detalhes na Central de Notificações.","bot");
+  if(msg)msg.dataset.notificationId=a.id;
  });
- /* Marca todos os eventos equivalentes como apresentados, inclusive duplicatas agrupadas. */
- const idsProcessados=pendentes.map(a=>a.id);
- if(idsProcessados.length){try{localStorage.setItem(camillyChatAvisosKey(),JSON.stringify([...new Set([...vistos,...idsProcessados])].slice(-100)));}catch(e){console.warn("Não foi possível salvar avisos já apresentados no chat:",e);}}
 }
 function iniciarAvisosCamilly(){if(camillyAvisosIntervalo)clearInterval(camillyAvisosIntervalo);verificarAvisosCamilly().catch(e=>console.warn("Notificações indisponíveis:",e.message));camillyAvisosIntervalo=setInterval(()=>verificarAvisosCamilly().catch(e=>console.warn("Falha ao atualizar notificações:",e.message)),60000);}
 document.addEventListener("click",e=>{const id=e.target?.closest?.("button")?.id;if(id==="camillyAlertsRead"||id==="notificacoesMarcarLidas"){e.preventDefault();marcarAvisosCamillyComoLidos();}else if(id==="notificacoesTodas"){filtroNotificacoes="todas";renderizarAvisosCamilly();}else if(id==="notificacoesNaoLidas"){filtroNotificacoes="naoLidas";renderizarAvisosCamilly();}});
