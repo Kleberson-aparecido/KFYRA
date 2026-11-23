@@ -1555,7 +1555,7 @@ if(!data||!data.length)return "Você ainda não tem solicitações registradas. 
 const status={pending:"aguardando análise",approved:"aprovada",rejected:"recusada",cancelled:"cancelada"};
 const t=camillyNormalizar(texto);
 let itens=data;
-if(/atestado|medic/.test(t))itens=data.filter(x=>x.request_type==="medical_certificate");
+if(/atestado|medic|horas.*abonad|abonad.*horas/.test(t))itens=data.filter(x=>x.request_type==="medical_certificate");
 else if(/declaracao|comparecimento|sindical/.test(t))itens=data.filter(x=>["attendance_declaration","union_declaration","other_declaration"].includes(x.request_type));
 if(!itens.length)return "Não encontrei uma solicitação desse tipo entre seus 10 pedidos mais recentes. Você pode conferir a lista completa na aba “Solicitações”. 💚";
 const resumo=itens.map(x=>"• "+(tiposSolicitacao[x.request_type]||"Solicitação")+" — "+(status[x.status]||x.status)+(x.requested_date?" — data: "+formatarDataSolicitacao(x.requested_date):"")+(x.decision_reason?" — resposta do responsável: "+x.decision_reason:"")).join("\n");
@@ -1574,7 +1574,7 @@ const recusadas=itens.filter(x=>x.status==="rejected");
 if(!recusadas.length)return "Não encontrei uma solicitação recusada desse tipo entre seus 10 pedidos mais recentes. Se você viu uma recusa, abra o pedido em “Minhas solicitações” ou fale com o RH para confirmar o motivo. 💚\n"+resumo;
 return "Encontrei solicitação(ões) recusada(s). O motivo registrado pelo responsável aparece após o status, quando foi informado. Se não houver motivo exibido, consulte o RH para entender a decisão. 💚\n"+resumo;
 }
-if(/atestado|medic/.test(t)&&/abon|horas|credito|descont/.test(t)){
+if(/atestado|medic|abonad/.test(t)&&/abon|horas|credito|descont/.test(t)){
 const aprovados=itens.filter(x=>x.status==="approved");
 return (aprovados.length?"Seu pedido de atestado consta como aprovado. ":"")+ "Isso confirma a aprovação do documento, mas esta consulta não confirma por si só que as horas já foram lançadas como abonadas. O RH deve considerar somente o período aceito; confira o espelho de ponto atualizado ou peça ao RH que confirme o lançamento. 💚\n"+resumo;
 }
@@ -1675,6 +1675,7 @@ if(/como faco|como envio|como pedir|quero solicitar|posso solicitar|preciso soli
 if(/como funciona|onde encontro|como registro|como bato ponto|como usar|me ajuda a usar/.test(t))return "ajuda_ponto";
 if(/resumo do dia|como foi meu dia|meu dia hoje|situacao de hoje|status de hoje|trabalhei hoje|trabalhei ontem|quanto trabalhei|total de horas trabalhadas/.test(t))return "dia_completo";
 if(/quanto tempo|demora|prazo|quando (vai|sera) (ser )?analisad|quando aprov|como sei se|foi aceito|foi aprovado|foi recusad|foi rejeitad|o que acontece se|acompanhar|minha solicitacao|meu atestado/.test(t)&&/solicit|pedido|atestado|medic|documento|analis|aprov|recus|rejeit/.test(t))return "solicitacoes";
+if(/horas.*abonad|abonad.*horas/.test(t))return "solicitacoes";
 if(/solicit|pedido|atestado|declaracao|documento|comprovante|justificativa|troca de escala/.test(t))return "solicitacoes";
 if(/espelho|assinatura|pdf|fechamento|documento mensal/.test(t))return "espelho";
 if(/hora extra|horas extras|banco de horas|saldo de horas|saldo de banco|meu saldo|credito de horas|debito de horas|compensacao/.test(t))return "horas";
