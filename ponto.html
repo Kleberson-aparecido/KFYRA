@@ -278,31 +278,23 @@ body:has(#areaLogada:not(.oculto)) .card{background:linear-gradient(145deg,#f5f8
 @media(min-width:760px){.ky-bottom-nav{bottom:18px}.ky-nav-item{font-size:11px;min-height:62px}.ky-nav-icon{font-size:22px}}
 @media(max-width:390px){.ky-bottom-nav{width:calc(100% - 16px);bottom:calc(8px + env(safe-area-inset-bottom));padding:7px 5px;gap:2px;border-radius:18px}.ky-nav-item{font-size:9px;min-height:55px}.ky-nav-icon{font-size:19px}}
 
-/* CAMILLY — assistente visual do Meu Ponto */
-#camillyLauncher{position:fixed;right:18px;bottom:calc(96px + env(safe-area-inset-bottom));z-index:40;display:none;align-items:center;gap:10px;width:auto;margin:0;padding:9px 14px 9px 9px;border:1px solid rgba(216,183,107,.55);border-radius:999px;background:linear-gradient(135deg,#092f27,#17664e);color:#fff;box-shadow:0 12px 34px rgba(0,0,0,.25);cursor:pointer}
-#camillyLauncher.visible{display:flex;animation:kyCamillyIn .45s ease both}
-@keyframes kyCamillyIn{from{opacity:0;transform:translateY(12px) scale(.94)}to{opacity:1;transform:translateY(0) scale(1)}}
-.camilly-avatar{width:48px;height:48px;flex:0 0 48px;border:2px solid #e3c77f;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 25%,#fff2cf,#e7bd83 44%,#8d554e 100%);overflow:hidden}
-.camilly-avatar img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
-.camilly-label{text-align:left;line-height:1.25}.camilly-label strong{display:block;font-size:13px}.camilly-label small{color:#d9eadf;font-size:11px}
-#camillyLauncher .camilly-dot{width:8px;height:8px;border-radius:50%;background:#8be0a9;box-shadow:0 0 0 4px #8be0a922}
-#camillyChat{position:fixed;right:18px;bottom:calc(158px + env(safe-area-inset-bottom));z-index:41;width:min(360px,calc(100vw - 28px));height:min(490px,calc(100dvh - 190px));display:none;flex-direction:column;overflow:hidden;border:1px solid rgba(216,183,107,.45);border-radius:22px;background:#f8fbf8;box-shadow:0 24px 70px rgba(0,0,0,.3)}
-#camillyChat.open{display:flex;animation:kyCamillyIn .25s ease both}
-.camilly-head{display:flex;align-items:center;gap:10px;padding:13px 15px;background:linear-gradient(115deg,#082d25,#17654d);color:white}
-.camilly-head .camilly-avatar{width:42px;height:42px;flex-basis:42px}.camilly-head .camilly-avatar img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
-.camilly-head div:nth-child(2){flex:1}.camilly-head strong{display:block;font-size:14px}.camilly-head small{color:#d5e9dc;font-size:11px}
-#camillyClose{width:34px;height:34px;margin:0;padding:0;background:#ffffff18;color:white;border:1px solid #ffffff35;border-radius:50%;font-size:20px;box-shadow:none}
-#camillyMessages{flex:1;overflow:auto;padding:15px;display:flex;flex-direction:column;gap:10px}
-.camilly-msg{max-width:88%;padding:10px 12px;border-radius:14px;font-size:13px;line-height:1.5;overflow-wrap:anywhere}
-.camilly-msg.bot{align-self:flex-start;background:#e7f2ea;color:#214a39;border-bottom-left-radius:4px}
+/* CAMILLY — chat integrado em aba própria */
+.camilly-page{display:flex;flex-direction:column;min-height:min(690px,calc(100dvh - 235px));padding:0!important;overflow:hidden;border-radius:22px}
+.camilly-page-head{display:flex;align-items:center;gap:12px;padding:14px 16px;background:linear-gradient(115deg,#082d25,#17654d);color:white}
+.camilly-page-head .camilly-avatar{width:48px;height:48px;flex:0 0 48px}
+.camilly-page-head h3{margin:0;color:#fff;font-size:17px}
+.camilly-page-head p{margin:3px 0 0;color:#d5e9dc;font-size:11px}
+.camilly-online{margin-left:auto;color:#a8efbf;font-size:11px;white-space:nowrap}
+.camilly-page-messages{flex:1;min-height:280px;max-height:calc(100dvh - 390px);overflow:auto;padding:16px;display:flex;flex-direction:column;gap:11px;background:linear-gradient(180deg,#f8fbf8,#eef5ef)}
+.camilly-msg{max-width:88%;padding:11px 13px;border-radius:15px;font-size:14px;line-height:1.55;overflow-wrap:anywhere;white-space:pre-wrap}
+.camilly-msg.bot{align-self:flex-start;background:#e2efe6;color:#214a39;border-bottom-left-radius:4px}
 .camilly-msg.user{align-self:flex-end;background:#155b45;color:white;border-bottom-right-radius:4px}
-.camilly-compose{display:flex;gap:8px;padding:11px;border-top:1px solid #e1ebe4;background:white}
-#camillyInput{min-width:0;flex:1;padding:11px 12px;font-size:14px;border-radius:12px}
-#camillySend{width:44px;flex:0 0 44px;margin:0;padding:0;border-radius:12px;font-size:18px}
-.camilly-note{padding:0 13px 9px;margin:0;background:white;color:#829188;font-size:10px;text-align:center}
-@media(max-width:500px){#camillyLauncher{right:12px;bottom:calc(88px + env(safe-area-inset-bottom))}#camillyChat{right:10px;bottom:calc(145px + env(safe-area-inset-bottom));width:calc(100vw - 20px);height:min(470px,calc(100dvh - 175px))}}
-@media(prefers-reduced-motion:reduce){#camillyLauncher,#camillyChat{animation:none}}
-
+.camilly-page-compose{display:flex;gap:8px;padding:12px;border-top:1px solid #e1ebe4;background:#fff}
+#camillyInput{min-width:0;flex:1;padding:12px 13px;font-size:14px;border-radius:13px}
+#camillySend{width:46px;flex:0 0 46px;margin:0;padding:0;border-radius:13px;font-size:18px}
+.camilly-note{padding:0 13px 11px;margin:0;background:white;color:#829188;font-size:10px;text-align:center}
+@media(max-width:500px){.camilly-page{min-height:calc(100dvh - 235px)}.camilly-page-messages{max-height:calc(100dvh - 390px);padding:12px}.ky-bottom-nav{width:calc(100% - 12px);padding:6px 4px;gap:2px}.ky-nav-item{font-size:9px;min-height:54px;padding:6px 1px}.ky-nav-icon{font-size:18px}}
+@media(prefers-reduced-motion:reduce){.camilly-page{animation:none}}
 </style>
 </head>
 <body>
@@ -343,6 +335,7 @@ body:has(#areaLogada:not(.oculto)) .card{background:linear-gradient(145deg,#f5f8
 <button type="button" class="ky-nav-item" id="abaEspelho" data-aba="espelho"><span class="ky-nav-icon" aria-hidden="true">▤</span><span>Espelho</span></button>
 <button type="button" class="ky-nav-item" id="abaSolicitacoes" data-aba="solicitacoes"><span class="ky-nav-icon" aria-hidden="true">⇄</span><span>Solicitações</span></button>
 <button type="button" class="ky-nav-item" id="abaPerfil" data-aba="perfil"><span class="ky-nav-icon" aria-hidden="true">◎</span><span>Perfil</span></button>
+<button type="button" class="ky-nav-item" id="abaCamilly" data-aba="camilly"><span class="ky-nav-icon" aria-hidden="true">✦</span><span>Camilly</span></button>
 </nav>
 <section id="conteudoPonto">
 <div class="painel-ponto">
@@ -445,6 +438,13 @@ body:has(#areaLogada:not(.oculto)) .card{background:linear-gradient(145deg,#f5f8
 <div id="listaSolicitacoes"><p>Carregando solicitações...</p></div>
 </div>
 </section>
+<section id="conteudoCamilly" class="oculto" hidden aria-hidden="true">
+<div class="painel-ponto camilly-page">
+<div class="camilly-page-head"><span class="camilly-avatar"><img id="camillyAvatar" alt="Camilly"></span><div><h3>Camilly</h3><p>Sua assistente do Meu Ponto • Estou aqui para ajudar 💚</p></div><span class="camilly-online">● Online</span></div>
+<div id="camillyMessages" class="camilly-page-messages" aria-live="polite"><div class="camilly-msg bot">Oii! 💚 Eu sou a Camilly! Posso consultar suas informações do Meu Ponto e ajudar você a entender sua jornada. 😊</div></div>
+<form class="camilly-compose camilly-page-compose" id="camillyForm"><input id="camillyInput" type="text" maxlength="500" placeholder="Escreva sua mensagem..." autocomplete="off" aria-label="Mensagem para Camilly"><button id="camillySend" type="submit" aria-label="Enviar mensagem">➤</button></form>
+<p class="camilly-note">Consultas pessoais do Meu Ponto • não realizo aprovações nem alterações.</p>
+</div></section>
 <section id="conteudoPerfil" class="oculto" hidden aria-hidden="true">
 <div class="painel-ponto">
 <div class="perfil-topo">
@@ -469,16 +469,7 @@ body:has(#areaLogada:not(.oculto)) .card{background:linear-gradient(145deg,#f5f8
 </div>
 </div>
 
-<button type="button" id="camillyLauncher" aria-label="Conversar com Camilly" aria-expanded="false">
-<span class="camilly-avatar" aria-hidden="true"><img id="camillyAvatarLauncher" alt="" loading="eager"></span>
-<span class="camilly-label"><strong>Camilly 💚</strong><small>Oi! Estou aqui para ajudar</small></span><span class="camilly-dot"></span>
-</button>
-<aside id="camillyChat" aria-label="Conversa com Camilly" aria-hidden="true">
-<div class="camilly-head"><span class="camilly-avatar" aria-hidden="true"><img id="camillyAvatarChat" alt="" loading="eager"></span><div><strong>Camilly</strong><small>Sua assistente do Meu Ponto</small></div><button type="button" id="camillyClose" aria-label="Fechar conversa">×</button></div>
-<div id="camillyMessages" aria-live="polite"><div class="camilly-msg bot">Oii! 💚 Eu sou a Camilly! Posso consultar suas informações do Meu Ponto e ajudar você a entender sua jornada. 😊</div></div>
-<form class="camilly-compose" id="camillyForm"><input id="camillyInput" type="text" maxlength="500" placeholder="Escreva sua mensagem..." autocomplete="off" aria-label="Mensagem para Camilly"><button id="camillySend" type="submit" aria-label="Enviar mensagem">➤</button></form>
-<p class="camilly-note">Consultas pessoais do Meu Ponto • não realizo aprovações nem alterações.</p>
-</aside>
+
 
 </main>
 
@@ -1477,14 +1468,8 @@ this.disabled=false;this.textContent="Atualizar histórico";
 
 
 /* CAMILLY — assistente do Meu Ponto, consultas pessoais somente leitura */
-const camillyLauncher=document.getElementById("camillyLauncher");
-const camillyChat=document.getElementById("camillyChat");
 const camillyMessages=document.getElementById("camillyMessages");
-fetch("assets/camilly-avatar.webp.b64?v=2").then(r=>{if(!r.ok)throw new Error("Imagem da Camilly indisponível");return r.text()}).then(b64=>{const src="data:image/webp;base64,"+b64.trim();document.querySelectorAll("#camillyAvatarLauncher,#camillyAvatarChat").forEach(img=>img.src=src)}).catch(error=>console.error("Não foi possível carregar a foto da Camilly:",error));
-function mostrarCamilly(){if(camillyLauncher)camillyLauncher.classList.add("visible")}
-function ocultarCamilly(){if(camillyLauncher)camillyLauncher.classList.remove("visible");fecharCamilly()}
-function abrirCamilly(){camillyChat.classList.add("open");camillyChat.setAttribute("aria-hidden","false");camillyLauncher.setAttribute("aria-expanded","true");document.getElementById("camillyInput").focus()}
-function fecharCamilly(){camillyChat.classList.remove("open");camillyChat.setAttribute("aria-hidden","true");if(camillyLauncher)camillyLauncher.setAttribute("aria-expanded","false")}
+fetch("assets/camilly-avatar.webp.b64?v=2").then(r=>{if(!r.ok)throw new Error("Imagem da Camilly indisponível");return r.text()}).then(b64=>{document.getElementById("camillyAvatar").src="data:image/webp;base64,"+b64.trim()}).catch(error=>console.error("Não foi possível carregar a foto da Camilly:",error));
 function camillyDataAlvo(texto,dataBase=null){
 const t=camillyNormalizar(texto),agora=dataBase?new Date(dataBase.getFullYear(),dataBase.getMonth(),dataBase.getDate(),12):new Date();
 if(/depois de amanha/.test(t)){agora.setDate(agora.getDate()+2);return agora}
@@ -1779,8 +1764,6 @@ return "Tive um probleminha ao consultar essa informação agora. "+(error.messa
 return "Não consegui concluir essa consulta. Pode me explicar de outro jeito? 💚";
 }
 function adicionarMensagemCamilly(texto,tipo){const el=document.createElement("div");el.className="camilly-msg "+tipo;el.textContent=texto;camillyMessages.appendChild(el);camillyMessages.scrollTop=camillyMessages.scrollHeight}
-document.getElementById("camillyLauncher").addEventListener("click",()=>camillyChat.classList.contains("open")?fecharCamilly():abrirCamilly());
-document.getElementById("camillyClose").addEventListener("click",fecharCamilly);
 document.getElementById("camillyForm").addEventListener("submit",async function(e){e.preventDefault();const input=document.getElementById("camillyInput"),texto=input.value.trim();if(!texto)return;adicionarMensagemCamilly(texto,"user");input.value="";const botao=document.getElementById("camillySend");botao.disabled=true;try{const resposta=await responderCamilly(texto);adicionarMensagemCamilly(resposta,"bot")}finally{botao.disabled=false}});
 
 
@@ -1793,7 +1776,7 @@ colaboradorAtual=await buscarColaborador(user);
 document.getElementById("nomeColaborador").textContent=colaboradorAtual.full_name;
 document.getElementById("emailColaborador").textContent=colaboradorAtual.email||user.email;
 areaLogada.classList.remove("oculto");
-mostrarCamilly();
+
 titulo.textContent="Meu Ponto";subtitulo.textContent="Bem-vindo ao seu portal de colaborador.";
 const mesInicial=new Date();document.getElementById("mesCalendario").value=mesInicial.getFullYear()+"-"+String(mesInicial.getMonth()+1).padStart(2,"0");
 ativarAba("ponto");
@@ -1846,9 +1829,9 @@ document.getElementById("mesCalendario").addEventListener("change",()=>sincroniz
 
 /* NAVEGAÇÃO PRINCIPAL — KFYRA MEU PONTO */
 function ativarAba(nome){
-const secoes={ponto:document.getElementById("conteudoPonto"),calendario:document.getElementById("conteudoCalendario"),espelho:document.getElementById("conteudoEspelho"),solicitacoes:document.getElementById("conteudoSolicitacoes"),perfil:document.getElementById("conteudoPerfil")};
-const botoes={ponto:document.getElementById("abaPonto"),calendario:document.getElementById("abaCalendario"),espelho:document.getElementById("abaEspelho"),solicitacoes:document.getElementById("abaSolicitacoes"),perfil:document.getElementById("abaPerfil")};
-const titulos={ponto:["Registro de Jornada","Acompanhe sua jornada e registre seus horários."],calendario:["Calendário","Consulte sua escala, jornadas previstas e folgas."],espelho:["Espelho de Ponto","Consulte suas marcações e o documento mensal."],solicitacoes:["Solicitações","Envie e acompanhe suas solicitações."],perfil:["Meu Perfil","Consulte seus dados e sua jornada."]};
+const secoes={ponto:document.getElementById("conteudoPonto"),calendario:document.getElementById("conteudoCalendario"),espelho:document.getElementById("conteudoEspelho"),solicitacoes:document.getElementById("conteudoSolicitacoes"),perfil:document.getElementById("conteudoPerfil"),camilly:document.getElementById("conteudoCamilly")};
+const botoes={ponto:document.getElementById("abaPonto"),calendario:document.getElementById("abaCalendario"),espelho:document.getElementById("abaEspelho"),solicitacoes:document.getElementById("abaSolicitacoes"),perfil:document.getElementById("abaPerfil"),camilly:document.getElementById("abaCamilly")};
+const titulos={ponto:["Registro de Jornada","Acompanhe sua jornada e registre seus horários."],calendario:["Calendário","Consulte sua escala, jornadas previstas e folgas."],espelho:["Espelho de Ponto","Consulte suas marcações e o documento mensal."],solicitacoes:["Solicitações","Envie e acompanhe suas solicitações."],perfil:["Meu Perfil","Consulte seus dados e sua jornada."],camilly:["Camilly","Converse com sua assistente pessoal do Meu Ponto."]};
 if(!Object.prototype.hasOwnProperty.call(secoes,nome))nome="ponto";
 Object.keys(secoes).forEach(chave=>{
 const ativa=chave===nome;
@@ -1942,7 +1925,7 @@ async function sair(){
 const {error}=await supabaseClient.auth.signOut();
 if(error){mostrarMensagem("Não foi possível sair da conta: "+error.message,"erro");return}
 if(relogioIntervalo)clearInterval(relogioIntervalo);
-ocultarCamilly();
+
 window.location.replace(window.location.pathname);
 }
 document.getElementById("botaoSair").addEventListener("click",sair);
