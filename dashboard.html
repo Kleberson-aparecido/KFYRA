@@ -1559,9 +1559,11 @@ async function generateOfficialTimesheetStatement(){
  const button=$('generateStatementButton'),box=$('officialStatementMessage');
  if(!canManage()){showBox('officialStatementMessage','Somente RH ou administrador da empresa pode gerar o espelho oficial.','error');return}
  if(!selectedPointEmployeeId){showBox('officialStatementMessage','Pesquise e selecione um colaborador antes de gerar o espelho.','error');return}
- const month=$('pointMonth')?.value||localDateInSaoPaulo(new Date()).slice(0,7);
- if(!/^\d{4}-\d{2}$/.test(month)){showBox('officialStatementMessage','Selecione um mês válido.','error');return}
- const [year,mon]=month.split('-').map(Number);
+ const monthField=$('pointMonth');
+ const month=String(monthField?.value||'').trim();
+ const monthParts=month.split('-');
+ const year=Number(monthParts[0]),mon=Number(monthParts[1]);
+ if(monthParts.length!==2||monthParts[0].length!==4||monthParts[1].length!==2||!Number.isInteger(year)||!Number.isInteger(mon)||year<2000||mon<1||mon>12){showBox('officialStatementMessage','Mês de consulta inválido. Selecione novamente o mês no campo “Mês de consulta”.','error');return}
  const periodStart=`${month}-01`;
  const periodEnd=`${year}-${String(mon).padStart(2,'0')}-${String(new Date(year,mon,0).getDate()).padStart(2,'0')}`;
  const employee=employeesData.find(e=>String(e.id)===String(selectedPointEmployeeId));
