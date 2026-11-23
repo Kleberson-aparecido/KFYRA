@@ -1619,8 +1619,25 @@ if(registros&&registros.length)resposta+="• Marcações registradas:\n"+regist
 else resposta+="• Ainda não há marcações registradas nesse dia.";
 return resposta+"\n\nA ausência de marcação, por si só, não confirma falta. 💚";
 }
-function camillyAjudaSolicitacoes(){
-return "Você pode enviar uma solicitação pela aba Solicitações do Meu Ponto. Escolha o tipo, informe a data, explique o motivo e anexe um documento se necessário. Depois, acompanhe o andamento em “Minhas solicitações”. O envio não significa aprovação: o RH ou responsável autorizado fará a análise. 💚";
+function camillyAjudaSolicitacoes(texto=""){
+const t=camillyNormalizar(texto);
+const inicio="Para enviar, abra a aba Solicitações no Meu Ponto e preencha a data relacionada e a justificativa. Depois toque em “Enviar solicitação” e acompanhe o resultado em “Minhas solicitações”.";
+if(/troca|trocar|mudar|alterar/.test(t)&&/folga|dia de descanso/.test(t)){
+return "Sim! 💚 Você pode pedir uma troca de folga. Na aba Solicitações, selecione “Troca de folga”, informe a data da folga que deseja alterar e explique qual mudança está solicitando. "+inicio+" A folga só será alterada depois da aprovação do RH ou responsável autorizado; enviar o pedido não muda sua escala automaticamente.";
+}
+if(/corrigir|correcao|esqueci|marcacao|horario/.test(t)&&/ponto|entrada|saida|bater|registro/.test(t)){
+return "Se uma marcação estiver faltando ou incorreta, você pode pedir uma correção. 💚 Na aba Solicitações, selecione “Correção de ponto”, informe o dia, preencha o horário correto quando solicitado e explique o que aconteceu. "+inicio+" A marcação original será preservada e a correção dependerá da análise do RH ou responsável autorizado.";
+}
+if(/escala|turno|jornada/.test(t)){
+return "Para pedir uma mudança de jornada, abra Solicitações e selecione “Alteração de escala”. 💚 Informe a data relacionada, preencha os horários inicial e final se forem pertinentes e explique a mudança desejada. "+inicio+" Sua escala só muda depois da aprovação do responsável autorizado.";
+}
+if(/atestado|medic|doente|consulta/.test(t)){
+return "Para enviar um atestado, abra Solicitações e selecione “Atestado médico”. 💚 Informe a data relacionada, descreva o período indicado e anexe o documento em PDF, JPG ou PNG (até 10 MB). "+inicio+" O RH analisará o documento e, se aceitar, abonará somente o período aprovado. O envio não gera abono automático.";
+}
+if(/declaracao|comparecimento|sindical/.test(t)){
+return "Para enviar uma declaração, abra Solicitações e escolha o tipo correto: “Declaração de horas / comparecimento”, “Declaração sindical” ou “Outra declaração”. 💚 Informe a data, explique o período que precisa justificar e anexe o documento em PDF, JPG ou PNG (até 10 MB). O RH analisará e decidirá quais horas serão justificadas.";
+}
+return "Você pode enviar uma solicitação pela aba Solicitações do Meu Ponto. Escolha o tipo correspondente, informe a data, explique o motivo e anexe um documento se necessário. Depois acompanhe em “Minhas solicitações”. O envio não significa aprovação: o RH ou responsável autorizado fará a análise. 💚";
 }
 function camillyAjudaPonto(){
 return "Na aba Registro de Jornada você registra entrada, intervalo, retorno, pausas e saída conforme sua rotina. Na aba Calendário você consulta a escala do mês; em Espelho, confere as marcações organizadas por competência. Se esqueceu ou registrou algo incorretamente, envie uma solicitação de correção pela aba Solicitações. Não altere uma marcação oficial por conta própria. 💚";
@@ -1704,7 +1721,7 @@ const r=await consultarProximaFolgaCamilly();
 camillyContexto={intencao,data:camillyUltimaFolgaData||dataChaveLocal(data),ultimaResposta:r};return r;
 }
 if(intencao==="ajuda_solicitacao"){
-const r=camillyAjudaSolicitacoes();camillyContexto={intencao,data:dataChaveLocal(data),ultimaResposta:r};return r;
+const r=camillyAjudaSolicitacoes(texto);camillyContexto={intencao,data:dataChaveLocal(data),ultimaResposta:r};return r;
 }
 if(intencao==="ajuda_ponto"){
 const r=camillyAjudaPonto();camillyContexto={intencao,data:dataChaveLocal(data),ultimaResposta:r};return r;
