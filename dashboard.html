@@ -1544,14 +1544,33 @@ async function recalculateAttendance(){
    analyzed++;
    const expectedSpan=plannedEndMinutes-startMinutes;
    const plannedMainBreak=Math.max(0,Number(plan.day.break_minutes)||0);
-   const extraPauseMinutes=(plan.day.pauses||[]).reduce((sum,p)=>sum+Math.max(0,Number(p.duration_minutes)||0),0);
+   const plannedExtraPauseMinutes=(plan.day.pauses||[]).reduce((sum,p)=>sum+Math.max(0,Number(p.duration_minutes)||0),0);
    let actualMainBreak=plannedMainBreak;
    if(mainStart&&mainEnd)actualMainBreak=Math.round((new Date(mainEnd.recorded_at)-new Date(mainStart.recorded_at))/60000);
+   // Para apurar o tempo líquido, desconta a duração REAL das pausas adicionais registradas,
+   // e não apenas a duração planejada na escala.
+   let openExtraPause=null,actualExtraPauseMs=0,invalidExtraPause=false;
+   for(const mark of events){
+    if(mark.event_type==='inicio_pausa'){
+     if(openExtraPause!==null){invalidExtraPause=true;break}
+     openExtraPause=new Date(mark.recorded_at).getTime();
+    }else if(mark.event_type==='retorno_pausa'){
+     const returnedAt=new Date(mark.recorded_at).getTime();
+     if(openExtraPause===null||returnedAt<=openExtraPause){invalidExtraPause=true;break}
+     actualExtraPauseMs+=returnedAt-openExtraPause;
+     openExtraPause=null;
+    }
+   }
+   if(invalidExtraPause||openExtraPause!==null){
+    reportSkip(item,'As marcações de pausa adicional estão incompletas ou fora de sequência; jornada preservada para conferência.');
+    analyzed--;continue;
+   }
+   const actualExtraPauseMinutes=Math.round(actualExtraPauseMs/60000);
    const elapsed=Math.round((new Date(exit.recorded_at)-new Date(entry.recorded_at))/60000);
-   const actualNet=elapsed-actualMainBreak-extraPauseMinutes;
-   const expectedNet=expectedSpan-plannedMainBreak-extraPauseMinutes;
+   const actualNet=elapsed-actualMainBreak-actualExtraPauseMinutes;
+   const expectedNet=expectedSpan-plannedMainBreak-plannedExtraPauseMinutes;
    const overtimeMinutes=Math.max(0,actualNet-expectedNet);
-   const description=`Jornada prevista: ${String(plan.day.start_time).slice(0,5)}–${String(plan.day.end_time).slice(0,5)}. Tempo líquido apurado: ${actualNet} min; previsto: ${expectedNet} min. Intervalo principal considerado: ${actualMainBreak} min; pausas adicionais previstas: ${extraPauseMinutes} min. Cálculo automático sujeito à conferência do RH.`;
+   const description=`Jornada prevista: ${String(plan.day.start_time).slice(0,5)}–${String(plan.day.end_time).slice(0,5)}. Tempo líquido apurado: ${actualNet} min; previsto: ${expectedNet} min. Intervalo principal real considerado: ${actualMainBreak} min; pausas adicionais registradas: ${actualExtraPauseMinutes} min; pausas adicionais previstas: ${plannedExtraPauseMinutes} min. Cálculo automático sujeito à conferência do RH.`;
    const previous=(existing||[]).find(x=>x.employee_id===item.employee_id&&x.work_date===item.date);
    if(previous){
     if(previous.status!=='pending'){protected++;diagnostics.push({name:employeeName(item.employee_id),date:item.date,reason:'Já existe ocorrência '+(previous.status==='approved'?'aprovada':'recusada')+'; preservada sem alteração.'});continue}
