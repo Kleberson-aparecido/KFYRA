@@ -1539,12 +1539,23 @@ function notificarCamillyNoChat(){
  if(!secao||secao.hidden||!camillyMessages||!colaboradorAtual)return;
  let vistos=[];try{vistos=JSON.parse(localStorage.getItem(camillyChatAvisosKey())||"[]");}catch(e){vistos=[];}
  const limite=Date.now()-24*60*60*1000;
- const novos=camillyAvisos.filter(a=>!vistos.includes(a.id)&&new Date(a.quando).getTime()>=limite).slice(0,5).reverse();
- novos.forEach(a=>{
-  adicionarMensagemCamilly("Oi! 💚 Tenho uma atualização para você. "+a.texto+" Você pode consultar os detalhes na Central de Notificações.","bot");
-  vistos.push(a.id);
+ const pendentes=camillyAvisos.filter(a=>!vistos.includes(a.id)&&new Date(a.quando).getTime()>=limite);
+ const normalizarTexto=t=>String(t||"").replace(/other declaration/gi,"outra declaração").replace(/medical certificate/gi,"atestado médico").replace(/declaration hours/gi,"declaração de horas").replace(/union declaration/gi,"declaração sindical").replace(/\s+/g," ").trim();
+ /* Agrupa eventos equivalentes para não repetir no chat quando a mesma decisão gerou mais de um registro. */
+ const unicos=new Map();
+ pendentes.forEach(a=>{
+  const texto=normalizarTexto(a.texto);
+  const chave=(a.tipo||"")+"|"+texto.toLocaleLowerCase("pt-BR");
+  const anterior=unicos.get(chave);
+  if(!anterior||new Date(a.quando)>new Date(anterior.quando))unicos.set(chave,a);
  });
- if(novos.length){try{localStorage.setItem(camillyChatAvisosKey(),JSON.stringify(vistos.slice(-100)));}catch(e){console.warn("Não foi possível salvar avisos já apresentados no chat:",e);}}
+ const selecionados=[...unicos.values()].sort((a,b)=>new Date(a.quando)-new Date(b.quando)).slice(-5);
+ selecionados.forEach(a=>{
+  adicionarMensagemCamilly("Oi! 💚 Tenho uma atualização para você. "+normalizarTexto(a.texto)+" Você pode consultar os detalhes na Central de Notificações.","bot");
+ });
+ /* Marca todos os eventos equivalentes como apresentados, inclusive duplicatas agrupadas. */
+ const idsProcessados=pendentes.map(a=>a.id);
+ if(idsProcessados.length){try{localStorage.setItem(camillyChatAvisosKey(),JSON.stringify([...new Set([...vistos,...idsProcessados])].slice(-100)));}catch(e){console.warn("Não foi possível salvar avisos já apresentados no chat:",e);}}
 }
 function iniciarAvisosCamilly(){if(camillyAvisosIntervalo)clearInterval(camillyAvisosIntervalo);verificarAvisosCamilly().catch(e=>console.warn("Notificações indisponíveis:",e.message));camillyAvisosIntervalo=setInterval(()=>verificarAvisosCamilly().catch(e=>console.warn("Falha ao atualizar notificações:",e.message)),60000);}
 document.addEventListener("click",e=>{const id=e.target?.closest?.("button")?.id;if(id==="camillyAlertsRead"||id==="notificacoesMarcarLidas"){e.preventDefault();marcarAvisosCamillyComoLidos();}else if(id==="notificacoesTodas"){filtroNotificacoes="todas";renderizarAvisosCamilly();}else if(id==="notificacoesNaoLidas"){filtroNotificacoes="naoLidas";renderizarAvisosCamilly();}});
