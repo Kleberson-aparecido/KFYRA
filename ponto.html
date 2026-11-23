@@ -27,6 +27,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .erro{display:block!important;background:#fff0ef;color:#a53d35}
 .sucesso{display:block!important;background:#eaf7ef;color:#216343}
 .oculto{display:none!important}
+[hidden]{display:none!important}
 .painel-ponto{background:#f4f7f4;border:1px solid #e1eae3;border-radius:12px;padding:18px;margin-top:17px}
 .painel-ponto p{margin:8px 0}
 .relogio{font-size:19px;font-weight:bold;color:#123d32;margin-top:12px}
@@ -328,7 +329,7 @@ body:has(#areaLogada:not(.oculto)) .card{background:linear-gradient(145deg,#f5f8
 <button type="button" id="botaoPonto" disabled>Carregando...</button>
 </div>
 </section>
-<section id="conteudoCalendario" class="oculto">
+<section id="conteudoCalendario" class="oculto" hidden aria-hidden="true">
 <div class="painel-ponto">
 <h3>Calendário mensal</h3>
 <div id="calendarioMensal" class="calendario"></div>
@@ -341,7 +342,7 @@ body:has(#areaLogada:not(.oculto)) .card{background:linear-gradient(145deg,#f5f8
 <div id="calendarioDetalhe" class="cal-detalhe">Selecione um dia do calendário para consultar os detalhes.</div>
 </div>
 </section>
-<section id="conteudoEspelho" class="oculto">
+<section id="conteudoEspelho" class="oculto" hidden aria-hidden="true">
 <div class="painel-ponto" id="painelEspelho">
 <h3>Espelho de Ponto</h3>
 <p>Consulte suas marcações organizadas por dia.</p>
@@ -365,7 +366,7 @@ body:has(#areaLogada:not(.oculto)) .card{background:linear-gradient(145deg,#f5f8
 </div>
 <div id="listaEspelho"><p>Carregando histórico...</p></div>
 </section>
-<section id="conteudoSolicitacoes" class="oculto">
+<section id="conteudoSolicitacoes" class="oculto" hidden aria-hidden="true">
 <div class="painel-ponto">
 <h3>Nova solicitação</h3>
 <p>Envie uma solicitação para análise do RH ou do responsável autorizado pela sua empresa.</p>
@@ -408,7 +409,7 @@ body:has(#areaLogada:not(.oculto)) .card{background:linear-gradient(145deg,#f5f8
 <div id="listaSolicitacoes"><p>Carregando solicitações...</p></div>
 </div>
 </section>
-<section id="conteudoPerfil" class="oculto">
+<section id="conteudoPerfil" class="oculto" hidden aria-hidden="true">
 <div class="painel-ponto">
 <div class="perfil-topo">
 <div id="avatarIniciais" class="avatar-iniciais">K</div>
@@ -426,8 +427,9 @@ body:has(#areaLogada:not(.oculto)) .card{background:linear-gradient(145deg,#f5f8
 <p>Horários previstos conforme a escala cadastrada pela empresa.</p>
 <div id="listaEscala"><p>Carregando horários...</p></div>
 </div>
-</section>
 <button type="button" id="botaoSair" class="secundario">Sair da conta</button>
+</section>
+
 </div>
 </div>
 </main>
@@ -1459,7 +1461,7 @@ dataSelecionadaCalendario=null;carregarEspelhoPonto();
 }
 document.getElementById("mesAnterior").addEventListener("click",()=>alterarMesEspelho(-1));
 document.getElementById("proximoMes").addEventListener("click",()=>alterarMesEspelho(1));
-document.getElementById("botaoConsultarEspelho").addEventListener("click",async()=>{await carregarEspelhoPonto();document.getElementById("calendarioDetalhe").scrollIntoView({behavior:"smooth",block:"center"});});
+document.getElementById("botaoConsultarEspelho").addEventListener("click",async()=>{await carregarEspelhoPonto();document.getElementById("resumoEspelho").scrollIntoView({behavior:"smooth",block:"center"});});
 document.getElementById("botaoPdfEspelho").addEventListener("click",gerarPdfEspelho);
 document.getElementById("mesEspelho").addEventListener("change",function(){
 dataSelecionadaCalendario=null;carregarEspelhoPonto();
@@ -1469,11 +1471,20 @@ dataSelecionadaCalendario=null;carregarEspelhoPonto();
 function ativarAba(nome){
 const secoes={ponto:document.getElementById("conteudoPonto"),calendario:document.getElementById("conteudoCalendario"),espelho:document.getElementById("conteudoEspelho"),solicitacoes:document.getElementById("conteudoSolicitacoes"),perfil:document.getElementById("conteudoPerfil")};
 const botoes={ponto:document.getElementById("abaPonto"),calendario:document.getElementById("abaCalendario"),espelho:document.getElementById("abaEspelho"),solicitacoes:document.getElementById("abaSolicitacoes"),perfil:document.getElementById("abaPerfil")};
-Object.keys(secoes).forEach(chave=>{secoes[chave].classList.toggle("oculto",chave!==nome);botoes[chave].classList.toggle("ativa",chave===nome);if(chave===nome)botoes[chave].setAttribute("aria-current","page");else botoes[chave].removeAttribute("aria-current");});
 const titulos={ponto:["Registro de Jornada","Acompanhe sua jornada e registre seus horários."],calendario:["Calendário","Consulte sua escala, jornadas previstas e folgas."],espelho:["Espelho de Ponto","Consulte suas marcações e o documento mensal."],solicitacoes:["Solicitações","Envie e acompanhe suas solicitações."],perfil:["Meu Perfil","Consulte seus dados e sua jornada."]};
+if(!Object.prototype.hasOwnProperty.call(secoes,nome))nome="ponto";
+Object.keys(secoes).forEach(chave=>{
+const ativa=chave===nome;
+secoes[chave].hidden=!ativa;
+secoes[chave].classList.toggle("oculto",!ativa);
+secoes[chave].setAttribute("aria-hidden",String(!ativa));
+botoes[chave].classList.toggle("ativa",ativa);
+if(ativa)botoes[chave].setAttribute("aria-current","page");else botoes[chave].removeAttribute("aria-current");
+});
 titulo.textContent=titulos[nome][0];subtitulo.textContent=titulos[nome][1];
 if(nome==="solicitacoes")carregarMinhasSolicitacoes();
 if(nome==="perfil")carregarPerfil();
+window.scrollTo({top:0,behavior:"smooth"});
 }
 document.querySelectorAll("#navegacaoMeuPonto [data-aba]").forEach(botao=>botao.addEventListener("click",()=>ativarAba(botao.dataset.aba)));
 document.getElementById("arquivoFoto").addEventListener("change",enviarFoto);
