@@ -147,7 +147,8 @@ body{color:#e8eaff;background:radial-gradient(ellipse at 78% 0%,rgba(93,78,190,.
 const SUPABASE_URL='https://guiadodxikdvsfrhedls.supabase.co';
 const SUPABASE_KEY='sb_publishable_dhAqwNSfwGj8_nBnudx_Hw_gMZpnyEL';
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const $=id=>document.getElementById(id);\nlet adminCompanies=[];
+const $=id=>document.getElementById(id);
+let adminCompanies=[];
 function showAuthMessage(message){$('authMessage').textContent=message}
 function isPlatformOwner(claims){const meta=claims?.app_metadata||{};return ['owner','platform_admin'].includes(meta.platform_role)}
 async function verifyAdminAccess(){
@@ -181,7 +182,10 @@ async function loadAdminOverview(){
   const {data,error}=await supabaseClient.functions.invoke('admin-overview',{body:{}});
   if(error) throw error;
   if(!data || !data.totals || !Array.isArray(data.companies)) throw new Error(data?.error||'Resposta administrativa inválida.');
-  adminCompanies=data.companies||[];\n  const companySelect=$('incidentCompany');\n  if(companySelect) companySelect.innerHTML='<option value="">Incidente geral da plataforma</option>'+adminCompanies.map(c=>'<option value="'+String(c.id).replace(/[^a-f0-9-]/gi,'')+'">'+String(c.name||'Empresa').replace(/[&<>\"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[ch]))+'</option>').join('');\n  $('totalCompanies').textContent=data.totals.companies;
+  adminCompanies=data.companies||[];
+  const companySelect=$('incidentCompany');
+  if(companySelect) companySelect.innerHTML='<option value="">Incidente geral da plataforma</option>'+adminCompanies.map(c=>'<option value="'+String(c.id).replace(/[^a-f0-9-]/gi,'')+'">'+String(c.name||'Empresa').replace(/[&<>\"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[ch]))+'</option>').join('');
+  $('totalCompanies').textContent=data.totals.companies;
   $('totalLicenses').textContent=data.totals.active_licenses;
   $('totalEmployees').textContent=data.totals.employees;
   $('companiesHint').textContent='Dados reais • atualizado '+new Date(data.generated_at).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
@@ -194,7 +198,8 @@ async function loadAdminOverview(){
   $('companiesLoading').classList.add('hidden');
   $('companiesTable').classList.remove('hidden');
   $('peopleSummary').innerHTML='<b>'+data.totals.employees+' colaboradores cadastrados</b>Distribuídos em '+data.totals.companies+' empresas. Esta visão apresenta somente totais; dados pessoais permanecem protegidos.';
-  $('systemStatus').textContent='Supabase conectado • leitura administrativa';\n  loadAdminOperations();
+  $('systemStatus').textContent='Supabase conectado • leitura administrativa';
+  loadAdminOperations();
  }catch(err){
   $('companiesLoading').innerHTML='<b>Não foi possível carregar os dados</b>'+String(err.message||'Falha de conexão')+'<br>Verifique a sessão e a autorização administrativa.';
   $('companiesHint').textContent='Falha ao consultar o Supabase';
