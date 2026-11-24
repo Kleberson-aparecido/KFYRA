@@ -91,3 +91,23 @@ body:has(.hero) .crew-avatar:empty{font-size:0!important}
 /* Retratos oficiais dos assistentes KFYRA */
 body:has(.hero) .crew-avatar{background:#fff!important;padding:0!important}
 body:has(.hero) .crew-avatar img{width:100%;height:100%;object-fit:contain;object-position:center bottom;mix-blend-mode:multiply;display:block;border-radius:inherit}
+
+/* KFYRA — retratos em destaque na órbita de cristal */
+body:has(.hero) .crew-card{position:relative!important;display:block!important;min-height:390px!important;padding:34px 310px 34px 34px!important;overflow:hidden!important}
+body:has(.hero) .crew-orbit{display:none!important}
+body:has(.hero) .crew-avatar{position:absolute!important;right:22px!important;top:50%!important;left:auto!important;transform:translateY(-50%)!important;width:280px!important;height:280px!important;min-width:280px!important;flex:none!important;border-radius:50%!important;border:2px solid rgba(156,233,240,.9)!important;background:radial-gradient(circle at 35% 25%,#fff,#e9e6ff 72%,#d8f7fa)!important;box-shadow:0 0 0 10px rgba(156,233,240,.12),0 20px 55px rgba(54,44,115,.18)!important;overflow:hidden!important;animation:crew-portrait-float 6s ease-in-out infinite!important}
+body:has(.hero) .crew-avatar img{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center bottom!important;mix-blend-mode:multiply!important;border-radius:50%!important;display:block!important}
+body:has(.hero) .crew-content{max-width:100%!important;position:relative!important;z-index:2!important}
+body:has(.hero) .crew-content>p:not(.crew-role){font-size:13px!important;line-height:1.8!important;margin-top:12px!important}
+body:has(.hero) .crew-content .crew-description{color:#626783!important}
+body:has(.hero) .crew-skills{display:flex;flex-wrap:wrap;gap:8px;margin-top:17px}
+body:has(.hero) .crew-skills span{display:inline-flex;align-items:center;padding:7px 11px;border:1px solid rgba(101,85,183,.2);border-radius:999px;background:rgba(255,255,255,.72);color:#51458e;font-size:10px;font-weight:800;letter-spacing:.1px}
+@keyframes crew-portrait-float{0%,100%{margin-top:0}50%{margin-top:-9px}}
+@media(max-width:760px){
+ body:has(.hero) .crew-card{min-height:0!important;padding:24px 22px 26px!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:20px!important}
+ body:has(.hero) .crew-avatar{position:relative!important;top:auto!important;right:auto!important;left:auto!important;transform:none!important;width:min(72vw,280px)!important;height:min(72vw,280px)!important;min-width:0!important;margin:0 auto 4px!important;flex:0 0 auto!important}
+ body:has(.hero) .crew-content h3{font-size:32px!important}
+ body:has(.hero) .crew-content .crew-role{font-size:13px!important}
+ body:has(.hero) .crew-skills{gap:7px}
+}
+@media(prefers-reduced-motion:reduce){body:has(.hero) .crew-avatar{animation:none!important}}
