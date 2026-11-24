@@ -385,9 +385,9 @@ body:has(#areaLogada:not(.oculto)) .card{animation:kyRevealFade .65s ease both}
 <p id="emailColaborador"></p>
 </div>
 <div class="painel-ponto">
-<p>Data e horário do dispositivo</p>
-<div id="relogio" class="relogio"></div>
-<p class="aviso-registro">O relógio acima é apenas informativo. A marcação é registrada pelo servidor; a sincronização comprovada com a Hora Legal Brasileira (Observatório Nacional) ainda está em validação.</p>
+<p>Data e horário do servidor</p>
+<div id="relogio" class="relogio">Sincronizando...</div>
+<p class="aviso-registro">O horário é obtido do servidor KFYRA. A sincronização comprovada com a Hora Legal Brasileira (Observatório Nacional), com tolerância máxima de 30 segundos, ainda está em validação.</p>
 </div>
 <div class="painel-ponto">
 <p>Registro de ponto</p>
@@ -532,7 +532,8 @@ const areaLogada=document.getElementById("areaLogada");
 const linkRecuperacao=document.getElementById("linkRecuperacao");
 const titulo=document.getElementById("titulo");
 const subtitulo=document.getElementById("subtitulo");
-let usuarioAtual=null,colaboradorAtual=null,relogioIntervalo=null;
+let usuarioAtual=null,colaboradorAtual=null,relogioIntervalo=null,relogioServidorRefresh=null;
+let relogioServidorBase=null,relogioServidorPerf=0;
 let processandoPonto=false,processandoSolicitacao=false;
 let jornadasCalendario={},diasCalendario={},dataSelecionadaCalendario=null;
 let jornadaAtual=null;
@@ -556,10 +557,27 @@ titulo.textContent=tipo==="invite"?"Primeiro acesso":"Redefinir senha";
 subtitulo.textContent="Defina sua senha pessoal para acessar o Meu Ponto.";
 mostrarMensagem("Crie uma senha com pelo menos 8 caracteres.","sucesso");
 }
-function iniciarRelogio(){
+async function iniciarRelogio(){
 if(relogioIntervalo)clearInterval(relogioIntervalo);
-function atualizar(){document.getElementById("relogio").textContent=new Date().toLocaleString("pt-BR",{dateStyle:"full",timeStyle:"medium"})}
-atualizar();relogioIntervalo=setInterval(atualizar,1000);
+if(relogioServidorRefresh)clearInterval(relogioServidorRefresh);
+const campo=document.getElementById("relogio");
+async function sincronizar(){
+const {data,error}=await supabaseClient.rpc("kfyra_server_time");
+if(error)throw error;
+const instante=new Date(data).getTime();
+if(!Number.isFinite(instante))throw new Error("Horário do servidor inválido.");
+relogioServidorBase=instante;
+relogioServidorPerf=performance.now();
+}
+function atualizar(){
+if(relogioServidorBase===null){campo.textContent="Horário do servidor indisponível";return;}
+const instante=relogioServidorBase+(performance.now()-relogioServidorPerf);
+campo.textContent=new Date(instante).toLocaleString("pt-BR",{dateStyle:"full",timeStyle:"medium",timeZone:"America/Sao_Paulo"});
+}
+try{await sincronizar();atualizar();}
+catch(error){console.error("Falha ao sincronizar relógio do servidor:",error.message);campo.textContent="Horário do servidor indisponível";}
+relogioIntervalo=setInterval(atualizar,1000);
+relogioServidorRefresh=setInterval(()=>sincronizar().then(atualizar).catch(error=>{console.error("Falha ao atualizar relógio:",error.message);relogioServidorBase=null;atualizar();}),30000);
 }
 async function buscarColaborador(user){
 const {data,error}=await supabaseClient.from("employees")
@@ -1925,7 +1943,7 @@ areaLogada.classList.remove("oculto");
 titulo.textContent="Meu Ponto";subtitulo.textContent="Bem-vindo ao seu portal de colaborador.";
 const mesInicial=new Date();document.getElementById("mesCalendario").value=mesInicial.getFullYear()+"-"+String(mesInicial.getMonth()+1).padStart(2,"0");
 ativarAba("ponto");
-iniciarRelogio();
+await iniciarRelogio();
 await carregarUltimoComprovante();
 await carregarEspelhoPonto();
 await carregarEspelhosParaAssinatura();
