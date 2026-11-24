@@ -61,6 +61,10 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .linha-registro{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid #edf1ee;font-size:14px}
 .linha-registro span:last-child{font-weight:bold;white-space:nowrap}
 .aviso-registro{font-size:13px;color:#9a6720;background:#fff8e8;border-radius:7px;padding:9px;margin-top:9px;line-height:1.5}
+#ultimoComprovante{margin-top:14px;padding:15px;border:1px solid #cfe5d5;background:linear-gradient(145deg,#f4fbf6,#fff);border-radius:13px;overflow-wrap:anywhere}
+#ultimoComprovante h4{margin:0 0 9px;color:#14563e}
+#ultimoComprovante p{margin:5px 0;font-size:13px;color:#52665d}
+#ultimoComprovante code{display:block;margin-top:7px;padding:9px;background:#edf4ef;border-radius:8px;font-size:11px;word-break:break-all;color:#174737}
 .sem-registros{text-align:center;padding:18px;background:#f4f7f4;border-radius:9px;color:#687c72}
 .horas-dia{margin-top:10px;padding:10px;background:#eaf7ef;border-radius:8px;color:#216343;font-weight:bold;font-size:14px;line-height:1.6}
 .horas-alerta{background:#fff8e8;color:#93651c}
@@ -381,13 +385,15 @@ body:has(#areaLogada:not(.oculto)) .card{animation:kyRevealFade .65s ease both}
 <p id="emailColaborador"></p>
 </div>
 <div class="painel-ponto">
-<p>Data e horário atual</p>
+<p>Data e horário do dispositivo</p>
 <div id="relogio" class="relogio"></div>
+<p class="aviso-registro">O relógio acima é apenas informativo. A marcação é registrada pelo servidor; a sincronização comprovada com a Hora Legal Brasileira (Observatório Nacional) ainda está em validação.</p>
 </div>
 <div class="painel-ponto">
 <p>Registro de ponto</p>
 <div id="statusPonto" class="status-ponto">Verificando registros...</div>
 <button type="button" id="botaoPonto" disabled>Carregando...</button>
+<div id="ultimoComprovante" class="painel-ponto oculto" aria-live="polite"></div>
 </div>
 </section>
 <section id="conteudoCalendario" class="oculto" hidden aria-hidden="true">
@@ -1180,6 +1186,30 @@ const valores={'__MES__':tituloMes,'__NOME__':escapar(colaboradorAtual.full_name
 Object.keys(valores).forEach(chave=>{html=html.split(chave).join(valores[chave])});janela.document.open();janela.document.write(html);janela.document.close();
 }
 
+/* COMPROVANTE DA ÚLTIMA MARCAÇÃO */
+async function carregarUltimoComprovante(){
+const area=document.getElementById("ultimoComprovante");
+if(!area||!usuarioAtual||!colaboradorAtual)return;
+try{
+const {data,error}=await supabaseClient.from("attendance_records")
+.select("nsr,event_type,recorded_at,record_hash,employee_cpf,employer_name_snapshot,employer_identifier_snapshot")
+.eq("user_id",usuarioAtual.id).eq("employee_id",colaboradorAtual.id).eq("is_test",false)
+.not("nsr","is",null).order("recorded_at",{ascending:false}).limit(1).maybeSingle();
+if(error)throw error;
+if(!data){area.classList.add("oculto");return;}
+area.innerHTML="";
+const titulo=document.createElement("h4");titulo.textContent="Comprovante da última marcação";
+const detalhes=document.createElement("p");
+detalhes.textContent="NSR "+data.nsr+" • "+nomeEvento(data.event_type)+" • "+new Date(data.recorded_at).toLocaleString("pt-BR",{timeZone:"America/Sao_Paulo"});
+const empregador=document.createElement("p");empregador.textContent=(data.employer_name_snapshot||"Empregador não informado")+" • CNPJ "+(data.employer_identifier_snapshot||"não informado");
+const cpf=document.createElement("p");cpf.textContent="CPF do trabalhador: "+(data.employee_cpf||"não informado");
+const hash=document.createElement("code");hash.textContent="SHA-256: "+(data.record_hash||"não disponível");
+const aviso=document.createElement("p");aviso.textContent="Comprovante técnico preliminar. A assinatura eletrônica qualificada PAdES e a sincronização HLB ainda precisam ser concluídas antes de declarar conformidade REP-P.";
+area.append(titulo,detalhes,empregador,cpf,hash,aviso);
+area.classList.remove("oculto");
+}catch(error){console.error("Não foi possível carregar o comprovante:",error.message);}
+}
+
 /* REGISTRO DE PONTO */
 async function registrarPonto(){
 if(processandoPonto)return;
@@ -1197,18 +1227,16 @@ const etapa=proximaEtapa(registros,jornada);
 if(etapa.erro)throw new Error(etapa.status);
 const novoEvento=etapa.evento;
 if(!novoEvento)throw new Error("Não foi possível identificar a próxima marcação.");
-const agora=new Date().toISOString();
-const {error}=await supabaseClient.from("attendance_records").insert({
-id:crypto.randomUUID(),
-company_id:colaboradorAtual.company_id,
-employee_id:colaboradorAtual.id,
-user_id:usuarioAtual.id,
-event_type:novoEvento,
-recorded_at:agora,
-created_at:agora
+const {data:comprovante,error}=await supabaseClient.rpc("kfyra_register_attendance",{
+p_employee_id:colaboradorAtual.id,
+p_event_type:novoEvento,
+p_collector_id:"KFYRA-MEU-PONTO-WEB"
 });
 if(error)throw error;
-mostrarMensagem(nomeEvento(novoEvento)+" registrado com sucesso! Seu horário foi salvo.","sucesso");
+const registro=Array.isArray(comprovante)?comprovante[0]:comprovante;
+if(!registro||!registro.record_id||!registro.nsr||!registro.record_hash)throw new Error("O servidor não retornou os dados completos do comprovante.");
+mostrarMensagem(nomeEvento(novoEvento)+" registrado. NSR "+registro.nsr+" • "+new Date(registro.recorded_at).toLocaleString("pt-BR",{timeZone:"America/Sao_Paulo"})+" • SHA-256: "+registro.record_hash,"sucesso");
+await carregarUltimoComprovante();
 await carregarEspelhoPonto();
 }catch(error){
 mostrarMensagem("Não foi possível registrar: "+error.message,"erro");
@@ -1897,6 +1925,7 @@ titulo.textContent="Meu Ponto";subtitulo.textContent="Bem-vindo ao seu portal de
 const mesInicial=new Date();document.getElementById("mesCalendario").value=mesInicial.getFullYear()+"-"+String(mesInicial.getMonth()+1).padStart(2,"0");
 ativarAba("ponto");
 iniciarRelogio();
+await carregarUltimoComprovante();
 await carregarEspelhoPonto();
 await carregarEspelhosParaAssinatura();
 await atualizarEstadoPonto();
