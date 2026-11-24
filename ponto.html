@@ -694,7 +694,7 @@ return resultado;
 async function buscarRegistrosJornada(){
 const {data,error}=await supabaseClient.from("attendance_records")
 .select("id,event_type,recorded_at")
-.eq("user_id",usuarioAtual.id).eq("employee_id",colaboradorAtual.id)
+.eq("user_id",usuarioAtual.id).eq("employee_id",colaboradorAtual.id).eq("is_test",false)
 .order("recorded_at",{ascending:false}).limit(100);
 if(error)throw new Error("Erro ao consultar registros: "+error.message);
 const registros=(data||[]).reverse();
