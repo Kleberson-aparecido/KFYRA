@@ -1228,7 +1228,7 @@ if(!novoEvento)throw new Error("Não foi possível identificar a próxima marca�
 const {data:comprovante,error}=await supabaseClient.rpc("kfyra_register_attendance",{
 p_employee_id:colaboradorAtual.id,
 p_event_type:novoEvento,
-p_collector_id:"KFYRA-MEU-PONTO-WEB"
+p_collector_id:"02"
 });
 if(error)throw error;
 const registro=Array.isArray(comprovante)?comprovante[0]:comprovante;
