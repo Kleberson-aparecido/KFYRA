@@ -1566,8 +1566,13 @@ document.addEventListener("click",e=>{const id=e.target?.closest?.("button")?.id
 /* CAMILLY — assistente do Meu Ponto, consultas pessoais somente leitura */
 const camillyMessages=document.getElementById("camillyMessages");
 fetch("assets/camilly-avatar.webp.b64?v=2").then(r=>{if(!r.ok)throw new Error("Imagem da Camilly indisponível");return r.text()}).then(b64=>{document.getElementById("camillyAvatar").src="data:image/webp;base64,"+b64.trim()}).catch(error=>console.error("Não foi possível carregar a foto da Camilly:",error));
+function camillyHojeSaoPaulo(){
+const partes=new Intl.DateTimeFormat("en-CA",{timeZone:"America/Sao_Paulo",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date());
+const p={};partes.forEach(x=>p[x.type]=x.value);
+return new Date(Number(p.year),Number(p.month)-1,Number(p.day),12,0,0,0);
+}
 function camillyDataAlvo(texto,dataBase=null){
-const t=camillyNormalizar(texto),agora=dataBase?new Date(dataBase.getFullYear(),dataBase.getMonth(),dataBase.getDate(),12):new Date();
+const t=camillyNormalizar(texto),agora=dataBase?new Date(dataBase.getFullYear(),dataBase.getMonth(),dataBase.getDate(),12):camillyHojeSaoPaulo();
 if(/depois de amanha/.test(t)){agora.setDate(agora.getDate()+2);return agora}
 if(/\bamanha\b/.test(t)){agora.setDate(agora.getDate()+1);return agora}
 if(/\bontem\b/.test(t)){agora.setDate(agora.getDate()-1);return agora}
@@ -1581,7 +1586,7 @@ return agora;
 }
 function camillyDetalhesJornada(jornada){
 if(!jornada.trabalho)return "É dia de folga na escala. 💚";
-const hora=(m)=>m===null||m===undefined?"--:--":String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0");
+const hora=(m)=>formatarHora(m);
 const partes=["Entrada prevista: "+hora(jornada.inicio),"saída prevista: "+hora(jornada.fim)];
 if(jornada.intervalo>0)partes.push("intervalo principal: "+formatarHora(jornada.intervaloInicio)+" às "+formatarHora(jornada.intervaloFim)+" ("+formatarIntervalo(jornada.intervalo)+")");
 if(jornada.pausas&&jornada.pausas.length)jornada.pausas.forEach(p=>partes.push("pausa "+p.numero+": "+formatarHora(p.inicio)+" às "+formatarHora(p.fim)+" ("+formatarIntervalo(p.duracao)+")"));
@@ -1621,7 +1626,7 @@ return "Consultei sua escala para "+dataBonita+": "+camillyDetalhesJornada(jorna
 async function consultarPontoCamilly(texto,dataForcada=null){
 if(!usuarioAtual||!colaboradorAtual)throw new Error("Sua sessão não está ativa. Entre novamente no Meu Ponto.");
 const data=dataForcada||camillyDataAlvo(texto),inicio=new Date(data.getFullYear(),data.getMonth(),data.getDate()),fim=new Date(data.getFullYear(),data.getMonth(),data.getDate()+1);
-const {data:registros,error}=await supabaseClient.from("attendance_records").select("event_type,recorded_at").eq("user_id",usuarioAtual.id).eq("employee_id",colaboradorAtual.id).gte("recorded_at",inicio.toISOString()).lt("recorded_at",fim.toISOString()).order("recorded_at",{ascending:true});
+const {data:registros,error}=await supabaseClient.from("attendance_records").select("event_type,recorded_at").eq("user_id",usuarioAtual.id).eq("employee_id",colaboradorAtual.id).eq("is_test",false).gte("recorded_at",inicio.toISOString()).lt("recorded_at",fim.toISOString()).order("recorded_at",{ascending:true});
 if(error)throw error;
 const dia=data.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long"});
 if(!registros||!registros.length)return "Não encontrei marcações registradas em "+dia+". Isso não confirma falta; apenas indica que não há registros de ponto nesse dia. 💚";
@@ -1726,7 +1731,7 @@ return "Consultei sua escala dos próximos 12 meses, mas não encontrei um dia m
 async function consultarDiaCompletoCamilly(data){
 const chave=dataChaveLocal(data),meses=await carregarJornadasPrevistas(data.getFullYear(),data.getMonth()+1),j=meses[chave];
 const inicio=new Date(data.getFullYear(),data.getMonth(),data.getDate()),fim=new Date(data.getFullYear(),data.getMonth(),data.getDate()+1);
-const {data:registros,error}=await supabaseClient.from("attendance_records").select("event_type,recorded_at").eq("user_id",usuarioAtual.id).eq("employee_id",colaboradorAtual.id).gte("recorded_at",inicio.toISOString()).lt("recorded_at",fim.toISOString()).order("recorded_at",{ascending:true});
+const {data:registros,error}=await supabaseClient.from("attendance_records").select("event_type,recorded_at").eq("user_id",usuarioAtual.id).eq("employee_id",colaboradorAtual.id).eq("is_test",false).gte("recorded_at",inicio.toISOString()).lt("recorded_at",fim.toISOString()).order("recorded_at",{ascending:true});
 if(error)throw error;
 const titulo=data.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long"});
 let resposta="Resumo de "+titulo+":\n";
@@ -1760,7 +1765,7 @@ if(/horas.*abonad|abonad.*horas/.test(t))return "solicitacoes";
 if(/solicit|pedido|atestado|declaracao|documento|comprovante|justificativa|troca de escala/.test(t))return "solicitacoes";
 if(/espelho|assinatura|pdf|fechamento|documento mensal/.test(t))return "espelho";
 if(/hora extra|horas extras|banco de horas|saldo de horas|saldo de banco|meu saldo|credito de horas|debito de horas|compensacao/.test(t))return "horas";
-if(/marcacao|marcacoes|registro de ponto|bati (o )?ponto|meu ponto|entrada real|saida real|dei entrada|dei saida|qual (e )?(o )?horario (que )?(eu )?dei (entrada|saida)|que horas (eu )?dei (entrada|saida)|registrei (minha )?(entrada|saida)|horario (em )?que (entrei|sai(?!o))|que horas (eu )?(entrei|sai(?!o))|minhas entradas|minhas saidas|atraso|atrasado|esqueci de registrar/.test(t))return "ponto";
+if(/marcacao|marcacoes|registro de ponto|bati (o )?ponto|que horas (eu )?bati|meu ponto|entrada real|saida real|dei entrada|dei saida|qual (e )?(o )?horario (que )?(eu )?dei (entrada|saida)|que horas (eu )?dei (entrada|saida)|registrei (minha )?(entrada|saida)|horario (em )?que (entrei|sai(?!o))|que horas (eu )?(entrei|sai(?!o))|minhas entradas|minhas saidas|atraso|atrasado|esqueci de registrar/.test(t))return "ponto";
 if(/escala|horario|amanha|depois de amanha|ontem|hoje|folga|pausa|intervalo|almoco|entrada prevista|saida prevista|que horas (eu )?saio|que horas comeco|que horas termino|qual (e|sera) minha entrada|qual (e|sera) minha saida|meu turno|jornada|trabalho (neste|nesse|no) sabado|trabalho (neste|nesse|na) (domingo|segunda|terca|quarta|quinta|sexta)/.test(t))return "escala";
 return null;
 }
@@ -1815,8 +1820,7 @@ let data;
 if(followupDiaSeguinte){
 data=new Date(camillyContexto.data+"T12:00:00");data.setDate(data.getDate()+1);
 }else if(followupData){
-const baseContexto=followup&&camillyContexto.data?new Date(camillyContexto.data+"T12:00:00"):null;
-data=camillyDataAlvo(t,baseContexto);
+data=camillyDataAlvo(t);
 }else if(followup&&camillyContexto.data){
 data=new Date(camillyContexto.data+"T12:00:00");
 }else{
