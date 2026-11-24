@@ -1499,7 +1499,7 @@ async function recalculateAttendance(){
   const today=localDateInSaoPaulo(new Date()),monthStart=today.slice(0,7)+'-01';
   const {data:marks,error:marksError}=await supabaseClient.from('attendance_records')
    .select('id,company_id,employee_id,event_type,recorded_at')
-   .eq('company_id',currentCompany.id).gte('recorded_at',monthStart+'T00:00:00-03:00')
+   .eq('company_id',currentCompany.id).eq('is_test',false).gte('recorded_at',monthStart+'T00:00:00-03:00')
    .order('recorded_at',{ascending:true});
   if(marksError)throw marksError;
   const grouped={};
@@ -1633,7 +1633,7 @@ async function loadEmployeePointHistory(){
  try{
   const {data,error}=await supabaseClient.from('attendance_records')
    .select('id,employee_id,event_type,recorded_at')
-   .eq('company_id',currentCompany.id).eq('employee_id',selectedPointEmployeeId)
+   .eq('company_id',currentCompany.id).eq('employee_id',selectedPointEmployeeId).eq('is_test',false)
    .gte('recorded_at',start.toISOString()).lt('recorded_at',end.toISOString())
    .order('recorded_at',{ascending:true}).limit(2000);
   if(error)throw error;
@@ -2058,7 +2058,7 @@ async function loadKfyraLive(manual=false){
   const now=new Date(),date=localDateInSaoPaulo(now),tomorrow=new Date(now);tomorrow.setDate(tomorrow.getDate()+1);
   const start=date+'T00:00:00-03:00',end=localDateInSaoPaulo(tomorrow)+'T00:00:00-03:00';
   const results=await Promise.all([
-   supabaseClient.from('attendance_records').select('id,employee_id,event_type,recorded_at').eq('company_id',currentCompany.id).gte('recorded_at',start).lt('recorded_at',end).order('recorded_at',{ascending:true}),
+   supabaseClient.from('attendance_records').select('id,employee_id,event_type,recorded_at').eq('company_id',currentCompany.id).eq('is_test',false).gte('recorded_at',start).lt('recorded_at',end).order('recorded_at',{ascending:true}),
    canManage()?supabaseClient.from('employee_absences').select('id').eq('company_id',currentCompany.id).eq('status','pending').lte('start_date',date).gte('end_date',date):Promise.resolve({data:null,error:null}),
    canManage()?supabaseClient.from('overtime_records').select('id').eq('company_id',currentCompany.id).eq('status','pending').eq('work_date',date):Promise.resolve({data:null,error:null})
   ]);
