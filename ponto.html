@@ -1196,14 +1196,17 @@ if(error)throw error;
 const registro=Array.isArray(data)?data[0]:data;
 if(!registro){area.classList.add("oculto");return;}
 area.innerHTML="";
-const titulo=document.createElement("h4");titulo.textContent="Comprovante da última marcação";
+const titulo=document.createElement("h4");titulo.textContent="Comprovante de Registro de Ponto do Trabalhador";
+const colaborador=document.createElement("p");colaborador.textContent="Trabalhador: "+(colaboradorAtual.full_name||"não informado");
 const detalhes=document.createElement("p");
 detalhes.textContent="NSR "+registro.nsr+" • "+nomeEvento(registro.event_type)+" • "+new Date(registro.recorded_at).toLocaleString("pt-BR",{timeZone:"America/Sao_Paulo"});
 const empregador=document.createElement("p");empregador.textContent=(registro.employer_name||"Empregador não informado")+" • CNPJ "+(registro.employer_identifier||"não informado");
+const local=document.createElement("p");local.textContent="Local de trabalho: "+(registro.work_location||"endereço ainda não cadastrado");
 const cpf=document.createElement("p");cpf.textContent="CPF do trabalhador: "+(registro.employee_cpf||"não informado");
+const programa=document.createElement("p");programa.textContent="Programa: KFYRA • Registro INPI: pendente";
 const hash=document.createElement("code");hash.textContent="SHA-256: "+(registro.record_hash||"não disponível");
-const aviso=document.createElement("p");aviso.textContent="Comprovante técnico preliminar. A assinatura eletrônica qualificada PAdES e a sincronização HLB ainda precisam ser concluídas antes de declarar conformidade REP-P.";
-area.append(titulo,detalhes,empregador,cpf,hash,aviso);
+const aviso=document.createElement("p");aviso.textContent="PRÉVIA TÉCNICA — ainda não é o comprovante legal final. Faltam o registro do programa no INPI, a assinatura qualificada PAdES ICP-Brasil e a validação do sincronismo com a Hora Legal Brasileira (HLB).";
+area.append(titulo,colaborador,detalhes,empregador,local,cpf,programa,hash,aviso);
 area.classList.remove("oculto");
 }catch(error){console.error("Não foi possível carregar o comprovante:",error.message);}
 }
