@@ -1,0 +1,40 @@
+/* KFYRA — IDENTIDADE ÚNICA: IMPÉRIO DE CRISTAL */
+:root{--kfy-night:#11132d;--kfy-deep:#0b0d25;--kfy-amethyst:#6555b7;--kfy-violet:#9889e8;--kfy-ice:#9ce9f0;--kfy-opal:#f4f2ff;--kfy-silver:#d7d9ee;--kfy-ink:#20213e;--kfy-muted:#777b98}
+html,body{color:var(--kfy-ink)}
+body{background:linear-gradient(145deg,#f8f8ff,#f0f1fb 58%,#f8fcff)!important}
+.header,body:has(.layout) .sidebar,body:has(.login-box) .brand-panel,body:has(#cadastroEmpresa) .side{background:linear-gradient(145deg,#0b0d25,#211d48 58%,#443879)!important;border-color:rgba(156,233,240,.25)!important}
+body:has(.layout){background:radial-gradient(ellipse at 12% 18%,rgba(152,137,232,.12),transparent 27%),radial-gradient(ellipse at 88% 52%,rgba(156,233,240,.16),transparent 29%),linear-gradient(145deg,#e9eaf8,#f8f8ff 52%,#eaf8fb)!important}
+body:has(.layout) .sidebar{background:linear-gradient(165deg,#0b0d25,#211d48 65%,#30285f)!important}
+body:has(.layout) .menu-title,body:has(.login-box) .security,body:has(#cadastroEmpresa) .side-label{color:#9ce9f0!important}
+body:has(.layout) .menu button.active{background:linear-gradient(100deg,rgba(156,233,240,.16),rgba(152,137,232,.18))!important;border-color:rgba(156,233,240,.35)!important;border-left-color:#9ce9f0!important}
+body:has(.layout) .company-banner{background:radial-gradient(circle at 90% 10%,rgba(156,233,240,.2),transparent 28%),linear-gradient(115deg,#0b0d25,#30285f 72%,#443879)!important;border-color:rgba(156,233,240,.32)!important}
+body:has(.layout) .section-title,body:has(.layout) .welcome h1,body:has(.layout) .section-title,body:has(.layout) .card-number,body:has(.layout) .panel-header h3,body:has(.layout) .request-detail h4,body:has(.layout) .private-section h4{color:#29234f!important}
+body:has(.layout) .card,body:has(.layout) .panel{background:linear-gradient(145deg,#fff,#f5f4ff)!important;border-color:rgba(101,85,183,.16)!important;box-shadow:0 14px 38px rgba(35,31,88,.075)!important}
+body:has(.layout) .card:before{background:linear-gradient(180deg,#9ce9f0,#9889e8)!important}
+body:has(.layout) .btn,body:has(.login-box) #entrar,body:has(#cadastroEmpresa) .submit{background:linear-gradient(115deg,#6555b7,#29234f)!important;color:#fff!important;box-shadow:0 9px 22px rgba(65,54,133,.2)!important}
+body:has(.layout) .btn-secondary,body:has(.layout) .btn-edit,body:has(.layout) .btn-linked{background:#efefff!important;color:#51439c!important;border-color:#dcd8f5!important}
+body:has(.layout) input:focus,body:has(.layout) select:focus,body:has(.layout) textarea:focus,body:has(.login-box) input:focus,body:has(#cadastroEmpresa) input:focus{border-color:#8c7be0!important;box-shadow:0 0 0 4px rgba(101,85,183,.12)!important}
+body:has(.layout) th{background:#eeedfb!important;color:#514a82!important}
+body:has(.layout) tbody tr:hover{background:#f4f3ff!important}
+body:has(.login-box),body:has(#cadastroEmpresa){background:radial-gradient(circle at 85% 15%,rgba(156,233,240,.2),transparent 27%),linear-gradient(145deg,#f8f8ff,#e9eaf8)!important}
+body:has(.login-box) .login-box,body:has(#cadastroEmpresa) .container{border-color:rgba(156,233,240,.32)!important;box-shadow:0 25px 75px rgba(35,31,88,.12)!important}
+body:has(.login-box) .login-box h2,body:has(#cadastroEmpresa) .form-area h2,body:has(#cadastroEmpresa) .section-title{color:#29234f!important}
+body:has(#cadastroEmpresa) .plan.selected{border-color:#9889e8!important;background:#f0efff!important}
+body:has(#cadastroEmpresa) .plan-price,body:has(#cadastroEmpresa) .plan-name{color:#39316e!important}
+body:has(.hero) .hero,body:has(.hero) .ai-section{background:radial-gradient(ellipse at 78% 24%,rgba(156,233,240,.18),transparent 32%),radial-gradient(ellipse at 14% 92%,rgba(152,137,232,.22),transparent 34%),linear-gradient(128deg,#0b0d25,#211d48 54%,#443879)!important}
+body:has(.hero) .live-section,body:has(.hero) .cta{background:linear-gradient(135deg,#eeeffb,#e7f8fa)!important}
+body:has(.hero) #planos{background:radial-gradient(ellipse at 12% 20%,rgba(156,233,240,.12),transparent 28%),radial-gradient(ellipse at 88% 80%,rgba(152,137,232,.2),transparent 25%),linear-gradient(145deg,#0b0d25,#211d48 58%,#30285f)!important}
+body:has(.hero) #planos .plan{background:linear-gradient(145deg,#fff,#f0efff)!important}
+body:has(.hero) #planos .plan.popular{background:linear-gradient(145deg,#30285f,#11132d)!important}
+body:has(.hero) #planos .plan h3,body:has(.hero) #planos .plan .price{color:#29234f!important}
+body:has(.hero) #planos .plan.popular h3,body:has(.hero) #planos .plan.popular .price,body:has(.hero) #planos .plan.popular .price small{color:#fff!important}
+body:has(.hero) #planos .plan .price{display:block!important;visibility:visible!important;opacity:1!important;font-weight:900!important}
+body:has(.hero) #planos .plan .price small{color:#777b98!important}
+body:has(.hero) #planos .plan.popular .price small{color:#d7d9ee!important}
+body:has(.hero) #planos .plan li{color:#4f5072!important}
+body:has(.hero) #planos .plan.popular li{color:#e1e1f2!important}
+body:has(.hero) .crew-avatar{background:linear-gradient(145deg,#6555b7,#171735)!important;border-color:#9ce9f0!important}
+body:has(.hero) .crew-card{background:linear-gradient(145deg,#fff,#f0efff)!important}
+body:has(.hero) .crew-content h3{color:#29234f!important}
+.reveal-ready .plan.is-visible,.reveal-ready .feature.is-visible,.reveal-ready .crew-card.is-visible,.reveal-ready .live-board.is-visible,.reveal-ready .ai-chat.is-visible{opacity:1!important;transform:translateY(0)!important}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
