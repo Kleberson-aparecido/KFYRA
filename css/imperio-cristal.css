@@ -111,3 +111,20 @@ body:has(.hero) .crew-skills span{display:inline-flex;align-items:center;padding
  body:has(.hero) .crew-skills{gap:7px}
 }
 @media(prefers-reduced-motion:reduce){body:has(.hero) .crew-avatar{animation:none!important}}
+
+/* Retratos: enquadramento mais próximo e nitidez visual */
+body:has(.hero) .crew-avatar{overflow:hidden!important;background:#f4f2ff!important}
+body:has(.hero) .crew-avatar img{
+  width:100%!important;height:100%!important;
+  object-fit:cover!important;
+  object-position:center 25%!important;
+  transform:scale(1.10)!important;
+  transform-origin:center 28%!important;
+  mix-blend-mode:normal!important;
+  image-rendering:auto!important;
+  filter:contrast(1.035) saturate(1.035);
+  border-radius:50%!important;
+}
+@media(max-width:760px){
+ body:has(.hero) .crew-avatar img{object-position:center 24%!important;transform:scale(1.12)!important}
+}
