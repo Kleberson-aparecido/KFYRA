@@ -338,6 +338,30 @@ body:has(#areaLogada:not(.oculto)) .card{animation:kyRevealFade .65s ease both}
 }
 @media(max-width:360px){.ky-nav-item{font-size:9px !important}.ky-bottom-nav{gap:3px !important;padding:7px 5px !important}}
 @media(min-width:760px){.ky-bottom-nav{grid-template-columns:repeat(7,minmax(0,1fr)) !important}}
+
+/* Organização dos comprovantes: fluxo vertical sem cartões aninhados */
+.comprovantes-area{display:block;width:100%;min-width:0;margin-top:16px;padding:16px;border:1px solid #dce9df;border-radius:16px;background:linear-gradient(145deg,#fbfdfb,#f1f7f2);overflow:hidden}
+.comprovantes-cabecalho{display:block;margin-bottom:12px}
+.comprovantes-cabecalho h3{margin:0;color:#174b38;font-size:17px;line-height:1.35}
+.comprovantes-cabecalho p{margin:4px 0 0;color:#71857c;font-size:12px}
+.comprovante-item{display:block;width:100%;min-width:0;margin:12px 0 0;padding:14px;border:1px solid #e0eae2;border-radius:13px;background:#fff;box-shadow:0 4px 12px rgba(20,65,46,.04);overflow:hidden}
+.comprovante-topo{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.comprovante-topo strong{color:#174b38;font-size:14px;line-height:1.4}
+.comprovante-nsr{display:inline-block;padding:5px 9px;border-radius:20px;background:#eaf3ec;color:#286247;font-size:11px;font-weight:800;white-space:nowrap}
+.comprovante-dado{display:flex;flex-direction:column;gap:3px;min-width:0;padding:8px 0;border-top:1px solid #edf1ed}
+.comprovante-dado span,.comprovante-hash>span{color:#829188;font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
+.comprovante-dado strong{display:block;min-width:0;color:#334f43;font-size:12px;font-weight:600;line-height:1.5;overflow-wrap:anywhere;word-break:break-word}
+.comprovante-hash{min-width:0;margin-top:8px;padding:10px;border-radius:9px;background:#f0f5f0}
+.comprovante-hash code{display:block;margin-top:6px;color:#28533f;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;line-height:1.5;white-space:normal;overflow-wrap:anywhere;word-break:break-all}
+.comprovante-aviso{margin:12px 0 0;padding:10px;border-radius:9px;background:#fff8e9;color:#80632c;font-size:11px;line-height:1.5}
+@media(max-width:500px){
+ .comprovantes-area{padding:12px;margin-top:13px;border-radius:13px}
+ .comprovante-item{padding:11px;margin-top:10px}
+ .comprovante-dado{gap:4px;padding:7px 0}
+ .comprovante-dado strong{font-size:12px}
+ .comprovante-hash{padding:9px}
+}
+
 </style>
 </head>
 <body>
@@ -396,7 +420,7 @@ body:has(#areaLogada:not(.oculto)) .card{animation:kyRevealFade .65s ease both}
 <p>Registro de ponto</p>
 <div id="statusPonto" class="status-ponto">Verificando registros...</div>
 <button type="button" id="botaoPonto" disabled>Carregando...</button>
-<div id="ultimoComprovante" class="painel-ponto oculto" aria-live="polite"></div>
+<div id="ultimoComprovante" class="comprovantes-area oculto" aria-live="polite"></div>
 </div>
 </section>
 <section id="conteudoCalendario" class="oculto" hidden aria-hidden="true">
@@ -1215,30 +1239,43 @@ try{
 const {data,error}=await supabaseClient.rpc("kfyra_list_attendance_receipts_48h",{p_employee_id:colaboradorAtual.id});
 if(error)throw error;
 const registros=Array.isArray(data)?data:[];
-if(!registros.length){area.classList.add("oculto");return;}
-area.innerHTML="";
-const titulo=document.createElement("h4");titulo.textContent="Comprovantes das últimas 48 horas";
-const introducao=document.createElement("p");introducao.textContent="Trabalhador: "+(colaboradorAtual.full_name||"não informado")+" • "+registros.length+" marcação(ões)";
-area.append(titulo,introducao);
+if(!registros.length){area.classList.add("oculto");area.replaceChildren();return;}
+area.replaceChildren();
+const cabecalho=document.createElement("div");cabecalho.className="comprovantes-cabecalho";
+const titulo=document.createElement("h3");titulo.textContent="Comprovantes recentes";
+const subtitulo=document.createElement("p");subtitulo.textContent="Últimas 48 horas • "+registros.length+" marcação(ões)";
+cabecalho.append(titulo,subtitulo);area.appendChild(cabecalho);
 registros.forEach(registro=>{
-const item=document.createElement("div");item.className="comprovante-item";
-const cabecalho=document.createElement("strong");
-cabecalho.textContent="NSR "+registro.nsr+" • "+nomeEvento(registro.event_type);
-const dataHora=document.createElement("p");
-dataHora.textContent=new Date(registro.recorded_at).toLocaleString("pt-BR",{timeZone:"America/Sao_Paulo"});
-const empregador=document.createElement("p");
-empregador.textContent=(registro.employer_name||"Empregador não informado")+" • CNPJ "+(registro.employer_identifier||"não informado");
-const local=document.createElement("p");
-local.textContent="Local de trabalho: "+(registro.work_location||"endereço ainda não cadastrado");
-const cpf=document.createElement("p");
-cpf.textContent="CPF do trabalhador: "+(registro.employee_cpf||"não informado");
-const hash=document.createElement("code");
-hash.textContent="SHA-256: "+(registro.record_hash||"não disponível");
-item.append(cabecalho,dataHora,empregador,local,cpf,hash);
+const item=document.createElement("article");item.className="comprovante-item";
+const topo=document.createElement("div");topo.className="comprovante-topo";
+const evento=document.createElement("strong");evento.textContent=nomeEvento(registro.event_type);
+const nsr=document.createElement("span");nsr.className="comprovante-nsr";nsr.textContent="NSR "+registro.nsr;
+topo.append(evento,nsr);
+const dataHora=document.createElement("div");dataHora.className="comprovante-dado";
+const dataLabel=document.createElement("span");dataLabel.textContent="Data e horário";
+const dataValor=document.createElement("strong");dataValor.textContent=new Date(registro.recorded_at).toLocaleString("pt-BR",{timeZone:"America/Sao_Paulo"});
+dataHora.append(dataLabel,dataValor);
+const empregador=document.createElement("div");empregador.className="comprovante-dado";
+const empLabel=document.createElement("span");empLabel.textContent="Empregador";
+const empValor=document.createElement("strong");empValor.textContent=(registro.employer_name||"Não informado")+" • CNPJ "+(registro.employer_identifier||"não informado");
+empregador.append(empLabel,empValor);
+const cpf=document.createElement("div");cpf.className="comprovante-dado";
+const cpfLabel=document.createElement("span");cpfLabel.textContent="CPF do trabalhador";
+const cpfValor=document.createElement("strong");cpfValor.textContent=registro.employee_cpf||"Não informado";
+cpf.append(cpfLabel,cpfValor);
+const local=document.createElement("div");local.className="comprovante-dado";
+const localLabel=document.createElement("span");localLabel.textContent="Local de trabalho";
+const localValor=document.createElement("strong");localValor.textContent=registro.work_location||"Endereço não cadastrado";
+local.append(localLabel,localValor);
+const hash=document.createElement("div");hash.className="comprovante-hash";
+const hashLabel=document.createElement("span");hashLabel.textContent="Código de integridade SHA-256";
+const hashValor=document.createElement("code");hashValor.textContent=registro.record_hash||"Não disponível";
+hash.append(hashLabel,hashValor);
+item.append(topo,dataHora,empregador,cpf,local,hash);
 area.appendChild(item);
 });
-const aviso=document.createElement("p");
-aviso.textContent="PRÉVIAS TÉCNICAS — o comprovante legal final ainda depende do registro do programa no INPI, assinatura qualificada PAdES ICP-Brasil e validação do sincronismo com a Hora Legal Brasileira (HLB).";
+const aviso=document.createElement("p");aviso.className="comprovante-aviso";
+aviso.textContent="Comprovante técnico preliminar. O PDF legal assinado e a validação da sincronização com a Hora Legal Brasileira ainda estão em implementação.";
 area.appendChild(aviso);
 area.classList.remove("oculto");
 }catch(error){console.error("Não foi possível carregar os comprovantes:",error.message);}
