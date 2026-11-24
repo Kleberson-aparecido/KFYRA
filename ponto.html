@@ -938,12 +938,53 @@ return String(Math.floor(valor/60)).padStart(2,"0")+":"+String(valor%60).padStar
 function formatarPausasJornada(jornada){
 const linhas=[];
 if(jornada.intervalo>0){
-linhas.push("Intervalo principal: "+formatarHora(jornada.intervaloInicio)+" até "+formatarHora(jornada.intervaloFim)+" ("+formatarIntervalo(jornada.intervalo)+")");
+const inicio=minutosHora(jornada.intervaloInicio),fim=minutosHora(jornada.intervaloFim);
+linhas.push(inicio!==null&&fim!==null
+?"Intervalo principal: "+formatarHora(jornada.intervaloInicio)+" até "+formatarHora(jornada.intervaloFim)+" ("+formatarIntervalo(jornada.intervalo)+")"
+:"Intervalo principal: "+formatarIntervalo(jornada.intervalo)+" (horário não definido)");
 }
 (jornada.pausas||[]).forEach(p=>{
-linhas.push("Pausa "+p.numero+": "+formatarHora(p.inicio)+" até "+formatarHora(p.fim)+" ("+formatarIntervalo(p.duracao)+")");
+const inicio=minutosHora(p.inicio),fim=minutosHora(p.fim);
+linhas.push(inicio!==null&&fim!==null
+?"Pausa "+p.numero+": "+formatarHora(p.inicio)+" até "+formatarHora(p.fim)+" ("+formatarIntervalo(p.duracao)+")"
+:"Pausa "+p.numero+": "+formatarIntervalo(p.duracao)+" (horário não definido)");
 });
 return linhas;
+}
+
+/* Projeta somente a parte da jornada já transcorrida no dia atual. */
+function minutosPrevistosAteAgora(jornada,chave,agora,hoje){
+if(!jornada||!jornada.trabalho)return 0;
+if(chave<hoje)return Math.max(0,Number(jornada.minutos)||0);
+if(chave>hoje||jornada.inicio===null||jornada.fim===null)return 0;
+const inicio=jornada.inicio;
+let fim=jornada.fim;
+if(fim<=inicio)fim+=1440;
+let agoraMinutos=agora.getHours()*60+agora.getMinutes();
+if(agoraMinutos<inicio&&fim>1440)agoraMinutos+=1440;
+const duracaoTurno=fim-inicio;
+const transcorrido=Math.max(0,Math.min(duracaoTurno,agoraMinutos-inicio));
+if(transcorrido<=0||duracaoTurno<=0)return 0;
+const blocos=[
+{inicio:minutosHora(jornada.intervaloInicio),fim:minutosHora(jornada.intervaloFim),duracao:Number(jornada.intervalo)||0},
+...(jornada.pausas||[]).map(p=>({inicio:minutosHora(p.inicio),fim:minutosHora(p.fim),duracao:Number(p.duracao)||0}))
+];
+let minutosDescontados=0;
+blocos.forEach(bloco=>{
+if(bloco.duracao<=0)return;
+if(bloco.inicio!==null){
+let inicioPausa=bloco.inicio;
+if(inicioPausa<inicio)inicioPausa+=1440;
+const fimPausa=inicioPausa+bloco.duracao;
+const fimJanela=inicio+transcorrido;
+minutosDescontados+=Math.max(0,Math.min(fimJanela,fimPausa)-Math.max(inicio,inicioPausa));
+}else{
+/* Quando a escala não informa o horário do intervalo, distribui sua duração proporcionalmente ao turno transcorrido. */
+minutosDescontados+=bloco.duracao*(transcorrido/duracaoTurno);
+}
+});
+const previsto=Math.max(0,transcorrido-minutosDescontados);
+return Math.round(Math.min(Number(jornada.minutos)||0,previsto));
 }
 
 /* DETALHES DO CALENDÁRIO */
@@ -1067,7 +1108,7 @@ let totalMes=0,previstoMes=0,atrasoMes=0,antecipadaMes=0,extraMes=0;
 let diasComRegistro=0,diasComOcorrencia=0,diasSemMarcacao=0;
 const agoraMinutos=agora.getHours()*60+agora.getMinutes();
 Object.entries(jornadas).forEach(([chave,j])=>{
-if(chave<=chaveHoje)previstoMes+=j.minutos;
+previstoMes+=minutosPrevistosAteAgora(j,chave,agora,chaveHoje);
 let fimPrevisto=j.fim;
 if(fimPrevisto!==null&&j.inicio!==null&&fimPrevisto<=j.inicio)fimPrevisto+=1440;
 const jornadaJaTerminou=chave<chaveHoje||(chave===chaveHoje&&fimPrevisto!==null&&agoraMinutos>=fimPrevisto);
@@ -1092,7 +1133,7 @@ resumo.innerHTML="";
 [registros.length,"Marcações"],
 [diasComRegistro,"Dias com registro"],
 [formatarDuracao(totalMes),"Horas trabalhadas"],
-[formatarDuracao(previstoMes),"Jornada prevista até hoje"],
+[formatarDuracao(previstoMes),"Jornada prevista até o momento"],
 [String(diasSemMarcacao),"Dias de trabalho sem marcação"],
 [(saldoMes>=0?"+":"-")+formatarDuracao(saldoMes),"Saldo do período"],
 [formatarDuracao(atrasoMes),"Atrasos acumulados"],
