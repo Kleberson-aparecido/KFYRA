@@ -194,7 +194,7 @@ function openPage(page){
 }
 document.querySelectorAll('.nav button[data-page]').forEach(b=>b.addEventListener('click',()=>openPage(b.dataset.page)));
 document.querySelectorAll('[data-open-page]').forEach(b=>b.addEventListener('click',()=>openPage(b.dataset.openPage)));
-$('refreshButton').addEventListener('click',()=>{verifyAdminAccess().then(loadAdminOverview)});
+$('refreshButton').addEventListener('click',()=>{verifyAdminAccess()});
 verifyAdminAccess();
 </script>
 </body>
