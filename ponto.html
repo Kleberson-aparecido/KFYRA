@@ -1191,19 +1191,17 @@ async function carregarUltimoComprovante(){
 const area=document.getElementById("ultimoComprovante");
 if(!area||!usuarioAtual||!colaboradorAtual)return;
 try{
-const {data,error}=await supabaseClient.from("attendance_records")
-.select("nsr,event_type,recorded_at,record_hash,employee_cpf,employer_name_snapshot,employer_identifier_snapshot")
-.eq("user_id",usuarioAtual.id).eq("employee_id",colaboradorAtual.id).eq("is_test",false)
-.not("nsr","is",null).order("recorded_at",{ascending:false}).limit(1).maybeSingle();
+const {data,error}=await supabaseClient.rpc("kfyra_get_latest_attendance_receipt",{p_employee_id:colaboradorAtual.id});
 if(error)throw error;
-if(!data){area.classList.add("oculto");return;}
+const registro=Array.isArray(data)?data[0]:data;
+if(!registro){area.classList.add("oculto");return;}
 area.innerHTML="";
 const titulo=document.createElement("h4");titulo.textContent="Comprovante da última marcação";
 const detalhes=document.createElement("p");
-detalhes.textContent="NSR "+data.nsr+" • "+nomeEvento(data.event_type)+" • "+new Date(data.recorded_at).toLocaleString("pt-BR",{timeZone:"America/Sao_Paulo"});
-const empregador=document.createElement("p");empregador.textContent=(data.employer_name_snapshot||"Empregador não informado")+" • CNPJ "+(data.employer_identifier_snapshot||"não informado");
-const cpf=document.createElement("p");cpf.textContent="CPF do trabalhador: "+(data.employee_cpf||"não informado");
-const hash=document.createElement("code");hash.textContent="SHA-256: "+(data.record_hash||"não disponível");
+detalhes.textContent="NSR "+registro.nsr+" • "+nomeEvento(registro.event_type)+" • "+new Date(registro.recorded_at).toLocaleString("pt-BR",{timeZone:"America/Sao_Paulo"});
+const empregador=document.createElement("p");empregador.textContent=(registro.employer_name||"Empregador não informado")+" • CNPJ "+(registro.employer_identifier||"não informado");
+const cpf=document.createElement("p");cpf.textContent="CPF do trabalhador: "+(registro.employee_cpf||"não informado");
+const hash=document.createElement("code");hash.textContent="SHA-256: "+(registro.record_hash||"não disponível");
 const aviso=document.createElement("p");aviso.textContent="Comprovante técnico preliminar. A assinatura eletrônica qualificada PAdES e a sincronização HLB ainda precisam ser concluídas antes de declarar conformidade REP-P.";
 area.append(titulo,detalhes,empregador,cpf,hash,aviso);
 area.classList.remove("oculto");
