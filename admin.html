@@ -107,7 +107,7 @@ body{color:#e8eaff;background:radial-gradient(ellipse at 78% 0%,rgba(93,78,190,.
     <article class="metric"><div class="metric-top"><span>Empresas na plataforma</span><i class="metric-icon">▦</i></div><strong id="totalCompanies">—</strong><small id="companiesHint">Conectando ao Supabase</small></article>
     <article class="metric"><div class="metric-top"><span>Licenças ativas</span><i class="metric-icon">◇</i></div><strong id="totalLicenses">—</strong><small>Licenças em status ativo</small></article>
     <article class="metric"><div class="metric-top"><span>Colaboradores</span><i class="metric-icon">♙</i></div><strong id="totalEmployees">—</strong><small>Somatório das empresas cadastradas</small></article>
-    <article class="metric"><div class="metric-top"><span>Incidentes em aberto</span><i class="metric-icon">⚑</i></div><strong>—</strong><small>Monitoramento ainda não conectado</small></article>
+    <article class="metric"><div class="metric-top"><span>Incidentes em aberto</span><i class="metric-icon">⚑</i></div><strong id="openIncidents">—</strong><small>Incidentes abertos / em análise</small></article>
    </div>
    <div class="grid-two">
     <div class="panel"><div class="panel-head"><h3>Saúde da operação</h3><span>STATUS DOS SERVIÇOS</span></div><div class="empty-state"><b>Conexão operacional pendente</b>Os indicadores serão preenchidos após conectar os serviços de monitoramento, autenticação, banco de dados e portal Meu Ponto.</div></div>
@@ -119,8 +119,26 @@ body{color:#e8eaff;background:radial-gradient(ellipse at 78% 0%,rgba(93,78,190,.
   <section id="page-licenses" class="section"><div class="page-head"><div><div class="eyebrow">RECEITA E ASSINATURAS</div><h1>Licenças e planos</h1><p>Controle de planos, vencimentos, pagamentos, ativações e suspensões.</p></div></div><div class="cards-3"><article class="module"><div class="module-icon">◇</div><h3>Assinaturas</h3><p>Plano contratado, ciclo, status, início e renovação de cada empresa.</p><span class="status-label">Integração pendente</span></article><article class="module"><div class="module-icon">▤</div><h3>Pagamentos</h3><p>Conciliação, comprovantes, cobranças recusadas e histórico financeiro.</p><span class="status-label">Integração pendente</span></article><article class="module"><div class="module-icon">⌁</div><h3>Ativação de licença</h3><p>Fluxo de análise e liberação com registro de responsável e data.</p><span class="status-label">Integração pendente</span></article></div></section>
   <section id="page-people" class="section"><div class="page-head"><div><div class="eyebrow">VISÃO MULTIEMPRESA</div><h1>Colaboradores</h1><p>Consulta administrativa de volume, vínculo e distribuição por empresa.</p></div></div><div class="panel"><div class="panel-head"><h3>Base de colaboradores</h3><span>ACESSO RESTRITO</span></div><div id="peopleSummary" class="empty-state"><b>Resumo administrativo</b>Os totais serão carregados da base após a autenticação do fundador. Dados pessoais detalhados permanecem fora desta visão geral.</div></div></section>
   <section id="page-services" class="section"><div class="page-head"><div><div class="eyebrow">INFRAESTRUTURA</div><h1>Serviços e sistemas</h1><p>Acompanhamento dos componentes que mantêm a KFYRA funcionando.</p></div></div><div class="cards-3"><article class="module"><div class="module-icon">◈</div><h3>Supabase / Banco de dados</h3><p>Disponibilidade, consultas, políticas de acesso, erros e desempenho.</p><span class="status-label">Monitoramento pendente</span></article><article class="module"><div class="module-icon">⌘</div><h3>Autenticação</h3><p>Login, sessões, recuperação de acesso e falhas de autenticação.</p><span class="status-label">Monitoramento pendente</span></article><article class="module"><div class="module-icon">◫</div><h3>Meu Ponto</h3><p>Falhas de marcação, sincronização, calendário e solicitações.</p><span class="status-label">Monitoramento pendente</span></article><article class="module"><div class="module-icon">▣</div><h3>Painel Empresarial</h3><p>Erros de acesso, telas, permissões e operações do RH.</p><span class="status-label">Monitoramento pendente</span></article><article class="module"><div class="module-icon">◇</div><h3>Site Oficial</h3><p>Cadastro, contratação, planos e jornada de novos clientes.</p><span class="status-label">Monitoramento pendente</span></article><article class="module"><div class="module-icon">✧</div><h3>Agentes inteligentes</h3><p>Disponibilidade, execução, limites, falhas e trilha de ações.</p><span class="status-label">Monitoramento pendente</span></article></div></section>
-  <section id="page-incidents" class="section"><div class="page-head"><div><div class="eyebrow">CENTRAL DE ATENDIMENTO</div><h1>Incidentes e suporte</h1><p>Receba problemas relatados por clientes e acompanhe a investigação técnica.</p></div></div><div class="panel"><div class="panel-head"><h3>Fila de incidentes</h3><span>ABERTURA E TRIAGEM</span></div><div class="empty-state"><b>Fila de suporte ainda não conectada</b>Quando o cliente informar que não consegue bater o ponto, o chamado deverá registrar empresa, usuário afetado, horário, dispositivo, mensagem de erro e impacto. A IA poderá investigar e sugerir correções, sem alterar dados de jornada silenciosamente.</div></div></section>
-  <section id="page-audit" class="section"><div class="page-head"><div><div class="eyebrow">SEGURANÇA E RASTREABILIDADE</div><h1>Auditoria e atividade</h1><p>Histórico de acessos, ações administrativas, investigações e decisões.</p></div></div><div class="panel"><div class="panel-head"><h3>Trilha de auditoria</h3><span>REGISTROS IMUTÁVEIS</span></div><div class="empty-state"><b>Registro administrativo pendente</b>Antes de liberar ações operacionais, será implementado o registro de autor, data, alvo, justificativa, resultado e identificador da solicitação.</div></div></section>
+  <section id="page-incidents" class="section">
+   <div class="page-head"><div><div class="eyebrow">CENTRAL DE ATENDIMENTO</div><h1>Incidentes e suporte</h1><p>Abra chamados técnicos e acompanhe a investigação, sem tocar nos registros de jornada dos clientes.</p></div></div>
+   <div class="panel" style="margin-bottom:18px"><div class="panel-head"><h3>Novo incidente</h3><span>REGISTRO ADMINISTRATIVO</span></div>
+    <form id="incidentForm" style="padding:18px;display:grid;gap:12px">
+     <label style="display:grid;gap:6px">Título<input id="incidentTitle" required minlength="3" maxlength="180" placeholder="Ex.: Colaboradores não conseguem registrar o ponto" style="padding:12px;border-radius:10px;border:1px solid #7775;background:#111827;color:#fff"></label>
+     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
+      <label style="display:grid;gap:6px">Empresa<select id="incidentCompany" style="padding:12px;border-radius:10px;border:1px solid #7775;background:#111827;color:#fff"><option value="">Incidente geral da plataforma</option></select></label>
+      <label style="display:grid;gap:6px">Categoria<select id="incidentCategory" style="padding:12px;border-radius:10px;border:1px solid #7775;background:#111827;color:#fff"><option value="technical">Técnico</option><option value="timekeeping">Registro de ponto</option><option value="access">Acesso / login</option><option value="billing">Pagamento / licença</option><option value="security">Segurança</option><option value="other">Outro</option></select></label>
+      <label style="display:grid;gap:6px">Gravidade<select id="incidentSeverity" style="padding:12px;border-radius:10px;border:1px solid #7775;background:#111827;color:#fff"><option value="low">Baixa</option><option value="medium" selected>Média</option><option value="high">Alta</option><option value="critical">Crítica</option></select></label>
+     </div>
+     <label style="display:grid;gap:6px">Descrição<textarea id="incidentDescription" required minlength="3" maxlength="10000" rows="3" placeholder="Descreva o problema, quando começou e quem foi afetado." style="padding:12px;border-radius:10px;border:1px solid #7775;background:#111827;color:#fff;resize:vertical"></textarea></label>
+     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><button class="primary" type="submit" id="incidentSubmit">Registrar incidente</button><span id="incidentFeedback" role="status" style="font-size:13px;color:#b8b5d5"></span></div>
+    </form>
+   </div>
+   <div class="panel"><div class="panel-head"><h3>Fila de incidentes</h3><span>ATÉ 100 REGISTROS RECENTES</span></div><div id="incidentsLoading" class="empty-state"><b>Carregando incidentes</b>Consultando a central administrativa.</div><div id="incidentsTableWrap" class="table-wrap hidden"><table><thead><tr><th>INCIDENTE</th><th>EMPRESA</th><th>GRAVIDADE</th><th>STATUS</th><th>ABERTO EM</th><th>AÇÃO</th></tr></thead><tbody id="incidentsRows"></tbody></table></div></div>
+  </section>
+  <section id="page-audit" class="section">
+   <div class="page-head"><div><div class="eyebrow">SEGURANÇA E RASTREABILIDADE</div><h1>Auditoria e atividade</h1><p>Registro append-only das operações feitas pela Central de Comando.</p></div></div>
+   <div class="panel"><div class="panel-head"><h3>Trilha de auditoria</h3><span>REGISTROS SEM EDIÇÃO / EXCLUSÃO PELO APP</span></div><div id="auditLoading" class="empty-state"><b>Carregando trilha de auditoria</b>Consultando os últimos eventos administrativos.</div><div id="auditTableWrap" class="table-wrap hidden"><table><thead><tr><th>DATA</th><th>RESPONSÁVEL</th><th>AÇÃO</th><th>ALVO</th><th>RESULTADO</th><th>MOTIVO</th></tr></thead><tbody id="auditRows"></tbody></table></div></div>
+  </section>
   <section id="page-ai" class="section"><div class="page-head"><div><div class="eyebrow">INTELIGÊNCIA PRIVADA DO FUNDADOR</div><h1>Central de IA</h1><p>Uma presença sofisticada e incisiva para investigar, questionar e coordenar a operação KFYRA.</p></div></div><div class="grid-two"><div class="command-box"><div class="ai-head"><div class="ai-avatar">✧</div><div><strong>Sua assistente de comando</strong><small>Perfil comportamental definido • retrato pendente</small></div></div><h3>Vamos descobrir o que está acontecendo.</h3><p>Personalidade inspirada na Madison Montgomery: autoconfiante, sarcástica, elegante, perspicaz e estrategista — sem copiar falas ou identidade da personagem. Exemplo de comando: “Uma empresa informou que ninguém consegue registrar o ponto. Investigue o que está acontecendo e me mostre a causa provável.”</p><div class="command-input"><input type="text" disabled placeholder="A caixa de comando será ativada após configurar a IA"><button disabled>Enviar comando</button></div><div class="lock-note">PERSONALIDADE DEFINIDA • MOTOR DE IA PENDENTE. Ela poderá investigar e recomendar. Não poderá alterar regras trabalhistas, convenções sindicais ou parâmetros legais sem sua autorização expressa; não poderá apagar comprovantes, registros de ponto, documentos protegidos ou trilhas de auditoria. Toda ação sensível exigirá aprovação, justificativa e registro. Estas proteções ainda precisam ser implementadas no backend antes de habilitar comandos.</div></div><div class="panel"><div class="panel-head"><h3>O que ela poderá fazer</h3><span>COM APROVAÇÃO</span></div><div class="module"><h3>01 • Investigar falhas</h3><p>Consultar logs e identificar causas prováveis em login, marcação, sincronização e serviços.</p></div><div class="module" style="margin-top:10px"><h3>02 • Preparar solução</h3><p>Explicar a correção, estimar impacto e propor um procedimento seguro.</p></div><div class="module" style="margin-top:10px"><h3>03 • Executar com autorização</h3><p>Solicitar sua aprovação antes de qualquer alteração sensível e registrar o resultado.</p></div><div class="module" style="margin-top:10px"><h3>04 • Integridade inviolável</h3><p>Preservar marcações, comprovantes, documentos, assinaturas e trilhas de auditoria. Nenhuma exclusão protegida por autonomia da IA.</p></div></div></div></section>
   <section id="page-settings" class="section"><div class="page-head"><div><div class="eyebrow">CONTROLE DO FUNDADOR</div><h1>Configurações</h1><p>Preferências, segurança, acessos administrativos e integrações.</p></div></div><div class="cards-3"><article class="module"><div class="module-icon">♙</div><h3>Identidade do fundador</h3><p>Conta principal, autenticação multifator e recuperação segura.</p><span class="status-label">A configurar</span></article><article class="module"><div class="module-icon">✧</div><h3>Identidade da IA</h3><p>Nome, foto, personalidade, escopo, ferramentas e limites operacionais.</p><span class="status-label">Retrato pendente</span></article><article class="module"><div class="module-icon">⚿</div><h3>Permissões</h3><p>Lista de administradores autorizados e níveis de aprovação.</p><span class="status-label">A configurar</span></article></div></section>
  </main>
@@ -129,7 +147,7 @@ body{color:#e8eaff;background:radial-gradient(ellipse at 78% 0%,rgba(93,78,190,.
 const SUPABASE_URL='https://guiadodxikdvsfrhedls.supabase.co';
 const SUPABASE_KEY='sb_publishable_dhAqwNSfwGj8_nBnudx_Hw_gMZpnyEL';
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const $=id=>document.getElementById(id);
+const $=id=>document.getElementById(id);\nlet adminCompanies=[];
 function showAuthMessage(message){$('authMessage').textContent=message}
 function isPlatformOwner(claims){const meta=claims?.app_metadata||{};return ['owner','platform_admin'].includes(meta.platform_role)}
 async function verifyAdminAccess(){
@@ -163,7 +181,7 @@ async function loadAdminOverview(){
   const {data,error}=await supabaseClient.functions.invoke('admin-overview',{body:{}});
   if(error) throw error;
   if(!data || !data.totals || !Array.isArray(data.companies)) throw new Error(data?.error||'Resposta administrativa inválida.');
-  $('totalCompanies').textContent=data.totals.companies;
+  adminCompanies=data.companies||[];\n  const companySelect=$('incidentCompany');\n  if(companySelect) companySelect.innerHTML='<option value="">Incidente geral da plataforma</option>'+adminCompanies.map(c=>'<option value="'+String(c.id).replace(/[^a-f0-9-]/gi,'')+'">'+String(c.name||'Empresa').replace(/[&<>\"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[ch]))+'</option>').join('');\n  $('totalCompanies').textContent=data.totals.companies;
   $('totalLicenses').textContent=data.totals.active_licenses;
   $('totalEmployees').textContent=data.totals.employees;
   $('companiesHint').textContent='Dados reais • atualizado '+new Date(data.generated_at).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
@@ -176,7 +194,7 @@ async function loadAdminOverview(){
   $('companiesLoading').classList.add('hidden');
   $('companiesTable').classList.remove('hidden');
   $('peopleSummary').innerHTML='<b>'+data.totals.employees+' colaboradores cadastrados</b>Distribuídos em '+data.totals.companies+' empresas. Esta visão apresenta somente totais; dados pessoais permanecem protegidos.';
-  $('systemStatus').textContent='Supabase conectado • leitura administrativa';
+  $('systemStatus').textContent='Supabase conectado • leitura administrativa';\n  loadAdminOperations();
  }catch(err){
   $('companiesLoading').innerHTML='<b>Não foi possível carregar os dados</b>'+String(err.message||'Falha de conexão')+'<br>Verifique a sessão e a autorização administrativa.';
   $('companiesHint').textContent='Falha ao consultar o Supabase';
@@ -184,6 +202,44 @@ async function loadAdminOverview(){
  }
 }
 
+function escapeAdminHtml(value){return String(value??'—').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+function formatAdminDate(value){return value?new Date(value).toLocaleString('pt-BR'):'—';}
+async function loadAdminOperations(){
+ const loading=$('incidentsLoading'); if(!loading)return;
+ loading.classList.remove('hidden'); $('incidentsTableWrap').classList.add('hidden'); $('auditLoading').classList.remove('hidden'); $('auditTableWrap').classList.add('hidden');
+ try{
+  const {data,error}=await supabaseClient.functions.invoke('admin-operations',{body:{action:'list'}});
+  if(error)throw error;
+  const incidents=data.incidents||[], audit=data.audit||[];
+  const open=incidents.filter(x=>['open','investigating','waiting_customer'].includes(x.status)).length;
+  $('openIncidents').textContent=open;
+  $('incidentsRows').innerHTML=incidents.length?incidents.map(x=>'<tr><td><strong>'+escapeAdminHtml(x.title)+'</strong><br><small>'+escapeAdminHtml(x.description).slice(0,180)+'</small></td><td>'+escapeAdminHtml(adminCompanies.find(c=>c.id===x.company_id)?.name||'Plataforma')+'</td><td>'+escapeAdminHtml(({low:'Baixa',medium:'Média',high:'Alta',critical:'Crítica'})[x.severity]||x.severity)+'</td><td><select id="incident-status-'+escapeAdminHtml(x.id)+'" style="padding:7px;background:#111827;color:#fff;border:1px solid #7775;border-radius:8px"><option value="open" '+(x.status==='open'?'selected':'')+'>Aberto</option><option value="investigating" '+(x.status==='investigating'?'selected':'')+'>Em análise</option><option value="waiting_customer" '+(x.status==='waiting_customer'?'selected':'')+'>Aguardando cliente</option><option value="resolved" '+(x.status==='resolved'?'selected':'')+'>Resolvido</option><option value="closed" '+(x.status==='closed'?'selected':'')+'>Encerrado</option></select></td><td>'+formatAdminDate(x.created_at)+'</td><td><button class="primary" type="button" onclick="changeIncidentStatus(\''+escapeAdminHtml(x.id)+'\')">Salvar</button></td></tr>').join(''):'<tr><td colspan="6">Nenhum incidente registrado.</td></tr>';
+  $('incidentsLoading').classList.add('hidden');$('incidentsTableWrap').classList.remove('hidden');
+  $('auditRows').innerHTML=audit.length?audit.map(x=>'<tr><td>'+formatAdminDate(x.created_at)+'</td><td>'+escapeAdminHtml(x.actor_role)+'</td><td>'+escapeAdminHtml(x.action)+'</td><td>'+escapeAdminHtml(x.target_type)+' '+escapeAdminHtml(x.target_id||'')+'</td><td>'+escapeAdminHtml(x.result)+'</td><td>'+escapeAdminHtml(x.reason||'—')+'</td></tr>').join(''):'<tr><td colspan="6">Nenhuma ação administrativa registrada ainda.</td></tr>';
+  $('auditLoading').classList.add('hidden');$('auditTableWrap').classList.remove('hidden');
+ }catch(err){
+  $('incidentsLoading').innerHTML='<b>Não foi possível carregar a operação</b>'+escapeAdminHtml(err.message||'Falha de conexão');
+  $('auditLoading').innerHTML='<b>Não foi possível carregar a auditoria</b>'+escapeAdminHtml(err.message||'Falha de conexão');
+ }
+}
+$('incidentForm').addEventListener('submit',async e=>{
+ e.preventDefault();const button=$('incidentSubmit');button.disabled=true;button.textContent='Registrando...';$('incidentFeedback').textContent='';
+ try{
+  const {data,error}=await supabaseClient.functions.invoke('admin-operations',{body:{action:'create_incident',title:$('incidentTitle').value,description:$('incidentDescription').value,company_id:$('incidentCompany').value||null,category:$('incidentCategory').value,severity:$('incidentSeverity').value}});
+  if(error)throw error;
+  $('incidentForm').reset();$('incidentFeedback').textContent='Incidente registrado com sucesso.';
+  await loadAdminOperations();
+ }catch(err){$('incidentFeedback').textContent=err.message||'Não foi possível registrar o incidente.';}
+ finally{button.disabled=false;button.textContent='Registrar incidente';}
+});
+async function changeIncidentStatus(id){
+ const status=$('incident-status-'+id)?.value;if(!status)return;
+ try{
+  const {error}=await supabaseClient.functions.invoke('admin-operations',{body:{action:'update_incident',id,status}});
+  if(error)throw error;
+  await loadAdminOperations();
+ }catch(err){alert(err.message||'Não foi possível atualizar o incidente.');}
+}
 function openPage(page){
  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
  document.querySelectorAll('.nav button[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
