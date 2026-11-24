@@ -104,9 +104,9 @@ body{color:#e8eaff;background:radial-gradient(ellipse at 78% 0%,rgba(93,78,190,.
    <div class="page-head"><div><div class="eyebrow">COMANDO CENTRAL • FUNDADOR</div><h1>O centro de tudo.</h1><p>Visão estratégica e operacional de todo o ecossistema KFYRA.</p></div><div class="date-chip" id="todayLabel">PAINEL ADMINISTRATIVO</div></div>
    <div class="hero"><div class="hero-copy"><div class="eyebrow">IMPÉRIO DE CRISTAL • CONTROLE TOTAL</div><h2>Bem-vindo à sua Central de Comando.</h2><p>Da saúde da plataforma ao atendimento de uma empresa que não consegue registrar o ponto: acompanhe, investigue e coordene a operação em um único ambiente privado.</p><div class="hero-tags"><span>◈ Multiempresa</span><span>⌁ Monitoramento</span><span>✧ Inteligência assistida</span><span>◇ Segurança e auditoria</span></div></div><div class="crystal-wrap"><div class="orbit"></div><div class="orbit two"></div><div class="crystal"></div></div></div>
    <div class="metrics">
-    <article class="metric"><div class="metric-top"><span>Empresas na plataforma</span><i class="metric-icon">▦</i></div><strong>—</strong><small>Aguardando integração administrativa</small></article>
-    <article class="metric"><div class="metric-top"><span>Licenças ativas</span><i class="metric-icon">◇</i></div><strong>—</strong><small>Aguardando integração administrativa</small></article>
-    <article class="metric"><div class="metric-top"><span>Colaboradores</span><i class="metric-icon">♙</i></div><strong>—</strong><small>Aguardando integração administrativa</small></article>
+    <article class="metric"><div class="metric-top"><span>Empresas na plataforma</span><i class="metric-icon">▦</i></div><strong id="totalCompanies">—</strong><small id="companiesHint">Conectando ao Supabase</small></article>
+    <article class="metric"><div class="metric-top"><span>Licenças ativas</span><i class="metric-icon">◇</i></div><strong id="totalLicenses">—</strong><small>Licenças em status ativo</small></article>
+    <article class="metric"><div class="metric-top"><span>Colaboradores</span><i class="metric-icon">♙</i></div><strong id="totalEmployees">—</strong><small>Somatório das empresas cadastradas</small></article>
     <article class="metric"><div class="metric-top"><span>Incidentes em aberto</span><i class="metric-icon">⚑</i></div><strong>—</strong><small>Monitoramento ainda não conectado</small></article>
    </div>
    <div class="grid-two">
@@ -115,9 +115,9 @@ body{color:#e8eaff;background:radial-gradient(ellipse at 78% 0%,rgba(93,78,190,.
    </div>
    <div class="footer-note">KFYRA • CENTRAL DE COMANDO • AMBIENTE PRIVADO DO FUNDADOR</div>
   </section>
-  <section id="page-companies" class="section"><div class="page-head"><div><div class="eyebrow">GESTÃO DA PLATAFORMA</div><h1>Empresas clientes</h1><p>Visão global de contas, cadastros, situação e suporte por empresa.</p></div></div><div class="panel"><div class="panel-head"><h3>Cadastro de empresas</h3><span>DADOS REAIS • A CONECTAR</span></div><div class="empty-state"><b>Nenhuma consulta administrativa conectada</b>Esta área será ligada à base de empresas com autorização exclusiva do fundador. Não exibimos dados de clientes até validar a camada administrativa.</div></div></section>
+  <section id="page-companies" class="section"><div class="page-head"><div><div class="eyebrow">GESTÃO DA PLATAFORMA</div><h1>Empresas clientes</h1><p>Visão global de contas, cadastros, situação e suporte por empresa.</p></div></div><div class="panel"><div class="panel-head"><h3>Cadastro de empresas</h3><span>DADOS REAIS • A CONECTAR</span></div><div id="companiesLoading" class="empty-state"><b>Consultando base administrativa</b>Carregando empresas diretamente do Supabase com autorização de fundador.</div><div id="companiesTable" class="table-wrap hidden"><table><thead><tr><th>EMPRESA</th><th>CNPJ</th><th>PLANO</th><th>STATUS</th><th>COLABORADORES</th><th>CADASTRO</th></tr></thead><tbody id="companiesRows"></tbody></table></div></div></section>
   <section id="page-licenses" class="section"><div class="page-head"><div><div class="eyebrow">RECEITA E ASSINATURAS</div><h1>Licenças e planos</h1><p>Controle de planos, vencimentos, pagamentos, ativações e suspensões.</p></div></div><div class="cards-3"><article class="module"><div class="module-icon">◇</div><h3>Assinaturas</h3><p>Plano contratado, ciclo, status, início e renovação de cada empresa.</p><span class="status-label">Integração pendente</span></article><article class="module"><div class="module-icon">▤</div><h3>Pagamentos</h3><p>Conciliação, comprovantes, cobranças recusadas e histórico financeiro.</p><span class="status-label">Integração pendente</span></article><article class="module"><div class="module-icon">⌁</div><h3>Ativação de licença</h3><p>Fluxo de análise e liberação com registro de responsável e data.</p><span class="status-label">Integração pendente</span></article></div></section>
-  <section id="page-people" class="section"><div class="page-head"><div><div class="eyebrow">VISÃO MULTIEMPRESA</div><h1>Colaboradores</h1><p>Consulta administrativa de volume, vínculo e distribuição por empresa.</p></div></div><div class="panel"><div class="panel-head"><h3>Base de colaboradores</h3><span>ACESSO RESTRITO</span></div><div class="empty-state"><b>Camada de consulta protegida</b>Os dados pessoais e trabalhistas só serão carregados por consultas administrativas autorizadas e com registro de auditoria.</div></div></section>
+  <section id="page-people" class="section"><div class="page-head"><div><div class="eyebrow">VISÃO MULTIEMPRESA</div><h1>Colaboradores</h1><p>Consulta administrativa de volume, vínculo e distribuição por empresa.</p></div></div><div class="panel"><div class="panel-head"><h3>Base de colaboradores</h3><span>ACESSO RESTRITO</span></div><div id="peopleSummary" class="empty-state"><b>Resumo administrativo</b>Os totais serão carregados da base após a autenticação do fundador. Dados pessoais detalhados permanecem fora desta visão geral.</div></div></section>
   <section id="page-services" class="section"><div class="page-head"><div><div class="eyebrow">INFRAESTRUTURA</div><h1>Serviços e sistemas</h1><p>Acompanhamento dos componentes que mantêm a KFYRA funcionando.</p></div></div><div class="cards-3"><article class="module"><div class="module-icon">◈</div><h3>Supabase / Banco de dados</h3><p>Disponibilidade, consultas, políticas de acesso, erros e desempenho.</p><span class="status-label">Monitoramento pendente</span></article><article class="module"><div class="module-icon">⌘</div><h3>Autenticação</h3><p>Login, sessões, recuperação de acesso e falhas de autenticação.</p><span class="status-label">Monitoramento pendente</span></article><article class="module"><div class="module-icon">◫</div><h3>Meu Ponto</h3><p>Falhas de marcação, sincronização, calendário e solicitações.</p><span class="status-label">Monitoramento pendente</span></article><article class="module"><div class="module-icon">▣</div><h3>Painel Empresarial</h3><p>Erros de acesso, telas, permissões e operações do RH.</p><span class="status-label">Monitoramento pendente</span></article><article class="module"><div class="module-icon">◇</div><h3>Site Oficial</h3><p>Cadastro, contratação, planos e jornada de novos clientes.</p><span class="status-label">Monitoramento pendente</span></article><article class="module"><div class="module-icon">✧</div><h3>Agentes inteligentes</h3><p>Disponibilidade, execução, limites, falhas e trilha de ações.</p><span class="status-label">Monitoramento pendente</span></article></div></section>
   <section id="page-incidents" class="section"><div class="page-head"><div><div class="eyebrow">CENTRAL DE ATENDIMENTO</div><h1>Incidentes e suporte</h1><p>Receba problemas relatados por clientes e acompanhe a investigação técnica.</p></div></div><div class="panel"><div class="panel-head"><h3>Fila de incidentes</h3><span>ABERTURA E TRIAGEM</span></div><div class="empty-state"><b>Fila de suporte ainda não conectada</b>Quando o cliente informar que não consegue bater o ponto, o chamado deverá registrar empresa, usuário afetado, horário, dispositivo, mensagem de erro e impacto. A IA poderá investigar e sugerir correções, sem alterar dados de jornada silenciosamente.</div></div></section>
   <section id="page-audit" class="section"><div class="page-head"><div><div class="eyebrow">SEGURANÇA E RASTREABILIDADE</div><h1>Auditoria e atividade</h1><p>Histórico de acessos, ações administrativas, investigações e decisões.</p></div></div><div class="panel"><div class="panel-head"><h3>Trilha de auditoria</h3><span>REGISTROS IMUTÁVEIS</span></div><div class="empty-state"><b>Registro administrativo pendente</b>Antes de liberar ações operacionais, será implementado o registro de autor, data, alvo, justificativa, resultado e identificador da solicitação.</div></div></section>
@@ -144,6 +144,7 @@ async function verifyAdminAccess(){
  }
  $('authGate').classList.add('hidden');$('app').classList.remove('hidden');
  $('todayLabel').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}).toUpperCase();
+ loadAdminOverview();
 }
 $('adminLogin').addEventListener('submit',async e=>{
  e.preventDefault();const button=$('loginButton');button.disabled=true;button.textContent='Verificando acesso...';showAuthMessage('');
@@ -153,6 +154,36 @@ $('adminLogin').addEventListener('submit',async e=>{
 });
 $('logoutButton').addEventListener('click',async()=>{await supabaseClient.auth.signOut();location.reload()});
 supabaseClient.auth.onAuthStateChange(()=>{setTimeout(verifyAdminAccess,0)});
+
+async function loadAdminOverview(){
+ $('systemStatus').textContent='Consultando Supabase...';
+ $('companiesLoading').classList.remove('hidden');
+ $('companiesTable').classList.add('hidden');
+ try{
+  const {data,error}=await supabaseClient.functions.invoke('admin-overview',{body:{}});
+  if(error) throw error;
+  if(!data || !data.totals || !Array.isArray(data.companies)) throw new Error(data?.error||'Resposta administrativa inválida.');
+  $('totalCompanies').textContent=data.totals.companies;
+  $('totalLicenses').textContent=data.totals.active_licenses;
+  $('totalEmployees').textContent=data.totals.employees;
+  $('companiesHint').textContent='Dados reais • atualizado '+new Date(data.generated_at).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  $('companiesRows').innerHTML=data.companies.map(company=>{
+   const safe=v=>String(v??'—').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+   const status=String(company.subscription_status||'não informado');
+   const date=company.created_at?new Date(company.created_at).toLocaleDateString('pt-BR'):'—';
+   return '<tr><td><strong>'+safe(company.name)+'</strong><br><small>'+safe(company.email)+'</small></td><td>'+safe(company.cnpj)+'</td><td>'+safe(company.plan_code)+'</td><td>'+safe(status)+'</td><td>'+safe(company.employee_count)+'</td><td>'+safe(date)+'</td></tr>';
+  }).join('');
+  $('companiesLoading').classList.add('hidden');
+  $('companiesTable').classList.remove('hidden');
+  $('peopleSummary').innerHTML='<b>'+data.totals.employees+' colaboradores cadastrados</b>Distribuídos em '+data.totals.companies+' empresas. Esta visão apresenta somente totais; dados pessoais permanecem protegidos.';
+  $('systemStatus').textContent='Supabase conectado • leitura administrativa';
+ }catch(err){
+  $('companiesLoading').innerHTML='<b>Não foi possível carregar os dados</b>'+String(err.message||'Falha de conexão')+'<br>Verifique a sessão e a autorização administrativa.';
+  $('companiesHint').textContent='Falha ao consultar o Supabase';
+  $('systemStatus').textContent='Falha na conexão administrativa';
+ }
+}
+
 function openPage(page){
  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
  document.querySelectorAll('.nav button[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
@@ -163,7 +194,7 @@ function openPage(page){
 }
 document.querySelectorAll('.nav button[data-page]').forEach(b=>b.addEventListener('click',()=>openPage(b.dataset.page)));
 document.querySelectorAll('[data-open-page]').forEach(b=>b.addEventListener('click',()=>openPage(b.dataset.openPage)));
-$('refreshButton').addEventListener('click',()=>{verifyAdminAccess()});
+$('refreshButton').addEventListener('click',()=>{verifyAdminAccess().then(loadAdminOverview)});
 verifyAdminAccess();
 </script>
 </body>
