@@ -1065,9 +1065,13 @@ const chaveHoje=dataChaveLocal(agora);
 jornadaAtual=jornadas[chaveHoje]||null;
 let totalMes=0,previstoMes=0,atrasoMes=0,antecipadaMes=0,extraMes=0;
 let diasComRegistro=0,diasComOcorrencia=0,diasSemMarcacao=0;
+const agoraMinutos=agora.getHours()*60+agora.getMinutes();
 Object.entries(jornadas).forEach(([chave,j])=>{
 if(chave<=chaveHoje)previstoMes+=j.minutos;
-if(chave<=chaveHoje&&j.trabalho&&!dias[chave]){
+let fimPrevisto=j.fim;
+if(fimPrevisto!==null&&j.inicio!==null&&fimPrevisto<=j.inicio)fimPrevisto+=1440;
+const jornadaJaTerminou=chave<chaveHoje||(chave===chaveHoje&&fimPrevisto!==null&&agoraMinutos>=fimPrevisto);
+if(jornadaJaTerminou&&j.trabalho&&!dias[chave]){
 diasSemMarcacao++;
 diasComOcorrencia++;
 }
