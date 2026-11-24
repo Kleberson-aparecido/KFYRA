@@ -256,6 +256,60 @@ button:disabled {
         top: 28px;
     }
 }
+
+/* KFYRA · SISTEMA VISUAL CRISTALOGRAFIA IMPERIAL */
+:root{
+ --ky-abyss:#11132d;--ky-royal:#6555b7;--ky-amethyst:#9889e8;
+ --ky-glacier:#9ce9f0;--ky-opal:#f4f2ff;--ky-silver:#d7d9ee;
+ --ky-ink:#20213e;--ky-muted:#777b98;--ky-line:rgba(101,85,183,.16);
+ --ky-glass:rgba(255,255,255,.78);
+ --ky-shadow:0 18px 50px rgba(28,27,75,.10);
+}
+html{scroll-behavior:smooth}
+body{
+ color:var(--ky-ink)!important;
+ background:
+  radial-gradient(ellipse at 8% 0%,rgba(156,233,240,.24),transparent 34%),
+  radial-gradient(ellipse at 96% 12%,rgba(152,137,232,.18),transparent 32%),
+  linear-gradient(145deg,#f7f8ff 0%,#f0f1fb 52%,#f7fbff 100%)!important;
+}
+h1,h2,h3,h4{color:var(--ky-abyss)}
+button,.btn,[type=button],[type=submit]{
+ transition:transform .22s ease,box-shadow .22s ease,filter .22s ease;
+}
+button:hover,.btn:hover,[type=button]:hover,[type=submit]:hover{
+ transform:translateY(-2px);filter:saturate(1.12);
+}
+input,select,textarea{
+ border-color:var(--ky-line)!important;
+ border-radius:13px!important;
+ background:rgba(255,255,255,.88)!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.9);
+}
+input:focus,select:focus,textarea:focus{
+ outline:none!important;border-color:var(--ky-amethyst)!important;
+ box-shadow:0 0 0 4px rgba(152,137,232,.15)!important;
+}
+.card,.panel,.stat-card,.metric-card,.section-card,.modal-content,.content-card{
+ border:1px solid rgba(255,255,255,.82)!important;
+ border-radius:22px!important;
+ background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(247,247,255,.82))!important;
+ box-shadow:var(--ky-shadow),inset 0 1px 0 #fff!important;
+}
+
+body{min-height:100vh}
+header,.login-header,.brand-panel{
+ background:linear-gradient(125deg,#11132d 0%,#28224f 52%,#6555b7 100%)!important;
+ color:#fff!important;position:relative;overflow:hidden;
+}
+header:after,.login-header:after,.brand-panel:after{
+ content:"";position:absolute;right:7%;top:12%;width:145px;height:145px;
+ border:1px solid rgba(156,233,240,.45);transform:rotate(45deg);
+ box-shadow:0 0 35px rgba(156,233,240,.18),inset 0 0 28px rgba(156,233,240,.12);
+ pointer-events:none;
+}
+button,.btn,[type=submit]{background:linear-gradient(115deg,#6555b7,#39356f)!important;color:#fff!important;border:1px solid rgba(156,233,240,.4)!important;border-radius:13px!important;box-shadow:0 10px 24px rgba(101,85,183,.24)!important}
+
 </style>
 <link rel="stylesheet" href="css/prisma-vivo.css?v=2">
 </head>
