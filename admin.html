@@ -59,6 +59,16 @@ body{color:#e8eaff;background:radial-gradient(ellipse at 78% 0%,rgba(93,78,190,.
 .lock-note{background:#2a241a;color:#e8c98a;border:1px solid #9d793c55}
 @media(max-width:760px){.sidebar{border-right:1px solid #8390d522}}
 
+
+.ai-conversation{display:flex;flex-direction:column;gap:11px;max-height:430px;overflow:auto;padding:12px 3px;margin-top:12px}
+.ai-message{max-width:94%;padding:12px 14px;border-radius:14px;font-size:11px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}
+.ai-message p{margin:5px 0 0;color:inherit;font-size:11px;line-height:1.7}
+.ai-message b{font-size:9px;letter-spacing:.8px;text-transform:uppercase;opacity:.78}
+.ai-message.assistant{align-self:flex-start;background:#222448;border:1px solid #9c91e633;color:#e7e8ff}
+.ai-message.user{align-self:flex-end;background:#3c3476;border:1px solid #9ce9f04a;color:#fff}
+.ai-feedback{font-size:10px;color:#9da7c5;margin-top:9px;min-height:16px}
+.command-input button{opacity:1;cursor:pointer}
+.command-input button:disabled{opacity:.45;cursor:wait}
 </style>
 </head>
 <body>
@@ -139,7 +149,7 @@ body{color:#e8eaff;background:radial-gradient(ellipse at 78% 0%,rgba(93,78,190,.
    <div class="page-head"><div><div class="eyebrow">SEGURANÇA E RASTREABILIDADE</div><h1>Auditoria e atividade</h1><p>Registro append-only das operações feitas pela Central de Comando.</p></div></div>
    <div class="panel"><div class="panel-head"><h3>Trilha de auditoria</h3><span>REGISTROS SEM EDIÇÃO / EXCLUSÃO PELO APP</span></div><div id="auditLoading" class="empty-state"><b>Carregando trilha de auditoria</b>Consultando os últimos eventos administrativos.</div><div id="auditTableWrap" class="table-wrap hidden"><table><thead><tr><th>DATA</th><th>RESPONSÁVEL</th><th>AÇÃO</th><th>ALVO</th><th>RESULTADO</th><th>MOTIVO</th></tr></thead><tbody id="auditRows"></tbody></table></div></div>
   </section>
-  <section id="page-ai" class="section"><div class="page-head"><div><div class="eyebrow">INTELIGÊNCIA PRIVADA DO FUNDADOR</div><h1>Central de IA</h1><p>Uma presença sofisticada e incisiva para investigar, questionar e coordenar a operação KFYRA.</p></div></div><div class="grid-two"><div class="command-box"><div class="ai-head"><div class="ai-avatar">✧</div><div><strong>Sua assistente de comando</strong><small>Perfil comportamental definido • retrato pendente</small></div></div><h3>Vamos descobrir o que está acontecendo.</h3><p>Personalidade original inspirada em três arquétipos: a autoridade fria, visão de longo prazo e liderança implacável de Fiona Goode; a dignidade, presença mística, inteligência social e proteção estratégica de Marie Laveau; e a confiança, ironia afiada, elegância provocadora e rapidez mental de Madison Montgomery. Ela será sofisticada, dominante, perspicaz, leal à KFYRA e capaz de discordar do fundador quando identificar riscos. A inspiração é comportamental: não copiar falas, identidade ou cenas das personagens. Exemplo de comando: “Uma empresa informou que ninguém consegue registrar o ponto. Investigue o que está acontecendo e me mostre a causa provável.”</p><div class="command-input"><input type="text" disabled placeholder="A caixa de comando será ativada após configurar a IA"><button disabled>Enviar comando</button></div><div class="lock-note">PERSONALIDADE DEFINIDA • MOTOR DE IA PENDENTE. Ela poderá investigar e recomendar. Não poderá alterar regras trabalhistas, convenções sindicais ou parâmetros legais sem sua autorização expressa; não poderá apagar comprovantes, registros de ponto, documentos protegidos ou trilhas de auditoria. Toda ação sensível exigirá aprovação, justificativa e registro. Estas proteções ainda precisam ser implementadas no backend antes de habilitar comandos.</div></div><div class="panel"><div class="panel-head"><h3>O que ela poderá fazer</h3><span>COM APROVAÇÃO</span></div><div class="module"><h3>01 • Investigar falhas</h3><p>Consultar logs e identificar causas prováveis em login, marcação, sincronização e serviços.</p></div><div class="module" style="margin-top:10px"><h3>02 • Preparar solução</h3><p>Explicar a correção, estimar impacto e propor um procedimento seguro.</p></div><div class="module" style="margin-top:10px"><h3>03 • Executar com autorização</h3><p>Solicitar sua aprovação antes de qualquer alteração sensível e registrar o resultado.</p></div><div class="module" style="margin-top:10px"><h3>04 • Integridade inviolável</h3><p>Preservar marcações, comprovantes, documentos, assinaturas e trilhas de auditoria. Nenhuma exclusão protegida por autonomia da IA.</p></div></div></div></section>
+  <section id="page-ai" class="section"><div class="page-head"><div><div class="eyebrow">INTELIGÊNCIA PRIVADA DO FUNDADOR</div><h1>Central de IA</h1><p>Uma presença sofisticada e incisiva para investigar, questionar e coordenar a operação KFYRA.</p></div></div><div class="grid-two"><div class="command-box"><div class="ai-head"><div class="ai-avatar">✧</div><div><strong>Sua assistente de comando</strong><small>Perfil comportamental definido • retrato pendente</small></div></div><h3>Vamos descobrir o que está acontecendo.</h3><p>Personalidade original inspirada em três arquétipos: a autoridade fria, visão de longo prazo e liderança implacável de Fiona Goode; a dignidade, presença mística, inteligência social e proteção estratégica de Marie Laveau; e a confiança, ironia afiada, elegância provocadora e rapidez mental de Madison Montgomery. Ela será sofisticada, dominante, perspicaz, leal à KFYRA e capaz de discordar do fundador quando identificar riscos. A inspiração é comportamental: não copiar falas, identidade ou cenas das personagens. Exemplo de comando: “Uma empresa informou que ninguém consegue registrar o ponto. Investigue o que está acontecendo e me mostre a causa provável.”</p><div id="aiConversation" class="ai-conversation" aria-live="polite"><div class="ai-message assistant"><b>Conselheira</b><p>Finalmente. Agora podemos conversar sem transformar cada decisão em uma reunião de emergência. Diga-me o que está acontecendo na KFYRA.</p></div></div><form id="aiChatForm" class="command-input"><input id="aiPrompt" type="text" maxlength="6000" autocomplete="off" placeholder="Diga o que precisamos investigar..." required><button id="aiSend" type="submit">Enviar ↗</button></form><div id="aiFeedback" class="ai-feedback" role="status">Conectando ao motor de inteligência...</div><div class="lock-note">MODO CONSELHEIRA ATIVO • Ela analisa e recomenda, mas não executa alterações. Não acessa logs nem banco automaticamente nesta versão. Regras trabalhistas, documentos, marcações e trilhas de auditoria permanecem protegidos. Qualquer proposta sensível exige validação técnica/jurídica e sua aprovação expressa.</div></div><div class="panel"><div class="panel-head"><h3>O que ela poderá fazer</h3><span>COM APROVAÇÃO</span></div><div class="module"><h3>01 • Investigar falhas</h3><p>Consultar logs e identificar causas prováveis em login, marcação, sincronização e serviços.</p></div><div class="module" style="margin-top:10px"><h3>02 • Preparar solução</h3><p>Explicar a correção, estimar impacto e propor um procedimento seguro.</p></div><div class="module" style="margin-top:10px"><h3>03 • Executar com autorização</h3><p>Solicitar sua aprovação antes de qualquer alteração sensível e registrar o resultado.</p></div><div class="module" style="margin-top:10px"><h3>04 • Integridade inviolável</h3><p>Preservar marcações, comprovantes, documentos, assinaturas e trilhas de auditoria. Nenhuma exclusão protegida por autonomia da IA.</p></div></div></div></section>
   <section id="page-settings" class="section"><div class="page-head"><div><div class="eyebrow">CONTROLE DO FUNDADOR</div><h1>Configurações</h1><p>Preferências, segurança, acessos administrativos e integrações.</p></div></div><div class="cards-3"><article class="module"><div class="module-icon">♙</div><h3>Identidade do fundador</h3><p>Conta principal, autenticação multifator e recuperação segura.</p><span class="status-label">A configurar</span></article><article class="module"><div class="module-icon">✧</div><h3>Identidade da IA</h3><p>Nome, foto, personalidade, escopo, ferramentas e limites operacionais.</p><span class="status-label">Retrato pendente</span></article><article class="module"><div class="module-icon">⚿</div><h3>Permissões</h3><p>Lista de administradores autorizados e níveis de aprovação.</p><span class="status-label">A configurar</span></article></div></section>
  </main>
 </div>
@@ -150,6 +160,33 @@ const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const $=id=>document.getElementById(id);
 let adminCompanies=[];
 function showAuthMessage(message){$('authMessage').textContent=message}
+
+const aiConversation=[];
+function renderAiConversation(){
+ const box=$('aiConversation');
+ box.innerHTML=aiConversation.map(m=>'<div class="ai-message '+(m.role==='user'?'user':'assistant')+'"><b>'+(m.role==='user'?'Você':'Conselheira')+'</b><p>'+escapeAdminHtml(m.content).replace(/\n/g,'<br>')+'</p></div>').join('');
+ box.scrollTop=box.scrollHeight;
+}
+$('aiChatForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ const input=$('aiPrompt'),button=$('aiSend'),feedback=$('aiFeedback');
+ const prompt=input.value.trim();if(!prompt||button.disabled)return;
+ aiConversation.push({role:'user',content:prompt});renderAiConversation();input.value='';
+ button.disabled=true;button.textContent='Analisando...';feedback.textContent='A conselheira está pensando. Um instante.';
+ try{
+  const {data,error}=await supabaseClient.functions.invoke('founder-ai',{body:{messages:aiConversation.slice(-16)}});
+  if(error)throw error;
+  if(!data?.reply)throw new Error(data?.error||'A IA não retornou uma resposta.');
+  aiConversation.push({role:'assistant',content:data.reply});renderAiConversation();
+  feedback.textContent='Conselheira conectada • '+(data.model||'IA');
+ }catch(err){
+  const msg=err?.context?.error||err.message||'Falha ao conversar com a IA.';
+  feedback.textContent=msg;
+  aiConversation.pop();
+  renderAiConversation();
+ }finally{button.disabled=false;button.textContent='Enviar ↗';input.focus()}
+});
+
 function isPlatformOwner(claims){const meta=claims?.app_metadata||{};return ['owner','platform_admin'].includes(meta.platform_role)}
 async function verifyAdminAccess(){
  const {data:{session}}=await supabaseClient.auth.getSession();
