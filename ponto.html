@@ -65,6 +65,9 @@ button:disabled{opacity:.55;cursor:not-allowed}
 #ultimoComprovante h4{margin:0 0 9px;color:#14563e}
 #ultimoComprovante p{margin:5px 0;font-size:13px;color:#52665d}
 #ultimoComprovante code{display:block;margin-top:7px;padding:9px;background:#edf4ef;border-radius:8px;font-size:11px;word-break:break-all;color:#174737}
+.comprovante-item{padding:12px 0;border-top:1px solid #dcebe0}
+.comprovante-item strong{display:block;color:#14563e;font-size:14px}
+.comprovante-item p{margin:5px 0;font-size:12px;color:#52665d}
 .sem-registros{text-align:center;padding:18px;background:#f4f7f4;border-radius:9px;color:#687c72}
 .horas-dia{margin-top:10px;padding:10px;background:#eaf7ef;border-radius:8px;color:#216343;font-weight:bold;font-size:14px;line-height:1.6}
 .horas-alerta{background:#fff8e8;color:#93651c}
@@ -1209,24 +1212,36 @@ async function carregarUltimoComprovante(){
 const area=document.getElementById("ultimoComprovante");
 if(!area||!usuarioAtual||!colaboradorAtual)return;
 try{
-const {data,error}=await supabaseClient.rpc("kfyra_get_latest_attendance_receipt",{p_employee_id:colaboradorAtual.id});
+const {data,error}=await supabaseClient.rpc("kfyra_list_attendance_receipts_48h",{p_employee_id:colaboradorAtual.id});
 if(error)throw error;
-const registro=Array.isArray(data)?data[0]:data;
-if(!registro){area.classList.add("oculto");return;}
+const registros=Array.isArray(data)?data:[];
+if(!registros.length){area.classList.add("oculto");return;}
 area.innerHTML="";
-const titulo=document.createElement("h4");titulo.textContent="Comprovante de Registro de Ponto do Trabalhador";
-const colaborador=document.createElement("p");colaborador.textContent="Trabalhador: "+(colaboradorAtual.full_name||"não informado");
-const detalhes=document.createElement("p");
-detalhes.textContent="NSR "+registro.nsr+" • "+nomeEvento(registro.event_type)+" • "+new Date(registro.recorded_at).toLocaleString("pt-BR",{timeZone:"America/Sao_Paulo"});
-const empregador=document.createElement("p");empregador.textContent=(registro.employer_name||"Empregador não informado")+" • CNPJ "+(registro.employer_identifier||"não informado");
-const local=document.createElement("p");local.textContent="Local de trabalho: "+(registro.work_location||"endereço ainda não cadastrado");
-const cpf=document.createElement("p");cpf.textContent="CPF do trabalhador: "+(registro.employee_cpf||"não informado");
-const programa=document.createElement("p");programa.textContent="Programa: KFYRA • Registro INPI: pendente";
-const hash=document.createElement("code");hash.textContent="SHA-256: "+(registro.record_hash||"não disponível");
-const aviso=document.createElement("p");aviso.textContent="PRÉVIA TÉCNICA — ainda não é o comprovante legal final. Faltam o registro do programa no INPI, a assinatura qualificada PAdES ICP-Brasil e a validação do sincronismo com a Hora Legal Brasileira (HLB).";
-area.append(titulo,colaborador,detalhes,empregador,local,cpf,programa,hash,aviso);
+const titulo=document.createElement("h4");titulo.textContent="Comprovantes das últimas 48 horas";
+const introducao=document.createElement("p");introducao.textContent="Trabalhador: "+(colaboradorAtual.full_name||"não informado")+" • "+registros.length+" marcação(ões)";
+area.append(titulo,introducao);
+registros.forEach(registro=>{
+const item=document.createElement("div");item.className="comprovante-item";
+const cabecalho=document.createElement("strong");
+cabecalho.textContent="NSR "+registro.nsr+" • "+nomeEvento(registro.event_type);
+const dataHora=document.createElement("p");
+dataHora.textContent=new Date(registro.recorded_at).toLocaleString("pt-BR",{timeZone:"America/Sao_Paulo"});
+const empregador=document.createElement("p");
+empregador.textContent=(registro.employer_name||"Empregador não informado")+" • CNPJ "+(registro.employer_identifier||"não informado");
+const local=document.createElement("p");
+local.textContent="Local de trabalho: "+(registro.work_location||"endereço ainda não cadastrado");
+const cpf=document.createElement("p");
+cpf.textContent="CPF do trabalhador: "+(registro.employee_cpf||"não informado");
+const hash=document.createElement("code");
+hash.textContent="SHA-256: "+(registro.record_hash||"não disponível");
+item.append(cabecalho,dataHora,empregador,local,cpf,hash);
+area.appendChild(item);
+});
+const aviso=document.createElement("p");
+aviso.textContent="PRÉVIAS TÉCNICAS — o comprovante legal final ainda depende do registro do programa no INPI, assinatura qualificada PAdES ICP-Brasil e validação do sincronismo com a Hora Legal Brasileira (HLB).";
+area.appendChild(aviso);
 area.classList.remove("oculto");
-}catch(error){console.error("Não foi possível carregar o comprovante:",error.message);}
+}catch(error){console.error("Não foi possível carregar os comprovantes:",error.message);}
 }
 
 /* REGISTRO DE PONTO */
