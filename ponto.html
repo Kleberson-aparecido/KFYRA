@@ -1064,8 +1064,14 @@ const agora=new Date();
 const chaveHoje=dataChaveLocal(agora);
 jornadaAtual=jornadas[chaveHoje]||null;
 let totalMes=0,previstoMes=0,atrasoMes=0,antecipadaMes=0,extraMes=0;
-let diasComRegistro=0,diasComOcorrencia=0;
-Object.entries(jornadas).forEach(([chave,j])=>{if(chave<=chaveHoje)previstoMes+=j.minutos});
+let diasComRegistro=0,diasComOcorrencia=0,diasSemMarcacao=0;
+Object.entries(jornadas).forEach(([chave,j])=>{
+if(chave<=chaveHoje)previstoMes+=j.minutos;
+if(chave<=chaveHoje&&j.trabalho&&!dias[chave]){
+diasSemMarcacao++;
+diasComOcorrencia++;
+}
+});
 Object.entries(dias).forEach(([chave,eventos])=>{
 const calc=calcularHorasDoDia(eventos),j=jornadas[chave];
 totalMes+=calc.minutos;
@@ -1083,23 +1089,41 @@ resumo.innerHTML="";
 [diasComRegistro,"Dias com registro"],
 [formatarDuracao(totalMes),"Horas trabalhadas"],
 [formatarDuracao(previstoMes),"Jornada prevista até hoje"],
+[String(diasSemMarcacao),"Dias de trabalho sem marcação"],
 [(saldoMes>=0?"+":"-")+formatarDuracao(saldoMes),"Saldo do período"],
 [formatarDuracao(atrasoMes),"Atrasos acumulados"],
 [formatarDuracao(antecipadaMes),"Saídas antecipadas"],
 [formatarDuracao(extraMes),"Horas extras calculadas"],
-[String(diasComOcorrencia),"Dias com ocorrências"]
+[String(diasComOcorrencia),"Dias para conferência"]
 ].forEach(item=>resumo.appendChild(criarResumoItem(item[0],item[1])));
 renderizarCalendario(ano,mes,jornadas,dias);
 lista.innerHTML="";
-const chaves=Object.keys(dias).sort();
+const chaves=[...new Set([...Object.keys(jornadas),...Object.keys(dias)])].sort();
 if(chaves.length===0){
-lista.innerHTML='<div class="sem-registros">Nenhuma marcação encontrada neste mês.</div>';
+lista.innerHTML='<div class="sem-registros">Não há escala cadastrada nem marcações neste mês.</div>';
 return;
 }
 chaves.forEach(chave=>{
+const eventos=dias[chave]||[],j=jornadas[chave];
 const bloco=criarElemento("div","registro-dia");
 bloco.appendChild(criarElemento("h4","",formatarDataEspelho(chave)));
-const eventos=dias[chave];
+if(!eventos.length){
+if(j&&!j.trabalho){
+bloco.appendChild(criarElemento("div","horas-dia","Folga programada"));
+}else if(j&&chave<=chaveHoje){
+bloco.appendChild(criarElemento("div","aviso-registro","Dia previsto para trabalho, mas sem marcação registrada. É uma possível ausência que deve ser analisada pelo RH; este aviso não confirma falta nem gera desconto automático."));
+}else if(j){
+bloco.appendChild(criarElemento("div","horas-dia","Jornada programada — dia ainda não iniciado."));
+}
+if(j&&j.trabalho){
+const horario="Horário previsto: "+horaMinutoTexto(j.inicio)+" até "+horaMinutoTexto(j.fim);
+bloco.appendChild(criarElemento("div","horas-dia",horario+" • Jornada: "+formatarDuracao(j.minutos)));
+const pausasPrevistas=formatarPausasJornada(j);
+if(pausasPrevistas.length)bloco.appendChild(criarElemento("div","aviso-registro",pausasPrevistas.join(" | ")));
+}
+lista.appendChild(bloco);
+return;
+}
 eventos.forEach(r=>{
 const linha=criarElemento("div","linha-registro");
 linha.append(
@@ -1108,7 +1132,7 @@ criarElemento("span","",new Date(r.recorded_at).toLocaleTimeString("pt-BR",{hour
 );
 bloco.appendChild(linha);
 });
-const calc=calcularHorasDoDia(eventos),j=jornadas[chave];
+const calc=calcularHorasDoDia(eventos);
 bloco.appendChild(criarElemento("div","horas-dia","Horas trabalhadas: "+formatarDuracao(calc.minutos)+" • Intervalos e pausas: "+formatarDuracao(calc.intervalo)));
 if(j){
 const o=calcularOcorrencias(calc,j);
