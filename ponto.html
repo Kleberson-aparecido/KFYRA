@@ -996,7 +996,7 @@ if(!ano||!mes||mes<1||mes>12)throw new Error("Selecione um mês válido.");
 const inicio=new Date(ano,mes-1,1,0,0,0,0),fim=new Date(ano,mes,1,0,0,0,0);
 const {data,error}=await supabaseClient.from("attendance_records")
 .select("id,event_type,recorded_at")
-.eq("user_id",usuarioAtual.id).eq("employee_id",colaboradorAtual.id)
+.eq("user_id",usuarioAtual.id).eq("employee_id",colaboradorAtual.id).eq("is_test",false)
 .gte("recorded_at",inicio.toISOString()).lt("recorded_at",fim.toISOString())
 .order("recorded_at",{ascending:true});
 if(error)throw error;
