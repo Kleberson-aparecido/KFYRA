@@ -1498,7 +1498,7 @@ function renderEmployees(list){
  tbody.innerHTML=list.map(e=>{
   const dep=departmentsData.find(d=>d.id===e.department_id),ass=currentAssignment(e.id),sch=schedulesData.find(s=>s.id===ass?.schedule_id);
   let access=e.user_id?'<button class="btn btn-linked" disabled>Acesso vinculado</button>':e.status==='active'&&e.email?`<button class="btn btn-invite" id="invite-${e.id}" onclick="inviteEmployee('${e.id}')">Enviar convite</button>`:'<button class="btn btn-linked" disabled>Sem acesso</button>';
-  const actions=canManage()?`<div class="actions"><button class="btn btn-edit" onclick="editEmployee('${e.id}')">Editar</button><button class="btn btn-delete" onclick="deleteEmployee('${e.id}')">Excluir</button>${access}</div>`:'—';
+  const actions=canManage()?`<div class="actions"><button class="btn btn-edit" onclick="editEmployee('${e.id}')">Editar</button><button class="btn btn-delete" onclick="deleteEmployee('${e.id}')">Desligar</button>${access}</div>`:'—';
   return `<tr><td><strong>${escapeHTML(e.full_name)}</strong></td><td>${escapeHTML(e.employee_code||'—')}</td><td>${escapeHTML(e.job_title||'—')}</td><td>${escapeHTML(e.employment_type||'CLT')}</td><td>${escapeHTML(dep?.nome||'—')}</td><td>${escapeHTML(sch?.name||'—')}</td><td>${escapeHTML(e.email||'—')}</td><td><span class="badge ${escapeHTML(e.status||'active')}">${escapeHTML(labels[e.status]||e.status||'Ativo')}</span></td><td>${actions}</td></tr>`;
  }).join('');
 }
@@ -1596,10 +1596,11 @@ $('newEmployeeForm').addEventListener('submit',async e=>{
 });
 async function deleteEmployee(id){
  if(!canManage())return;const e=employeesData.find(x=>x.id===id);if(!e)return;
- if(!confirm(`Excluir o cadastro de "${e.full_name}"? Isso não apaga automaticamente a conta de acesso.`))return;
- const {error}=await supabaseClient.from('employees').delete().eq('id',id).eq('company_id',currentCompany.id);
- if(error){showMessage('Não foi possível excluir: '+error.message,'error');return}
- showMessage('Colaborador excluído.','success');await loadEmployees();await loadSchedules();
+ if(e.status==='terminated'){showMessage('Este colaborador já está desligado.','info');return}
+ if(!confirm('Desligar '+e.full_name+'? O cadastro, os dados e todo o histórico de ponto serão preservados.'))return;
+ const {error}=await supabaseClient.from('employees').update({status:'terminated'}).eq('id',id).eq('company_id',currentCompany.id);
+ if(error){showMessage('Não foi possível desligar: '+error.message,'error');return}
+ showMessage('Colaborador desligado. Cadastro e histórico preservados.','success');await loadEmployees();await loadSchedules();
 }
 
 // CONVITE MEU PONTO
