@@ -847,61 +847,66 @@ renderCards();renderRecommendation();
 </style>
 
 <style id="kfyra-pricing-final-design">
-/* KFYRA — encerramento institucional e portfólio comercial */
-.kfyra-pricing{position:relative;overflow:hidden;padding:clamp(76px,9vw,112px) 0!important;background:radial-gradient(ellipse at 12% 12%,rgba(152,137,232,.13),transparent 32%),radial-gradient(ellipse at 92% 52%,rgba(156,233,240,.13),transparent 31%),linear-gradient(145deg,#f8f8ff,#eef0fc 58%,#f7fcff)!important}
-.kfyra-pricing:before{content:"";position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(101,85,183,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(101,85,183,.045) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(to bottom,black,transparent 75%)}
+/* KFYRA — planos no padrão visual Império de Cristal */
+.kfyra-pricing{position:relative;isolation:isolate;overflow:hidden;padding:clamp(76px,8vw,116px) 0!important;background:radial-gradient(ellipse at 15% 8%,rgba(101,85,183,.3),transparent 38%),radial-gradient(ellipse at 92% 48%,rgba(156,233,240,.11),transparent 34%),linear-gradient(145deg,#10122c 0%,#191b40 54%,#11132d 100%)!important;color:#f4f2ff}
+.kfyra-pricing:before{content:"";position:absolute;z-index:-1;inset:0;pointer-events:none;opacity:.15;background-image:linear-gradient(rgba(215,217,238,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(215,217,238,.08) 1px,transparent 1px);background-size:54px 54px;mask-image:linear-gradient(to bottom,#000,transparent 88%)}
+.kfyra-pricing:after{content:"";position:absolute;z-index:-1;top:10%;right:-170px;width:360px;height:360px;border:1px solid rgba(156,233,240,.1);border-radius:50%;box-shadow:0 0 0 35px rgba(156,233,240,.018),0 0 0 75px rgba(156,233,240,.015);pointer-events:none}
 .kfyra-pricing>.container{position:relative;z-index:1}
-.kfyra-pricing .section-head{max-width:790px;margin-bottom:42px}
-.kfyra-pricing .section-head .kicker,.kfyra-pricing .all-plans-heading .kicker{color:#6555b7}
-.kfyra-pricing .section-head h2{color:#171936;font-size:clamp(35px,5vw,58px);letter-spacing:-2.5px}
-.kfyra-pricing .section-head p{max-width:650px;margin:0 auto;color:#686d91;font-size:14px}
-.kfyra-pricing .plan-finder{display:grid;grid-template-columns:1.15fr .85fr;gap:25px;align-items:center;margin:0 auto 58px;padding:clamp(23px,4vw,38px);border:1px solid rgba(156,233,240,.28);border-radius:20px;background:radial-gradient(ellipse at 90% 0%,rgba(156,233,240,.16),transparent 42%),linear-gradient(125deg,#11132d,#29234f 68%,#39316d);box-shadow:0 25px 65px rgba(27,25,68,.2);color:#f4f2ff}
+.kfyra-pricing .section-head{max-width:790px;margin:0 0 46px;text-align:left}
+.kfyra-pricing .section-head .kicker,.kfyra-pricing .all-plans-heading .kicker{color:#9ce9f0;font-size:9px;font-weight:900;letter-spacing:2px}
+.kfyra-pricing .section-head h2{max-width:760px;margin:17px 0;color:#f4f2ff;font:800 clamp(39px,5.4vw,66px)/1.04 Manrope,sans-serif;letter-spacing:-2.8px}
+.kfyra-pricing .section-head p{max-width:610px;margin:0;color:#c3c5df;font-size:14px;line-height:1.85}
+.kfyra-pricing .plan-finder{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(230px,.75fr);gap:22px;align-items:center;margin:0 0 66px;padding:clamp(23px,3.6vw,38px);border:1px solid rgba(156,233,240,.24);border-radius:18px;background:radial-gradient(ellipse at 90% 0%,rgba(156,233,240,.13),transparent 42%),linear-gradient(125deg,rgba(42,43,87,.96),rgba(25,27,62,.98));box-shadow:0 26px 70px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.06);color:#f4f2ff}
 .kfyra-pricing .finder-label{color:#9ce9f0;font-size:9px;font-weight:900;letter-spacing:1.8px}
-.kfyra-pricing .finder-copy h3{max-width:440px;margin:12px 0 9px;color:#f4f2ff;font:800 clamp(23px,3vw,34px)/1.12 Manrope,sans-serif;letter-spacing:-1px}
-.kfyra-pricing .finder-copy p{max-width:420px;margin:0;color:#c1c3df;font-size:12px;line-height:1.7}
-.kfyra-pricing .finder-controls{padding:18px;border:1px solid rgba(215,217,238,.14);border-radius:13px;background:rgba(255,255,255,.055)}
-.kfyra-pricing .finder-controls label{display:block;margin-bottom:9px;color:#d9daf0;font-size:10px;font-weight:800;letter-spacing:.5px}
-.kfyra-pricing .finder-input{display:flex;align-items:center;gap:10px;padding:7px 13px;border:1px solid rgba(156,233,240,.35);border-radius:9px;background:rgba(9,11,35,.55)}
-.kfyra-pricing .finder-input input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:#fff;font:800 25px Manrope,sans-serif}
+.kfyra-pricing .finder-copy h3{max-width:470px;margin:12px 0 10px;color:#f4f2ff;font:800 clamp(24px,3vw,35px)/1.12 Manrope,sans-serif;letter-spacing:-1.1px}
+.kfyra-pricing .finder-copy p{max-width:420px;margin:0;color:#c1c4df;font-size:12px;line-height:1.8}
+.kfyra-pricing .finder-controls{padding:19px;border:1px solid rgba(215,217,238,.15);border-radius:12px;background:rgba(9,11,35,.38)}
+.kfyra-pricing .finder-controls label{display:block;margin-bottom:10px;color:#d9daf0;font-size:10px;font-weight:800;letter-spacing:.5px}
+.kfyra-pricing .finder-input{display:flex;align-items:center;gap:10px;padding:8px 13px;border:1px solid rgba(156,233,240,.4);border-radius:9px;background:rgba(9,11,35,.65)}
+.kfyra-pricing .finder-input input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:#fff;font:800 27px Manrope,sans-serif}
 .kfyra-pricing .finder-input input::-webkit-inner-spin-button{-webkit-appearance:none}
-.kfyra-pricing .finder-input span{color:#9ce9f0;font-size:10px}
-.kfyra-pricing .finder-controls>small{display:block;margin-top:9px;color:#a9accb;font-size:9px}
-.kfyra-pricing .finder-result{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:17px 19px;border:1px solid rgba(156,233,240,.25);border-radius:12px;background:rgba(156,233,240,.075)}
+.kfyra-pricing .finder-input span{color:#9ce9f0;font-size:10px;white-space:nowrap}
+.kfyra-pricing .finder-controls>small{display:block;margin-top:10px;color:#aeb2d0;font-size:9px;line-height:1.6}
+.kfyra-pricing .finder-result{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:17px 19px;border:1px solid rgba(156,233,240,.22);border-radius:11px;background:rgba(156,233,240,.07)}
 .kfyra-pricing .recommendation-kicker{color:#9ce9f0;font-size:8px;font-weight:900;letter-spacing:1.3px}
-.kfyra-pricing .recommendation-copy h4{margin:5px 0;color:#fff;font:800 19px Manrope,sans-serif}
+.kfyra-pricing .recommendation-copy h4{margin:6px 0;color:#fff;font:800 20px Manrope,sans-serif}
 .kfyra-pricing .recommendation-copy p{margin:0;color:#c4c6df;font-size:10px;line-height:1.6}
 .kfyra-pricing .recommendation-price{color:#fff;font:800 19px Manrope,sans-serif;white-space:nowrap}
 .kfyra-pricing .recommendation-price small{display:block;margin-top:4px;color:#aeb2d0;font:400 9px 'DM Sans',sans-serif;white-space:normal}
 .kfyra-pricing .finder-result .btn{flex-shrink:0}
-.kfyra-pricing .all-plans-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:23px}
-.kfyra-pricing .all-plans-heading h3{margin:8px 0 0;color:#191b3b;font:800 clamp(24px,3vw,34px) Manrope,sans-serif;letter-spacing:-1px}
-.kfyra-pricing .all-plans-heading>p{max-width:370px;margin:0;color:#777b98;font-size:11px;line-height:1.7}
-.kfyra-pricing .billing-switch{margin-bottom:30px!important}
-.kfyra-pricing .billing-switch:before{color:#6555b7}
-.kfyra-pricing .plans{grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;align-items:stretch}
-.kfyra-pricing .plan{position:relative;display:flex;flex-direction:column;min-width:0;padding:24px 21px 21px;border:1px solid rgba(101,85,183,.14);border-radius:15px;background:rgba(255,255,255,.88);box-shadow:0 12px 32px rgba(31,29,77,.055);transition:transform .25s,border-color .25s,box-shadow .25s}
-.kfyra-pricing .plan:hover{transform:translateY(-5px);border-color:rgba(101,85,183,.42);box-shadow:0 22px 48px rgba(31,29,77,.12)}
-.kfyra-pricing .plan.popular{border:1.5px solid #8d7ce0;background:linear-gradient(155deg,#fff,#f1efff);box-shadow:0 18px 42px rgba(101,85,183,.15)}
-.kfyra-pricing .plan-ribbon{position:absolute;top:0;right:17px;padding:7px 10px;border-radius:0 0 8px 8px;background:linear-gradient(110deg,#6555b7,#9889e8);color:white;font-size:7px;font-weight:900;letter-spacing:1px}
-.kfyra-pricing .plan-tag{display:block;min-height:28px;padding-right:65px;color:#6555b7;font-size:8px;line-height:1.5;letter-spacing:.8px}
-.kfyra-pricing .plan h3{margin:8px 0;color:#191b3b;font:800 20px Manrope,sans-serif}
-.kfyra-pricing .price{margin:12px 0 4px;color:#24204f;font:800 clamp(24px,2.5vw,31px) Manrope,sans-serif;letter-spacing:-1px}
-.kfyra-pricing .price small{color:#777b98;font:500 10px 'DM Sans',sans-serif;letter-spacing:0}
-.kfyra-pricing .plan-desc{min-height:39px;margin:7px 0 8px;color:#737895;font-size:10px;line-height:1.65}
-.kfyra-pricing .plan ul{flex:1;margin:15px 0 20px;padding:0;list-style:none}
-.kfyra-pricing .plan li{padding:8px 0;border-bottom:1px solid #ececf7;color:#555b7d;font-size:10px;line-height:1.45}
-.kfyra-pricing .plan li:before{color:#6555b7}
-.kfyra-pricing .plan .btn{width:100%;min-height:43px;border:0;border-radius:9px;background:linear-gradient(120deg,#6555b7,#9889e8);color:white;font-size:10px}
-.kfyra-pricing .plan .btn-outline{background:#f0effb;color:#51458e;border:1px solid #dcd8f5}
-.kfyra-pricing .plan .btn-outline:hover{background:#e6e2fb}
-.kfyra-pricing .plans-note{max-width:850px;margin:25px auto 0;padding:14px 17px;border:1px solid rgba(101,85,183,.12);border-radius:10px;background:rgba(255,255,255,.62);color:#777b98;text-align:center;font-size:9px;line-height:1.8}
-.kfyra-final-cta{position:relative;overflow:hidden;padding:clamp(70px,8vw,100px) 0!important;background:radial-gradient(ellipse at 80% 20%,rgba(156,233,240,.2),transparent 34%),radial-gradient(ellipse at 10% 100%,rgba(152,137,232,.25),transparent 38%),linear-gradient(125deg,#11132d,#29234f 65%,#41366f)!important;color:#f4f2ff}
-.kfyra-final-cta:before{content:"";position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(215,217,238,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(215,217,238,.07) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(to bottom,black,transparent)}
+.kfyra-pricing .all-plans-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:22px}
+.kfyra-pricing .all-plans-heading h3{margin:9px 0 0;color:#f4f2ff;font:800 clamp(27px,3.4vw,39px)/1.1 Manrope,sans-serif;letter-spacing:-1.3px}
+.kfyra-pricing .all-plans-heading>p{max-width:370px;margin:0;color:#aeb2d0;font-size:11px;line-height:1.8}
+.kfyra-pricing .billing-switch{width:min(100%,380px)!important;margin:0 0 28px!important;padding:0!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+.kfyra-pricing .billing-switch:before{content:"ESCOLHA A PERIODICIDADE";grid-column:1/-1;display:block;margin:0 0 5px;color:#aeb2d0;text-align:left;font:800 8px 'DM Sans',sans-serif;letter-spacing:1.4px}
+.kfyra-pricing .billing-switch button{min-width:0!important;min-height:46px;margin:0!important;padding:10px 12px!important;border:1px solid rgba(215,217,238,.17)!important;border-radius:9px!important;background:rgba(255,255,255,.045)!important;color:#d9daf0!important;font:700 11px 'DM Sans',sans-serif!important}
+.kfyra-pricing .billing-switch button.active{border-color:rgba(156,233,240,.55)!important;background:linear-gradient(120deg,#6555b7,#51458e)!important;color:#fff!important;box-shadow:0 8px 22px rgba(101,85,183,.25)!important}
+.kfyra-pricing .billing-switch button span{color:#9ce9f0!important;font-size:9px}
+.kfyra-pricing .billing-switch button.active span{color:#fff!important}
+.kfyra-pricing .plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:stretch}
+.kfyra-pricing .plan{position:relative;display:flex;flex-direction:column;min-width:0;padding:25px 22px 22px;border:1px solid rgba(156,233,240,.16);border-radius:15px;background:linear-gradient(155deg,rgba(42,44,84,.96),rgba(25,27,60,.98));box-shadow:0 18px 45px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.045);transition:transform .25s,border-color .25s,box-shadow .25s}
+.kfyra-pricing .plan:hover{transform:translateY(-5px);border-color:rgba(156,233,240,.48);box-shadow:0 25px 55px rgba(0,0,0,.3),0 0 28px rgba(101,85,183,.13)}
+.kfyra-pricing .plan.popular{border:1px solid rgba(156,233,240,.7);background:radial-gradient(ellipse at 100% 0%,rgba(156,233,240,.13),transparent 45%),linear-gradient(155deg,#333365,#222448);box-shadow:0 20px 55px rgba(0,0,0,.28),0 0 0 1px rgba(156,233,240,.1)}
+.kfyra-pricing .plan-ribbon{position:absolute;top:0;right:16px;padding:7px 10px;border-radius:0 0 7px 7px;background:linear-gradient(110deg,#6555b7,#9889e8);color:#fff;font-size:7px;font-weight:900;letter-spacing:1px}
+.kfyra-pricing .plan-tag{display:block;min-height:25px;padding-right:72px;color:#9ce9f0;font-size:8px;font-weight:800;line-height:1.5;letter-spacing:1px}
+.kfyra-pricing .plan h3{margin:9px 0;color:#f4f2ff;font:800 21px Manrope,sans-serif;letter-spacing:-.5px}
+.kfyra-pricing .price{margin:15px 0 5px;color:#fff;font:800 clamp(25px,2.6vw,33px) Manrope,sans-serif;letter-spacing:-1.2px}
+.kfyra-pricing .price small{color:#aeb2d0;font:500 10px 'DM Sans',sans-serif;letter-spacing:0}
+.kfyra-pricing .plan-desc{min-height:42px;margin:8px 0;color:#b9bdd9;font-size:10px;line-height:1.7}
+.kfyra-pricing .plan ul{flex:1;margin:15px 0 21px;padding:0;list-style:none}
+.kfyra-pricing .plan li{padding:9px 0;border-bottom:1px solid rgba(215,217,238,.1);color:#d2d4e8;font-size:10px;line-height:1.5}
+.kfyra-pricing .plan li:before{color:#9ce9f0}
+.kfyra-pricing .plan .btn{width:100%;min-height:44px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(156,233,240,.4);border-radius:8px;background:linear-gradient(120deg,#6555b7,#8172d1);color:#fff;font-size:10px;font-weight:800;box-shadow:0 8px 20px rgba(101,85,183,.2)}
+.kfyra-pricing .plan .btn-outline{border-color:rgba(215,217,238,.2);background:rgba(255,255,255,.045);color:#e4e4f3;box-shadow:none}
+.kfyra-pricing .plan .btn-outline:hover{border-color:#9ce9f0;background:rgba(156,233,240,.09)}
+.kfyra-pricing .plans-note{max-width:850px;margin:25px 0 0;padding:14px 17px;border:1px solid rgba(215,217,238,.13);border-radius:10px;background:rgba(255,255,255,.035);color:#aeb2d0;text-align:left;font-size:9px;line-height:1.8}
+.kfyra-final-cta{position:relative;overflow:hidden;padding:clamp(76px,8vw,108px) 0!important;background:radial-gradient(ellipse at 82% 10%,rgba(156,233,240,.15),transparent 35%),radial-gradient(ellipse at 12% 100%,rgba(101,85,183,.27),transparent 40%),linear-gradient(135deg,#11132d,#25264e 68%,#39316d)!important;color:#f4f2ff;text-align:left!important}
+.kfyra-final-cta:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.14;background-image:linear-gradient(rgba(215,217,238,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(215,217,238,.08) 1px,transparent 1px);background-size:54px 54px}
 .kfyra-final-cta .container{position:relative;z-index:1}
 .kfyra-final-cta .kicker{color:#9ce9f0}
-.kfyra-final-cta h2{max-width:760px;margin:17px auto;color:#f4f2ff;font:800 clamp(34px,5vw,55px)/1.08 Manrope,sans-serif;letter-spacing:-2px}
-.kfyra-final-cta p{max-width:590px;color:#c6c8e0;font-size:13px;line-height:1.85}
-.kfyra-final-cta .btn{background:linear-gradient(120deg,#b7eff2,#9889e8 62%,#6555b7)!important;color:#171735!important}
+.kfyra-final-cta h2{max-width:760px;margin:17px 0;color:#f4f2ff;font:800 clamp(37px,5.2vw,61px)/1.05 Manrope,sans-serif;letter-spacing:-2.5px}
+.kfyra-final-cta p{max-width:590px;margin:0 0 25px;color:#c6c8e0;font-size:13px;line-height:1.85}
+.kfyra-final-cta .btn{background:linear-gradient(120deg,#b7eff2,#9889e8 62%,#6555b7)!important;color:#171735!important;box-shadow:0 12px 30px rgba(0,0,0,.2)}
 .kfyra-footer{position:relative;overflow:hidden;padding:52px 0 24px!important;background:#090b22!important;border-top:1px solid rgba(156,233,240,.2)}
 .kfyra-footer .footer-grid{padding-bottom:32px}
 .kfyra-footer .logo{display:inline-block;margin-bottom:10px;color:#f4f2ff}
@@ -912,21 +917,26 @@ renderCards();renderRecommendation();
 .kfyra-footer .footer-bottom{border-color:rgba(215,217,238,.12);color:#777b98;font-size:9px}
 @media(max-width:980px){.kfyra-pricing .plans{grid-template-columns:repeat(2,minmax(0,1fr))}.kfyra-pricing .plan-finder{grid-template-columns:1fr 1fr}}
 @media(max-width:650px){
- .kfyra-pricing{padding:65px 0!important}
- .kfyra-pricing .section-head{text-align:left;margin-bottom:30px}
- .kfyra-pricing .section-head h2{font-size:39px;letter-spacing:-1.8px}
- .kfyra-pricing .plan-finder{grid-template-columns:1fr;gap:18px;margin-bottom:42px;padding:21px}
- .kfyra-pricing .finder-result{grid-column:auto;align-items:flex-start;flex-direction:column}
+ .kfyra-pricing{padding:66px 0!important}
+ .kfyra-pricing .section-head{margin-bottom:32px}
+ .kfyra-pricing .section-head h2{font-size:clamp(36px,10vw,47px);letter-spacing:-1.9px}
+ .kfyra-pricing .section-head p{font-size:13px}
+ .kfyra-pricing .plan-finder{grid-template-columns:1fr;gap:16px;margin-bottom:48px;padding:21px;border-radius:14px}
+ .kfyra-pricing .finder-copy h3{font-size:27px}
+ .kfyra-pricing .finder-result{grid-column:auto;align-items:flex-start;flex-direction:column;gap:12px}
  .kfyra-pricing .finder-result .btn{width:100%}
- .kfyra-pricing .all-plans-heading{display:block}
- .kfyra-pricing .all-plans-heading>p{margin-top:10px}
- .kfyra-pricing .plans{grid-template-columns:1fr;gap:12px}
- .kfyra-pricing .plan{padding:22px}
+ .kfyra-pricing .all-plans-heading{display:block;margin-bottom:20px}
+ .kfyra-pricing .all-plans-heading h3{font-size:30px}
+ .kfyra-pricing .all-plans-heading>p{margin-top:10px;font-size:11px}
+ .kfyra-pricing .billing-switch{margin-bottom:22px!important}
+ .kfyra-pricing .plans{grid-template-columns:1fr;gap:13px}
+ .kfyra-pricing .plan{padding:22px;border-radius:13px}
  .kfyra-pricing .plan-desc{min-height:0}
- .kfyra-pricing .billing-switch{margin-bottom:23px!important}
- .kfyra-final-cta{text-align:left!important}
- .kfyra-final-cta h2{font-size:38px;letter-spacing:-1.5px}
- .kfyra-final-cta p{margin-left:0}
+ .kfyra-pricing .plan ul{margin:12px 0 18px}
+ .kfyra-pricing .plan li{font-size:11px}
+ .kfyra-pricing .plans-note{font-size:9px;text-align:left}
+ .kfyra-final-cta{padding:68px 0!important}
+ .kfyra-final-cta h2{font-size:clamp(36px,10vw,47px);letter-spacing:-1.8px}
  .kfyra-footer .footer-grid{grid-template-columns:1fr 1fr;gap:20px}
  .kfyra-footer .footer-grid>div:first-child{grid-column:1/-1}
 }
