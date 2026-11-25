@@ -429,7 +429,7 @@ function priceBlock(p){
 function renderCards(){
  if(!cards)return;
  cards.innerHTML=catalog.map(p=>{
- const limit=p.limit==='custom'?'ACIMA DE 5.000 COLABORADORES':'ATÉ '+p.limit+' COLABORADORES';
+ const limit=p.limit==='custom'?'ACIMA DE 5.000 COLABORADORES':(p.limit===1?'ATÉ 1 COLABORADOR':'ATÉ '+p.limit+' COLABORADORES');
  const code=p.limit==='custom'?'custom':String(p.limit);
  const action=p.limit==='custom'?'Solicitar proposta':'Escolher plano';
  const features='<ul><li>Controle de ponto e jornada</li><li>Escalas, turnos e folgas</li><li>Banco de horas e relatórios</li><li>Portal Meu Ponto</li><li>Solicitações e aprovações</li><li>Documentos e espelhos de ponto</li><li>Assinaturas eletrônicas</li></ul>';
