@@ -287,6 +287,43 @@ footer a,.footer a{color:#9ce9f0!important}
 @media(max-width:520px){#solucoes .features{grid-template-columns:1fr;gap:11px}#solucoes .feature{min-height:0;padding:19px}#solucoes .feature p{min-height:0}.solutions-caption{flex-direction:column;gap:6px}.solutions-footer{align-items:flex-start;flex-wrap:wrap}.solutions-footer p{flex-basis:calc(100% - 55px)}.solutions-footer>a{margin-left:52px}.ecosystem-flow{grid-template-columns:1fr 10px 1fr 10px 1fr;gap:2px}.ecosystem-node{padding:8px 2px}.ecosystem-node strong{font-size:9px}.ecosystem-node small{font-size:7px}}
 @media(prefers-reduced-motion:reduce){.orbit-one{animation:none}#solucoes .feature,#solucoes .feature>a b{transition:none}}
 
+
+/* KFYRA / DESIGN SYSTEM — arquitetura proprietária */
+.kfyra-solutions{position:relative;isolation:isolate;overflow:hidden;padding:104px 0 92px!important;background:radial-gradient(ellipse at 78% 12%,rgba(101,85,183,.22),transparent 34%),radial-gradient(ellipse at 10% 80%,rgba(67,163,184,.12),transparent 32%),linear-gradient(135deg,#0d102a 0%,#17183b 48%,#10152f 100%)!important;color:#f4f2ff}
+.kfyra-solutions:before{content:"";position:absolute;inset:0;z-index:-1;opacity:.17;background-image:linear-gradient(rgba(156,233,240,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(156,233,240,.12) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(90deg,transparent,#000 28%,#000 85%,transparent)}
+.solutions-backdrop span{position:absolute;z-index:-1;border:1px solid rgba(156,233,240,.12);border-radius:50%;pointer-events:none}.solutions-backdrop span:nth-child(1){width:580px;height:580px;right:-280px;top:100px}.solutions-backdrop span:nth-child(2){width:390px;height:390px;right:-185px;top:195px}.solutions-backdrop span:nth-child(3){width:240px;height:240px;left:-160px;bottom:30px}
+.solutions-topline,.solutions-divider{display:flex;align-items:center;justify-content:space-between;gap:15px;color:#a7a5cb;font:800 9px 'DM Sans',sans-serif;letter-spacing:1.5px}.solutions-topline i{color:#9ce9f0;font-style:normal;font-size:15px}
+.solutions-hero{display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:35px;padding:55px 0 42px}.solutions-title .kicker{color:#9ce9f0}.solutions-title h2{margin:20px 0 20px;color:#f7f5ff;font:800 clamp(34px,4.7vw,57px)/1.08 'Manrope',sans-serif;letter-spacing:-2.6px}.solutions-title h2 em{font-style:normal;color:transparent;background:linear-gradient(95deg,#9ce9f0,#a99af6 65%,#e0dcff);background-clip:text;-webkit-background-clip:text}.solutions-title p{max-width:590px;color:#b8bad5;font-size:14px;line-height:1.95}.solutions-discover{display:inline-flex;align-items:center;gap:28px;margin-top:18px;padding:12px 15px;border:1px solid rgba(156,233,240,.28);border-radius:9px;color:#e8e7ff;text-decoration:none;font-size:11px;font-weight:800;letter-spacing:.5px;transition:.2s}.solutions-discover b{color:#9ce9f0;font-size:17px}.solutions-discover:hover{background:rgba(156,233,240,.08);border-color:#9ce9f0}
+.solutions-architecture{position:relative;width:min(100%,430px);aspect-ratio:1/1;margin:auto;display:grid;place-items:center}.architecture-orbit{position:absolute;border:1px solid rgba(156,233,240,.2);border-radius:50%;transform:rotate(-30deg)}.orbit-a{width:91%;height:42%;border-style:dashed;animation:architecture-turn 35s linear infinite}.orbit-b{width:74%;height:74%;border-color:rgba(152,137,232,.35);transform:rotate(30deg)}.orbit-c{width:53%;height:53%;border-color:rgba(156,233,240,.24);border-style:dotted}
+@keyframes architecture-turn{to{transform:rotate(330deg)}}
+.architecture-center{position:relative;z-index:2;width:126px;height:126px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(156,233,240,.45);border-radius:36px;background:linear-gradient(145deg,rgba(92,78,165,.9),rgba(25,30,72,.98));box-shadow:0 0 0 12px rgba(101,85,183,.08),0 0 65px rgba(101,85,183,.32),inset 0 1px 0 rgba(255,255,255,.2);transform:rotate(-8deg)}.architecture-center small{font-size:8px;letter-spacing:2px;color:#a9eaf0}.architecture-center strong{font:900 25px 'Manrope',sans-serif;color:#fff;letter-spacing:2px}.architecture-center span{color:#9ce9f0}
+.architecture-node{position:absolute;z-index:3;display:flex;align-items:center;gap:8px;padding:10px 13px;border:1px solid rgba(156,233,240,.22);border-radius:10px;background:rgba(21,25,61,.92);box-shadow:0 12px 35px rgba(0,0,0,.2);color:#e7e6ff;font:800 9px 'DM Sans',sans-serif;letter-spacing:1px}.architecture-node i{font-size:16px;color:#9ce9f0;font-style:normal}.node-people{top:11%;left:11%}.node-time{top:17%;right:4%}.node-data{bottom:17%;left:3%}.node-ai{right:10%;bottom:10%}.architecture-signal{position:absolute;width:7px;height:7px;border-radius:50%;background:#9ce9f0;box-shadow:0 0 0 5px rgba(156,233,240,.1),0 0 20px #9ce9f0}.signal-one{top:28%;left:22%}.signal-two{right:19%;bottom:27%;background:#a99af6;box-shadow:0 0 0 5px rgba(169,154,246,.1),0 0 20px #a99af6}
+.solutions-divider{margin:10px 0 22px}.solutions-divider i{height:1px;flex:1;background:linear-gradient(90deg,rgba(156,233,240,.35),rgba(152,137,232,.05))}
+.solutions-bento{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:13px}.solution-tile{position:relative;min-width:0;overflow:hidden;padding:20px 21px 19px;border:1px solid rgba(194,195,238,.15);border-radius:15px;background:linear-gradient(145deg,rgba(42,45,91,.76),rgba(24,28,65,.82));box-shadow:inset 0 1px 0 rgba(255,255,255,.045);transition:transform .25s,border-color .25s,background .25s}.solution-tile:hover{transform:translateY(-4px);border-color:rgba(156,233,240,.42);background:linear-gradient(145deg,rgba(55,59,112,.86),rgba(27,32,75,.9))}
+.tile-people,.tile-time,.tile-live{grid-column:span 4}.tile-insights,.tile-ai,.tile-security{grid-column:span 4}
+.tile-meta{display:flex;align-items:center;justify-content:space-between;color:#9e9cbe;font:800 8px 'DM Sans',sans-serif;letter-spacing:1.25px}.tile-meta b{color:#9ce9f0;font-size:16px}
+.tile-visual{position:relative;height:112px;margin:17px 0 17px;overflow:hidden;border:1px solid rgba(156,233,240,.11);border-radius:10px;background:linear-gradient(120deg,rgba(12,17,47,.7),rgba(75,66,135,.16))}
+.people-visual{display:flex;align-items:center;gap:16px;padding:17px 20px}.people-stack{display:flex;align-items:center}.people-stack i{width:29px;height:29px;margin-left:-5px;display:grid;place-items:center;border:2px solid #202449;border-radius:50%;background:#6259a8;color:#fff;font:800 8px 'DM Sans';font-style:normal}.people-stack i:first-child{margin:0;background:#4d9da9}.people-stack i:nth-child(3){background:#8879cf}.people-stack i:last-child{background:#30365f}.people-lines{flex:1;display:grid;gap:8px}.people-lines span{height:5px;border-radius:5px;background:linear-gradient(90deg,rgba(156,233,240,.7),rgba(156,233,240,.08))}.people-lines span:nth-child(2){width:75%}.people-lines span:nth-child(3){width:48%}.people-visual small{position:absolute;left:20px;bottom:8px;color:#8e91b7;font-size:7px;letter-spacing:1.2px}
+.time-visual{padding:20px 15px}.time-track{display:flex;align-items:center;justify-content:space-between;color:#a9a7c9;font-size:8px}.time-track i{height:1px;flex:1;margin:0 8px;background:rgba(156,233,240,.24)}.time-blocks{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-top:16px}.time-blocks i{height:26px;border-radius:3px;background:rgba(101,85,183,.6)}.time-blocks i:nth-child(3n){background:rgba(156,233,240,.72)}.time-blocks i:nth-child(4n){background:rgba(101,85,183,.22)}.time-visual small{display:block;margin-top:10px;color:#8e91b7;font-size:7px;letter-spacing:1.1px}
+.live-visual{display:flex;align-items:center;justify-content:center;gap:23px}.live-radar{position:relative;width:85px;height:85px;display:grid;place-items:center;border:1px solid rgba(156,233,240,.45);border-radius:50%;background:radial-gradient(circle,rgba(156,233,240,.2),transparent 68%)}.live-radar i{position:absolute;inset:10px;border:1px solid rgba(156,233,240,.3);border-radius:50%}.live-radar i:nth-child(2){inset:22px}.live-radar i:nth-child(3){inset:34px;background:rgba(156,233,240,.22)}.live-radar b{font-size:9px;color:#b9f6f2;letter-spacing:1px}.live-readout{display:grid;gap:3px}.live-readout span,.live-readout small{font-size:7px;color:#9395bb;letter-spacing:1px}.live-readout strong{font:800 25px 'Manrope';color:#e9e7ff}
+.insight-visual{display:grid;place-items:center}.insight-rings{position:absolute;width:86px;height:86px;border:1px solid rgba(156,233,240,.38);border-radius:50%;box-shadow:0 0 0 13px rgba(156,233,240,.04),0 0 0 27px rgba(152,137,232,.04)}.insight-orb{z-index:2;width:48px;height:48px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(145deg,#8175d3,#3e477e);box-shadow:0 0 32px rgba(129,117,211,.4);color:#b9f5f3;font-size:22px}.insight-label{position:absolute;color:#a7a4cb;font-size:7px;letter-spacing:1px}.label-a{top:15px;left:22px}.label-b{right:20px;top:30px}.label-c{bottom:13px;left:40%}
+.ai-visual{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}.ai-wave{height:55px;display:flex;align-items:center;gap:5px}.ai-wave i{width:4px;height:var(--h,20px);border-radius:5px;background:linear-gradient(#9ce9f0,#8b7bda);box-shadow:0 0 12px rgba(156,233,240,.2)}.ai-wave i:nth-child(3n){--h:43px}.ai-wave i:nth-child(3n+1){--h:25px}.ai-wave i:nth-child(3n+2){--h:34px}.ai-visual>span{font-size:7px;letter-spacing:1.3px;color:#a6a3cb}
+.security-visual{display:flex;align-items:center;justify-content:center;gap:16px}.security-shield{width:48px;height:54px;display:grid;place-items:center;clip-path:polygon(50% 0,94% 17%,86% 72%,50% 100%,14% 72%,6% 17%);background:linear-gradient(145deg,#78d8d7,#6555b7);color:#fff;font-size:20px}.security-visual div:last-child{display:grid;gap:6px}.security-visual strong{font-size:8px;color:#e7e6ff;letter-spacing:1px}.security-visual small{font-size:7px;color:#9998bd;letter-spacing:.7px}
+.solution-tile h3{margin:0 0 9px;color:#f4f2ff;font:750 19px/1.24 'Manrope',sans-serif;letter-spacing:-.5px}.solution-tile p{min-height:62px;margin:0;color:#b2b2d0;font-size:11px;line-height:1.8}.solution-tile>a{display:inline-flex;gap:10px;align-items:center;margin-top:13px;color:#9ce9f0;text-decoration:none;font-size:8px;font-weight:900;letter-spacing:1px}.solution-tile>a b{font-size:14px}
+.solutions-manifesto{display:flex;align-items:center;gap:17px;margin-top:20px;padding:22px 25px;border:1px solid rgba(156,233,240,.2);border-radius:13px;background:linear-gradient(100deg,rgba(101,85,183,.2),rgba(156,233,240,.055))}.solutions-manifesto>span{width:44px;height:44px;display:grid;place-items:center;border-radius:13px;background:rgba(156,233,240,.1);color:#9ce9f0;font-size:23px}.solutions-manifesto p{flex:1;display:grid;gap:6px;margin:0}.solutions-manifesto small{color:#a5a1cc;font-size:7px;font-weight:900;letter-spacing:1.6px}.solutions-manifesto strong{color:#f3f1ff;font:700 15px/1.45 'Manrope'}.solutions-manifesto>b{color:#9ce9f0;font-size:8px;letter-spacing:1px;white-space:nowrap}.solutions-manifesto>b i{font-style:normal;font-size:14px}
+.kfyra-ai-showcase{position:relative;overflow:hidden;background:radial-gradient(ellipse at 80% 50%,rgba(101,85,183,.3),transparent 38%),linear-gradient(120deg,#0b0d25,#151638 58%,#20204a)!important}.kfyra-ai-showcase:before{content:"";position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(156,233,240,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(156,233,240,.055) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(90deg,transparent,#000)}.kfyra-ai-showcase .ai-layout{position:relative;z-index:1;gap:55px}.kfyra-ai-showcase .ai-label{color:#9ce9f0}.kfyra-ai-showcase .ai-copy h2{font:800 clamp(36px,4.5vw,52px)/1.08 'Manrope';letter-spacing:-2px}.kfyra-ai-showcase .ai-copy h2 span{color:transparent;background:linear-gradient(90deg,#9ce9f0,#a99af6);background-clip:text;-webkit-background-clip:text}.kfyra-ai-showcase .ai-copy p{color:#c0c0dc}.thalita-capabilities{display:grid;gap:10px;margin-top:24px}.thalita-capabilities span{color:#d4d3ed;font-size:11px}.thalita-capabilities span:first-letter{color:#9ce9f0}
+.thalita-console{position:relative;overflow:hidden;border:1px solid rgba(156,233,240,.24);border-radius:18px;background:linear-gradient(145deg,rgba(35,38,81,.97),rgba(16,19,49,.99));box-shadow:0 30px 85px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08);color:#f4f2ff}.thalita-console:after{content:"";position:absolute;right:-90px;top:-100px;width:240px;height:240px;border:1px solid rgba(156,233,240,.11);border-radius:50%;box-shadow:0 0 0 25px rgba(156,233,240,.025),0 0 0 50px rgba(156,233,240,.02);pointer-events:none}
+.thalita-console-top{position:relative;z-index:1;display:flex;align-items:center;gap:10px;padding:14px 17px;border-bottom:1px solid rgba(215,217,238,.12);color:#a7a6cb;font-size:8px;font-weight:900;letter-spacing:1px}.console-window-dots{display:flex;gap:4px}.console-window-dots i{width:6px;height:6px;border-radius:50%;background:#8b83c7}.console-window-dots i:nth-child(2){background:#65bdc8}.console-window-dots i:nth-child(3){background:#d5b86f}.thalita-console-top>b{margin-left:auto;color:#9ce9f0;font-size:7px}
+.thalita-console-body{position:relative;z-index:1;padding:21px}.thalita-profile-row{display:flex;align-items:center;gap:12px;padding-bottom:18px;border-bottom:1px solid rgba(215,217,238,.12)}.thalita-chat-avatar{width:52px;height:52px;flex:0 0 52px;overflow:hidden;border:2px solid rgba(156,233,240,.75);border-radius:16px;background:#25234f;box-shadow:0 0 0 5px rgba(156,233,240,.07)}.thalita-chat-avatar img{width:100%;height:100%;display:block;object-fit:cover;object-position:50% 18%}.thalita-chat-identity strong{display:block;color:#fff;font-size:14px}.thalita-chat-identity small{display:flex;align-items:center;gap:6px;color:#a8a8ca;font-size:9px;margin-top:4px}.thalita-chat-identity small i{width:6px;height:6px;border-radius:50%;background:#7ce4c0;box-shadow:0 0 8px #7ce4c0}.thalita-profile-mark{margin-left:auto;color:#9ce9f0;font-size:23px}
+.thalita-welcome{padding:23px 0 17px}.thalita-welcome>small{color:#9ce9f0;font-size:8px;font-weight:900;letter-spacing:1.4px}.thalita-welcome h3{margin:9px 0;color:#f5f3ff;font:750 21px/1.25 'Manrope';letter-spacing:-.6px}.thalita-welcome h3 em{color:#a99af6;font-style:normal}.thalita-welcome p{margin:0;color:#b9b8d7;font-size:10px;line-height:1.8}
+.thalita-prompt-label{margin:3px 0 9px;color:#9d9bbf;font-size:7px;font-weight:900;letter-spacing:1.2px}.thalita-prompt-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.thalita-prompt-grid div{display:flex;align-items:center;gap:8px;padding:10px;border:1px solid rgba(156,233,240,.14);border-radius:8px;background:rgba(255,255,255,.035);color:#d7d5ed;font-size:9px}.thalita-prompt-grid span{color:#9ce9f0;font-size:13px}
+.thalita-input{display:flex;align-items:center;justify-content:space-between;margin-top:15px;padding:10px 11px 10px 14px;border:1px solid rgba(156,233,240,.2);border-radius:9px;background:rgba(8,11,34,.5);color:#8f91b4;font-size:9px}.thalita-input b{width:25px;height:25px;display:grid;place-items:center;border-radius:7px;background:#6555b7;color:white;font-size:15px}
+.thalita-preview-note{margin-top:12px;color:#8586aa;font-size:8px;line-height:1.6}
+@media(max-width:900px){.solutions-hero{grid-template-columns:1fr;gap:10px}.solutions-title{max-width:720px}.solutions-architecture{width:min(100%,360px)}.tile-people,.tile-time,.tile-live,.tile-insights,.tile-ai,.tile-security{grid-column:span 6}.kfyra-ai-showcase .ai-layout{gap:35px}}
+@media(max-width:650px){.kfyra-solutions{padding:72px 0 65px!important}.solutions-topline{font-size:7px;letter-spacing:.8px}.solutions-hero{padding:38px 0 25px}.solutions-title h2{font-size:35px;letter-spacing:-1.5px}.solutions-title p{font-size:12px}.solutions-architecture{width:min(100%,310px)}.architecture-center{width:100px;height:100px;border-radius:28px}.architecture-center strong{font-size:21px}.architecture-node{padding:8px 9px;font-size:7px}.architecture-node i{font-size:13px}.solutions-divider{font-size:7px;letter-spacing:.8px}.tile-people,.tile-time,.tile-live,.tile-insights,.tile-ai,.tile-security{grid-column:span 12}.solution-tile{padding:17px}.tile-visual{height:100px;margin:13px 0}.solution-tile p{min-height:0}.solutions-manifesto{padding:17px;gap:11px}.solutions-manifesto strong{font-size:12px}.solutions-manifesto>b{font-size:7px}.kfyra-ai-showcase .ai-copy h2{font-size:36px}.thalita-console-body{padding:16px}.thalita-welcome h3{font-size:19px}}
+@media(max-width:520px){.kfyra-analytics{grid-template-columns:1fr!important}.chart-side{display:grid;grid-template-columns:1fr 1fr;gap:8px}.chart-side-top,.chart-side-foot,.chart-divider{grid-column:1/-1}.chart-metric{padding:0}.chart-mini-row{align-self:center}.detailed-chart{height:auto}.chart-period{font-size:7px}.chart-summary span{font-size:6px}}
+@media(prefers-reduced-motion:reduce){.architecture-orbit{animation:none!important}.solution-tile,.solutions-discover{transition:none!important}}
+
 </style>
 <link rel="stylesheet" href="css/prisma-vivo.css?v=4">
 <link rel="stylesheet" href="css/imperio-cristal.css?v=4">
@@ -334,14 +371,31 @@ footer a,.footer a{color:#9ce9f0!important}
     <div class="stat"><div class="stat-label">Em intervalo</div><div class="stat-value">84</div><div class="stat-foot">Indicador ilustrativo</div></div>
     <div class="stat"><div class="stat-label">Ausências</div><div class="stat-value">21</div><div class="stat-foot">Indicador ilustrativo</div></div>
    </div>
-   <div class="preview-ecosystem">
-    <div class="ecosystem-head"><span class="ecosystem-pulse"></span><span>ECOSSISTEMA CONECTADO</span><small>VISÃO UNIFICADA</small></div>
-    <div class="ecosystem-flow">
-     <div class="ecosystem-node"><span>◈</span><strong>Pessoas</strong><small>Colaboradores</small></div><i></i>
-     <div class="ecosystem-node"><span>◷</span><strong>Jornadas</strong><small>Tempo e escalas</small></div><i></i>
-     <div class="ecosystem-node"><span>✧</span><strong>Inteligência</strong><small>Insights e gestão</small></div>
+   <div class="preview-bottom kfyra-analytics">
+    <div class="chart-box kfyra-chart">
+     <div class="chart-heading"><div><span class="chart-overline">KFYRA LIVE / ANALYTICS</span><div class="box-title">Ritmo operacional</div></div><span class="chart-period">ÚLTIMOS 7 DIAS⌄</span></div>
+     <div class="chart-summary"><strong>Visão consolidada</strong><span>DEMONSTRAÇÃO VISUAL · DADOS ILUSTRATIVOS</span></div>
+     <svg class="detailed-chart" viewBox="0 0 520 190" role="img" aria-label="Gráfico ilustrativo de evolução operacional ao longo de sete dias">
+      <defs><linearGradient id="chartAreaA" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#7568d5" stop-opacity=".28"/><stop offset="1" stop-color="#7568d5" stop-opacity="0"/></linearGradient><linearGradient id="chartAreaB" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#65c9d4" stop-opacity=".16"/><stop offset="1" stop-color="#65c9d4" stop-opacity="0"/></linearGradient></defs>
+      <g class="chart-grid"><path d="M42 22H505 M42 58H505 M42 94H505 M42 130H505 M42 166H505"/><path d="M42 22V166 M119 22V166 M196 22V166 M273 22V166 M350 22V166 M427 22V166 M505 22V166"/></g>
+      <g class="chart-ylabels"><text x="4" y="25">100%</text><text x="10" y="61">75%</text><text x="10" y="97">50%</text><text x="10" y="133">25%</text><text x="22" y="169">0</text></g>
+      <path class="chart-area-a" d="M42 83 C68 78 91 66 119 70 S169 95 196 76 S246 46 273 54 S323 71 350 48 S400 34 427 42 S480 28 505 25 L505 166 L42 166Z"/>
+      <path class="chart-area-b" d="M42 117 C70 110 93 104 119 108 S170 116 196 101 S245 91 273 97 S323 104 350 88 S400 81 427 91 S480 75 505 70 L505 166 L42 166Z"/>
+      <path class="chart-line-a" d="M42 83 C68 78 91 66 119 70 S169 95 196 76 S246 46 273 54 S323 71 350 48 S400 34 427 42 S480 28 505 25"/>
+      <path class="chart-line-b" d="M42 117 C70 110 93 104 119 108 S170 116 196 101 S245 91 273 97 S323 104 350 88 S400 81 427 91 S480 75 505 70"/>
+      <g class="chart-points-a"><circle cx="42" cy="83" r="3.5"/><circle cx="119" cy="70" r="3.5"/><circle cx="196" cy="76" r="3.5"/><circle cx="273" cy="54" r="3.5"/><circle cx="350" cy="48" r="3.5"/><circle cx="427" cy="42" r="3.5"/><circle cx="505" cy="25" r="4.5"/></g>
+      <g class="chart-xlabels"><text x="42" y="184">SEG</text><text x="119" y="184">TER</text><text x="196" y="184">QUA</text><text x="273" y="184">QUI</text><text x="350" y="184">SEX</text><text x="427" y="184">SÁB</text><text x="505" y="184">DOM</text></g>
+     </svg>
+     <div class="chart-legend"><span><i class="legend-a"></i>Jornada consolidada</span><span><i class="legend-b"></i>Planejamento</span><small>CURVA ILUSTRATIVA</small></div>
     </div>
-    <div class="ecosystem-foot"><span>Uma operação. Tudo conectado.</span><b>KFYRA CORE <span>●</span></b></div>
+    <div class="chart-side">
+     <div class="chart-side-top"><span>LEITURA DO SISTEMA</span><b>✧</b></div>
+     <div class="chart-metric"><small>Consistência operacional</small><strong>94,8<em>%</em></strong><span>Indicador ilustrativo</span></div>
+     <div class="chart-divider"></div>
+     <div class="chart-mini-row"><span><i class="mini-dot dot-violet"></i>Jornadas analisadas</span><b>1.248</b></div>
+     <div class="chart-mini-row"><span><i class="mini-dot dot-cyan"></i>Equipes conectadas</span><b>08</b></div>
+     <div class="chart-side-foot">DADOS FICTÍCIOS PARA APRESENTAÇÃO</div>
+    </div>
    </div>
   </div>
  </div>
@@ -355,26 +409,67 @@ footer a,.footer a{color:#9ce9f0!important}
   <span class="trust-item">INDICADORES E RELATÓRIOS</span>
  </div>
 </div>
-<section class="section" id="solucoes">
+<section class="section kfyra-solutions" id="solucoes">
+ <div class="solutions-backdrop" aria-hidden="true"><span></span><span></span><span></span></div>
  <div class="container">
-  <div class="solutions-intro">
-   <div class="section-head">
-    <span class="kicker">O UNIVERSO KFYRA · TECNOLOGIA QUE EVOLUI</span>
-    <h2>Mais do que gestão.<br><span>Uma nova inteligência para sua empresa.</span></h2>
-    <p>Conectamos pessoas, processos e informação em um ecossistema que transforma a rotina operacional em uma experiência mais clara, integrada e preparada para o futuro.</p>
+  <div class="solutions-topline"><span>01 — ARQUITETURA KFYRA</span><span>UM ECOSSISTEMA EM MOVIMENTO <i>✧</i></span></div>
+  <div class="solutions-hero">
+   <div class="solutions-title">
+    <span class="kicker">TECNOLOGIA COM IDENTIDADE PRÓPRIA</span>
+    <h2>Não é sobre acompanhar o futuro.<br><em>É sobre construir o próximo.</em></h2>
+    <p>A KFYRA conecta a inteligência da operação à experiência de cada pessoa. Uma arquitetura viva, desenhada para transformar a complexidade da gestão em movimento coordenado.</p>
+    <a class="solutions-discover" href="#live"><span>Explore o ecossistema</span><b>↘</b></a>
    </div>
-   <div class="solutions-orbit" aria-hidden="true"><div class="orbit-ring orbit-one"></div><div class="orbit-ring orbit-two"></div><div class="orbit-core">K<span>✧</span></div><i class="orbit-dot dot-one"></i><i class="orbit-dot dot-two"></i><i class="orbit-dot dot-three"></i></div>
+   <div class="solutions-architecture" aria-label="Representação visual dos módulos conectados da KFYRA">
+    <div class="architecture-orbit orbit-a"></div><div class="architecture-orbit orbit-b"></div><div class="architecture-orbit orbit-c"></div>
+    <div class="architecture-center"><small>NÚCLEO</small><strong>KFYRA</strong><span>✧</span></div>
+    <div class="architecture-node node-people"><i>◈</i><span>PESSOAS</span></div>
+    <div class="architecture-node node-time"><i>◷</i><span>JORNADA</span></div>
+    <div class="architecture-node node-data"><i>⌁</i><span>DADOS</span></div>
+    <div class="architecture-node node-ai"><i>✧</i><span>IA</span></div>
+    <div class="architecture-signal signal-one"></div><div class="architecture-signal signal-two"></div>
+   </div>
   </div>
-  <div class="solutions-caption"><span>01 / ECOSSISTEMA DE SOLUÇÕES</span><span>TECNOLOGIA EM CONSTANTE EVOLUÇÃO <b>↗</b></span></div>
-  <div class="features">
-   <article class="feature"><div class="feature-topline"><span class="feature-icon">◈</span><span class="feature-index">01</span></div><h3>Gestão de pessoas</h3><p>Uma visão organizada de colaboradores, equipes, departamentos, vínculos e informações essenciais para a operação.</p><a href="cadastro.html" aria-label="Conhecer gestão de pessoas">Explorar solução <b>↗</b></a></article>
-   <article class="feature"><div class="feature-topline"><span class="feature-icon">◷</span><span class="feature-index">02</span></div><h3>Jornada inteligente</h3><p>Registros de ponto, intervalos, histórico e acompanhamento da jornada em uma experiência conectada.</p><a href="cadastro.html" aria-label="Conhecer jornada inteligente">Explorar solução <b>↗</b></a></article>
-   <article class="feature"><div class="feature-topline"><span class="feature-icon">▦</span><span class="feature-index">03</span></div><h3>Escalas e planejamento</h3><p>Organize turnos, ciclos, folgas e horários por equipe, com planejamento alinhado à rotina de trabalho.</p><a href="cadastro.html" aria-label="Conhecer escalas e planejamento">Explorar solução <b>↗</b></a></article>
-   <article class="feature"><div class="feature-topline"><span class="feature-icon">⌁</span><span class="feature-index">04</span></div><h3>Visão operacional</h3><p>Indicadores e informações organizadas para acompanhar movimentações, identificar pontos de atenção e agir.</p><a href="cadastro.html" aria-label="Conhecer visão operacional">Explorar solução <b>↗</b></a></article>
-   <article class="feature"><div class="feature-topline"><span class="feature-icon">◎</span><span class="feature-index">05</span></div><h3>Relatórios e decisões</h3><p>Consolide registros e dados da operação em relatórios que apoiam análises e decisões mais conscientes.</p><a href="cadastro.html" aria-label="Conhecer relatórios e decisões">Explorar solução <b>↗</b></a></article>
-   <article class="feature feature-ai"><div class="feature-topline"><span class="feature-icon">✧</span><span class="feature-index">06</span></div><h3>Inteligência artificial</h3><p>Uma camada inteligente em evolução, com assistentes preparados para apoiar pessoas e gestão respeitando permissões.</p><a href="#ai" aria-label="Conhecer KFYRA AI">Conhecer KFYRA AI <b>↗</b></a></article>
+  <div class="solutions-divider"><span>O QUE MOVE A PLATAFORMA</span><i></i><span>06 CAMADAS CONECTADAS</span></div>
+  <div class="solutions-bento">
+   <article class="solution-tile tile-people">
+    <div class="tile-meta"><span>CAMADA 01 / PESSOAS</span><b>◈</b></div>
+    <div class="tile-visual people-visual"><div class="people-stack"><i>01</i><i>02</i><i>03</i><i>+</i></div><div class="people-lines"><span></span><span></span><span></span></div><small>ESTRUTURA ORGANIZACIONAL</small></div>
+    <h3>Pessoas no centro.<br>Gestão em sintonia.</h3><p>Colaboradores, departamentos, equipes, vínculos e perfis organizados em uma estrutura que respeita a realidade de cada empresa.</p>
+    <a href="cadastro.html">GESTÃO DE PESSOAS <b>↗</b></a>
+   </article>
+   <article class="solution-tile tile-time">
+    <div class="tile-meta"><span>CAMADA 02 / TEMPO</span><b>◷</b></div>
+    <div class="tile-visual time-visual"><div class="time-track"><span>08:00</span><i></i><span>12:00</span><i></i><span>18:00</span></div><div class="time-blocks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><small>JORNADA · PAUSAS · ESCALAS</small></div>
+    <h3>O tempo da operação,<br>sob controle.</h3><p>Marcações, intervalos, escalas, folgas e histórico de jornada em uma experiência conectada ao dia a dia.</p>
+    <a href="ponto.html">CONTROLE DE JORNADA <b>↗</b></a>
+   </article>
+   <article class="solution-tile tile-live">
+    <div class="tile-meta"><span>CAMADA 03 / OPERAÇÃO</span><b>⌁</b></div>
+    <div class="tile-visual live-visual"><div class="live-radar"><i></i><i></i><i></i><b>LIVE</b></div><div class="live-readout"><span>MONITORAMENTO</span><strong>360°</strong><small>VISÃO INTEGRADA</small></div></div>
+    <h3>Uma visão que<br>se mantém viva.</h3><p>Acompanhe indicadores, movimentações e pontos de atenção para compreender melhor o ritmo da sua operação.</p>
+    <a href="#live">CONHEÇA O KFYRA LIVE <b>↗</b></a>
+   </article>
+   <article class="solution-tile tile-insights">
+    <div class="tile-meta"><span>CAMADA 04 / INTELIGÊNCIA</span><b>✧</b></div>
+    <div class="tile-visual insight-visual"><div class="insight-orb"><span>✧</span></div><div class="insight-rings"></div><div class="insight-label label-a">ANALISAR</div><div class="insight-label label-b">CONECTAR</div><div class="insight-label label-c">EVOLUIR</div></div>
+    <h3>Informação que<br>ganha significado.</h3><p>Relatórios e leituras gerenciais para organizar informações e apoiar decisões com mais contexto.</p>
+    <a href="login.html">RELATÓRIOS E GESTÃO <b>↗</b></a>
+   </article>
+   <article class="solution-tile tile-ai">
+    <div class="tile-meta"><span>CAMADA 05 / IA</span><b>✦</b></div>
+    <div class="tile-visual ai-visual"><div class="ai-wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span>INTELIGÊNCIA EM EVOLUÇÃO</span></div>
+    <h3>Uma inteligência.<br>Múltiplas perspectivas.</h3><p>Thalita, Camilly e Pedro representam experiências especializadas, com atuação orientada por contexto e permissões.</p>
+    <a href="#assistentes">CONHEÇA OS ASSISTENTES <b>↗</b></a>
+   </article>
+   <article class="solution-tile tile-security">
+    <div class="tile-meta"><span>CAMADA 06 / CONFIANÇA</span><b>◇</b></div>
+    <div class="tile-visual security-visual"><div class="security-shield">✓</div><div><strong>ACESSO CONTEXTUAL</strong><small>PERMISSÕES · RASTREABILIDADE</small></div></div>
+    <h3>Inovação com<br>responsabilidade.</h3><p>Uma arquitetura pensada para separar ambientes, respeitar níveis de acesso e preservar o histórico das ações.</p>
+    <a href="#ai">CONHEÇA NOSSA VISÃO <b>↗</b></a>
+   </article>
   </div>
-  <div class="solutions-footer"><span class="solutions-footer-mark">✧</span><p><strong>Uma plataforma que acompanha a evolução da sua empresa.</strong><br>Modular, conectada e construída para evoluir continuamente.</p><a href="#planos">Encontre sua solução <b>↗</b></a></div>
+  <div class="solutions-manifesto"><span>✧</span><p><small>O PRINCÍPIO KFYRA</small><strong>Inovação não é uma funcionalidade.<br>É a forma como evoluímos.</strong></p><b>CONSTANTEMENTE <i>↗</i></b></div>
  </div>
 </section>
 <section class="live-section" id="live">
@@ -403,20 +498,25 @@ footer a,.footer a{color:#9ce9f0!important}
   </div>
  </div>
 </section>
-<section class="ai-section" id="ai">
+<section class="ai-section kfyra-ai-showcase" id="ai">
  <div class="container ai-layout">
   <div class="ai-copy">
-   <span class="ai-label">INTELIGÊNCIA ARTIFICIAL EMPRESARIAL</span>
-   <h2>KFYRA AI.<br>Dados que se transformam em decisões.</h2>
-   <p>Uma experiência de consulta inteligente para ajudar gestores a interpretar informações operacionais, identificar tendências e encontrar respostas com base nos dados aos quais possuem acesso.</p>
-   <p>O objetivo: menos tempo procurando informações, mais tempo conduzindo a empresa.</p>
-   <a href="cadastro.html" class="btn btn-gold" style="margin-top:15px">Descubra a KFYRA ↗</a>
+   <span class="ai-label">INTELIGÊNCIA ARTIFICIAL · NÚCLEO CENTRAL</span>
+   <h2>Thalita.<br><span>A inteligência que conecta.</span></h2>
+   <p>Uma nova forma de conversar com a gestão. Thalita representa o núcleo inteligente da KFYRA, conectando experiências e orientando cada pessoa dentro dos limites do seu acesso.</p>
+   <div class="thalita-capabilities"><span>✧ Coordenação de assistentes</span><span>◈ Contexto e orientação</span><span>⌁ Visão integrada</span></div>
+   <a href="#assistentes" class="btn btn-gold" style="margin-top:18px">Conheça o núcleo KFYRA ↗</a>
   </div>
-  <div class="ai-chat">
-   <div class="chat-top"><div class="ai-avatar thalita-chat-avatar"><img src="assets/thalita.jpeg?v=5" alt="Foto de perfil de Thalita" loading="eager"></div><div class="thalita-chat-identity"><strong>Thalita</strong><small>Assistente virtual · Núcleo central</small></div><span class="thalita-chat-badge">✦ CENTRAL</span></div>
-   <div class="chat-message">Como está a presença da equipe hoje?</div>
-   <div class="chat-message chat-question"><strong>Thalita</strong><br>Claro! Posso organizar um panorama da presença da equipe, destacar atrasos e ausências e separar as informações por departamento. Quando eu estiver conectada aos registros da sua empresa, apresentarei os dados reais disponíveis para o seu perfil, sempre respeitando as permissões de acesso.</div>
-   <div class="chat-disclaimer">Prévia demonstrativa da conversa. As respostas com dados reais serão habilitadas após a integração segura da Thalita com o sistema da empresa.</div>
+  <div class="thalita-console">
+   <div class="thalita-console-top"><div class="console-window-dots"><i></i><i></i><i></i></div><span>KYFRA INTELLIGENCE / 01</span><b>INTERFACE DEMONSTRATIVA</b></div>
+   <div class="thalita-console-body">
+    <div class="thalita-profile-row"><div class="ai-avatar thalita-chat-avatar"><img src="assets/thalita.jpeg?v=6" alt="Foto de perfil de Thalita" loading="eager"></div><div class="thalita-chat-identity"><strong>Thalita</strong><small><i></i> Núcleo central · Assistente virtual</small></div><span class="thalita-profile-mark">✧</span></div>
+    <div class="thalita-welcome"><small>OLÁ, COMO POSSO AJUDAR?</small><h3>Vamos olhar para sua operação<br><em>com uma nova perspectiva.</em></h3><p>Posso ajudar a organizar informações, orientar consultas e conectar você à experiência certa dentro da KFYRA.</p></div>
+    <div class="thalita-prompt-label">EXEMPLOS DE CONVERSA</div>
+    <div class="thalita-prompt-grid"><div><span>◷</span>Resumo da jornada</div><div><span>◈</span>Visão das equipes</div><div><span>⌁</span>Pendências do RH</div><div><span>✧</span>Explorar indicadores</div></div>
+    <div class="thalita-input"><span>Escreva sua mensagem...</span><b>↑</b></div>
+    <div class="thalita-preview-note">Prévia de interface. As conversas com dados da empresa dependem da integração segura e das permissões do usuário.</div>
+   </div>
   </div>
  </div>
 </section>
