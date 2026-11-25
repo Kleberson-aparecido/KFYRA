@@ -229,7 +229,7 @@ function renderizarPlanosCadastro(){
  containerPlanos.innerHTML=catalogoPlanos.map((p,i)=>{
  const value=p.limit==="custom"?"custom":String(p.limit);
  const checked=parametroPlano?parametroPlano===value:p.limit===10;
- const desc=p.limit==="custom"?"Mais de 5.000 colaboradores — proposta personalizada.":"Até "+p.limit+" colaboradores · "+p.segment;
+ const desc=p.limit==="custom"?"Mais de 5.000 colaboradores — proposta personalizada.":(p.limit===1?"Até 1 colaborador":"Até "+p.limit+" colaboradores")+" · "+p.segment;
  const price=p.monthly===null?"Sob consulta":cicloAssinatura==="annual"
   ?formatarPrecoPlano(p.annual)+'<small>/ ano</small><span class="annual-equivalent">'+formatarPrecoPlano(p.annual/12)+' por mês · 15% de desconto</span>'
   :formatarPrecoPlano(p.monthly)+'<small>/ mês</small>';
