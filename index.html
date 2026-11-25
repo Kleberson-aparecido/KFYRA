@@ -324,6 +324,24 @@ footer a,.footer a{color:#9ce9f0!important}
 @media(max-width:520px){.kfyra-analytics{grid-template-columns:1fr!important}.chart-side{display:grid;grid-template-columns:1fr 1fr;gap:8px}.chart-side-top,.chart-side-foot,.chart-divider{grid-column:1/-1}.chart-metric{padding:0}.chart-mini-row{align-self:center}.detailed-chart{height:auto}.chart-period{font-size:7px}.chart-summary span{font-size:6px}}
 @media(prefers-reduced-motion:reduce){.architecture-orbit{animation:none!important}.solution-tile,.solutions-discover{transition:none!important}}
 
+
+/* Painel analítico detalhado da prévia principal */
+.kfyra-analytics{grid-template-columns:minmax(0,1.65fr) minmax(145px,.75fr);gap:10px;margin-top:12px;align-items:stretch}
+.kfyra-chart{min-width:0;padding:13px 13px 10px;border:1px solid #e3e0f4;border-radius:12px;background:linear-gradient(155deg,#fff,#f8f7ff)}
+.chart-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}.chart-overline{display:block;margin-bottom:5px;color:#7770b1;font-size:7px;font-weight:900;letter-spacing:1px}.kfyra-chart .box-title{margin:0;color:#25234c;font-size:12px}
+.chart-period{padding:5px 6px;border:1px solid #e8e5f4;border-radius:5px;color:#777391;font-size:7px;font-weight:800;white-space:nowrap}
+.chart-summary{display:flex;flex-direction:column;gap:3px;margin-top:10px}.chart-summary strong{color:#39345f;font-size:9px}.chart-summary span{color:#9995b5;font-size:6px;font-weight:800;letter-spacing:.65px}
+.detailed-chart{display:block;width:100%;height:142px;margin-top:3px;overflow:visible}.chart-grid path{fill:none;stroke:#e9e7f3;stroke-width:1;stroke-dasharray:3 4}.chart-ylabels text,.chart-xlabels text{fill:#9996b0;font:8px 'DM Sans',sans-serif}.chart-ylabels text{text-anchor:end}.chart-xlabels text{text-anchor:middle;font-weight:800;font-size:7px}
+.chart-area-a{fill:url(#chartAreaA)}.chart-area-b{fill:url(#chartAreaB)}.chart-line-a,.chart-line-b{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.8}.chart-line-a{stroke:#7568d5}.chart-line-b{stroke:#65c9d4;stroke-width:2;stroke-dasharray:5 4}.chart-points-a circle{fill:#7568d5;stroke:#fff;stroke-width:2}
+.chart-legend{display:flex;align-items:center;gap:11px;flex-wrap:wrap;margin-top:0}.chart-legend span{display:flex;align-items:center;gap:4px;color:#77748f;font-size:7px}.chart-legend i{width:7px;height:7px;border-radius:50%}.legend-a{background:#7568d5}.legend-b{background:#65c9d4}.chart-legend small{margin-left:auto;color:#aaa6c0;font-size:6px;letter-spacing:.6px}
+.chart-side{display:flex;flex-direction:column;justify-content:space-between;gap:10px;padding:13px 12px;border:1px solid #e3e0f4;border-radius:12px;background:linear-gradient(155deg,#24214c,#39336e);color:#f4f2ff}
+.chart-side-top{display:flex;justify-content:space-between;align-items:center;color:#b4afd9;font-size:7px;font-weight:900;letter-spacing:.7px}.chart-side-top b{color:#9ce9f0;font-size:15px}
+.chart-metric{display:grid;gap:4px}.chart-metric small{color:#b6b2d2;font-size:8px}.chart-metric strong{color:#fff;font:800 27px 'Manrope';letter-spacing:-1px}.chart-metric em{color:#9ce9f0;font-size:14px;font-style:normal}.chart-metric>span{color:#9f9abe;font-size:7px}
+.chart-divider{height:1px;background:rgba(215,217,238,.15)}
+.chart-mini-row{display:flex;justify-content:space-between;gap:6px;align-items:center;color:#c4c0df;font-size:7px}.chart-mini-row b{color:#fff;font-size:9px}.mini-dot{display:inline-block;width:6px;height:6px;margin-right:4px;border-radius:50%}.dot-violet{background:#a99af6}.dot-cyan{background:#79dce5}
+.chart-side-foot{color:#8e8ab4;font-size:6px;letter-spacing:.55px;line-height:1.4}
+@media(max-width:900px){.kfyra-analytics{grid-template-columns:minmax(0,1.6fr) minmax(135px,.7fr)}}
+
 </style>
 <link rel="stylesheet" href="css/prisma-vivo.css?v=4">
 <link rel="stylesheet" href="css/imperio-cristal.css?v=4">
@@ -508,7 +526,7 @@ footer a,.footer a{color:#9ce9f0!important}
    <a href="#assistentes" class="btn btn-gold" style="margin-top:18px">Conheça o núcleo KFYRA ↗</a>
   </div>
   <div class="thalita-console">
-   <div class="thalita-console-top"><div class="console-window-dots"><i></i><i></i><i></i></div><span>KYFRA INTELLIGENCE / 01</span><b>INTERFACE DEMONSTRATIVA</b></div>
+   <div class="thalita-console-top"><div class="console-window-dots"><i></i><i></i><i></i></div><span>KFYRA INTELLIGENCE / 01</span><b>INTERFACE DEMONSTRATIVA</b></div>
    <div class="thalita-console-body">
     <div class="thalita-profile-row"><div class="ai-avatar thalita-chat-avatar"><img src="assets/thalita.jpeg?v=6" alt="Foto de perfil de Thalita" loading="eager"></div><div class="thalita-chat-identity"><strong>Thalita</strong><small><i></i> Núcleo central · Assistente virtual</small></div><span class="thalita-profile-mark">✧</span></div>
     <div class="thalita-welcome"><small>OLÁ, COMO POSSO AJUDAR?</small><h3>Vamos olhar para sua operação<br><em>com uma nova perspectiva.</em></h3><p>Posso ajudar a organizar informações, orientar consultas e conectar você à experiência certa dentro da KFYRA.</p></div>
