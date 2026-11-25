@@ -253,6 +253,40 @@ footer a,.footer a{color:#9ce9f0!important}
 .billing-switch button:focus-visible{outline:3px solid rgba(156,233,240,.9)!important;outline-offset:3px}
 @media(max-width:380px){.billing-switch{width:100%!important;gap:6px!important}.billing-switch button{min-height:44px;padding:8px 5px!important;font-size:12px!important;gap:5px}.billing-switch button span{font-size:8px!important;padding:4px 5px}}
 
+
+/* KFYRA — experiência tecnológica da seção Soluções */
+.preview-ecosystem{margin-top:14px;padding:15px 16px 13px;border:1px solid rgba(156,233,240,.2);border-radius:15px;background:linear-gradient(135deg,rgba(25,29,65,.96),rgba(45,39,91,.94));color:#f4f2ff;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.ecosystem-head,.ecosystem-foot{display:flex;align-items:center;gap:8px;font-size:9px;font-weight:900;letter-spacing:1.1px}.ecosystem-head small{margin-left:auto;color:#aaa7d0;font-size:8px;letter-spacing:.7px}
+.ecosystem-pulse{width:7px;height:7px;border-radius:50%;background:#9ce9f0;box-shadow:0 0 12px #9ce9f0}
+.ecosystem-flow{display:grid;grid-template-columns:1fr 18px 1fr 18px 1fr;align-items:center;gap:3px;margin:15px 0}
+.ecosystem-node{min-width:0;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 3px;border:1px solid rgba(215,217,238,.13);border-radius:10px;background:rgba(255,255,255,.055);text-align:center}
+.ecosystem-node>span{font-size:19px;color:#9ce9f0}.ecosystem-node strong{font-size:10px}.ecosystem-node small{font-size:8px;color:#b7b4d4}
+.ecosystem-flow>i{height:1px;background:linear-gradient(90deg,#6555b7,#9ce9f0);position:relative}.ecosystem-flow>i:after{content:"›";position:absolute;right:-1px;top:-9px;color:#9ce9f0;font-size:15px}
+.ecosystem-foot{justify-content:space-between;color:#c6c3e2;font-size:8px;letter-spacing:.4px}.ecosystem-foot b{color:#9ce9f0;font-size:8px;letter-spacing:1px}.ecosystem-foot b span{color:#8cf0c4}
+.solutions-intro{display:grid;grid-template-columns:1.35fr .65fr;align-items:center;gap:35px;margin-bottom:38px}
+.solutions-intro .section-head{max-width:760px;margin:0;text-align:left}.solutions-intro .section-head h2 span{background:linear-gradient(100deg,#6555b7,#8a7be0 50%,#55b9c8);-webkit-background-clip:text;background-clip:text;color:transparent}.solutions-intro .section-head p{max-width:680px}
+.solutions-orbit{width:220px;height:220px;position:relative;display:grid;place-items:center;justify-self:center}
+.orbit-ring{position:absolute;border:1px solid rgba(101,85,183,.2);border-radius:50%}.orbit-one{width:185px;height:185px;border-style:dashed;animation:orbit-spin 32s linear infinite}.orbit-two{width:140px;height:140px;border-color:rgba(85,185,200,.35);transform:rotate(45deg)}
+.orbit-core{width:76px;height:76px;display:grid;place-items:center;border-radius:24px;background:linear-gradient(145deg,#25204e,#6555b7);box-shadow:0 12px 35px rgba(101,85,183,.28),inset 0 1px 0 rgba(255,255,255,.3);color:#fff;font:900 26px 'Manrope',sans-serif}.orbit-core span{color:#9ce9f0;font-size:17px;margin-left:2px}
+.orbit-dot{position:absolute;width:10px;height:10px;border:2px solid #fff;border-radius:50%;background:#8adfe8;box-shadow:0 0 0 4px rgba(138,223,232,.16)}.dot-one{top:29px;right:46px}.dot-two{bottom:35px;left:29px;background:#9889e8}.dot-three{right:14px;bottom:73px;width:7px;height:7px}
+@keyframes orbit-spin{to{transform:rotate(336deg)}}
+.solutions-caption{display:flex;justify-content:space-between;gap:12px;padding:13px 2px;margin-bottom:14px;border-top:1px solid rgba(101,85,183,.15);border-bottom:1px solid rgba(101,85,183,.15);color:#77729b;font-size:9px;font-weight:900;letter-spacing:1.2px}.solutions-caption b{color:#6555b7;font-size:14px;margin-left:5px}
+#solucoes .features{grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+#solucoes .feature{position:relative;overflow:hidden;min-height:220px;padding:23px 23px 20px;border:1px solid rgba(101,85,183,.13);border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(246,245,255,.9));box-shadow:0 8px 25px rgba(35,31,88,.035);transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+#solucoes .feature:before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:linear-gradient(#9ce9f0,#6555b7);opacity:0;transition:opacity .25s}
+#solucoes .feature:hover{transform:translateY(-5px);border-color:rgba(101,85,183,.34);box-shadow:0 17px 38px rgba(35,31,88,.09)}#solucoes .feature:hover:before{opacity:1}
+.feature-topline{display:flex;align-items:center;justify-content:space-between;margin-bottom:19px}
+#solucoes .feature-icon{width:43px;height:43px;margin:0;display:grid;place-items:center;border:1px solid rgba(101,85,183,.13);border-radius:13px;background:linear-gradient(145deg,#f0efff,#e7fbff);color:#6555b7;font-size:21px}
+.feature-index{color:#aaa6c8;font:800 10px 'DM Sans',sans-serif;letter-spacing:1px}
+#solucoes .feature h3{margin:0 0 9px;color:#28234f;font-size:16px;letter-spacing:-.25px}#solucoes .feature p{min-height:66px;margin:0;color:#77748e;font-size:12px;line-height:1.75}
+#solucoes .feature>a{display:inline-flex;align-items:center;gap:8px;margin-top:14px;color:#6555b7;font-size:10px;font-weight:900;letter-spacing:.35px;text-decoration:none}#solucoes .feature>a b{font-size:14px;transition:transform .2s}#solucoes .feature>a:hover b{transform:translate(3px,-2px)}
+#solucoes .feature-ai{background:linear-gradient(145deg,#29234f,#51428f)!important;border-color:rgba(156,233,240,.25)!important}#solucoes .feature-ai h3{color:#fff!important}#solucoes .feature-ai p{color:#d0cde8!important}#solucoes .feature-ai .feature-index{color:#aaa3df}#solucoes .feature-ai .feature-icon{background:rgba(156,233,240,.12);border-color:rgba(156,233,240,.22);color:#9ce9f0}#solucoes .feature-ai>a{color:#9ce9f0}
+.solutions-footer{display:flex;align-items:center;gap:14px;margin-top:22px;padding:18px 21px;border:1px solid rgba(101,85,183,.13);border-radius:16px;background:linear-gradient(100deg,rgba(240,239,255,.8),rgba(235,251,255,.8))}
+.solutions-footer-mark{width:38px;height:38px;flex:0 0 38px;display:grid;place-items:center;border-radius:12px;background:#6555b7;color:#9ce9f0;font-size:20px}.solutions-footer p{flex:1;margin:0;color:#77748e;font-size:11px;line-height:1.6}.solutions-footer p strong{color:#302a59;font-size:12px}.solutions-footer>a{white-space:nowrap;color:#6555b7;font-size:10px;font-weight:900;text-decoration:none}.solutions-footer>a b{font-size:14px}
+@media(max-width:800px){.solutions-intro{grid-template-columns:1fr;gap:4px}.solutions-orbit{width:150px;height:150px;margin:0 auto 8px}.orbit-one{width:135px;height:135px}.orbit-two{width:105px;height:105px}.orbit-core{width:60px;height:60px;border-radius:19px;font-size:22px}#solucoes .features{grid-template-columns:repeat(2,minmax(0,1fr))}.solutions-caption{font-size:8px}}
+@media(max-width:520px){#solucoes .features{grid-template-columns:1fr;gap:11px}#solucoes .feature{min-height:0;padding:19px}#solucoes .feature p{min-height:0}.solutions-caption{flex-direction:column;gap:6px}.solutions-footer{align-items:flex-start;flex-wrap:wrap}.solutions-footer p{flex-basis:calc(100% - 55px)}.solutions-footer>a{margin-left:52px}.ecosystem-flow{grid-template-columns:1fr 10px 1fr 10px 1fr;gap:2px}.ecosystem-node{padding:8px 2px}.ecosystem-node strong{font-size:9px}.ecosystem-node small{font-size:7px}}
+@media(prefers-reduced-motion:reduce){.orbit-one{animation:none}#solucoes .feature,#solucoes .feature>a b{transition:none}}
+
 </style>
 <link rel="stylesheet" href="css/prisma-vivo.css?v=4">
 <link rel="stylesheet" href="css/imperio-cristal.css?v=4">
@@ -300,19 +334,14 @@ footer a,.footer a{color:#9ce9f0!important}
     <div class="stat"><div class="stat-label">Em intervalo</div><div class="stat-value">84</div><div class="stat-foot">Indicador ilustrativo</div></div>
     <div class="stat"><div class="stat-label">Ausências</div><div class="stat-value">21</div><div class="stat-foot">Indicador ilustrativo</div></div>
    </div>
-   <div class="preview-bottom">
-    <div class="chart-box">
-     <div class="box-title">Atividade operacional · demonstração</div>
-     <div class="bars">
-      <div class="bar" style="height:42%"></div><div class="bar" style="height:65%"></div><div class="bar" style="height:52%"></div><div class="bar" style="height:83%"></div><div class="bar" style="height:70%"></div><div class="bar" style="height:95%"></div><div class="bar" style="height:78%"></div>
-     </div>
+   <div class="preview-ecosystem">
+    <div class="ecosystem-head"><span class="ecosystem-pulse"></span><span>ECOSSISTEMA CONECTADO</span><small>VISÃO UNIFICADA</small></div>
+    <div class="ecosystem-flow">
+     <div class="ecosystem-node"><span>◈</span><strong>Pessoas</strong><small>Colaboradores</small></div><i></i>
+     <div class="ecosystem-node"><span>◷</span><strong>Jornadas</strong><small>Tempo e escalas</small></div><i></i>
+     <div class="ecosystem-node"><span>✧</span><strong>Inteligência</strong><small>Insights e gestão</small></div>
     </div>
-    <div class="presence-box">
-     <div class="box-title">Presença · exemplo</div>
-     <div class="presence-number">87%</div>
-     <div class="presence-line"><span></span></div>
-     <div class="stat-foot">Dados fictícios</div>
-    </div>
+    <div class="ecosystem-foot"><span>Uma operação. Tudo conectado.</span><b>KFYRA CORE <span>●</span></b></div>
    </div>
   </div>
  </div>
@@ -328,19 +357,24 @@ footer a,.footer a{color:#9ce9f0!important}
 </div>
 <section class="section" id="solucoes">
  <div class="container">
-  <div class="section-head">
-   <span class="kicker">ECOSSISTEMA KFYRA</span>
-   <h2>Uma visão completa da sua empresa.</h2>
-   <p>Centralize rotinas, acompanhe equipes e tenha informações organizadas para conduzir a operação com clareza.</p>
+  <div class="solutions-intro">
+   <div class="section-head">
+    <span class="kicker">O UNIVERSO KFYRA · TECNOLOGIA QUE EVOLUI</span>
+    <h2>Mais do que gestão.<br><span>Uma nova inteligência para sua empresa.</span></h2>
+    <p>Conectamos pessoas, processos e informação em um ecossistema que transforma a rotina operacional em uma experiência mais clara, integrada e preparada para o futuro.</p>
+   </div>
+   <div class="solutions-orbit" aria-hidden="true"><div class="orbit-ring orbit-one"></div><div class="orbit-ring orbit-two"></div><div class="orbit-core">K<span>✧</span></div><i class="orbit-dot dot-one"></i><i class="orbit-dot dot-two"></i><i class="orbit-dot dot-three"></i></div>
   </div>
+  <div class="solutions-caption"><span>01 / ECOSSISTEMA DE SOLUÇÕES</span><span>TECNOLOGIA EM CONSTANTE EVOLUÇÃO <b>↗</b></span></div>
   <div class="features">
-   <article class="feature"><div class="feature-icon">◈</div><h3>Gestão de colaboradores</h3><p>Organize cadastros, departamentos, equipes e informações importantes em um ambiente centralizado.</p></article>
-   <article class="feature"><div class="feature-icon">◷</div><h3>Controle de jornada</h3><p>Registros de entrada, saída e intervalos, com histórico de marcações e relatórios.</p></article>
-   <article class="feature"><div class="feature-icon">▦</div><h3>Escalas e jornadas</h3><p>Organize turnos, horários, folgas e escalas de trabalho por equipe e departamento.</p></article>
-   <article class="feature"><div class="feature-icon">⌁</div><h3>Indicadores operacionais</h3><p>Acompanhe dados de presença, atrasos e movimentações da equipe.</p></article>
-   <article class="feature"><div class="feature-icon">◎</div><h3>Relatórios gerenciais</h3><p>Transforme registros e informações da empresa em relatórios para apoiar decisões.</p></article>
-   <article class="feature"><div class="feature-icon">✧</div><h3>Inteligência integrada</h3><p>Prepare sua operação para utilizar inteligência artificial conectada aos dados autorizados.</p></article>
+   <article class="feature"><div class="feature-topline"><span class="feature-icon">◈</span><span class="feature-index">01</span></div><h3>Gestão de pessoas</h3><p>Uma visão organizada de colaboradores, equipes, departamentos, vínculos e informações essenciais para a operação.</p><a href="cadastro.html" aria-label="Conhecer gestão de pessoas">Explorar solução <b>↗</b></a></article>
+   <article class="feature"><div class="feature-topline"><span class="feature-icon">◷</span><span class="feature-index">02</span></div><h3>Jornada inteligente</h3><p>Registros de ponto, intervalos, histórico e acompanhamento da jornada em uma experiência conectada.</p><a href="cadastro.html" aria-label="Conhecer jornada inteligente">Explorar solução <b>↗</b></a></article>
+   <article class="feature"><div class="feature-topline"><span class="feature-icon">▦</span><span class="feature-index">03</span></div><h3>Escalas e planejamento</h3><p>Organize turnos, ciclos, folgas e horários por equipe, com planejamento alinhado à rotina de trabalho.</p><a href="cadastro.html" aria-label="Conhecer escalas e planejamento">Explorar solução <b>↗</b></a></article>
+   <article class="feature"><div class="feature-topline"><span class="feature-icon">⌁</span><span class="feature-index">04</span></div><h3>Visão operacional</h3><p>Indicadores e informações organizadas para acompanhar movimentações, identificar pontos de atenção e agir.</p><a href="cadastro.html" aria-label="Conhecer visão operacional">Explorar solução <b>↗</b></a></article>
+   <article class="feature"><div class="feature-topline"><span class="feature-icon">◎</span><span class="feature-index">05</span></div><h3>Relatórios e decisões</h3><p>Consolide registros e dados da operação em relatórios que apoiam análises e decisões mais conscientes.</p><a href="cadastro.html" aria-label="Conhecer relatórios e decisões">Explorar solução <b>↗</b></a></article>
+   <article class="feature feature-ai"><div class="feature-topline"><span class="feature-icon">✧</span><span class="feature-index">06</span></div><h3>Inteligência artificial</h3><p>Uma camada inteligente em evolução, com assistentes preparados para apoiar pessoas e gestão respeitando permissões.</p><a href="#ai" aria-label="Conhecer KFYRA AI">Conhecer KFYRA AI <b>↗</b></a></article>
   </div>
+  <div class="solutions-footer"><span class="solutions-footer-mark">✧</span><p><strong>Uma plataforma que acompanha a evolução da sua empresa.</strong><br>Modular, conectada e construída para evoluir continuamente.</p><a href="#planos">Encontre sua solução <b>↗</b></a></div>
  </div>
 </section>
 <section class="live-section" id="live">
