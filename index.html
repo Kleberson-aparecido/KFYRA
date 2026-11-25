@@ -242,40 +242,14 @@ footer a,.footer a{color:#9ce9f0!important}
 
 .billing-switch{display:flex;justify-content:center;gap:8px;margin:0 auto 30px;padding:6px;width:max-content;max-width:100%;border:1px solid rgba(101,85,183,.18);border-radius:999px;background:rgba(255,255,255,.8)}.billing-switch button{border:0;background:transparent;color:#514a82;padding:12px 20px;border-radius:999px;font:700 13px 'DM Sans',sans-serif;cursor:pointer}.billing-switch button.active{background:linear-gradient(120deg,#6555b7,#9889e8);color:#fff;box-shadow:0 5px 16px rgba(101,85,183,.2)}.billing-switch button span{font-size:10px;margin-left:5px;color:#9ce9f0}.billing-switch button.active span{color:#fff}
 \n.ai-chat .chat-top .thalita-chat-avatar{width:64px;height:64px;min-width:64px;flex:0 0 64px;padding:3px;display:block!important;border-radius:50%!important;background:linear-gradient(135deg,#9ce9f0,#9889e8,#6555b7);overflow:hidden;box-shadow:0 5px 18px rgba(101,85,183,.28)}.ai-chat .chat-top .thalita-chat-avatar img{width:100%;height:100%;display:block;object-fit:cover;object-position:50% 18%;border-radius:50%;border:2px solid #fff}.ai-chat .chat-top .thalita-chat-identity{min-width:0}.ai-chat .chat-top .thalita-chat-identity strong{display:block;font-size:14px;color:#20213e}.ai-chat .chat-top .thalita-chat-identity small{display:block;color:#809087;font-size:10px;margin-top:3px}.thalita-chat-badge{margin-left:auto;padding:6px 9px;border-radius:30px;background:#efedff;color:#6555b7;font-size:8px;font-weight:900;letter-spacing:.8px}\n
-/* PORTFÓLIO — escolha da periodicidade antes dos planos */
-.billing-switch{
-  width:min(560px,100%);margin:0 auto 34px;padding:20px 22px;
-  display:flex;align-items:center;justify-content:center;gap:12px;
-  flex-wrap:wrap;background:linear-gradient(135deg,rgba(255,255,255,.98),rgba(235,249,252,.96));
-  border:1px solid rgba(101,85,183,.22);border-radius:20px;
-  box-shadow:0 14px 38px rgba(35,31,88,.09);
-}
-.billing-switch:before{
-  content:"ESCOLHA A PERIODICIDADE DA ASSINATURA";
-  display:block;width:100%;text-align:center;color:#514a82;
-  font:900 10px 'DM Sans',sans-serif;letter-spacing:1.35px;
-}
-.billing-switch button{
-  min-width:145px;min-height:46px;padding:11px 19px;border-radius:12px;
-  border:1px solid #dcdaf0;background:#fff;color:#514a82;
-  font:800 13px 'DM Sans',sans-serif;cursor:pointer;transition:.22s ease;
-}
-.billing-switch button:hover{border-color:#9889e8;transform:translateY(-2px)}
-.billing-switch button.active{
-  color:#fff;border-color:#51448f;
-  background:linear-gradient(120deg,#6555b7,#29234f);
-  box-shadow:0 8px 20px rgba(101,85,183,.24);
-}
-.billing-switch button span{
-  display:inline-block;margin-left:5px;padding:4px 7px;border-radius:20px;
-  background:#d8fbff;color:#315e75;font-size:9px;font-weight:900;
-}
-.billing-switch button.active span{background:#9ce9f0;color:#20213e}
-.all-plans-heading{margin-top:46px}
-@media(max-width:520px){
- .billing-switch{padding:17px 12px;gap:8px;margin-bottom:25px}
- .billing-switch button{min-width:calc(50% - 5px);padding:10px 8px}
-}
+/* PORTFÓLIO — seletor de cobrança compacto e responsivo */
+.billing-switch{width:min(100%,430px)!important;max-width:100%!important;margin:0 auto 32px!important;padding:16px!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;border:1px solid rgba(101,85,183,.18)!important;border-radius:18px!important;background:linear-gradient(145deg,#fff,#f2faff)!important;box-shadow:0 10px 28px rgba(35,31,88,.08)!important}
+.billing-switch:before{content:"PERIODICIDADE DA ASSINATURA";grid-column:1/-1;display:block;width:100%;margin:0 0 2px;text-align:center;color:#514a82;font:800 10px 'DM Sans',sans-serif;letter-spacing:1px}
+.billing-switch button{width:100%!important;min-width:0!important;min-height:48px;margin:0!important;padding:10px 8px!important;display:flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap;border:1px solid #dedcf0!important;border-radius:11px!important;background:#fff!important;color:#514a82!important;font:800 13px 'DM Sans',sans-serif!important;box-shadow:none!important;transform:none!important}
+.billing-switch button.active{border-color:#6555b7!important;background:linear-gradient(120deg,#6555b7,#29234f)!important;color:#fff!important;box-shadow:0 6px 15px rgba(101,85,183,.2)!important}
+.billing-switch button span{display:inline-block;margin:0!important;padding:4px 6px;border-radius:20px;background:#d8fbff!important;color:#315e75!important;font-size:9px!important;line-height:1}
+.billing-switch button.active span{background:#9ce9f0!important;color:#20213e!important}
+@media(max-width:380px){.billing-switch{padding:12px!important;gap:8px!important}.billing-switch button{font-size:12px!important;padding:9px 5px!important}.billing-switch button span{font-size:8px!important;padding:4px 5px}}
 
 </style>
 <link rel="stylesheet" href="css/prisma-vivo.css?v=4">
