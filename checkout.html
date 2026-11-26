@@ -17,7 +17,7 @@ h1{font:800 clamp(28px,4vw,40px) Manrope,sans-serif;margin:10px 0 8px} .intro{co
 .layout{display:grid;grid-template-columns:1.15fr .85fr;gap:22px;align-items:start}.card{background:rgba(255,255,255,.92);border:1px solid #fff;border-radius:22px;padding:25px;box-shadow:0 18px 55px rgba(31,29,81,.08)}
 h2{font:700 18px Manrope,sans-serif;margin:0 0 18px}.company{padding:13px 15px;background:#f5f4ff;border:1px solid #e8e4ff;border-radius:13px;margin-bottom:20px}.company strong{display:block}.company small{color:var(--muted)}
 .switch{display:flex;background:#f0eff9;padding:4px;border-radius:12px;gap:4px;margin-bottom:17px}.switch button{flex:1;border:0;border-radius:9px;padding:11px;background:transparent;color:#5c5d7d;font-weight:700}.switch button.active{background:#fff;color:var(--violet);box-shadow:0 2px 9px #24204b14}
-.plans{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-height:430px;overflow:auto;padding:2px}.plan{display:block;border:1px solid var(--line);border-radius:13px;padding:13px;cursor:pointer;transition:.15s}.plan:has(input:checked){border:2px solid var(--violet);background:#f8f7ff;padding:12px}.plan input{accent-color:var(--violet)}.plan-name{display:block;font-weight:800;margin:7px 0 3px}.price{font:800 18px Manrope}.sub{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-height:430px;overflow:auto;padding:2px}.plan{display:block;border:1px solid var(--line);border-radius:13px;padding:13px;cursor:pointer;transition:.15s}.plan:has(input:checked){border:2px solid var(--violet);background:#f8f7ff;padding:12px}.plan input{accent-color:var(--violet)}.plan-name{display:block;font-weight:800;margin:7px 0 3px}.plan-desc{display:block;color:var(--muted);font-size:11px;line-height:1.45;margin:4px 0 8px}.price{font:800 18px Manrope}.sub{display:block;color:var(--muted);font-size:11px;margin-top:3px}
 .methods{display:grid;gap:9px}.method{display:flex;align-items:center;gap:11px;padding:13px;border:1px solid var(--line);border-radius:12px;cursor:pointer}.method:has(input:checked){border-color:var(--violet);background:#f8f7ff}.method input{accent-color:var(--violet)}.method span{font-weight:700}.method small{display:block;color:var(--muted);font-weight:400;margin-top:2px}
 .summary{background:linear-gradient(145deg,#171936,#39356f);color:white;border-radius:17px;padding:20px;margin:18px 0}.summary small{color:#c9c6e8}.summary strong{display:block;font:800 28px Manrope;margin:5px 0}.summary .fine{font-size:11px;color:#d1d0e7;line-height:1.5}
 button.primary{width:100%;border:0;border-radius:12px;padding:15px;background:linear-gradient(110deg,#6555b7,#39356f);color:#fff;font-weight:800;font-size:14px;cursor:pointer;box-shadow:0 10px 22px #6555b733}button.primary:disabled{opacity:.55;cursor:wait}
@@ -25,6 +25,34 @@ button.primary{width:100%;border:0;border-radius:12px;padding:15px;background:li
 .note{font-size:11px;color:var(--muted);line-height:1.6;margin-top:13px}.loading{padding:24px;text-align:center;color:var(--muted)}
 @media(max-width:760px){.layout{grid-template-columns:1fr}main{margin-top:28px}.plans{grid-template-columns:1fr 1fr}.card{padding:19px}}
 @media(max-width:420px){.plans{grid-template-columns:1fr}}
+
+/* Identidade visual alinhada ao site oficial KFYRA */
+:root{--navy:#09251f;--violet:#103d32;--ice:#b8f2d5;--ink:#15382e;--muted:#71847b;--line:#e0eae3;--gold:#d8b65c}
+body{background:radial-gradient(ellipse at 88% 0,rgba(56,185,135,.12),transparent 34%),linear-gradient(145deg,#f5faf7,#edf5ef 60%,#fff);color:#15382e}
+header{background:linear-gradient(110deg,#061b17,#103d32);border-bottom:1px solid rgba(216,182,92,.35)}
+.logo{letter-spacing:-1.7px}.logo span{color:#d8b65c}
+header a{color:#d8e7de}
+.eyebrow{color:#238a63}.eyebrow:before{background:#d8b65c}
+h1{color:#103d32;letter-spacing:-1.8px}
+.card{background:#fff;border:1px solid #e2ece5;border-radius:16px;box-shadow:0 18px 50px rgba(9,37,31,.08)}
+h2{color:#103d32}
+.company{background:#eff8f2;border:1px solid #dcece1}
+.switch{background:#edf4ef}.switch button{color:#577166}
+.switch button.active{color:#103d32;box-shadow:0 2px 9px rgba(9,37,31,.1)}
+.plan{border-color:#e1ebe4;background:#fff}
+.plan:has(input:checked){border-color:#2b966c;background:#f1faf4}
+.plan-desc{color:#557266}
+.methods .method:has(input:checked){border-color:#2b966c;background:#f1faf4}
+.methods input,.plan input{accent-color:#238a63}
+.summary{background:radial-gradient(ellipse at 90% 0,rgba(56,185,135,.18),transparent 45%),linear-gradient(135deg,#061b17,#103d32 72%,#09251f);border:1px solid rgba(216,182,92,.3)}
+.summary small{color:#d8e7de}.summary strong{color:#fff}.summary .fine{color:#c7dbd0}
+button.primary{background:linear-gradient(135deg,#f2d98d,#c6a344);color:#18372c;box-shadow:0 9px 24px rgba(198,163,68,.24)}
+button.primary:disabled{opacity:.65}
+.message.info{background:#edf7f0;color:#285e45}
+.message.success{background:#e8f7ed;color:#246b48}
+.note{color:#71847b}
+@media(max-width:760px){main{margin-top:28px}.layout{gap:15px}}
+
 </style>
 </head>
 <body>
@@ -69,7 +97,7 @@ function render(){
  const chosen=selectedPlan()||String(company.plan_code||"");
  $("plans").innerHTML=plans.map(p=>{
   const code=String(p.plan_code),price=Number(cycle==="annual"?p.annual_price:p.monthly_price);
-  return '<label class="plan"><input type="radio" name="plan" value="'+code+'" '+(code===chosen?'checked':'')+'><span class="plan-name">'+p.name+'</span><span class="price">'+money(price)+'</span><span class="sub">'+(cycle==="annual"?"por ano · 15% de desconto":"por mês")+'</span></label>';
+  const limit=Number(p.plan_code);const employeeText=limit===1?'1 colaborador':limit.toLocaleString('pt-BR')+' colaboradores';\n  return '<label class="plan"><input type="radio" name="plan" value="'+code+'" '+(code===chosen?'checked':'')+'><span class="plan-name">'+p.name+'</span><span class="plan-desc">Para até '+employeeText+'</span><span class="price">'+money(price)+'</span><span class="sub">'+(cycle==="annual"?"por ano · 15% de desconto":"por mês")+'</span></label>';
  }).join("");
  updateSummary();
 }
@@ -128,9 +156,9 @@ $("startPayment").addEventListener("click",async()=>{
   const {data,error}=await supabaseClient.functions.invoke("create-asaas-subscription",{body:{company_id:company.id,plan_code:planCode,billing_cycle:cycle,payment_method:paymentMethod}});
   if(error)throw error;
   if(!data?.success)throw new Error(data?.error||"Não foi possível iniciar a assinatura.");
-  if(data.invoice_url){message("Assinatura criada. A fatura foi aberta em uma nova aba. Após pagar no Sandbox, volte aqui para conferir a confirmação.","success");window.open(data.invoice_url,"_blank","noopener,noreferrer");button.textContent="Fatura aberta no Asaas";}
+  if(data.invoice_url){message("Assinatura criada. Redirecionando para a fatura segura do Asaas. Após concluir o teste, você poderá voltar ao KFYRA.","success");button.textContent="Abrindo fatura do Asaas...";window.location.assign(data.invoice_url);}
   else{message(data.message||"Assinatura criada. Aguardando a primeira fatura do Asaas. Atualize esta página em instantes.","success");button.textContent="Assinatura criada";}
- }catch(e){console.error(e);message(e.message||"Falha ao iniciar pagamento.","error");button.disabled=false;button.textContent="Tentar novamente";}
+ }catch(e){console.error(e);let detail=e.message||"Falha ao iniciar pagamento.";try{if(e.context?.json){const payload=await e.context.json();if(payload?.error)detail=payload.error;}}catch(_){}message(detail,"error");button.disabled=false;button.textContent="Tentar novamente";}
 });
 init();
 </script>
