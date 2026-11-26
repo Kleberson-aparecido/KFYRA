@@ -95,7 +95,7 @@ async function init(){
   company=co;
   if(company.subscription_status==="active"){message("A assinatura desta empresa já está ativa. Você pode acessar o painel empresarial.","success");$("loading").innerHTML='<a href="dashboard.html">Acessar painel da empresa</a>';return;}
   if(company.asaas_subscription_id && ["pending","overdue"].includes(company.subscription_status)){message("Já existe uma assinatura vinculada a esta empresa. Para evitar cobranças duplicadas, não criaremos outra. Verifique a fatura ou consulte o suporte.","info");$("loading").innerHTML='<a href="login.html">Voltar ao login</a>';return;}
-  const {data:catalog,error:planError}=await supabaseClient.from("subscription_plans").select("plan_code,name,monthly_price,annual_price,is_active").eq("is_active",true).order("monthly_price",{ascending:true});
+  const {data:catalog,error:planError}=await supabaseClient.from("subscription_plans").select("plan_code,name,monthly_price,annual_price,is_active").eq("is_active",true).not("monthly_price","is",null).order("monthly_price",{ascending:true});
   if(planError)throw planError;
   plans=catalog||[];
   if(!plans.length)throw new Error("Não foi possível carregar os planos ativos.");
