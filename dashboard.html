@@ -790,6 +790,12 @@ async function initializeDashboard(){
  const {data:company,error:ce}=await supabaseClient.from('companies').select('*').eq('id',membership.company_id).single();
  if(ce||!company){alert('Não foi possível carregar os dados da empresa.');return}
  currentCompany=company;
+ // Bloqueia o painel empresarial enquanto a assinatura não estiver ativa.
+ // O administrador é encaminhado ao checkout para concluir a contratação.
+ if(currentRole==='admin_empresa' && company.subscription_status!=='active'){
+  location.href='checkout.html';
+  return;
+ }
  const {data:profile}=await supabaseClient.from('profiles').select('full_name').eq('id',currentUser.id).maybeSingle();
  $('userName').textContent=profile?.full_name||currentUser.email;
  $('userRole').textContent=currentRole||'Usuário';
