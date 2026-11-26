@@ -379,9 +379,10 @@ form.addEventListener("submit", async function(event) {
         if (data.user) {
             if (data.session) {
                 mostrarMensagem(
-                    "Cadastro criado com sucesso! Sua empresa foi registrada. A contratação do plano ainda ficará pendente até a próxima etapa. Você já pode acessar a área de login.",
+                    "Cadastro criado com sucesso! Vamos direcionar você à contratação do plano.",
                     "success"
                 );
+                setTimeout(() => { window.location.href = "checkout.html"; }, 1200);
             } else {
                 mostrarMensagem(
                     "Cadastro recebido com sucesso! Enviamos um e-mail de confirmação para " +
