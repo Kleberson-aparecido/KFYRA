@@ -97,7 +97,7 @@ function render(){
  const chosen=selectedPlan()||String(company.plan_code||"");
  $("plans").innerHTML=plans.map(p=>{
   const code=String(p.plan_code),price=Number(cycle==="annual"?p.annual_price:p.monthly_price);
-  const limit=Number(p.plan_code);const employeeText=limit===1?'1 colaborador':limit.toLocaleString('pt-BR')+' colaboradores';
+  const limit=Number(p.max_employees ?? p.plan_code);const employeeText=Number.isFinite(limit)&&limit>0?(limit===1?'1 colaborador':limit.toLocaleString('pt-BR')+' colaboradores'):'limite personalizado';
   return '<label class="plan"><input type="radio" name="plan" value="'+code+'" '+(code===chosen?'checked':'')+'><span class="plan-name">'+p.name+'</span><span class="plan-desc">Para até '+employeeText+'</span><span class="price">'+money(price)+'</span><span class="sub">'+(cycle==="annual"?"por ano · 15% de desconto":"por mês")+'</span></label>';
  }).join("");
  updateSummary();
@@ -125,7 +125,7 @@ async function init(){
   if(company.subscription_status==="active"){message("A assinatura desta empresa já está ativa. Você pode acessar o painel empresarial.","success");$("loading").innerHTML='<a href="dashboard.html">Acessar painel da empresa</a>';return;}
   existingSubscription=Boolean(company.asaas_subscription_id && ["pending","overdue"].includes(company.subscription_status));
   if(existingSubscription)message("Já existe uma assinatura pendente. Vamos recuperar a fatura existente, sem criar uma nova cobrança.","info");
-  const {data:catalog,error:planError}=await supabaseClient.from("subscription_plans").select("plan_code,name,monthly_price,annual_price,is_active").eq("is_active",true).not("monthly_price","is",null).order("monthly_price",{ascending:true});
+  const {data:catalog,error:planError}=await supabaseClient.from("subscription_plans").select("plan_code,name,max_employees,monthly_price,annual_price,is_active").eq("is_active",true).not("monthly_price","is",null).order("monthly_price",{ascending:true});
   if(planError)throw planError;
   plans=catalog||[];
   if(!plans.length)throw new Error("Não foi possível carregar os planos ativos.");
