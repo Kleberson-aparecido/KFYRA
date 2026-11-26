@@ -97,7 +97,8 @@ function render(){
  const chosen=selectedPlan()||String(company.plan_code||"");
  $("plans").innerHTML=plans.map(p=>{
   const code=String(p.plan_code),price=Number(cycle==="annual"?p.annual_price:p.monthly_price);
-  const limit=Number(p.plan_code);const employeeText=limit===1?'1 colaborador':limit.toLocaleString('pt-BR')+' colaboradores';\n  return '<label class="plan"><input type="radio" name="plan" value="'+code+'" '+(code===chosen?'checked':'')+'><span class="plan-name">'+p.name+'</span><span class="plan-desc">Para até '+employeeText+'</span><span class="price">'+money(price)+'</span><span class="sub">'+(cycle==="annual"?"por ano · 15% de desconto":"por mês")+'</span></label>';
+  const limit=Number(p.plan_code);const employeeText=limit===1?'1 colaborador':limit.toLocaleString('pt-BR')+' colaboradores';
+  return '<label class="plan"><input type="radio" name="plan" value="'+code+'" '+(code===chosen?'checked':'')+'><span class="plan-name">'+p.name+'</span><span class="plan-desc">Para até '+employeeText+'</span><span class="price">'+money(price)+'</span><span class="sub">'+(cycle==="annual"?"por ano · 15% de desconto":"por mês")+'</span></label>';
  }).join("");
  updateSummary();
 }
