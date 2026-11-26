@@ -77,7 +77,7 @@ button.primary:disabled{opacity:.65}
 </div>
 <div class="summary"><small>Valor da contratação</small><strong id="total">—</strong><div class="fine" id="billingDescription">Cobrança mensal recorrente.</div></div>
 <button class="primary" id="startPayment" type="button">Continuar para pagamento</button>
-<p class="note">Ambiente de homologação: pagamentos de teste não movimentam dinheiro real. Não compartilhe dados de cartão ou senhas nesta página. A confirmação depende do retorno seguro do Asaas.</p>
+<p class="note">Ambiente de produção: ao continuar, você poderá gerar uma cobrança real e haverá movimentação financeira após o pagamento. Confira o plano e o valor antes de confirmar. Não compartilhe dados de cartão ou senhas nesta página. A confirmação depende do retorno seguro do Asaas.</p>
 </aside>
 </div>
 </main>
@@ -121,7 +121,7 @@ async function init(){
   company=co;
   if(company.subscription_status==="active"){message("A assinatura desta empresa já está ativa. Você pode acessar o painel empresarial.","success");$("loading").innerHTML='<a href="dashboard.html">Acessar painel da empresa</a>';return;}
   existingSubscription=Boolean(company.asaas_subscription_id && ["pending","overdue"].includes(company.subscription_status));
-  if(existingSubscription)message("Já existe uma assinatura pendente. Vamos recuperar a fatura existente, sem criar uma nova cobrança.","info");
+  if(existingSubscription)message("Já existe uma assinatura pendente. Ao continuar, vamos recuperar a cobrança existente, sem criar uma nova assinatura.","info");
   const {data:catalog,error:planError}=await supabaseClient.from("subscription_plans").select("plan_code,name,max_employees,monthly_price,annual_price,is_active").eq("is_active",true).not("monthly_price","is",null).order("monthly_price",{ascending:true});
   if(planError)throw planError;
   plans=catalog||[];
@@ -135,30 +135,8 @@ async function init(){
   if(existingSubscription){
    document.querySelectorAll('#plans input[name="plan"]').forEach(input=>{input.disabled=true;});
    document.querySelectorAll('#cycleSwitch button').forEach(button=>{button.disabled=true;});
-   $("startPayment").textContent="Corrigindo fatura...";
-   $("startPayment").disabled=true;
-   message("Encontramos uma fatura antiga configurada somente para Pix. Estamos atualizando a cobrança existente para permitir a escolha dos meios disponíveis no Asaas. Nenhuma nova cobrança será criada.", "info");
-   try {
-    const {data:{session}}=await supabaseClient.auth.getSession();
-    if(!session) throw new Error("Sua sessão expirou. Entre novamente.");
-    const {data,error}=await supabaseClient.functions.invoke("create-asaas-subscription",{
-     body:{company_id:company.id,plan_code:String(company.plan_code),billing_cycle:cycle,payment_method:"choose"}
-    });
-    if(error) throw error;
-    if(!data?.success) throw new Error(data?.error||"O Asaas não confirmou a atualização da fatura.");
-    if(String(data.billing_type||"").toUpperCase()!=="UNDEFINED") {
-     throw new Error("O Asaas ainda não confirmou a liberação da escolha de pagamento. A fatura antiga não será aberta.");
-    }
-    if(!data.invoice_url) throw new Error("A cobrança foi atualizada, mas o Asaas ainda não disponibilizou o link da fatura.");
-    message("Fatura atualizada e validada. Abrindo a página segura do Asaas.", "success");
-    $("startPayment").textContent="Abrindo fatura atualizada...";
-    window.location.replace(data.invoice_url);
-   } catch(err) {
-    console.error(err);
-    message(err.message||"Não foi possível corrigir a fatura existente.", "error");
-    $("startPayment").disabled=false;
-    $("startPayment").textContent="Tentar corrigir fatura novamente";
-   }
+   $("startPayment").textContent="Continuar para a fatura existente";
+   message("Encontramos uma assinatura pendente. Clique em “Continuar para a fatura existente” para recuperar a cobrança. Nenhuma alteração será feita automaticamente ao abrir esta página.", "info");
   }
  }catch(e){$("loading").textContent=e.message||"Não foi possível carregar o checkout.";message(e.message||"Falha ao carregar o checkout.","error");}
 }
@@ -169,7 +147,7 @@ $("startPayment").addEventListener("click",async()=>{
  if(!planCode||!paymentMethod){message("Selecione um plano e uma forma de pagamento.","error");return;}
  const p=plans.find(x=>String(x.plan_code)===String(planCode));
  const amount=Number(cycle==="annual"?p.annual_price:p.monthly_price);
- if(!confirm("Confirma iniciar a assinatura KFYRA "+p.name+" por "+money(amount)+(cycle==="annual"?" ao ano?":" por mês?")+" Você será direcionado ao ambiente Asaas Sandbox."))return;
+ if(!confirm("ATENÇÃO: o KFYRA está em PRODUÇÃO. Confirma iniciar/recuperar a assinatura "+p.name+" por "+money(amount)+(cycle==="annual"?" ao ano?":" por mês?")+"? O pagamento será uma cobrança REAL no Asaas. Só confirme se deseja prosseguir."))return;
  const button=$("startPayment");button.disabled=true;button.textContent="Criando cobrança...";
  try{
   const {data:{session}}=await supabaseClient.auth.getSession();
@@ -177,8 +155,8 @@ $("startPayment").addEventListener("click",async()=>{
   const {data,error}=await supabaseClient.functions.invoke("create-asaas-subscription",{body:{company_id:company.id,plan_code:planCode,billing_cycle:cycle,payment_method:paymentMethod}});
   if(error)throw error;
   if(!data?.success)throw new Error(data?.error||"Não foi possível iniciar a assinatura.");
-  if(data.invoice_url){message("Assinatura criada. Redirecionando para a fatura segura do Asaas. Após concluir o teste, você poderá voltar ao KFYRA.","success");button.textContent="Abrindo fatura do Asaas...";window.location.assign(data.invoice_url);}
-  else{message(data.message||"Assinatura criada. Aguardando a primeira fatura do Asaas. Atualize esta página em instantes.","success");button.textContent="Assinatura criada";}
+  if(data.invoice_url){message("Cobrança disponível. Redirecionando para a página segura do Asaas. A empresa será ativada somente após a confirmação do pagamento.","success");button.textContent="Abrindo fatura do Asaas...";window.location.assign(data.invoice_url);}
+  else{message(data.message||"Assinatura registrada. Aguardando a primeira fatura do Asaas. A empresa será ativada somente após a confirmação do pagamento.","success");button.textContent="Assinatura criada";}
  }catch(e){console.error(e);let detail=e.message||"Falha ao iniciar pagamento.";try{if(e.context?.json){const payload=await e.context.json();if(payload?.error)detail=payload.error;}}catch(_){}message(detail,"error");button.disabled=false;button.textContent="Tentar novamente";}
 });
 init();
