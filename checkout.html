@@ -60,7 +60,7 @@ button.primary{width:100%;border:0;border-radius:12px;padding:15px;background:li
 const SUPABASE_URL="https://guiadodxikdvsfrhedls.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable_dhAqwNSfwGj8_nBnudx_Hw_gMZpnyEL";
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-let currentUser=null,company=null,plans=[],cycle="monthly";
+let currentUser=null,company=null,plans=[],cycle="monthly",existingSubscription=false;
 const $=id=>document.getElementById(id);
 const money=v=>Number(v).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 function message(text,type="info"){const el=$("message");el.textContent=text;el.className="message "+type;}
@@ -94,14 +94,8 @@ async function init(){
   if(coError)throw coError;
   company=co;
   if(company.subscription_status==="active"){message("A assinatura desta empresa já está ativa. Você pode acessar o painel empresarial.","success");$("loading").innerHTML='<a href="dashboard.html">Acessar painel da empresa</a>';return;}
-  if(company.asaas_subscription_id && ["pending","overdue"].includes(company.subscription_status)){
-   const {data:payment}=await supabaseClient.from("subscription_payments").select("invoice_url,status,due_date,amount").eq("asaas_subscription_id",company.asaas_subscription_id).order("created_at",{ascending:false}).limit(1).maybeSingle();
-   message("Já existe uma assinatura vinculada a esta empresa. Para evitar cobranças duplicadas, não criaremos outra.","info");
-   $("loading").innerHTML=payment?.invoice_url
-    ? '<p>Existe uma fatura aguardando pagamento.</p><p style="margin:12px 0">Valor: <strong>'+money(payment.amount)+'</strong> · Vencimento: '+(payment.due_date||"consulte a fatura")+'</p><a class="primary" style="display:block;text-align:center;text-decoration:none" href="'+payment.invoice_url+'" target="_blank" rel="noopener">Abrir fatura no Asaas</a>'
-    : '<p>Já existe uma assinatura, mas a fatura ainda não está disponível no KFYRA. Não tente contratar novamente. Consulte o suporte ou aguarde a sincronização.</p>';
-   return;
-  }
+  existingSubscription=Boolean(company.asaas_subscription_id && ["pending","overdue"].includes(company.subscription_status));
+  if(existingSubscription)message("Já existe uma assinatura pendente. Vamos recuperar a fatura existente, sem criar uma nova cobrança.","info");
   const {data:catalog,error:planError}=await supabaseClient.from("subscription_plans").select("plan_code,name,monthly_price,annual_price,is_active").eq("is_active",true).not("monthly_price","is",null).order("monthly_price",{ascending:true});
   if(planError)throw planError;
   plans=catalog||[];
@@ -112,6 +106,11 @@ async function init(){
   document.querySelectorAll("#cycleSwitch button").forEach(b=>b.classList.toggle("active",b.dataset.cycle===cycle));
   $("loading").hidden=true;$("checkout").hidden=false;
   render();
+  if(existingSubscription){
+   document.querySelectorAll('#plans input[name="plan"]').forEach(input=>{input.disabled=true;});
+   document.querySelectorAll('#cycleSwitch button').forEach(button=>{button.disabled=true;});
+   $("startPayment").textContent="Retomar pagamento";
+  }
  }catch(e){$("loading").textContent=e.message||"Não foi possível carregar o checkout.";message(e.message||"Falha ao carregar o checkout.","error");}
 }
 $("cycleSwitch").addEventListener("click",e=>{const b=e.target.closest("button[data-cycle]");if(!b)return;cycle=b.dataset.cycle;document.querySelectorAll("#cycleSwitch button").forEach(x=>x.classList.toggle("active",x===b));render();});
