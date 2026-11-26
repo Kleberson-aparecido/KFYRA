@@ -135,7 +135,30 @@ async function init(){
   if(existingSubscription){
    document.querySelectorAll('#plans input[name="plan"]').forEach(input=>{input.disabled=true;});
    document.querySelectorAll('#cycleSwitch button').forEach(button=>{button.disabled=true;});
-   $("startPayment").textContent="Retomar pagamento";
+   $("startPayment").textContent="Corrigindo fatura...";
+   $("startPayment").disabled=true;
+   message("Encontramos uma fatura antiga configurada somente para Pix. Estamos atualizando a cobrança existente para permitir a escolha dos meios disponíveis no Asaas. Nenhuma nova cobrança será criada.", "info");
+   try {
+    const {data:{session}}=await supabaseClient.auth.getSession();
+    if(!session) throw new Error("Sua sessão expirou. Entre novamente.");
+    const {data,error}=await supabaseClient.functions.invoke("create-asaas-subscription",{
+     body:{company_id:company.id,plan_code:String(company.plan_code),billing_cycle:cycle,payment_method:"choose"}
+    });
+    if(error) throw error;
+    if(!data?.success) throw new Error(data?.error||"O Asaas não confirmou a atualização da fatura.");
+    if(String(data.billing_type||"").toUpperCase()!=="UNDEFINED") {
+     throw new Error("O Asaas ainda não confirmou a liberação da escolha de pagamento. A fatura antiga não será aberta.");
+    }
+    if(!data.invoice_url) throw new Error("A cobrança foi atualizada, mas o Asaas ainda não disponibilizou o link da fatura.");
+    message("Fatura atualizada e validada. Abrindo a página segura do Asaas.", "success");
+    $("startPayment").textContent="Abrindo fatura atualizada...";
+    window.location.replace(data.invoice_url);
+   } catch(err) {
+    console.error(err);
+    message(err.message||"Não foi possível corrigir a fatura existente.", "error");
+    $("startPayment").disabled=false;
+    $("startPayment").textContent="Tentar corrigir fatura novamente";
+   }
   }
  }catch(e){$("loading").textContent=e.message||"Não foi possível carregar o checkout.";message(e.message||"Falha ao carregar o checkout.","error");}
 }
