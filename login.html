@@ -548,6 +548,43 @@ loginForm.addEventListener("submit", async function(event) {
             "success"
         );
 
+        // Direciona administradores com assinatura pendente para o checkout.
+        // Colaboradores e empresas já ativas seguem para o painel normalmente.
+        try {
+            const { data: memberships, error: membershipError } = await supabaseClient
+                .from("company_memberships")
+                .select("company_id, role")
+                .eq("user_id", data.user.id);
+
+            if (membershipError) throw membershipError;
+
+            const adminMemberships = (memberships || []).filter(item => item.role === "admin_empresa");
+
+            if (adminMemberships.length === 1) {
+                const { data: company, error: companyError } = await supabaseClient
+                    .from("companies")
+                    .select("subscription_status")
+                    .eq("id", adminMemberships[0].company_id)
+                    .single();
+
+                if (companyError) throw companyError;
+
+                if (company.subscription_status !== "active") {
+                    window.location.href = "checkout.html";
+                    return;
+                }
+            }
+        } catch (routingError) {
+            console.error("Não foi possível verificar a assinatura antes do redirecionamento:", routingError);
+            mostrarMensagem(
+                "Login realizado, mas não conseguimos verificar a assinatura agora. Tente novamente em instantes.",
+                "error"
+            );
+            botao.disabled = false;
+            botao.textContent = "Entrar na plataforma";
+            return;
+        }
+
         window.location.href = "dashboard.html";
 
     } catch (error) {
