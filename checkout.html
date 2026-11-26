@@ -94,7 +94,14 @@ async function init(){
   if(coError)throw coError;
   company=co;
   if(company.subscription_status==="active"){message("A assinatura desta empresa já está ativa. Você pode acessar o painel empresarial.","success");$("loading").innerHTML='<a href="dashboard.html">Acessar painel da empresa</a>';return;}
-  if(company.asaas_subscription_id && ["pending","overdue"].includes(company.subscription_status)){message("Já existe uma assinatura vinculada a esta empresa. Para evitar cobranças duplicadas, não criaremos outra. Verifique a fatura ou consulte o suporte.","info");$("loading").innerHTML='<a href="login.html">Voltar ao login</a>';return;}
+  if(company.asaas_subscription_id && ["pending","overdue"].includes(company.subscription_status)){
+   const {data:payment}=await supabaseClient.from("subscription_payments").select("invoice_url,status,due_date,amount").eq("asaas_subscription_id",company.asaas_subscription_id).order("created_at",{ascending:false}).limit(1).maybeSingle();
+   message("Já existe uma assinatura vinculada a esta empresa. Para evitar cobranças duplicadas, não criaremos outra.","info");
+   $("loading").innerHTML=payment?.invoice_url
+    ? '<p>Existe uma fatura aguardando pagamento.</p><p style="margin:12px 0">Valor: <strong>'+money(payment.amount)+'</strong> · Vencimento: '+(payment.due_date||"consulte a fatura")+'</p><a class="primary" style="display:block;text-align:center;text-decoration:none" href="'+payment.invoice_url+'" target="_blank" rel="noopener">Abrir fatura no Asaas</a>'
+    : '<p>Já existe uma assinatura, mas a fatura ainda não está disponível no KFYRA. Não tente contratar novamente. Consulte o suporte ou aguarde a sincronização.</p>';
+   return;
+  }
   const {data:catalog,error:planError}=await supabaseClient.from("subscription_plans").select("plan_code,name,monthly_price,annual_price,is_active").eq("is_active",true).not("monthly_price","is",null).order("monthly_price",{ascending:true});
   if(planError)throw planError;
   plans=catalog||[];
